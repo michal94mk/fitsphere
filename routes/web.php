@@ -11,27 +11,28 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+// Trasy dostępne dla wszystkich
+Route::resource('posts', PostController::class)->only(['index', 'show']); // Brak middleware dla tych dwóch metod
 Route::get('/home', [HomeController::class, 'index'])->name('home');
-
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::resource('posts', PostController::class);
 
-Route::post('posts/{post}/comments', [CommentController::class, 'store'])
-    ->middleware('auth')
-    ->name('comments.store');
-
-
+// Trasy dostępne tylko dla zalogowanych
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::post('posts/{post}/comments', [CommentController::class, 'store'])->name('comments.store');
+    Route::resource('posts', PostController::class)->except(['index', 'show']);
 });
 
-Route::middleware([AdminMiddleware::class])->group(function () {
-    Route::resource('posts', PostController::class);
+
+// Trasy dostępne tylko dla administratorów
+Route::middleware([AdminMiddleware::class, 'auth'])->group(function () {
+    Route::resource('posts', PostController::class)->except(['index', 'show']);
 });
 
 

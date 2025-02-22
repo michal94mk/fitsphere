@@ -10,9 +10,20 @@ class PostController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth')->except(['index', 'show']);
-        $this->middleware('admin')->only(['create', 'store', 'edit', 'update', 'destroy']);
     }
+
+    public function index()
+    {
+        $posts = Post::latest()->paginate(10);
+        return view('posts.index', compact('posts'));
+    }
+
+    public function show(Post $post)
+    {
+        $comments = $post->comments()->latest()->paginate(3);
+        return view('posts.show', compact('post', 'comments'));
+    }
+    
 
     public function create()
     {
@@ -30,5 +41,29 @@ class PostController extends Controller
         Post::create($validated);
 
         return redirect()->route('posts.index')->with('success', 'Post został dodany!');
+    }
+
+    public function edit(Post $post)
+    {
+        return view('posts.edit', compact('post'));
+    }
+
+    public function update(Request $request, Post $post)
+    {
+        $validated = $request->validate([
+            'title'   => 'required|max:255',
+            'content' => 'required',
+        ]);
+
+        $post->update($validated);
+
+        return redirect()->route('posts.index')->with('success', 'Post został zaktualizowany!');
+    }
+
+    public function destroy(Post $post)
+    {
+        $post->delete();
+
+        return redirect()->route('posts.index')->with('success', 'Post został usunięty!');
     }
 }
