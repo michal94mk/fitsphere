@@ -1,28 +1,69 @@
 <x-blog-layout>
+<section class="relative bg-gray-900 text-white h-screen text-center flex flex-col justify-center">
+  <!-- Tło z wideo -->
+  <div class="absolute inset-0 w-full h-full">
+    <video id="video1" class="absolute inset-0 w-full h-full object-cover opacity-20" autoplay loop muted>
+      <source src="/videos/video1.mp4" type="video/mp4">
+    </video>
+    <video id="video2" class="absolute inset-0 w-full h-full object-cover opacity-0" autoplay loop muted>
+      <source src="/videos/video2.mp4" type="video/mp4">
+    </video>
+    <video id="video3" class="absolute inset-0 w-full h-full object-cover opacity-0" autoplay loop muted>
+      <source src="/videos/video3.mp4" type="video/mp4">
+    </video>
+  </div>
+
+  <div class="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <h1 class="text-4xl font-bold transform transition duration-500 ease-in-out hover:scale-105">Zdrowie & Fitness</h1>
+    <p class="mt-2 text-lg text-gray-300 opacity-80 transition-all duration-500 hover:opacity-100">Trenuj, jedz zdrowo i dbaj o siebie!</p>
+    <button id="startJourneyButton" class="mt-4 px-6 py-2 bg-blue-500 text-white rounded-full hover:bg-orange-600 transform transition duration-500 hover:scale-105">Rozpocznij swoją podróż</button>
+  </div>
+</section>
+
+
+    <!-- Pasek oddzielający -->
+    <div class="border-t-4 border-gray-900"></div>
+
+    <section id="nextSection" class="bg-gray-300 text-gray-900 py-16 flex items-center justify-center text-center border-t-8 border-b-8 border-gray-900 z-10 pt-24">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <h2 class="text-3xl font-bold mb-4">Przygotuj się do działania</h2>
+    <p class="mt-4 text-lg">Zaczynamy naszą podróż ku zdrowiu!</p>
+  </div>
+</section>
+
+
+
+
+
+    <!-- Pasek oddzielający -->
+    <div class="border-t-4 border-gray-900"></div>
+
     <div class="max-w-4xl mx-auto">
-        <h2 class="text-3xl font-bold mb-6">Najnowsze posty</h2>
-        
-        @foreach($posts as $post)
-            <div class="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 mb-6 relative border border-gray-200 hover:border-gray-300">
-                <h3 class="text-2xl font-semibold text-gray-800 hover:text-blue-600 transition-colors duration-200">
-                    <a href="{{ route('posts.show', $post) }}" class="text-blue-600 hover:underline">
-                        {{ $post->title }}
-                    </a>
-                </h3>
-                <p class="text-gray-600 text-sm mb-4">Dodano: {{ $post->created_at->format('d.m.Y') }}</p>
-                <p class="text-gray-800 text-base mb-4">{{ $post->excerpt }}</p>
+  @if (session('error'))
+      <div class="mb-4 p-4 bg-red-600 text-white rounded">
+          {{ session('error') }}
+      </div>
+  @endif
+  <h2 class="text-3xl font-bold mb-6">Najnowsze posty</h2>
 
-                <!-- Liczba komentarzy, umieszczona w prawym dolnym rogu -->
-                <p class="absolute bottom-4 right-4 text-sm text-gray-500">
-                    Komentarze: {{ $post->comments->count() }}
-                </p>
+  @foreach ($posts as $post)
+      <div class="bg-white rounded-lg shadow-lg p-6 mb-6 transition-transform duration-300 hover:scale-105">
+          <h2 class="text-2xl font-semibold mb-4">{{ $post->title }}</h2>
+          <p class="text-gray-600 text-sm mb-4">Dodano: {{ $post->created_at->format('d.m.Y') }}</p>
+          <p class="text-gray-800 text-base mb-4">{{ $post->excerpt }}</p>
+          <p>Komentarze: {{ $post->comments_count }}</p>
+          <p>Autor: {{ $post->user ? $post->user->name : 'Brak autora' }}</p>
 
-                <a href="{{ route('posts.show', $post) }}" class="text-blue-500 font-semibold mt-2 inline-block hover:text-blue-700 transition-colors duration-200">Czytaj więcej</a>
-            </div>
-        @endforeach
+          <a href="{{ route('posts.show', $post) }}" class="text-blue-600 hover:underline">Czytaj więcej</a>
+      </div>
+  @endforeach
 
-        <div class="mt-6">
-            {{ $posts->links() }}
-        </div>
-    </div>
+  <div class="mt-6">
+      {{ $posts->links() }}
+  </div>
+</div>
+
+
+    <!-- Pasek oddzielający -->
+    <div class="border-t border-gray-900"></div>
 </x-blog-layout>

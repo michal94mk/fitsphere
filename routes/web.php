@@ -14,6 +14,9 @@ Route::get('/', function () {
 // Trasy dostępne dla wszystkich
 Route::resource('posts', PostController::class)->only(['index', 'show']); // Brak middleware dla tych dwóch metod
 Route::get('/home', [HomeController::class, 'index'])->name('home');
+Route::get('/about', [HomeController::class, 'about'])->name('about');
+Route::get('/contact', [HomeController::class, 'contact'])->name('contact');
+Route::get('/terms', [HomeController::class, 'terms'])->name('terms');
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
