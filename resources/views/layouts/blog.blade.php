@@ -56,7 +56,6 @@
     <main>
       {{ $slot }}
     </main>
-
     <!-- Footer Section -->
     <footer class="bg-gray-800 text-center py-6 text-gray-600">
       <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -69,38 +68,30 @@
       </div>
     </footer>
 
-    <!-- Script for Video Backgrounds -->
+<!-- Button to scroll to top -->
+<button onclick="scrollToTop()" id="scrollToTopBtn" class="fixed bottom-5 right-5 bg-orange-500 text-white w-20 h-20 rounded-full shadow-lg flex items-center justify-center hover:bg-orange-500 transition opacity-0 pointer-events-none">
+  ▲
+</button>
+
+
+    <!-- Scroll to Top Script -->
     <script>
-      let videoIndex = 0;
-      const videos = [
-        document.getElementById('video1'),
-        document.getElementById('video2'),
-        document.getElementById('video3')
-      ];
-
-      // Function to switch between videos
-      function switchVideo() {
-        // Hide current video
-        videos[videoIndex].style.opacity = 0;
-
-        // Move to the next video
-        videoIndex = (videoIndex + 1) % videos.length;
-
-        // Show next video
-        videos[videoIndex].style.opacity = 0.2;
+      // Funkcja przewijania na górę strony
+      function scrollToTop() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       }
 
-      // Change video every 5 seconds
-      setInterval(switchVideo, 5000);
-
-      // Smooth scroll to next section on button click
-      document.getElementById('startJourneyButton').addEventListener('click', function() {
-        const nextSection = document.getElementById('nextSection');
-        window.scrollTo({
-            top: nextSection.offsetTop - 6,
-            behavior: 'smooth'
-        });
-      });
+      // Pokaż lub ukryj przycisk w zależności od przewinięcia strony
+      window.onscroll = function() {
+        var button = document.getElementById("scrollToTopBtn");
+        if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+          button.classList.remove("opacity-0", "pointer-events-none");
+          button.classList.add("opacity-100", "pointer-events-auto");
+        } else {
+          button.classList.remove("opacity-100", "pointer-events-auto");
+          button.classList.add("opacity-0", "pointer-events-none");
+        }
+      };
     </script>
 
   </body>
