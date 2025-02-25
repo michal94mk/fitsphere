@@ -20,6 +20,9 @@
               <a href="{{ route('about') }}" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">About</a>
               <a href="{{ route('contact') }}" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Contact</a>
               <a href="{{ route('terms') }}" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Terms</a>
+              @if(auth()->check() && auth()->user()->role === 'admin')
+                <a href="{{ route('admin-dashboard') }}" class="rounded-md px-3 py-2 text-sm font-medium bg-red-600 text-white hover:bg-red-700">Admin Panel</a>
+              @endif
             </div>
             <!-- Right Side: User Authentication -->
             <div class="flex space-x-4 items-center">
@@ -34,7 +37,7 @@
                   </button>
                   <!-- Dropdown Menu Content -->
                   <div x-show="dropdownOpen" @click.away="dropdownOpen = false" x-transition class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg">
-                    <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Profile</a>
+                    <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Profile</a>                    
                     <form method="POST" action="{{ route('logout') }}">
                       @csrf
                       <button type="submit" class="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100">Logout</button>
