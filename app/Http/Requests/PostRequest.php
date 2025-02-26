@@ -8,8 +8,8 @@ class PostRequest extends FormRequest
 {
     public function authorize()
     {
-        return true;
-    }
+        return auth()->check() && auth()->user()->role === 'admin';
+    }    
 
     public function rules()
     {
