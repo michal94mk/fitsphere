@@ -7,7 +7,7 @@
                 <ul>
                     <li class="mb-3"><a href="{{ route('admin-dashboard') }}" class="block p-2 rounded hover:bg-blue-700">Dashboard</a></li>
                     <li class="mb-3"><a href="{{ route('users.index') }}" class="block p-2 rounded hover:bg-blue-700">Użytkownicy</a></li>
-                    <li class="mb-3"><a href="{{ route('posts.index') }}" class="block p-2 rounded hover:bg-blue-700">Posty</a></li>
+                    <li class="mb-3"><a href="{{ route('admin.posts.index') }}" class="block p-2 rounded hover:bg-blue-700">Posty</a></li>
                     <li class="mb-3"><a href="{{ route('comments.index') }}" class="block p-2 rounded hover:bg-blue-700">Komentarze</a></li>
                     <li class="mb-3"><a href="{{ route('categories.index') }}" class="block p-2 rounded hover:bg-blue-700">Kategorie</a></li>
                 </ul>

@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use App\Models\Category;
 use App\Http\Requests\PostRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
+
 
 class PostController extends Controller
 {
@@ -15,7 +18,7 @@ class PostController extends Controller
 
     public function index()
     {
-        $posts = Post::latest()->paginate(10);
+        $posts = Post::with(['user', 'category'])->paginate(10);
         return view('admin.posts.index', compact('posts'));
     }
 
@@ -25,38 +28,50 @@ class PostController extends Controller
         return view('posts.show', compact('post', 'comments'));
     }
     
-
     public function create()
     {
-        return view('admin.posts.create');
+        $categories = Category::all();
+        return view('admin.posts.create', compact('categories'));
     }
-
+    
     public function store(PostRequest $request)
     {
-        $validated = $request->validated();
-        $validated['slug'] = Str::slug($validated['title']);
+        $data = $request->validated();
+        $data['user_id'] = auth()->user()->id;
+        $data['excerpt'] = Str::limit($data['content'], 100);
     
-        Post::create($validated);
+        Post::create($data);
     
-        return redirect()->route('posts.index')->with('success', 'Post added successfully.');
+        return redirect()->route('admin.posts.index')->with('success', 'Post został dodany');
     }
+    
     
     public function edit(Post $post)
     {
-        return view('posts.edit', compact('post'));
+        $categories = Category::all();
+        return view('admin.posts.edit', compact('post', 'categories'));
     }
 
     public function update(Request $request, Post $post)
     {
         $validated = $request->validate([
-            'title'   => 'required|max:255',
-            'content' => 'required',
+            'title'       => 'required|max:255',
+            'slug'        => 'required|max:255|unique:posts,slug,' . $post->id,
+            'content'     => 'required',
+            'category_id' => 'nullable|exists:categories,id',
+            'status'      => 'required|in:draft,published',
+            'image'       => 'nullable|image|max:2048',
         ]);
+
+        if ($request->hasFile('image')) {
+            $validated['image'] = $request->file('image')->store('posts', 'public');
+        }
 
         $post->update($validated);
 
         return redirect()->route('posts.index')->with('success', 'Post został zaktualizowany!');
     }
+
 
     public function destroy(Post $post)
     {

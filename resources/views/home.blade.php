@@ -38,7 +38,7 @@
     <!-- Pasek oddzielający -->
     <div class="border-t-4 border-gray-900"></div>
 
-    <div class="max-w-4xl mx-auto">
+    <div id="posts" class="max-w-4xl mx-auto">
   @if (session('error'))
       <div class="mb-4 p-4 bg-red-600 text-white rounded">
           {{ session('error') }}
@@ -48,20 +48,22 @@
 
   @foreach ($posts as $post)
       <div class="bg-white rounded-lg shadow-lg p-6 mb-6 transition-transform duration-300 hover:scale-105">
-          <h2 class="text-2xl font-semibold mb-4">{{ $post->title }}</h2>
-          <p class="text-gray-600 text-sm mb-4">Dodano: {{ $post->created_at->format('d.m.Y') }}</p>
-          <p class="text-gray-800 text-base mb-4">{{ $post->excerpt }}</p>
-          <p>Komentarze: {{ $post->comments_count }}</p>
-          <p>Autor: {{ $post->user ? $post->user->name : 'Brak autora' }}</p>
-
-          <a href="{{ route('posts.show', $post) }}" class="text-blue-600 hover:underline">Czytaj więcej</a>
+        <h2 class="text-2xl font-semibold mb-4">{{ $post->title ?? 'Brak tytułu' }}</h2>
+        <p class="text-gray-600 text-sm mb-4">
+            Dodano: {{ optional($post->created_at)->format('d.m.Y') ?? 'Brak daty' }}
+        </p>
+        <p class="text-gray-800 text-base mb-4">{{ $post->excerpt ?? 'Brak podsumowania' }}</p>
+        <p>Komentarze: {{ $post->comments_count ?? 0 }}</p>
+        <p>Autor: {{ optional($post->user)->name ?? 'Brak autora' }}</p>
+        <a href="{{ route('posts.show', $post) }}" class="text-blue-600 hover:underline">Czytaj więcej</a>
       </div>
   @endforeach
 
   <div class="mt-6">
-      {{ $posts->links() }}
+      {{ $posts->fragment('posts')->links() }}
   </div>
 </div>
+
 
 
     <!-- Pasek oddzielający -->

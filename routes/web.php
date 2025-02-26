@@ -38,7 +38,16 @@ Route::middleware('auth')->group(function () {
 // Trasy dostępne tylko dla administratorów
 Route::middleware([AdminMiddleware::class, 'auth'])->prefix('admin')->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('admin-dashboard');
-    Route::resource('posts', PostController::class)->except(['index', 'show']);
+    Route::resource('posts', PostController::class)->names([
+        'index' => 'admin.posts.index',
+        'create' => 'admin.posts.create',
+        'store' => 'admin.posts.store',
+        'show' => 'admin.posts.show',
+        'edit' => 'admin.posts.edit',
+        'update' => 'admin.posts.update',
+        'destroy' => 'admin.posts.destroy',
+    ]);
+    
     Route::resource('comments', CommentController::class);
     Route::resource('users', UserController::class);
     Route::resource('categories', CategoryController::class);

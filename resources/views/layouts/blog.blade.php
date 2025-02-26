@@ -59,6 +59,7 @@
     <main>
       {{ $slot }}
     </main>
+    
     <!-- Footer Section -->
     <footer class="bg-gray-800 text-center py-6 text-gray-600">
       <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -71,20 +72,16 @@
       </div>
     </footer>
 
-<!-- Button to scroll to top -->
-<button onclick="scrollToTop()" id="scrollToTopBtn" class="fixed bottom-5 right-5 bg-orange-500 text-white w-20 h-20 rounded-full shadow-lg flex items-center justify-center hover:bg-orange-500 transition opacity-0 pointer-events-none">
-  ▲
-</button>
-
+    <!-- Button to scroll to top -->
+    <button onclick="scrollToTop()" id="scrollToTopBtn" class="fixed bottom-5 right-5 bg-orange-500 text-white w-20 h-20 rounded-full shadow-lg flex items-center justify-center hover:bg-orange-500 transition opacity-0 pointer-events-none">
+      ▲
+    </button>
 
     <!-- Scroll to Top Script -->
     <script>
-      // Funkcja przewijania na górę strony
       function scrollToTop() {
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
-
-      // Pokaż lub ukryj przycisk w zależności od przewinięcia strony
       window.onscroll = function() {
         var button = document.getElementById("scrollToTopBtn");
         if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
@@ -96,6 +93,5 @@
         }
       };
     </script>
-
   </body>
 </html>
