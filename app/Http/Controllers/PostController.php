@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use App\Models\Category;
 use App\Http\Requests\PostRequest;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -33,19 +34,24 @@ class PostController extends Controller
         $categories = Category::all();
         return view('admin.posts.create', compact('categories'));
     }
-    
+
     public function store(PostRequest $request)
     {
         $data = $request->validated();
         $data['user_id'] = auth()->user()->id;
         $data['excerpt'] = Str::limit($data['content'], 100);
     
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imagePath = $image->store('posts', 'public');
+            $data['image'] = $imagePath;
+        }
+    
         Post::create($data);
     
         return redirect()->route('admin.posts.index')->with('success', 'Post został dodany');
     }
-    
-    
+
     public function edit(Post $post)
     {
         $categories = Category::all();

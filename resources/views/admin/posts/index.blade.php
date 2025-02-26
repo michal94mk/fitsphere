@@ -18,7 +18,11 @@
       <!-- Prawa strona: pusta, żeby wyśrodkować tytuł -->
       <div class="w-32"></div>
     </div>
-
+    @if (session('success'))
+      <div class="mb-4 p-4 bg-green-600 text-white rounded">
+          {{ session('success') }}
+      </div>
+    @endif
     <!-- Wrapper z poziomym przewijaniem -->
     <div class="overflow-x-auto">
       <table class="min-w-full border border-gray-300">
@@ -42,7 +46,7 @@
             <td class="px-4 py-2 border font-semibold">{{ $post->title }}</td>
             <td class="px-4 py-2 border text-center">
               @if($post->image)
-                <img src="{{ asset('images/' . $post->image) }}" alt="{{ $post->title }}" class="w-16 h-auto rounded">
+                <img src="{{ asset('storage/' . $post->image) }}" alt="{{ $post->title }}" class="w-16 h-auto rounded">
               @else
                 <span class="text-gray-500 text-sm">Brak obrazka</span>
               @endif
