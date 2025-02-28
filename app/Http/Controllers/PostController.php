@@ -26,7 +26,7 @@ class PostController extends Controller
     public function show(Post $post)
     {
         $comments = $post->comments()->latest()->paginate(3);
-        return view('posts.show', compact('post', 'comments'));
+        return view('admin.posts.show', compact('post', 'comments'));
     }
     
     public function create()
@@ -39,7 +39,7 @@ class PostController extends Controller
     {
         $data = $request->validated();
         $data['user_id'] = auth()->user()->id;
-        $data['excerpt'] = Str::limit($data['content'], 100);
+        $data['excerpt'] = Str::limit($data['content'], 300);
     
         if ($request->hasFile('image')) {
             $image = $request->file('image');

@@ -47,7 +47,7 @@
         </div>
       </nav>
     </header>
-  <main class="flex-grow p-4">
+    <main class="flex-grow p-4">
         {{ $slot }}
     </main>
     <!-- Footer Section -->
