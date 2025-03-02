@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Middleware\AdminMiddleware;
@@ -47,10 +48,19 @@ Route::middleware([AdminMiddleware::class, 'auth'])->prefix('admin')->group(func
         'update' => 'admin.posts.update',
         'destroy' => 'admin.posts.destroy',
     ]);
+    Route::resource('categories', CategoryController::class)->names([
+        'index' => 'admin.categories.index',
+        'create' => 'admin.categories.create',
+        'store' => 'admin.categories.store',
+        'show' => 'admin.categories.show',
+        'edit' => 'admin.categories.edit',
+        'update' => 'admin.categories.update',
+        'destroy' => 'admin.categories.destroy',
+    ]);
+    
     
     Route::resource('comments', CommentController::class);
     Route::resource('users', UserController::class);
-    Route::resource('categories', CategoryController::class);
 });
 
 
