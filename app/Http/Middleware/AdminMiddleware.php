@@ -10,10 +10,9 @@ class AdminMiddleware
 {
     public function handle(Request $request, Closure $next)
     {
-        if (Auth::check() && Auth::user()->role === 'admin') {
-            return $next($request);
+        if (!Auth::check() || Auth::user()->role !== 'admin') {
+            abort(403, 'Brak dostępu.');
         }
-        
-        abort(403, 'Nie masz uprawnień do tej akcji.');
+        return $next($request);
     }
 }

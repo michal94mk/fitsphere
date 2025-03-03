@@ -21,7 +21,7 @@
               <a href="{{ route('contact') }}" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Contact</a>
               <a href="{{ route('terms') }}" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Terms</a>
               @if(auth()->check() && auth()->user()->role === 'admin')
-                <a href="{{ route('admin-dashboard') }}" class="rounded-md px-3 py-2 text-sm font-medium bg-red-600 text-white hover:bg-red-700">Admin Panel</a>
+              <a href="{{ route('admin.dashboard') }}" class="rounded-md px-3 py-2 text-sm font-medium bg-red-600 text-white hover:bg-red-700">Admin Panel</a>
               @endif
             </div>
 

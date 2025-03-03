@@ -5,8 +5,8 @@
             <h2 class="text-xl font-bold mb-5">Admin Panel</h2>
             <nav>
                 <ul>
-                    <li class="mb-3"><a href="{{ route('admin-dashboard') }}" class="block p-2 rounded hover:bg-blue-700">Dashboard</a></li>
-                    <li class="mb-3"><a href="" class="block p-2 rounded hover:bg-blue-700">Użytkownicy</a></li>
+                    <li class="mb-3"><a href="{{ route('admin.dashboard') }}" class="block p-2 rounded hover:bg-blue-700">Dashboard</a></li>
+                    <li class="mb-3"><a href="{{ route('admin.users.index') }}" class="block p-2 rounded hover:bg-blue-700">Użytkownicy</a></li>
                     <li class="mb-3"><a href="{{ route('admin.posts.index') }}" class="block p-2 rounded hover:bg-blue-700">Posty</a></li>
                     <li class="mb-3"><a href="" class="block p-2 rounded hover:bg-blue-700">Komentarze</a></li>
                     <li class="mb-3"><a href="{{ route('admin.categories.index') }}" class="block p-2 rounded hover:bg-blue-700">Kategorie</a></li>
@@ -17,7 +17,6 @@
         <!-- Main Content -->
         <main class="flex-1 p-5">
             <h1 class="text-2xl font-bold mb-4">Dashboard</h1>
-            
             <!-- Cards -->
             <div class="grid grid-cols-3 gap-4">
                 <div class="bg-white p-5 rounded shadow">

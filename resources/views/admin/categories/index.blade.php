@@ -4,7 +4,7 @@
     <div class="flex items-center justify-between mb-4">
       <!-- Lewa strona: przyciski -->
       <div class="flex space-x-2">
-        <a href="{{ route('admin-dashboard') }}" class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 transition">
+        <a href="{{ route('admin.dashboard') }}" class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 transition">
           Cofnij
         </a>
         <a href="{{ route('admin.categories.create') }}" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition">
