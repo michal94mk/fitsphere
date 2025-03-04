@@ -31,9 +31,10 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
     Route::post('posts/{post}/comments', [CommentController::class, 'store'])->name('comments.store');
     Route::resource('posts', PostController::class)->except(['index', 'show']);
+    Route::get('comments/{comment}/edit', [CommentController::class, 'edit'])->name('comments.edit');
+    Route::put('comments/{comment}', [CommentController::class, 'update'])->name('comments.update');
 });
 
 // Trasy dostępne tylko dla administratorów
