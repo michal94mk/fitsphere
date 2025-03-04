@@ -18,7 +18,7 @@
             <div class="flex space-x-4">
               <a href="{{ route('home') }}" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Home</a>
               <a href="{{ route('about') }}" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">About</a>
-              <a href="{{ route('contact') }}" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Contact</a>
+              <a href="{{ route('contact.form') }}" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Contact</a>
               <a href="{{ route('terms') }}" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Terms</a>
               @if(auth()->check() && auth()->user()->role === 'admin')
               <a href="{{ route('admin.dashboard') }}" class="rounded-md px-3 py-2 text-sm font-medium bg-red-600 text-white hover:bg-red-700">Admin Panel</a>

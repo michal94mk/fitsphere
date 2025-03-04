@@ -8,7 +8,8 @@
             
             <div class="flex justify-center">
                 <div class="w-full max-w-md">
-                    <form action="#" method="POST" class="bg-white shadow-lg rounded-lg p-8 space-y-4">
+                    <form action="{{ route('contact.submit') }}" method="POST" class="bg-white shadow-lg rounded-lg p-8 space-y-4">
+                    @csrf
                         <div>
                             <label for="name" class="block text-sm font-medium text-gray-700">Your Name</label>
                             <input type="text" name="name" id="name" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500" required>
