@@ -62,16 +62,45 @@
     </main>
 
     <!-- Footer Section -->
-    <footer class="bg-gray-800 text-center py-6 text-gray-600">
-      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+<!-- Footer Section -->
+<!-- Footer Section -->
+<footer class="bg-gray-800 text-center py-6 text-gray-600">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <p class="mb-4">&copy; 2024 Zdrowie & Fitness Blog</p>
+
         <!-- Newsletter Subscription Form -->
-        <form action="#" method="POST" class="flex justify-center">
-          <input type="email" name="newsletter" placeholder="Enter your email" class="px-4 py-2 rounded-l-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500" required>
-          <button type="submit" class="px-4 py-2 bg-orange-500 text-white rounded-r-full hover:bg-orange-600 transform transition duration-300 hover:scale-105">Subscribe</button>
-        </form>
-      </div>
-    </footer>
+        <div x-data="{ showModal: false, message: '' }"
+     x-init="
+     @if(session('success')) message = '{{ session('success') }}'; showModal = true; @endif
+     @if(session('error')) message = '{{ session('error') }}'; showModal = true; @endif
+     ">
+    <form action="{{ route('subscribe.store') }}" method="POST" class="flex justify-center">
+        @csrf
+        <input type="email" name="email" placeholder="Enter your email" class="px-4 py-2 rounded-l-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500" required>
+        <button type="submit" class="px-4 py-2 bg-orange-500 text-white rounded-r-full hover:bg-orange-600 transform transition duration-300 hover:scale-105">Subscribe</button>
+    </form>
+
+    <!-- Modal -->
+    <div x-show="showModal" x-transition.opacity x-transition.scale 
+         x-cloak
+         class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+        <div class="bg-white p-6 rounded shadow-lg max-w-md text-center">
+            <p class="text-lg font-semibold" x-text="message"></p>
+            <button @click="showModal = false" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded">OK</button>
+        </div>
+    </div>
+</div>
+
+<!-- Dodaj ten styl do <head> strony lub do CSS -->
+<style>
+    [x-cloak] { display: none !important; }
+</style>
+
+</div>
+
+    </div>
+</footer>
+
 
     <!-- Button to scroll to top -->
     <button onclick="scrollToTop()" id="scrollToTopBtn" class="fixed bottom-5 right-5 bg-orange-500 text-white w-20 h-20 rounded-full shadow-lg flex items-center justify-center hover:bg-orange-500 transition opacity-0 pointer-events-none">
