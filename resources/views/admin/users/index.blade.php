@@ -43,13 +43,33 @@
               <a href="{{ route('admin.users.edit', $user) }}" class="bg-blue-500 text-white px-3 py-1 rounded-md text-sm hover:bg-blue-600 transition inline-block mb-1">
                 Edytuj
               </a>
-              <form action="{{ route('admin.users.destroy', $user) }}" method="POST" class="inline-block">
-                @csrf
-                @method('DELETE')
-                <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded-md text-sm hover:bg-red-600 transition inline-block mb-1">
+              <!-- AlpineJS - potwierdzenie usunięcia -->
+              <div x-data="{ open: false }" class="inline-block">
+                <button type="button" x-on:click="open = true" class="bg-red-500 text-white px-3 py-1 rounded-md text-sm hover:bg-red-600 transition">
                   Usuń
                 </button>
-              </form>
+                <!-- Modal -->
+                <div x-show="open" x-cloak class="fixed inset-0 flex items-center justify-center z-50">
+                  <div class="fixed inset-0 bg-black opacity-50"></div>
+                  <div class="bg-white rounded-lg p-6 z-50 shadow-lg w-96">
+                    <h2 class="text-xl font-bold mb-4">Potwierdzenie usunięcia</h2>
+                    <p class="mb-4">Czy na pewno chcesz usunąć tego użytkownika?</p>
+                    <div class="flex justify-end space-x-2">
+                      <button type="button" x-on:click="open = false" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">
+                        Anuluj
+                      </button>
+                      <form action="{{ route('admin.users.destroy', $user) }}" method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
+                          Usuń
+                        </button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Koniec AlpineJS -->
             </td>
           </tr>
           @endforeach
