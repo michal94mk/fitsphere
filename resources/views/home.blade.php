@@ -29,13 +29,7 @@
 
     <div class="border-t-4 border-gray-900"></div>
 
-    <div id="posts" class="max-w-screen-xxl mx-auto p-4">
-        @if (session('error'))
-            <div class="mb-4 p-4 bg-red-600 text-white rounded">
-                {{ session('error') }}
-            </div>
-        @endif
-        
+    <div id="posts" class="max-w-screen-xxl mx-auto p-4">       
         <h2 class="text-5xl text-center p-20 font-bold mb-6">Najnowsze posty</h2>
 
         @foreach ($posts as $post)
