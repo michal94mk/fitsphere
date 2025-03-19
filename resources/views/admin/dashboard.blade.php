@@ -32,40 +32,6 @@
                     <p class="text-2xl">456</p>
                 </div>
             </div>
-            
-            <!-- Posts Table -->
-            <div class="mt-5 bg-white p-5 rounded shadow">
-                <h2 class="text-xl font-bold mb-3">Lista Postów</h2>
-                <table class="w-full border-collapse border border-gray-200">
-                    <thead>
-                        <tr class="bg-gray-100">
-                            <th class="border p-2">ID</th>
-                            <th class="border p-2">Tytuł</th>
-                            <th class="border p-2">Akcje</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="border p-2">1</td>
-                            <td class="border p-2">Pierwszy post</td>
-                            <td class="border p-2">
-                                <a href="#" class="text-blue-500">Pokaż</a> |
-                                <a href="#" class="text-yellow-500">Edytuj</a> |
-                                <a href="#" class="text-red-500">Usuń</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="border p-2">2</td>
-                            <td class="border p-2">Drugi post</td>
-                            <td class="border p-2">
-                                <a href="#" class="text-blue-500">Pokaż</a> |
-                                <a href="#" class="text-yellow-500">Edytuj</a> |
-                                <a href="#" class="text-red-500">Usuń</a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
         </main>
     </div>
 </x-admin-layout>
