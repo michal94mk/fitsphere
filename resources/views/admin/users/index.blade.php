@@ -1,28 +1,37 @@
 <x-admin-layout>
   <div class="container mx-auto p-6">
-    <div class="flex items-center justify-between mb-4">
-      <div class="flex space-x-2">
-        <a href="{{ route('admin.dashboard') }}" class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 transition">
+    <!-- Nagłówek z tytułem i przyciskami -->
+    <div class="flex flex-col sm:items-start mb-4">
+      <!-- Tytuł -->
+      <h1 class="text-2xl font-bold text-center sm:text-left mb-4">
+        Lista użytkowników
+      </h1>
+
+      <!-- Przyciski akcji -->
+      <div class="flex flex-row space-x-2 justify-center sm:justify-start">
+        <a href="{{ route('admin.dashboard') }}" 
+           class="bg-gray-500 text-white px-4 py-2 h-10 rounded-md hover:bg-gray-600 transition flex items-center justify-center whitespace-nowrap">
           Cofnij
         </a>
-        <a href="{{ route('admin.users.create') }}" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition">
+        <a href="{{ route('admin.users.create') }}" 
+           class="bg-blue-500 text-white px-4 py-2 h-10 rounded-md hover:bg-blue-600 transition flex items-center justify-center whitespace-nowrap">
           Dodaj nowego użytkownika
         </a>
       </div>
-      <h1 class="text-2xl font-bold text-center flex-grow">Lista użytkowników</h1>
-      <div class="w-32"></div>
     </div>
 
+    <!-- Komunikat o sukcesie -->
     @if (session('success'))
       <div class="mb-4 p-4 bg-green-600 text-white rounded">
         {{ session('success') }}
       </div>
     @endif
 
-    <div class="overflow-x-auto">
+    <!-- Tabela użytkowników -->
+    <div class="overflow-x-auto bg-white shadow-md rounded-lg">
       <table class="min-w-full border border-gray-300">
         <thead class="bg-gray-200">
-          <tr class="text-left">
+          <tr>
             <th class="px-4 py-2 border">ID</th>
             <th class="px-4 py-2 border">Imię</th>
             <th class="px-4 py-2 border">Email</th>
@@ -77,6 +86,7 @@
       </table>
     </div>
 
+    <!-- Paginacja -->
     <div class="mt-4">
       {{ $users->links() }}
     </div>
