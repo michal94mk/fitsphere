@@ -11,10 +11,6 @@
            class="bg-gray-500 text-white px-4 py-2 h-10 rounded-md hover:bg-gray-600 transition flex items-center justify-center">
           Cofnij
         </a>
-        <a href="{{ route('admin.users.create') }}" 
-           class="bg-blue-500 text-white px-4 py-2 h-10 rounded-md hover:bg-blue-600 transition flex items-center justify-center">
-          Dodaj nowego użytkownika
-        </a>
       </div>
     </div>
 
