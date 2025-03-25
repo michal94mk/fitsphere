@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Post;
 use App\Models\Category;
+use App\Models\User;
 
 class HomeController extends Controller
 {
@@ -18,7 +19,8 @@ class HomeController extends Controller
 
     public function about()
     {
-        return view('about');
+        $trainers = User::where('role', 'trainer')->paginate(9);
+        return view('about', compact('trainers'));
     }
 
     public function contact()

@@ -44,6 +44,10 @@ Route::middleware('auth', 'verified')->group(function () {
 // Trasy dostępne tylko dla administratorów
 Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('users/dashboard', [UserController::class, 'dashboard'])->name('users.dashboard');
+    Route::get('users', [UserController::class, 'index'])->name('users.index');
+    Route::get('users/admins', [UserController::class, 'admins'])->name('users.admins');
+    Route::get('users/trainers', [UserController::class, 'trainers'])->name('users.trainers');
     Route::resource('posts', PostController::class);
     Route::resource('categories', CategoryController::class);
     Route::resource('comments', CommentController::class);
