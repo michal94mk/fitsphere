@@ -23,6 +23,14 @@ class PostController extends Controller
         return view('admin.posts.index', compact('posts'));
     }
 
+    public function showw(Post $post)
+    {
+        $posts = Post::withCount('comments')
+                    ->latest()
+                    ->paginate(5);
+        return view('home', compact('posts'));
+    }
+
     public function show(Post $post)
     {
         $comments = $post->comments()->latest()->paginate(3);

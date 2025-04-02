@@ -1,5 +1,6 @@
 <div>
-    <p><strong>Imię:</strong> {{ $data['name'] }}</p>
-    <p><strong>Email:</strong> {{ $data['email'] }}</p>
-    <p><strong>Wiadomość:</strong> {{ $data['message'] }}</p>
+    <h3>New contact form submission:</h3>
+    <p><strong>Name:</strong> {{ $contactData['name'] }}</p>
+    <p><strong>Email:</strong> {{ $contactData['email'] }}</p>
+    <p><strong>Message:</strong> {{ $contactData['message'] }}</p>
 </div>

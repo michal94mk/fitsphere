@@ -1,7 +1,7 @@
 import './bootstrap';
 
-import Alpine from 'alpinejs';
-
-window.Alpine = Alpine;
-
-Alpine.start();
+document.addEventListener("DOMContentLoaded", function () {
+    Livewire.on("subscriptionSuccess", function () {
+        document.querySelector("#subscriptionModal")?.classList.remove("hidden");
+    });
+});
