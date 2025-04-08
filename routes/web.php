@@ -14,12 +14,26 @@ use App\Livewire\PostView;
 use App\Livewire\PostDetails;
 use App\Livewire\PostsList;
 use App\Livewire\TermsPage;
+use App\Livewire\Auth\Login;
+use App\Livewire\Auth\Register;
+use App\Livewire\Auth\ForgotPassword;
+use App\Livewire\Auth\ResetPassword;
+use App\Livewire\Auth\VerifyEmail;
+use App\Livewire\Auth\ConfirmPassword;
+use App\Livewire\Profile\Profile;
+use App\Livewire\Profile\UpdatePassword;
+
+use Illuminate\Auth\Events\Verified;
+use App\Models\User;
 use App\Models\Post;
 use App\Http\Middleware\AdminMiddleware;
 use Illuminate\Support\Facades\Route;
 
+// =============================
+// Public Routes - Available to all users
+// =============================
 
-// Public routes - Available to all users
+// Main public pages
 Route::get('/home', HomePage::class)->name('home');
 Route::get('/posts', PostsList::class)->name('posts');
 Route::get('/post/{postId}', PostDetails::class)->name('post.show');
@@ -27,18 +41,31 @@ Route::get('/about', AboutPage::class)->name('about');
 Route::get('/contact', ContactPage::class)->name('contact');
 Route::get('/terms', TermsPage::class)->name('terms');
 
-// Protected routes - Only authenticated & verified users can access
+// -----------------------------
+// Public Authentication Routes
+// -----------------------------
+Route::get('/login', Login::class)->name('login');
+Route::get('/register', Register::class)->name('register');
+Route::get('/forgot-password', ForgotPassword::class)->name('password.request');
+Route::get('/reset-password/{token}', ResetPassword::class)->name('password.reset');
+Route::get('/email/verify', VerifyEmail::class)->name('verification.notice');
+Route::get('/email/verify/{id}/{hash}', VerifyEmail::class)->name('verification.verify');
+Route::get('/password/confirm', ConfirmPassword::class)->name('password.confirm');
+
+// Profile routes
+Route::get('/profile', Profile::class)->name('profile');
+Route::get('/profile/password', UpdatePassword::class)->name('profile.password');
+
+// Logout route
+Route::post('/logout', function () {
+    auth()->logout();
+    return redirect('/home');
+})->name('logout');
+
+// =============================
+// Protected Routes - Only authenticated & verified users can access
+// =============================
 Route::middleware('auth', 'verified')->group(function () {
-    // Dashboard view
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
-
-    // Profile management
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
     // Comments functionality
     Route::post('posts/{post}/comments', [CommentController::class, 'store'])->name('comments.store');
     Route::get('comments/{comment}/edit', [CommentController::class, 'edit'])->name('comments.edit');
@@ -48,7 +75,9 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::resource('posts', PostController::class)->except(['index', 'show']);
 });
 
-// Admin routes - Only accessible by users with 'admin' middleware
+// =============================
+// Admin Routes - Only accessible by users with 'admin' middleware
+// =============================
 Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
     // Admin dashboard
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -66,5 +95,24 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
     Route::resource('comments', CommentController::class);
 });
 
-// Authentication routes
-require __DIR__.'/auth.php';
+
+// Email verification route
+Route::get('email/verify/{id}/{hash}', function ($id, $hash) {
+    $user = User::findOrFail($id);
+
+    // Ensure that the hash matches the user's email verification hash
+    if (! hash_equals((string) $hash, (string) sha1($user->getEmailForVerification()))) {
+        abort(403);
+    }
+
+    // If email is already verified, redirect to profile
+    if ($user->hasVerifiedEmail()) {
+        return redirect()->route('profile')->with('verified', 'Your email address is already verified!');
+    }
+
+    // Mark the email as verified and trigger the Verified event
+    $user->markEmailAsVerified();
+    event(new Verified($user));
+
+    return redirect()->route('profile')->with('verified', 'Your email address has been successfully verified!');
+})->middleware(['signed', 'throttle:6,1'])->name('verification.verify');

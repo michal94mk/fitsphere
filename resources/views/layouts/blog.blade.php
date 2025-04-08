@@ -22,7 +22,7 @@
     </header>
 
     <!-- Main content area -->
-    <main class="flex-grow">
+    <main class="flex-grow flex justify-center items-center">
         @yield('content')
     </main>
 

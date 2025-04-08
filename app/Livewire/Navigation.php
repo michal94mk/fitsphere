@@ -19,7 +19,7 @@ class Navigation extends Component
         $path = request()->path() ?: 'home';
 
         // Define allowed pages
-        $allowedPages = ['home', 'posts', 'about', 'contact', 'terms', 'admin'];
+        $allowedPages = ['home', 'posts', 'about', 'contact', 'terms', 'admin', 'login', 'register', 'forgot-password', 'profile'];
 
         // Check if the path is an allowed page, otherwise default to 'home'
         $this->currentPage = in_array($path, $allowedPages) ? $path : 'home';
