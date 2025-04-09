@@ -3,51 +3,88 @@
 namespace App\Livewire;
 
 use Livewire\Component;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Request;
 
 class Navigation extends Component
 {
     public string $currentPage = 'home';
     public ?string $successMessage = null;
+    public string $searchQuery = '';
+    public $toastMessage = '';
 
-    // Listens for page change event
-    protected $listeners = ['pageChanged' => 'goToPage'];
 
-    // Initialize component by setting current page based on the URL
+    protected $listeners = ['pageChanged' => 'updateCurrentPage'];
+
     public function mount()
     {
-        // Get current URL path or default to 'home'
-        $path = request()->path() ?: 'home';
+        $path = Request::path() ?: 'home';
+        $allowedPages = [
+            'home', 'posts', 'about', 'contact', 'terms',
+            'admin', 'login', 'register', 'forgot-password', 'profile',
+            'search'
+        ];
 
-        // Define allowed pages
-        $allowedPages = ['home', 'posts', 'about', 'contact', 'terms', 'admin', 'login', 'register', 'forgot-password', 'profile'];
-
-        // Check if the path is an allowed page, otherwise default to 'home'
-        $this->currentPage = in_array($path, $allowedPages) ? $path : 'home';
-
-        // Store current page in session
-        session(['currentPage' => $this->currentPage]);
+        // Jeśli URL jest 'search', ustawiamy currentPage na 'search'
+        if ($path === 'search') {
+            $this->currentPage = 'search';
+        } else {
+            $this->currentPage = in_array($path, $allowedPages) ? $path : 'home';
+        }
+        
+        Session::put('currentPage', $this->currentPage);
     }
 
-    // Handle page navigation logic
     public function goToPage($page)
     {
         $this->successMessage = null;
 
-        // Clear session data for specific pages
         if ($page === 'home') {
-            session()->forget('home_selectedPostId');
+            Session::forget('home_selectedPostId');
             $this->dispatch('navigateToHome');
         } elseif ($page === 'posts') {
-            session()->forget('posts_selectedPostId');
+            Session::forget('posts_selectedPostId');
             $this->dispatch('navigateToPosts');
+        } elseif ($page === 'search') {
+            Session::forget('search_selectedPostId');
+            $this->goToSearch();
+            return;
         }
 
-        // Update current page and store it in session
         $this->currentPage = $page;
-        session(['currentPage' => $page]);
+        Session::put('currentPage', $page);
+        $this->dispatch('navigateToPage', $page);
     }
 
-    // Render the component's view
+
+    public function resetToast()
+    {
+        $this->toastMessage = '';
+    }
+    
+    public function goToSearch()
+    {
+        if (empty(trim($this->searchQuery)) || strlen(trim($this->searchQuery)) < 3) {
+            $this->toastMessage = 'Wprowadź minimum 3 znaki';
+            return;
+        }
+    
+        Session::put('searchQuery', $this->searchQuery);
+        
+        $this->currentPage = 'search';
+        Session::put('currentPage', 'search');
+    
+        $this->dispatch('navigateToPage', 'search');
+        
+        $this->dispatch('performSearch', $this->searchQuery);
+    }
+
+    public function updateCurrentPage($page)
+    {
+        $this->currentPage = $page;
+        Session::put('currentPage', $page);
+    }
+
     public function render()
     {
         return view('livewire.navigation');

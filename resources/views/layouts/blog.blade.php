@@ -21,16 +21,13 @@
         <livewire:navigation />
     </header>
 
-    <!-- Main content area -->
-    <main class="flex-grow flex justify-center items-center">
-        @yield('content')
+    <main>
+        <livewire:page-content />
     </main>
 
-    <!-- Footer section -->
     <footer>
         <livewire:footer />
     </footer>
-
     <!-- Scroll-to-top button -->
     @include('partials.scroll-to-top')
 

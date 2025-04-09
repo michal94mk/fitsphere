@@ -14,6 +14,7 @@ use App\Livewire\PostView;
 use App\Livewire\PostDetails;
 use App\Livewire\PostsList;
 use App\Livewire\TermsPage;
+use App\Livewire\SearchResultsPage;
 use App\Livewire\Auth\Login;
 use App\Livewire\Auth\Register;
 use App\Livewire\Auth\ForgotPassword;
@@ -116,3 +117,6 @@ Route::get('email/verify/{id}/{hash}', function ($id, $hash) {
 
     return redirect()->route('profile')->with('verified', 'Your email address has been successfully verified!');
 })->middleware(['signed', 'throttle:6,1'])->name('verification.verify');
+
+
+Route::get('/search', SearchResultsPage::class)->name('search');

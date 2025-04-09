@@ -1,11 +1,15 @@
 <div>    
-    <!-- Post Content -->
     <div class="max-w-4xl mx-auto py-12 px-6 bg-white shadow-lg rounded-lg">
 
         <h1 class="text-4xl font-bold text-center mb-4">{{ $post->title }}</h1>
         <p class="text-center text-gray-500 text-sm mb-8">
             <span class="font-bold">Autor:</span> {{ $post->user->name }} | 
-            <span class="font-bold">Opublikowano:</span> {{ $post->created_at->format('d.m.Y') }}
+            <span class="font-bold">Opublikowano:</span> 
+            @if($post->created_at)
+                {{ $post->created_at->format('d.m.Y') }}
+            @else
+                <span class="italic text-gray-400">Brak daty publikacji</span>
+            @endif
         </p>
 
         @if($post->image)
@@ -14,9 +18,17 @@
                      alt="{{ $post->title }}" 
                      class="w-96 h-96 object-cover rounded-lg shadow-lg">
             </div>
+        @else
+            <p class="text-center text-gray-400">Brak obrazu do posta</p>
         @endif
 
-        <p class="text-gray-700 text-lg leading-relaxed mb-8 break-words">{{ $post->content }}</p>
+        <p class="text-gray-700 text-lg leading-relaxed mb-8 break-words">
+            @if($post->content)
+                {{ $post->content }}
+            @else
+                <span class="italic text-gray-400">Brak treści do posta</span>
+            @endif
+        </p>
     </div>
 
     <!-- Comments Section -->
@@ -44,7 +56,11 @@
                     <p class="text-gray-900 text-lg break-words">{{ $comment->content }}</p>
                     <p class="text-sm text-gray-500 mt-2">
                         Dodane przez {{ $comment->user->name }} | 
-                        {{ $comment->created_at->format('d.m.Y H:i') }}
+                        @if($comment->created_at)
+                            {{ $comment->created_at->format('d.m.Y H:i') }}
+                        @else
+                            <span class="italic text-gray-400">Brak daty komentarza</span>
+                        @endif
                     </p>
 
                     <!-- Allow the author to edit their comment -->

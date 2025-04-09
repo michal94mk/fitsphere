@@ -2,12 +2,10 @@
 
 namespace App\Livewire;
 
-use Livewire\Attributes\Url;
 use Livewire\Component;
 
 class PostsPage extends Component
 {
-    #[Url]
     public ?int $selectedPostId = null;
 
     protected $listeners = [
