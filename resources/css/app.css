@@ -3,3 +3,132 @@
 @tailwind utilities;
 
 [x-cloak] { display: none !important; }
+
+/* Główny kontener paginacji */
+.pagination-links nav {
+    display: inline-flex;
+    @apply shadow-xl rounded-lg overflow-hidden;
+}
+
+/* Przyciski paginacji */
+.pagination-links button, 
+.pagination-links span.relative.inline-flex.items-center.px-4.py-2,
+.pagination-links span.relative.inline-flex.items-center.px-2.py-2 {
+    @apply py-3 border-gray-300;
+}
+
+/* Przyciski z numerami stron - poszerzenie */
+.pagination-links button,
+.pagination-links span.relative.inline-flex.items-center.px-4.py-2 {
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+    min-width: 3rem;
+    text-align: center;
+}
+
+/* Aktywna strona */
+.pagination-links span[aria-current="page"] span {
+    background: linear-gradient(to right, #3b82f6, #2563eb);
+    @apply text-white border-blue-500;
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+    min-width: 3rem;
+}
+
+/* Ukryj informację o wynikach */
+.pagination-links p.text-sm.text-gray-700 {
+    display: none;
+}
+
+/* Ukryj wersję mobilną paginacji */
+.pagination-links div.sm\:hidden {
+    display: none;
+}
+
+/* Zawsze pokazuj pełną wersję paginacji */
+.pagination-links div.hidden.sm\:flex-1.sm\:flex.sm\:items-center.sm\:justify-between {
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+}
+
+.pagination-links div.hidden.sm\:flex-1.sm\:flex.sm\:items-center.sm\:justify-center {
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Responsive - mniejsze odstępy między numerami na małych ekranach */
+@media (max-width: 640px) {
+    .pagination-links button,
+    .pagination-links span.relative.inline-flex.items-center.px-4.py-2,
+    .pagination-links span[aria-current="page"] span {
+        padding-left: 0.875rem;
+        padding-right: 0.875rem;
+        min-width: 2.5rem;
+    }
+}
+
+/* Animacje przejść stron */
+.transition {
+    transition-property: opacity, transform;
+}
+
+.duration-100 {
+    transition-duration: 100ms;
+}
+
+.duration-150 {
+    transition-duration: 150ms;
+}
+
+.duration-200 {
+    transition-duration: 200ms;
+}
+
+.duration-250 {
+    transition-duration: 250ms;
+}
+
+.ease-in {
+    transition-timing-function: cubic-bezier(0.4, 0, 1, 1);
+}
+
+.ease-out {
+    transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+}
+
+.transform {
+    --transform-translate-x: 0;
+    --transform-translate-y: 0;
+    --transform-rotate: 0;
+    --transform-skew-x: 0;
+    --transform-skew-y: 0;
+    --transform-scale-x: 1;
+    --transform-scale-y: 1;
+    transform: translateX(var(--transform-translate-x)) translateY(var(--transform-translate-y)) rotate(var(--transform-rotate)) skewX(var(--transform-skew-x)) skewY(var(--transform-skew-y)) scaleX(var(--transform-scale-x)) scaleY(var(--transform-scale-y));
+}
+
+.scale-98 {
+    --transform-scale-x: 0.98;
+    --transform-scale-y: 0.98;
+}
+
+.scale-99 {
+    --transform-scale-x: 0.99;
+    --transform-scale-y: 0.99;
+}
+
+.scale-100 {
+    --transform-scale-x: 1;
+    --transform-scale-y: 1;
+}
+
+.opacity-0 {
+    opacity: 0;
+}
+
+.opacity-100 {
+    opacity: 1;
+}

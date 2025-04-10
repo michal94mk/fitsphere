@@ -21,6 +21,7 @@ class UpdatePasswordForm extends Component
 
         $user = Auth::user();
 
+        // Verify the current password before allowing changes
         if (!Hash::check($this->current_password, $user->password)) {
             $this->addError('current_password', 'Obecne hasło jest nieprawidłowe.');
             return;

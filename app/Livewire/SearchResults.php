@@ -43,7 +43,7 @@ class SearchResults extends Component
                       ->orWhere('content', 'like', '%'.$this->searchQuery.'%');
             })
             ->latest()
-            ->paginate(10);
+            ->paginate(9);
 
         return view('livewire.search-results', compact('posts'));
     }

@@ -1,24 +1,45 @@
 <div>
-    <!-- Dynamic page content based on currentPage -->
-    @if($currentPage === 'home')
-        <livewire:home-page wire:key="home-page" />
-    @elseif($currentPage === 'posts')
-        <livewire:posts-page wire:key="posts-page" />
-    @elseif($currentPage === 'about')
-        <livewire:about-page wire:key="about-page" />
-    @elseif($currentPage === 'contact')
-        <livewire:contact-page wire:key="contact-page" />
-    @elseif($currentPage === 'terms')
-        <livewire:terms-page wire:key="terms-page" />
-    @elseif($currentPage === 'login')
-        <livewire:auth.login wire:key="login-page" />
-    @elseif($currentPage === 'register')
-        <livewire:auth.register wire:key="register-page" />
-    @elseif($currentPage === 'profile')
-        <livewire:profile.profile wire:key="profile-page" />
-    @elseif($currentPage === 'forgot-password')
-        <livewire:auth.forgot-password wire:key="forgot-password-page" />
-    @elseif($currentPage === 'search')
-        <livewire:search-results-page wire:key="search-results-page" />
-    @endif
+    <div x-data="{ 
+        show: true, 
+        currentContent: @entangle('currentPage')
+    }"
+         x-init="
+            $watch('currentContent', () => {
+                show = false;
+                setTimeout(() => {
+                    show = true;
+                }, 100);
+            })
+         ">
+        <div x-show="show" 
+             x-transition:enter="transition ease-out duration-250"
+             x-transition:enter-start="opacity-0 transform scale-99"
+             x-transition:enter-end="opacity-100 transform scale-100"
+             x-transition:leave="transition ease-in duration-100"
+             x-transition:leave-start="opacity-100 transform scale-100"
+             x-transition:leave-end="opacity-0 transform scale-99">
+            
+            @if($currentPage === 'home')
+                <livewire:home-page />
+            @elseif($currentPage === 'about')
+                <livewire:about-page />
+            @elseif($currentPage === 'contact')
+                <livewire:contact-page />
+            @elseif($currentPage === 'search')
+                <livewire:search-results-page />
+            @elseif($currentPage === 'terms')
+                <livewire:terms-page />
+            @elseif($currentPage === 'posts')
+                <livewire:posts-page />
+            @elseif($currentPage === 'profile')
+                <livewire:profile.profile />
+            @elseif($currentPage === 'login')
+                <livewire:auth.login />
+            @elseif($currentPage === 'register')
+                <livewire:auth.register />
+            @else
+                <livewire:home-page />
+            @endif
+        </div>
+    </div>
 </div>

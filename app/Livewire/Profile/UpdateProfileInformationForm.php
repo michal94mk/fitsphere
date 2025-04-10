@@ -6,6 +6,10 @@ use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 
+/**
+ * Profile information update component.
+ * Handles the user profile editing functionality including name and email updates.
+ */
 class UpdateProfileInformationForm extends Component
 {
     public $name;
@@ -27,8 +31,13 @@ class UpdateProfileInformationForm extends Component
             'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
         ]);
 
-        $user->update($data);
-        session()->flash('status', 'Profil został zaktualizowany.');
+        // Only update if data has changed
+        if ($user->name !== $data['name'] || $user->email !== $data['email']) {
+            $user->update($data);
+            session()->flash('status', 'Profil został zaktualizowany.');
+        } else {
+            session()->flash('info', 'Nie wprowadzono żadnych zmian w profilu.');
+        }
     }
 
     public function render()

@@ -54,8 +54,8 @@ Route::get('/email/verify/{id}/{hash}', VerifyEmail::class)->name('verification.
 Route::get('/password/confirm', ConfirmPassword::class)->name('password.confirm');
 
 // Profile routes
-Route::get('/profile', Profile::class)->name('profile');
-Route::get('/profile/password', UpdatePassword::class)->name('profile.password');
+Route::get('/profile', \App\Livewire\Profile\Profile::class)->name('profile');
+Route::get('/profile/password', \App\Livewire\Profile\UpdatePassword::class)->name('profile.password');
 
 // Logout route
 Route::post('/logout', function () {
