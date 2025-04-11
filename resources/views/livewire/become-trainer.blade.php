@@ -22,6 +22,9 @@
                     </h3>
                     <div class="mt-2 text-sm text-green-700">
                         <p>Dziękujemy za rejestrację jako trener. Twoje zgłoszenie zostało przyjęte i oczekuje na weryfikację.</p>
+                        @if($verification_message)
+                        <p class="mt-2 font-semibold">Sprawdź swoją skrzynkę email - wysłaliśmy Ci link do weryfikacji adresu email. Musisz zweryfikować swój adres email, aby aktywować konto.</p>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -29,7 +32,7 @@
     @else
         <div class="bg-white shadow-md rounded-lg overflow-hidden">
             <div class="px-4 py-5 sm:p-6">
-                <form wire:submit.prevent="save" class="space-y-6">
+                <form wire:submit="save" class="space-y-6">
                     <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2">
                         <div>
                             <label for="name" class="block text-sm font-medium text-gray-700">Imię i nazwisko</label>
@@ -71,9 +74,33 @@
                         </div>
 
                         <div>
+                            <label for="experience" class="block text-sm font-medium text-gray-700">Lata doświadczenia</label>
+                            <div class="mt-1">
+                                <input type="number" id="experience" wire:model="experience" min="0" max="100" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
+                            </div>
+                            @error('experience') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
+                        </div>
+
+                        <div class="sm:col-span-2">
+                            <label for="description" class="block text-sm font-medium text-gray-700">Krótki opis</label>
+                            <div class="mt-1">
+                                <textarea id="description" wire:model="description" rows="2" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"></textarea>
+                            </div>
+                            @error('description') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
+                        </div>
+
+                        <div class="sm:col-span-2">
+                            <label for="biography" class="block text-sm font-medium text-gray-700">Pełna biografia</label>
+                            <div class="mt-1">
+                                <textarea id="biography" wire:model="biography" rows="4" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"></textarea>
+                            </div>
+                            @error('biography') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
+                        </div>
+
+                        <div>
                             <label for="image" class="block text-sm font-medium text-gray-700">Zdjęcie</label>
                             <div class="mt-1">
-                                <input type="file" id="image" wire:model="image">
+                                <input type="file" id="image" wire:model.live="image">
                             </div>
                             @error('image') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
                             
@@ -85,19 +112,26 @@
                         </div>
                     </div>
 
-                    <div>
-                        <label for="description" class="block text-sm font-medium text-gray-700">O sobie</label>
-                        <div class="mt-1">
-                            <textarea id="description" wire:model="description" rows="4" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"></textarea>
+                    <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <svg class="h-5 w-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm text-yellow-700">
+                                    Po rejestracji otrzymasz email z linkiem weryfikacyjnym. Weryfikacja adresu email jest wymagana, aby Twoje konto zostało aktywowane.
+                                </p>
+                            </div>
                         </div>
-                        @error('description') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
                     </div>
 
                     <div class="pt-5">
                         <div class="flex justify-end">
-                            <button type="button" class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50" onclick="window.location.href='{{ route('home') }}'">
+                            <a href="{{ route('home') }}" class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50">
                                 Anuluj
-                            </button>
+                            </a>
                             <button type="submit" class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
                                 Wyślij zgłoszenie
                             </button>

@@ -5,10 +5,7 @@
             <p class="text-gray-600">Przeglądaj informacje o trenerze</p>
         </div>
         <div>
-            <a href="{{ route('admin.trainers.edit', $trainer->id) }}" class="px-4 py-2 bg-yellow-600 text-white rounded hover:bg-yellow-700 mr-2">
-                Edytuj
-            </a>
-            <a href="{{ route('admin.trainers.index') }}" class="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700">
+            <a href="{{ route('admin.trainers.index') }}" wire:navigate class="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700">
                 Powrót
             </a>
         </div>
@@ -70,6 +67,34 @@
                         {!! nl2br(e($trainer->description ?? 'Brak opisu')) !!}
                     </dd>
                 </div>
+                <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt class="text-sm font-medium text-gray-500">Pełna biografia</dt>
+                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                        {!! nl2br(e($trainer->bio ?? 'Brak pełnej biografii')) !!}
+                    </dd>
+                </div>
+                <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt class="text-sm font-medium text-gray-500">Status zatwierdzenia</dt>
+                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                        @if ($trainer->is_approved)
+                            <span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
+                                Zatwierdzony
+                            </span>
+                        @else
+                            <span class="px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                                Oczekujący na zatwierdzenie
+                            </span>
+                        @endif
+                    </dd>
+                </div>
+                @if(isset($trainer->experience))
+                <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt class="text-sm font-medium text-gray-500">Doświadczenie (lata)</dt>
+                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                        {{ $trainer->experience ?? '0' }}
+                    </dd>
+                </div>
+                @endif
             </dl>
         </div>
     </div>

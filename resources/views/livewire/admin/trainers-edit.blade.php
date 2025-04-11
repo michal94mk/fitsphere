@@ -4,22 +4,35 @@
 
 <div>
     <div class="container mx-auto p-6">
+        <!-- Alerts -->
+        @if (session()->has('success'))
+            <div class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
+                <span class="block sm:inline">{{ session('success') }}</span>
+                <button type="button" wire:click="$set('alertSuccess', null)" class="absolute top-0 bottom-0 right-0 px-4 py-3">
+                    <svg class="fill-current h-6 w-6 text-green-500" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><title>Close</title><path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z"/></svg>
+                </button>
+            </div>
+        @endif
+        
+        @if (session()->has('error'))
+            <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                <span class="block sm:inline">{{ session('error') }}</span>
+                <button type="button" wire:click="$set('alertError', null)" class="absolute top-0 bottom-0 right-0 px-4 py-3">
+                    <svg class="fill-current h-6 w-6 text-red-500" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><title>Close</title><path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z"/></svg>
+                </button>
+            </div>
+        @endif
+
         <div class="flex items-center justify-between mb-6">
             <h1 class="text-2xl font-bold">Edytuj trenera</h1>
-            <a href="" 
+            <a href="{{ route('admin.trainers.index') }}" wire:navigate 
                class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 transition">
                 Powrót do listy
             </a>
         </div>
 
-        @if (session()->has('message'))
-            <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6">
-                {{ session('message') }}
-            </div>
-        @endif
-
         <div class="bg-white rounded-lg shadow overflow-hidden">
-            <form wire:submit.prevent="updateTrainer">
+            <form wire:submit="save">
                 <div class="p-6 space-y-6">
                     <!-- User information section -->
                     <div>
@@ -44,20 +57,28 @@
                     <!-- Password change section (optional) -->
                     <div>
                         <h2 class="text-lg font-medium text-gray-900 border-b pb-2">Zmiana hasła (opcjonalnie)</h2>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
-                            <div>
-                                <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Nowe hasło</label>
-                                <input type="password" id="password" wire:model="password" 
-                                       class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                                <p class="text-xs text-gray-500 mt-1">Pozostaw puste, aby zachować obecne hasło.</p>
-                                @error('password') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
-                            </div>
+                        <div class="mt-4">
+                            <label class="inline-flex items-center mb-4">
+                                <input type="checkbox" wire:model.live="changePassword" wire:click="toggleChangePassword" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                                <span class="ml-2 text-sm text-gray-700">Zmień hasło</span>
+                            </label>
                             
-                            <div>
-                                <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-1">Potwierdź nowe hasło</label>
-                                <input type="password" id="password_confirmation" wire:model="password_confirmation" 
-                                       class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                            @if($changePassword)
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Nowe hasło</label>
+                                    <input type="password" id="password" wire:model="password" 
+                                           class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                                    @error('password') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                                </div>
+                                
+                                <div>
+                                    <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-1">Potwierdź nowe hasło</label>
+                                    <input type="password" id="password_confirmation" wire:model="password_confirmation" 
+                                           class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                                </div>
                             </div>
+                            @endif
                         </div>
                     </div>
                     
@@ -77,6 +98,13 @@
                                 <input type="number" id="experience" wire:model="experience" min="0" max="100" 
                                        class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                                 @error('experience') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                            </div>
+
+                            <div class="md:col-span-2">
+                                <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Krótki opis</label>
+                                <textarea id="description" rows="2" wire:model="description" 
+                                          class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"></textarea>
+                                @error('description') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                             </div>
 
                             <div class="md:col-span-2">
@@ -110,7 +138,7 @@
                                     <div class="flex items-center">
                                         <label for="photo" class="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none">
                                             <span>{{ $existing_photo ? 'Zmień zdjęcie' : 'Prześlij zdjęcie' }}</span>
-                                            <input id="photo" wire:model="photo" type="file" class="sr-only" accept="image/*">
+                                            <input id="photo" wire:model.live="photo" type="file" class="sr-only" accept="image/*">
                                         </label>
                                     </div>
                                     <p class="text-xs text-gray-500">PNG, JPG, do 1MB</p>

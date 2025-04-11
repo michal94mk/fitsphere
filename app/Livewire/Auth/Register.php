@@ -68,7 +68,7 @@ class Register extends Component
         // Use a distinct session flag to avoid conflicts with other form notifications
         session()->flash('registration_success', 'Udało się zarejestrować! Proszę potwierdzić swój adres e-mail.');
 
-        return $this->redirect(route('profile'), navigate: true);
+        return $this->redirect(route('registration.success'), navigate: true);
     }
 
     /**

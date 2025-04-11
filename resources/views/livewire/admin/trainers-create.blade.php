@@ -6,14 +6,14 @@
     <div class="container mx-auto p-6">
         <div class="flex items-center justify-between mb-6">
             <h1 class="text-2xl font-bold">Dodaj nowego trenera</h1>
-            <a href="" 
+            <a href="{{ route('admin.trainers.index') }}" wire:navigate
                class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 transition">
                 Powrót do listy
             </a>
         </div>
 
         <div class="bg-white rounded-lg shadow overflow-hidden">
-            <form wire:submit.prevent="createTrainer">
+            <form wire:submit="save">
                 <div class="p-6 space-y-6">
                     <!-- User information section -->
                     <div>
@@ -67,6 +67,13 @@
                             </div>
 
                             <div class="md:col-span-2">
+                                <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Krótki opis</label>
+                                <textarea id="description" rows="2" wire:model="description" 
+                                          class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"></textarea>
+                                @error('description') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                            </div>
+
+                            <div class="md:col-span-2">
                                 <label for="biography" class="block text-sm font-medium text-gray-700 mb-1">Biografia</label>
                                 <textarea id="biography" rows="4" wire:model="biography" 
                                           class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"></textarea>
@@ -95,7 +102,7 @@
                                     <div class="flex items-center">
                                         <label for="photo" class="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none">
                                             <span>Prześlij zdjęcie</span>
-                                            <input id="photo" wire:model="photo" type="file" class="sr-only" accept="image/*">
+                                            <input id="photo" wire:model.live="photo" type="file" class="sr-only" accept="image/*">
                                         </label>
                                     </div>
                                     <p class="text-xs text-gray-500">PNG, JPG, do 1MB</p>

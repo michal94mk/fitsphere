@@ -71,6 +71,7 @@ Route::get('/contact', ContactPage::class)->name('contact');
 Route::get('/terms', TermsPage::class)->name('terms');
 Route::get('/become-trainer', \App\Livewire\BecomeTrainer::class)->name('become.trainer');
 Route::get('/search', SearchResultsPage::class)->name('search');
+Route::get('registration-success', \App\Livewire\RegistrationSuccess::class)->name('registration.success');
 
 // -----------------------------
 // Public Authentication Routes

@@ -6,6 +6,8 @@ use App\Models\User;
 use App\Models\Post;
 use App\Models\Trainer;
 use App\Models\Comment;
+use App\Mail\TrainerApproved;
+use Illuminate\Support\Facades\Mail;
 use Livewire\Component;
 use Carbon\Carbon;
 
@@ -63,7 +65,13 @@ class Dashboard extends Component
         // Update the stats
         $this->stats['pendingTrainers'] = Trainer::where('is_approved', false)->count();
         
-        session()->flash('success', "Trener {$trainer->name} został zatwierdzony.");
+        // Wysyłka emaila z powiadomieniem
+        try {
+            Mail::to($trainer->email)->send(new TrainerApproved($trainer));
+            session()->flash('success', "Trener {$trainer->name} został zatwierdzony, a powiadomienie email zostało wysłane.");
+        } catch (\Exception $e) {
+            session()->flash('success', "Trener {$trainer->name} został zatwierdzony, ale wystąpił błąd podczas wysyłania powiadomienia email: {$e->getMessage()}");
+        }
     }
     
     public function render()
