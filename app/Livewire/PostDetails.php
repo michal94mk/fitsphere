@@ -51,6 +51,6 @@ class PostDetails extends Component
                 ->with('user')
                 ->latest()
                 ->paginate(5)
-        ]);
+        ])->layout('layouts.blog');
     }
 }

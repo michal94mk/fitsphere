@@ -15,7 +15,7 @@
             </h2>
             <p class="mt-2 text-sm text-gray-600">
                 Lub
-                <a href="{{ route('login') }}" class="font-medium text-blue-600 hover:text-blue-500">
+                <a href="{{ route('login') }}" wire:navigate wire:prefetch class="font-medium text-blue-600 hover:text-blue-500">
                     zaloguj się na istniejące konto
                 </a>
             </p>

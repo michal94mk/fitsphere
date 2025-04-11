@@ -41,4 +41,10 @@
             Resetuj hasło
         </button>
     </form>
+    
+    <div class="mt-6 text-center">
+        <a href="{{ route('login') }}" wire:navigate wire:prefetch class="text-blue-600 hover:text-blue-800 font-medium">
+            Wróć do logowania
+        </a>
+    </div>
 </div>

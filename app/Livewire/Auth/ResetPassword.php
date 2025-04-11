@@ -42,7 +42,8 @@ class ResetPassword extends Component
         );
 
         if ($status == Password::PASSWORD_RESET) {
-            return redirect()->route('login')->with('status', 'Hasło zostało zresetowane!');
+            session()->flash('status', 'Hasło zostało zresetowane!');
+            return $this->redirect(route('login'), navigate: true);
         } else {
             $this->addError('email', 'Błąd przy resetowaniu hasła.');
         }

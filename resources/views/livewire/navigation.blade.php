@@ -1,8 +1,4 @@
-<div x-data="{ currentPage: @entangle('currentPage').defer, mobileOpen: false, profileDropdownOpen: false, isNavigating: false }"
-     x-init="$watch('currentPage', value => { 
-         window.dispatchEvent(new CustomEvent('page-changed'));
-         history.pushState(null, '', '/' + value);
-     })">
+<div x-data="{ mobileOpen: false, profileDropdownOpen: false }">
     <div>
         <nav class="bg-gray-800">
             <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
@@ -26,39 +22,35 @@
                     
                     <!-- Lewa strona - przyciski nawigacyjne desktop -->
                     <div class="hidden sm:flex sm:items-center sm:space-x-2 md:space-x-4">
-                        <button @click="if(!isNavigating) { isNavigating = true; currentPage='home'; setTimeout(() => isNavigating = false, 350); }" 
-                                wire:click="goToPage('home')"
-                                :disabled="isNavigating"
-                                class="rounded-md px-2 md:px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white disabled:opacity-50">
+                        <a href="{{ route('home') }}" 
+                           wire:navigate
+                           class="rounded-md px-2 md:px-3 py-2 text-sm font-medium {{ $currentPage == 'home' ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
                             Home
-                        </button>
-                        <button @click="if(!isNavigating) { isNavigating = true; currentPage='posts'; setTimeout(() => isNavigating = false, 350); }" 
-                                wire:click="goToPage('posts')"
-                                :disabled="isNavigating"
-                                class="rounded-md px-2 md:px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white disabled:opacity-50">
+                        </a>
+                        <a href="{{ route('posts.list') }}"
+                           wire:navigate
+                           class="rounded-md px-2 md:px-3 py-2 text-sm font-medium {{ $currentPage == 'posts' ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
                             Posts
-                        </button>
-                        <button @click="if(!isNavigating) { isNavigating = true; currentPage='about'; setTimeout(() => isNavigating = false, 350); }" 
-                                wire:click="goToPage('about')"
-                                :disabled="isNavigating"
-                                class="rounded-md px-2 md:px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white disabled:opacity-50">
-                            About
-                        </button>
-                        <button @click="if(!isNavigating) { isNavigating = true; currentPage='contact'; setTimeout(() => isNavigating = false, 350); }" 
-                                wire:click="goToPage('contact')"
-                                :disabled="isNavigating"
-                                class="rounded-md px-2 md:px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white disabled:opacity-50">
+                        </a>
+                        <a href="{{ route('trainers.list') }}"
+                           wire:navigate
+                           class="rounded-md px-2 md:px-3 py-2 text-sm font-medium {{ $currentPage == 'about' ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
+                            Trainers
+                        </a>
+                        <a href="{{ route('contact') }}"
+                           wire:navigate
+                           class="rounded-md px-2 md:px-3 py-2 text-sm font-medium {{ $currentPage == 'contact' ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
                             Contact
-                        </button>
-                        <button @click="if(!isNavigating) { isNavigating = true; currentPage='terms'; setTimeout(() => isNavigating = false, 350); }" 
-                                wire:click="goToPage('terms')"
-                                :disabled="isNavigating"
-                                class="rounded-md px-2 md:px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white disabled:opacity-50">
+                        </a>
+                        <a href="{{ route('terms') }}"
+                           wire:navigate
+                           class="rounded-md px-2 md:px-3 py-2 text-sm font-medium {{ $currentPage == 'terms' ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
                             Terms
-                        </button>
+                        </a>
                         
                         @if(auth()->check() && auth()->user()->role === 'admin')
                             <a href="{{ route('admin.dashboard') }}"
+                               wire:navigate
                                class="rounded-md px-2 md:px-3 py-2 text-sm font-medium bg-red-600 text-white hover:bg-red-700">
                                 Admin Panel
                             </a>
@@ -84,6 +76,7 @@
                                 <div x-show="dropdownOpen" x-cloak
                                      class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-50">
                                     <a href="{{ route('profile') }}"
+                                       wire:navigate
                                        class="block w-full px-4 py-2 text-gray-800 text-left hover:bg-gray-100">
                                         Profil
                                     </a>
@@ -97,18 +90,16 @@
                                 </div>
                             </div>
                         @else
-                            <button @click="if(!isNavigating) { isNavigating = true; currentPage='login'; setTimeout(() => isNavigating = false, 350); }" 
-                                    wire:click="goToPage('login')"
-                                    :disabled="isNavigating"
-                                    class="rounded-md px-2 md:px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white disabled:opacity-50">
+                            <a href="{{ route('login') }}"
+                               wire:navigate
+                               class="rounded-md px-2 md:px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">
                                 Zaloguj
-                            </button>
-                            <button @click="if(!isNavigating) { isNavigating = true; currentPage='register'; setTimeout(() => isNavigating = false, 350); }" 
-                                    wire:click="goToPage('register')"
-                                    :disabled="isNavigating"
-                                    class="rounded-md px-2 md:px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white disabled:opacity-50">
+                            </a>
+                            <a href="{{ route('register') }}"
+                               wire:navigate
+                               class="rounded-md px-2 md:px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">
                                 Rejestracja
-                            </button>
+                            </a>
                         @endauth
                     </div>
                 </div>
@@ -118,39 +109,41 @@
             <div x-show="mobileOpen" x-transition class="sm:hidden bg-gray-800">
                 <div class="px-2 pt-2 pb-3 space-y-1">
                
-                    <button @click="if(!isNavigating) { isNavigating = true; currentPage='home'; mobileOpen = false; setTimeout(() => isNavigating = false, 350); }" 
-                            wire:click="goToPage('home')"
-                            :disabled="isNavigating"
-                            class="block w-full text-center rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white disabled:opacity-50">
+                    <a href="{{ route('home') }}"
+                       wire:navigate
+                       @click="mobileOpen = false"
+                       class="block w-full text-center rounded-md px-3 py-2 text-base font-medium {{ $currentPage == 'home' ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
                         Home
-                    </button>
-                    <button @click="if(!isNavigating) { isNavigating = true; currentPage='posts'; mobileOpen = false; setTimeout(() => isNavigating = false, 350); }" 
-                            wire:click="goToPage('posts')"
-                            :disabled="isNavigating"
-                            class="block w-full text-center rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white disabled:opacity-50">
+                    </a>
+                    <a href="{{ route('posts.list') }}"
+                       wire:navigate
+                       @click="mobileOpen = false"
+                       class="block w-full text-center rounded-md px-3 py-2 text-base font-medium {{ $currentPage == 'posts' ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
                         Posts
-                    </button>
-                    <button @click="if(!isNavigating) { isNavigating = true; currentPage='about'; mobileOpen = false; setTimeout(() => isNavigating = false, 350); }" 
-                            wire:click="goToPage('about')"
-                            :disabled="isNavigating"
-                            class="block w-full text-center rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white disabled:opacity-50">
-                        About
-                    </button>
-                    <button @click="if(!isNavigating) { isNavigating = true; currentPage='contact'; mobileOpen = false; setTimeout(() => isNavigating = false, 350); }" 
-                            wire:click="goToPage('contact')"
-                            :disabled="isNavigating"
-                            class="block w-full text-center rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white disabled:opacity-50">
+                    </a>
+                    <a href="{{ route('trainers.list') }}"
+                       wire:navigate
+                       @click="mobileOpen = false"
+                       class="block w-full text-center rounded-md px-3 py-2 text-base font-medium {{ $currentPage == 'about' ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
+                        Trainers
+                    </a>
+                    <a href="{{ route('contact') }}"
+                       wire:navigate
+                       @click="mobileOpen = false"
+                       class="block w-full text-center rounded-md px-3 py-2 text-base font-medium {{ $currentPage == 'contact' ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
                         Contact
-                    </button>
-                    <button @click="if(!isNavigating) { isNavigating = true; currentPage='terms'; mobileOpen = false; setTimeout(() => isNavigating = false, 350); }" 
-                            wire:click="goToPage('terms')"
-                            :disabled="isNavigating"
-                            class="block w-full text-center rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white disabled:opacity-50">
+                    </a>
+                    <a href="{{ route('terms') }}"
+                       wire:navigate
+                       @click="mobileOpen = false"
+                       class="block w-full text-center rounded-md px-3 py-2 text-base font-medium {{ $currentPage == 'terms' ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
                         Terms
-                    </button>
+                    </a>
                     
                     @if(auth()->check() && auth()->user()->role === 'admin')
-                        <a href="{{ route('admin.dashboard') }}" @click="mobileOpen = false"
+                        <a href="{{ route('admin.dashboard') }}"
+                           wire:navigate
+                           @click="mobileOpen = false"
                            class="block w-full text-center rounded-md px-3 py-2 text-base font-medium bg-red-600 text-white hover:bg-red-700">
                             Admin Panel
                         </a>
@@ -165,12 +158,12 @@
                             </button>
                             <div x-show="dropdownOpen" x-cloak
                                  class="mt-2 w-full bg-white border border-gray-300 rounded-md shadow-md">
-                                <button @click="if(!isNavigating) { isNavigating = true; currentPage='profile'; dropdownOpen = false; mobileOpen = false; setTimeout(() => isNavigating = false, 350); }"
-                                        wire:click="goToPage('profile')"
-                                        :disabled="isNavigating"
-                                        class="block w-full text-center px-4 py-2 text-gray-900 hover:bg-gray-100 disabled:opacity-50">
+                                <a href="{{ route('profile') }}"
+                                   wire:navigate
+                                   @click="dropdownOpen = false; mobileOpen = false"
+                                   class="block w-full text-center px-4 py-2 text-gray-900 hover:bg-gray-100">
                                     Profil
-                                </button>
+                                </a>
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
                                     <button type="submit"
@@ -181,18 +174,18 @@
                             </div>
                         </div>
                     @else
-                        <button @click="if(!isNavigating) { isNavigating = true; currentPage='login'; mobileOpen = false; setTimeout(() => isNavigating = false, 350); }" 
-                                wire:click="goToPage('login')"
-                                :disabled="isNavigating"
-                                class="block w-full text-center rounded-md px-4 py-2 text-gray-900 bg-gray-200 hover:bg-gray-300 disabled:opacity-50">
+                        <a href="{{ route('login') }}"
+                           wire:navigate
+                           @click="mobileOpen = false"
+                           class="block w-full text-center rounded-md px-4 py-2 text-gray-900 bg-gray-200 hover:bg-gray-300">
                             Zaloguj się
-                        </button>
-                        <button @click="if(!isNavigating) { isNavigating = true; currentPage='register'; mobileOpen = false; setTimeout(() => isNavigating = false, 350); }" 
-                                wire:click="goToPage('register')"
-                                :disabled="isNavigating"
-                                class="block w-full text-center rounded-md px-4 py-2 text-gray-900 bg-gray-200 hover:bg-gray-300 disabled:opacity-50">
+                        </a>
+                        <a href="{{ route('register') }}"
+                           wire:navigate
+                           @click="mobileOpen = false"
+                           class="block w-full text-center rounded-md px-4 py-2 text-gray-900 bg-gray-200 hover:bg-gray-300">
                             Zarejestruj się
-                        </button>
+                        </a>
                     @endauth
                 </div>
             </div>
@@ -203,14 +196,12 @@
             <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="relative">
                     <input type="text"
-                           wire:model.defer="searchQuery"
-                           wire:keydown.enter="if(!isNavigating) { goToSearch(); }"
+                           wire:model="searchQuery"
+                           wire:keydown.enter="goToSearch"
                            placeholder="Wyszukaj artykuły, porady, tematy..."
                            class="w-full p-3 pl-5 pr-24 rounded-lg border-0 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent shadow-md text-gray-700 text-base" />
-                    <button @click="if(!isNavigating) { goToSearch(); }"
-                            wire:click="goToSearch"
-                            :disabled="isNavigating"
-                            class="absolute right-0 top-0 bottom-0 h-full text-white bg-blue-600 hover:bg-blue-700 rounded-r-lg px-5 disabled:opacity-50 transition-all duration-200 ease-in-out shadow-md flex items-center justify-center">
+                    <button wire:click="goToSearch"
+                            class="absolute right-0 top-0 bottom-0 h-full text-white bg-blue-600 hover:bg-blue-700 rounded-r-lg px-5 transition-all duration-200 ease-in-out shadow-md flex items-center justify-center">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                         </svg>

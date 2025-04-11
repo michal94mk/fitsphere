@@ -3,37 +3,63 @@
 namespace App\Livewire;
 
 use Livewire\Component;
+use App\Models\Post;
+use App\Models\Category;
+use Illuminate\Support\Facades\Route;
 
 class PostsPage extends Component
 {
-    public ?int $selectedPostId = null;
-
-    protected $listeners = [
-        'showPostDetails' => 'goToPost',
-        'navigateToPosts' => 'resetSelectedPost'
+    
+    public $searchQuery = '';
+    public $category = '';
+    public $sortBy = 'newest';
+    
+    protected $queryString = [
+        'searchQuery' => ['except' => ''],
+        'category' => ['except' => ''],
+        'sortBy' => ['except' => 'newest'],
     ];
 
-    public function mount()
-    {
-        $this->selectedPostId = session('posts_selectedPostId', null);
-    }
-
+    
     public function goToPost($postId)
     {
-        $this->selectedPostId = $postId;
-        session(['posts_selectedPostId' => $postId]);
+        return $this->redirect(route('post.show', ['postId' => $postId]), navigate: true);
     }
-
-    public function resetSelectedPost()
-    {
-        $this->reset('selectedPostId');
-        session()->forget('posts_selectedPostId');
-    }
-
+    
     public function render()
     {
+        $query = Post::query();
+        
+        if (!empty($this->searchQuery)) {
+            $query->where(function($q) {
+                $q->where('title', 'like', '%' . $this->searchQuery . '%')
+                  ->orWhere('content', 'like', '%' . $this->searchQuery . '%');
+            });
+        }
+        
+        if (!empty($this->category)) {
+            $query->where('category_id', $this->category);
+        }
+        
+        switch ($this->sortBy) {
+            case 'oldest':
+                $query->oldest();
+                break;
+            case 'popular':
+                $query->orderBy('views', 'desc');
+                break;
+            case 'newest':
+            default:
+                $query->latest();
+                break;
+        }
+        
+        $posts = $query->paginate(9);
+        $categories = Category::all();
+        
         return view('livewire.posts-page', [
-            'posts' => \App\Models\Post::latest()->get()
-        ]);
+            'posts' => $posts,
+            'categories' => $categories,
+        ])->layout('layouts.blog');
     }
 }

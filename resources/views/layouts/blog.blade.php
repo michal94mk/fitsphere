@@ -22,7 +22,7 @@
     </header>
 
     <main>
-        <livewire:page-content />
+        {{ $slot }}
     </main>
 
     <footer>

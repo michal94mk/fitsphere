@@ -12,7 +12,7 @@ use App\Livewire\AboutPage;
 use App\Livewire\ContactPage;
 use App\Livewire\PostView;
 use App\Livewire\PostDetails;
-use App\Livewire\PostsList;
+use App\Livewire\PostsPage;
 use App\Livewire\TermsPage;
 use App\Livewire\SearchResultsPage;
 use App\Livewire\Auth\Login;
@@ -23,6 +23,9 @@ use App\Livewire\Auth\VerifyEmail;
 use App\Livewire\Auth\ConfirmPassword;
 use App\Livewire\Profile\Profile;
 use App\Livewire\Profile\UpdatePassword;
+use App\Livewire\TrainerProfilePage;
+use App\Livewire\TrainersList;
+use App\Livewire\TrainerDetails;
 
 use Illuminate\Auth\Events\Verified;
 use App\Models\User;
@@ -34,11 +37,17 @@ use Illuminate\Support\Facades\Route;
 // Public Routes - Available to all users
 // =============================
 
+// Root route redirects to home
+Route::get('/', function () {
+    return redirect()->route('home');
+});
+
 // Main public pages
 Route::get('/home', HomePage::class)->name('home');
-Route::get('/posts', PostsList::class)->name('posts');
+Route::get('/posts', PostsPage::class)->name('posts.list');
 Route::get('/post/{postId}', PostDetails::class)->name('post.show');
-Route::get('/about', AboutPage::class)->name('about');
+Route::get('/about', TrainersList::class)->name('trainers.list');
+Route::get('/trainer/{trainerId}', TrainerDetails::class)->name('trainer.show');
 Route::get('/contact', ContactPage::class)->name('contact');
 Route::get('/terms', TermsPage::class)->name('terms');
 

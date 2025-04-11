@@ -19,5 +19,10 @@ class DatabaseSeeder extends Seeder
             'name' => 'Test User',
             'email' => 'test@example.com',
         ]);
+        
+        // Dodajemy przykładowych trenerów
+        $this->call([
+            TrainerSeeder::class,
+        ]);
     }
 }

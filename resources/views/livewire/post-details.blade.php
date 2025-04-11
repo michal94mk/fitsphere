@@ -1,3 +1,4 @@
+<div>
 <div class="max-w-4xl mx-auto px-6">
     <div class="bg-white shadow-md rounded-lg mb-10 overflow-hidden">
         <!-- Post Header Section -->
@@ -188,4 +189,5 @@
             @endauth
         </div>
     </div>
+</div>
 </div>

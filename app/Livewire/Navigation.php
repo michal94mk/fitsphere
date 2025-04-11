@@ -9,53 +9,32 @@ use Illuminate\Support\Facades\Request;
 class Navigation extends Component
 {
     public string $currentPage = 'home';
-    public ?string $successMessage = null;
     public string $searchQuery = '';
-    public $toastMessage = '';
-
-
-    protected $listeners = ['pageChanged' => 'updateCurrentPage'];
+    public string $toastMessage = '';
 
     public function mount()
     {
-        $path = Request::path() ?: 'home';
-        $allowedPages = [
-            'home', 'posts', 'about', 'contact', 'terms',
-            'admin', 'login', 'register', 'forgot-password', 'profile',
-            'search'
-        ];
-
-        // Jeśli URL jest 'search', ustawiamy currentPage na 'search'
-        if ($path === 'search') {
-            $this->currentPage = 'search';
-        } else {
-            $this->currentPage = in_array($path, $allowedPages) ? $path : 'home';
+        // Set the current page based on the URL path
+        $path = Request::path();
+        
+        // Extract base path for pages with parameters
+        if (str_contains($path, '/')) {
+            $path = explode('/', $path)[0];
         }
         
-        Session::put('currentPage', $this->currentPage);
-    }
-
-    public function goToPage($page)
-    {
-        $this->successMessage = null;
-
-        if ($page === 'home') {
-            Session::forget('home_selectedPostId');
-            $this->dispatch('navigateToHome');
-        } elseif ($page === 'posts') {
-            Session::forget('posts_selectedPostId');
-            $this->dispatch('navigateToPosts');
-        } elseif ($page === 'search') {
-            Session::forget('search_selectedPostId');
-            $this->goToSearch();
-            return;
+        // Map path to page names
+        if ($path === '' || $path === '/') {
+            $this->currentPage = 'home';
+        } elseif ($path === 'post') {
+            $this->currentPage = 'posts';
+        } elseif ($path === 'trainer') {
+            $this->currentPage = 'about'; // We keep 'about' for trainers for backwards compatibility
+        } elseif (in_array($path, ['home', 'posts', 'about', 'contact', 'terms', 'search', 'login', 'register', 'forgot-password', 'profile'])) {
+            $this->currentPage = $path;
+        } else {
+            $this->currentPage = 'home';
         }
-
-        $this->currentPage = $page;
-        Session::put('currentPage', $page);
-        $this->dispatch('navigateToPage', $page);
     }
-
 
     public function resetToast()
     {
@@ -69,20 +48,11 @@ class Navigation extends Component
             return;
         }
     
-        Session::put('searchQuery', $this->searchQuery);
-        
+        // Set the current page to search
         $this->currentPage = 'search';
-        Session::put('currentPage', 'search');
-    
-        $this->dispatch('navigateToPage', 'search');
         
-        $this->dispatch('performSearch', $this->searchQuery);
-    }
-
-    public function updateCurrentPage($page)
-    {
-        $this->currentPage = $page;
-        Session::put('currentPage', $page);
+        // Redirect to search results page with the query
+        return $this->redirect(route('search', ['q' => $this->searchQuery]), navigate: true);
     }
 
     public function render()

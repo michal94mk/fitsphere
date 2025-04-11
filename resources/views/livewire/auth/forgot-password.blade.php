@@ -52,7 +52,8 @@
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                         </svg>
-                        Wyślij link resetujący
+                        <span wire:loading.remove>Wyślij link resetujący</span>
+                        <span wire:loading>Ładowanie...</span>
                     </button>
                 </div>
             </form>
@@ -60,9 +61,13 @@
             <div class="mt-6 flex items-center justify-center">
                 <span class="text-sm text-gray-600">
                     Pamiętasz hasło? 
-                    <button wire:click="$dispatch('navigateToPage', 'login')" class="text-blue-600 hover:text-blue-800 font-medium transition-colors">
-                        Zaloguj się
-                    </button>
+                    <a href="{{ route('login') }}" 
+                       wire:navigate 
+                       wire:prefetch
+                       class="text-blue-600 hover:text-blue-800 font-medium transition-colors">
+                        <span wire:loading.remove>Zaloguj się</span>
+                        <span wire:loading>Ładowanie...</span>
+                    </a>
                 </span>
             </div>
         </div>
