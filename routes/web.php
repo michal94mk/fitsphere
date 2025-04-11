@@ -69,6 +69,7 @@ Route::get('/about', TrainersList::class)->name('trainers.list');
 Route::get('/trainer/{trainerId}', TrainerDetails::class)->name('trainer.show');
 Route::get('/contact', ContactPage::class)->name('contact');
 Route::get('/terms', TermsPage::class)->name('terms');
+Route::get('/become-trainer', \App\Livewire\BecomeTrainer::class)->name('become.trainer');
 Route::get('/search', SearchResultsPage::class)->name('search');
 
 // -----------------------------

@@ -37,6 +37,11 @@
                            class="rounded-md px-2 md:px-3 py-2 text-sm font-medium {{ $currentPage == 'about' ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
                             Trainers
                         </a>
+                        <a href="{{ route('become.trainer') }}"
+                           wire:navigate
+                           class="rounded-md px-2 md:px-3 py-2 text-sm font-medium {{ $currentPage == 'become-trainer' ? 'bg-gray-900 text-white' : 'text-green-500 hover:bg-gray-700 hover:text-white' }}">
+                            Zostań trenerem
+                        </a>
                         <a href="{{ route('contact') }}"
                            wire:navigate
                            class="rounded-md px-2 md:px-3 py-2 text-sm font-medium {{ $currentPage == 'contact' ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
@@ -126,6 +131,12 @@
                        @click="mobileOpen = false"
                        class="block w-full text-center rounded-md px-3 py-2 text-base font-medium {{ $currentPage == 'about' ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
                         Trainers
+                    </a>
+                    <a href="{{ route('become.trainer') }}"
+                       wire:navigate
+                       @click="mobileOpen = false"
+                       class="block w-full text-center rounded-md px-3 py-2 text-base font-medium {{ $currentPage == 'become-trainer' ? 'bg-gray-900 text-white' : 'text-green-500 hover:bg-gray-700 hover:text-white' }}">
+                        Zostań trenerem
                     </a>
                     <a href="{{ route('contact') }}"
                        wire:navigate
