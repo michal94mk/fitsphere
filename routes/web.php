@@ -27,6 +27,25 @@ use App\Livewire\TrainerProfilePage;
 use App\Livewire\TrainersList;
 use App\Livewire\TrainerDetails;
 
+use App\Livewire\Admin\Dashboard as AdminDashboard;
+use App\Livewire\Admin\PostsIndex;
+use App\Livewire\Admin\PostsCreate;
+use App\Livewire\Admin\PostsEdit;
+use App\Livewire\Admin\CategoriesIndex;
+use App\Livewire\Admin\CategoriesCreate;
+use App\Livewire\Admin\CategoriesEdit;
+use App\Livewire\Admin\CategoriesShow;
+use App\Livewire\Admin\CommentsIndex;
+use App\Livewire\Admin\UsersIndex;
+use App\Livewire\Admin\UsersCreate;
+use App\Livewire\Admin\UsersEdit;
+use App\Livewire\Admin\UsersShow;
+use App\Livewire\Admin\UsersDashboard;
+use App\Livewire\Admin\TrainersIndex;
+use App\Livewire\Admin\TrainersCreate;
+use App\Livewire\Admin\TrainersEdit;
+use App\Livewire\Admin\TrainersShow;
+
 use Illuminate\Auth\Events\Verified;
 use App\Models\User;
 use App\Models\Post;
@@ -50,6 +69,7 @@ Route::get('/about', TrainersList::class)->name('trainers.list');
 Route::get('/trainer/{trainerId}', TrainerDetails::class)->name('trainer.show');
 Route::get('/contact', ContactPage::class)->name('contact');
 Route::get('/terms', TermsPage::class)->name('terms');
+Route::get('/search', SearchResultsPage::class)->name('search');
 
 // -----------------------------
 // Public Authentication Routes
@@ -63,8 +83,8 @@ Route::get('/email/verify/{id}/{hash}', VerifyEmail::class)->name('verification.
 Route::get('/password/confirm', ConfirmPassword::class)->name('password.confirm');
 
 // Profile routes
-Route::get('/profile', \App\Livewire\Profile\Profile::class)->name('profile');
-Route::get('/profile/password', \App\Livewire\Profile\UpdatePassword::class)->name('profile.password');
+Route::get('/profile', Profile::class)->name('profile');
+Route::get('/profile/password', UpdatePassword::class)->name('profile.password');
 
 // Logout route
 Route::post('/logout', function () {
@@ -89,20 +109,35 @@ Route::middleware('auth', 'verified')->group(function () {
 // Admin Routes - Only accessible by users with 'admin' middleware
 // =============================
 Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
-    // Admin dashboard
-    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    // Livewire Admin Dashboard
+    Route::get('/', AdminDashboard::class)->name('dashboard');
     
-    // User management
-    Route::get('users/dashboard', [UserController::class, 'dashboard'])->name('users.dashboard');
-    Route::get('users', [UserController::class, 'index'])->name('users.index');
-    Route::get('users/admins', [UserController::class, 'admins'])->name('users.admins');
-    Route::get('users/trainers', [UserController::class, 'trainers'])->name('users.trainers');
-    Route::resource('users', UserController::class);
+    // Posts management
+    Route::get('/posts', PostsIndex::class)->name('posts.index');
+    Route::get('/posts/create', PostsCreate::class)->name('posts.create');
+    Route::get('/posts/{id}/edit', PostsEdit::class)->name('posts.edit');
     
-    // Content management
-    Route::resource('posts', PostController::class);
-    Route::resource('categories', CategoryController::class);
-    Route::resource('comments', CommentController::class);
+    // Categories management
+    Route::get('/categories', CategoriesIndex::class)->name('categories.index');
+    Route::get('/categories/create', CategoriesCreate::class)->name('categories.create');
+    Route::get('/categories/{id}/edit', CategoriesEdit::class)->name('categories.edit');
+    Route::get('/categories/{id}', CategoriesShow::class)->name('categories.show');
+    
+    // Comments management
+    Route::get('/comments', CommentsIndex::class)->name('comments.index');
+    
+    // Users management
+    Route::get('/users/dashboard', UsersDashboard::class)->name('users.dashboard');
+    Route::get('/users', UsersIndex::class)->name('users.index');
+    Route::get('/users/create', UsersCreate::class)->name('users.create');
+    Route::get('/users/{id}/edit', UsersEdit::class)->name('users.edit');
+    Route::get('/users/{id}', UsersShow::class)->name('users.show');
+    
+    // Trainers management
+    Route::get('/trainers', TrainersIndex::class)->name('trainers.index');
+    Route::get('/trainers/create', TrainersCreate::class)->name('trainers.create');
+    Route::get('/trainers/{id}/edit', TrainersEdit::class)->name('trainers.edit');
+    Route::get('/trainers/{id}', TrainersShow::class)->name('trainers.show');
 });
 
 
@@ -126,6 +161,3 @@ Route::get('email/verify/{id}/{hash}', function ($id, $hash) {
 
     return redirect()->route('profile')->with('verified', 'Your email address has been successfully verified!');
 })->middleware(['signed', 'throttle:6,1'])->name('verification.verify');
-
-
-Route::get('/search', SearchResultsPage::class)->name('search');
