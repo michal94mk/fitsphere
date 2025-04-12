@@ -51,6 +51,7 @@ use App\Models\User;
 use App\Models\Post;
 use App\Http\Middleware\AdminMiddleware;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
 // =============================
 // Public Routes - Available to all users
@@ -76,10 +77,14 @@ Route::get('registration-success', \App\Livewire\RegistrationSuccess::class)->na
 // -----------------------------
 // Public Authentication Routes
 // -----------------------------
-Route::get('/login', Login::class)->name('login');
-Route::get('/register', Register::class)->name('register');
-Route::get('/forgot-password', ForgotPassword::class)->name('password.request');
-Route::get('/reset-password/{token}', ResetPassword::class)->name('password.reset');
+Route::middleware('guest')->group(function () {
+    Route::get('/login', Login::class)->name('login');
+    Route::get('/register', Register::class)->name('register');
+    Route::get('/forgot-password', ForgotPassword::class)->name('password.request');
+    Route::get('/reset-password/{token}', ResetPassword::class)->name('password.reset');
+    Route::get('registration-success', \App\Livewire\RegistrationSuccess::class)->name('registration.success');
+});
+
 Route::get('/email/verify', VerifyEmail::class)->name('verification.notice');
 Route::get('/email/verify/{id}/{hash}', VerifyEmail::class)->name('verification.verify');
 Route::get('/password/confirm', ConfirmPassword::class)->name('password.confirm');
@@ -90,7 +95,7 @@ Route::get('/profile/password', UpdatePassword::class)->name('profile.password')
 
 // Logout route
 Route::post('/logout', function () {
-    auth()->logout();
+    Auth::logout();
     return redirect('/home');
 })->name('logout');
 
@@ -145,7 +150,21 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
 
 // Email verification route
 Route::get('email/verify/{id}/{hash}', function ($id, $hash) {
-    $user = User::findOrFail($id);
+    // Check if the ID belongs to a User
+    $user = null;
+    $isTrainer = false;
+    
+    try {
+        $user = User::findOrFail($id);
+    } catch (\Exception $e) {
+        // If not found in users, try to find in trainers
+        try {
+            $user = \App\Models\Trainer::findOrFail($id);
+            $isTrainer = true;
+        } catch (\Exception $e) {
+            abort(404);
+        }
+    }
 
     // Ensure that the hash matches the user's email verification hash
     if (! hash_equals((string) $hash, (string) sha1($user->getEmailForVerification()))) {
@@ -161,5 +180,10 @@ Route::get('email/verify/{id}/{hash}', function ($id, $hash) {
     $user->markEmailAsVerified();
     event(new Verified($user));
 
-    return redirect()->route('profile')->with('verified', 'Your email address has been successfully verified!');
+    $successMessage = 'Your email address has been successfully verified!';
+    if ($isTrainer) {
+        $successMessage = 'Your trainer account email has been successfully verified! An administrator will review your application.';
+    }
+
+    return redirect()->route('profile')->with('verified', $successMessage);
 })->middleware(['signed', 'throttle:6,1'])->name('verification.verify');

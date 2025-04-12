@@ -4,8 +4,11 @@ namespace App\Livewire\Auth;
 
 use Livewire\Component;
 use App\Models\User;
+use App\Models\Trainer;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Auth\Events\Registered;
+use Livewire\Attributes\Layout;
 
 /**
  * User registration component.
@@ -38,14 +41,39 @@ class Register extends Component
     public $password_confirmation;
 
     /**
+     * Account type (regular or trainer)
+     * @var string
+     */
+    public $account_type = 'regular';
+
+    /**
+     * Trainer specialization (only for trainer accounts)
+     * @var string
+     */
+    public $specialization;
+
+    /**
      * Validation rules
      * @var array
      */
-    protected $rules = [
-        'name'                  => 'required|string|min:3|max:255',
-        'email'                 => 'required|email|unique:users,email',
-        'password'              => 'required|min:6|confirmed',
-    ];
+    protected function rules()
+    {
+        $rules = [
+            'name'                  => 'required|string|min:3|max:255',
+            'email'                 => 'required|email',
+            'password'              => 'required|min:6|confirmed',
+            'account_type'          => 'required|in:regular,trainer',
+        ];
+
+        if ($this->account_type === 'regular') {
+            $rules['email'] .= '|unique:users,email';
+        } else {
+            $rules['email'] .= '|unique:trainers,email';
+            $rules['specialization'] = 'required|string|max:255';
+        }
+
+        return $rules;
+    }
 
     /**
      * Process user registration.
@@ -55,18 +83,34 @@ class Register extends Component
     {
         $this->validate();
 
-        $user = User::create([
-            'name'     => $this->name,
-            'email'    => $this->email,
-            'password' => Hash::make($this->password),
-        ]);
+        if ($this->account_type === 'regular') {
+            // Register as regular user
+            $user = User::create([
+                'name'     => $this->name,
+                'email'    => $this->email,
+                'password' => Hash::make($this->password),
+            ]);
 
-        Auth::login($user);
+            Auth::login($user);
+            $user->sendEmailVerificationNotification();
 
-        $user->sendEmailVerificationNotification();
+            // Use a distinct session flag to avoid conflicts with other form notifications
+            session()->flash('registration_success', 'Udało się zarejestrować! Proszę potwierdzić swój adres e-mail.');
+        } else {
+            // Register as trainer
+            $trainer = Trainer::create([
+                'name'           => $this->name,
+                'email'          => $this->email,
+                'password'       => Hash::make($this->password),
+                'specialization' => $this->specialization,
+                'is_approved'    => false,
+            ]);
 
-        // Use a distinct session flag to avoid conflicts with other form notifications
-        session()->flash('registration_success', 'Udało się zarejestrować! Proszę potwierdzić swój adres e-mail.');
+            Auth::login($trainer);
+            event(new Registered($trainer));
+
+            session()->flash('registration_success', 'Udało się zarejestrować jako trener! Proszę potwierdzić swój adres e-mail. Konto będzie wymagało zatwierdzenia przez administratora.');
+        }
 
         return $this->redirect(route('registration.success'), navigate: true);
     }
@@ -74,8 +118,9 @@ class Register extends Component
     /**
      * Render the component.
      */
+    #[Layout('layouts.blog')]
     public function render()
     {
-        return view('livewire.auth.register')->layout('layouts.blog');
+        return view('livewire.auth.register');
     }
 }

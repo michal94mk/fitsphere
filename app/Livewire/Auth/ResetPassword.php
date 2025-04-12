@@ -5,6 +5,7 @@ namespace App\Livewire\Auth;
 use Livewire\Component;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Hash;
+use Livewire\Attributes\Layout;
 
 class ResetPassword extends Component
 {
@@ -49,8 +50,9 @@ class ResetPassword extends Component
         }
     }
 
+    #[Layout('layouts.blog')]
     public function render()
     {
-        return view('livewire.auth.reset-password')->layout('layouts.blog');
+        return view('livewire.auth.reset-password');
     }
 }

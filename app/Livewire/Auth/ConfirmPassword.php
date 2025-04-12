@@ -5,6 +5,7 @@ namespace App\Livewire\Auth;
 use Livewire\Component;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\Layout;
 
 class ConfirmPassword extends Component
 {
@@ -26,8 +27,9 @@ class ConfirmPassword extends Component
         $this->addError('password', 'Hasło jest nieprawidłowe.');
     }
 
+    #[Layout('layouts.blog')]
     public function render()
     {
-        return view('livewire.auth.confirm-password')->layout('layouts.blog');
+        return view('livewire.auth.confirm-password');
     }
 }
