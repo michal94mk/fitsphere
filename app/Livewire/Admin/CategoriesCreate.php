@@ -4,30 +4,38 @@ namespace App\Livewire\Admin;
 
 use App\Models\Category;
 use Livewire\Component;
+use Livewire\Attributes\Layout;
+use Livewire\Attributes\Rule;
 
 class CategoriesCreate extends Component
 {
-    public $name;
+    #[Rule('required|string|max:255', message: 'Nazwa kategorii jest wymagana.')]
+    public $name = '';
     
-    protected $rules = [
-        'name' => 'required|min:2|unique:categories,name'
+
+    protected $messages = [
+        'name.required' => 'Nazwa kategorii jest wymagana.',
     ];
-    
-    public function store()
+
+    #[Layout('layouts.admin', ['header' => 'Dodaj nową kategorię'])]
+    public function render()
+    {
+        return view('livewire.admin.categories-create');
+    }
+
+    public function save()
     {
         $this->validate();
         
-        $category = new Category();
-        $category->name = $this->name;
-        $category->save();
-        
-        session()->flash('success', 'Kategoria została pomyślnie utworzona.');
-        return redirect()->route('admin.categories.index');
-    }
-    
-    public function render()
-    {
-        return view('livewire.admin.categories-create')
-            ->layout('layouts.admin', ['header' => 'Dodaj nową kategorię']);
+        try {
+            Category::create([
+                'name' => $this->name
+            ]);
+            
+            session()->flash('success', 'Kategoria została pomyślnie dodana!');
+            return redirect()->route('admin.categories.index');
+        } catch (\Exception $e) {
+            session()->flash('error', 'Wystąpił błąd podczas dodawania kategorii: ' . $e->getMessage());
+        }
     }
 } 

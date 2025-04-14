@@ -1,40 +1,40 @@
+<x-slot name="header">
+    Edytuj kategorię
+</x-slot>
+
 <div>
     <div class="container mx-auto p-6">
-        <!-- Nagłówek z przyciskami i tytułem -->
-        <div class="flex items-center justify-between mb-4">
-            <!-- Lewa strona: przyciski -->
-            <div class="flex space-x-2">
-                <a href="{{ route('admin.categories.index') }}" class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 transition">
-                    Cofnij
-                </a>
-            </div>
-            <!-- Środkowa część: tytuł -->
-            <h1 class="text-2xl font-bold text-center flex-grow">
-                Edytuj kategorię
-            </h1>
-            <!-- Prawa strona: pusta, żeby wyśrodkować tytuł -->
-            <div class="w-32"></div>
+        <div class="flex items-center justify-between mb-6">
+            <h1 class="text-2xl font-bold">Edytuj kategorię</h1>
+            <a href="{{ route('admin.categories.index') }}" wire:navigate
+               class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 transition">
+                Powrót do listy
+            </a>
         </div>
 
-        <!-- Formularz edycji kategorii -->
-        <form wire:submit="update">
-            <div class="space-y-4">
-                <!-- Nazwa -->
-                <div>
-                    <label for="name" class="block text-sm font-medium text-gray-700">Nazwa</label>
-                    <input type="text" id="name" wire:model="category.name" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
-                    @error('category.name')
-                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
+        <div class="bg-white rounded-lg shadow overflow-hidden">
+            <form wire:submit="save">
+                <div class="p-6 space-y-6">
+                    <!-- Category information section -->
+                    <div>
+                        <h2 class="text-lg font-medium text-gray-900 border-b pb-2">Dane kategorii</h2>
+                        <div class="grid grid-cols-1 gap-6 mt-4">
+                            <div>
+                                <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Nazwa kategorii</label>
+                                <input type="text" id="name" wire:model="name" 
+                                       class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                                @error('name') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                            </div>
+                        </div>
+                    </div>
                 </div>
-
-                <!-- Przycisk zapisz -->
-                <div>
-                    <button type="submit" class="w-full bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition">
+                
+                <div class="px-6 py-3 bg-gray-50 text-right">
+                    <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition">
                         Zapisz zmiany
                     </button>
                 </div>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
 </div> 

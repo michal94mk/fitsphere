@@ -5,22 +5,92 @@ namespace App\Livewire\Admin;
 use App\Models\Comment;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Livewire\Attributes\Layout;
 
 class CommentsIndex extends Component
 {
     use WithPagination;
-    
-    public function deleteComment($id)
+
+    public $search = '';
+    public $sortField = 'created_at';
+    public $sortDirection = 'desc';
+    public $commentIdBeingDeleted = null;
+    public $confirmingCommentDeletion = false;
+
+    protected $queryString = ['search', 'sortField', 'sortDirection'];
+
+    public function updatingSearch()
     {
-        $comment = Comment::findOrFail($id);
-        $comment->delete();
-        session()->flash('success', 'Komentarz został pomyślnie usunięty.');
+        $this->resetPage();
     }
-    
+
+    public function updatingSortField()
+    {
+        $this->resetPage();
+    }
+
+    public function setSorting($field)
+    {
+        if ($this->sortField === $field) {
+            $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->sortField = $field;
+            $this->sortDirection = 'asc';
+        }
+    }
+
+    public function confirmCommentDeletion($id)
+    {
+        $this->commentIdBeingDeleted = $id;
+        $this->confirmingCommentDeletion = true;
+    }
+
+    public function deleteComment()
+    {
+        if (!$this->commentIdBeingDeleted) {
+            session()->flash('error', "Nie można usunąć komentarza, brak identyfikatora.");
+            $this->confirmingCommentDeletion = false;
+            return;
+        }
+        
+        try {
+            $comment = Comment::findOrFail($this->commentIdBeingDeleted);
+            $comment->delete();
+            
+            session()->flash('success', "Komentarz został pomyślnie usunięty.");
+        } catch (\Exception $e) {
+            session()->flash('error', "Wystąpił błąd podczas usuwania komentarza: {$e->getMessage()}");
+        }
+        
+        $this->confirmingCommentDeletion = false;
+        $this->commentIdBeingDeleted = null;
+    }
+
+    public function cancelDeletion()
+    {
+        $this->confirmingCommentDeletion = false;
+        $this->commentIdBeingDeleted = null;
+    }
+
+    #[Layout('layouts.admin', ['header' => 'Zarządzanie komentarzami'])]
     public function render()
     {
-        return view('livewire.admin.comments-index', [
-            'comments' => Comment::with(['user', 'post'])->latest()->paginate(10)
-        ])->layout('layouts.admin', ['header' => 'Lista komentarzy']);
+        $comments = Comment::with(['user', 'post'])
+            ->when($this->search, function ($query) {
+                $query->where(function ($query) {
+                    $query->where('content', 'like', '%' . $this->search . '%')
+                        ->orWhereHas('user', function ($query) {
+                            $query->where('name', 'like', '%' . $this->search . '%')
+                                ->orWhere('email', 'like', '%' . $this->search . '%');
+                        })
+                        ->orWhereHas('post', function ($query) {
+                            $query->where('title', 'like', '%' . $this->search . '%');
+                        });
+                });
+            })
+            ->orderBy($this->sortField, $this->sortDirection)
+            ->paginate(10);
+
+        return view('livewire.admin.comments-index', compact('comments'));
     }
 } 
