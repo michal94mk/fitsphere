@@ -34,11 +34,27 @@
                     <div class="space-y-3">
                         <div class="flex justify-between text-sm">
                             <span class="text-gray-500">Członek od</span>
-                            <span class="font-medium text-gray-800">{{ auth()->user()->created_at->format('d.m.Y') }}</span>
+                            <span class="font-medium text-gray-800">
+                                @if(Auth::check())
+                                    {{ Auth::user()->created_at->format('d.m.Y') }}
+                                @elseif(Auth::guard('trainer')->check())
+                                    {{ Auth::guard('trainer')->user()->created_at->format('d.m.Y') }}
+                                @else
+                                    --
+                                @endif
+                            </span>
                         </div>
                         <div class="flex justify-between text-sm">
                             <span class="text-gray-500">Rola</span>
-                            <span class="font-medium text-gray-800">{{ ucfirst(auth()->user()->role ?? 'użytkownik') }}</span>
+                            <span class="font-medium text-gray-800">
+                                @if(Auth::check())
+                                    {{ ucfirst(Auth::user()->role ?? 'użytkownik') }}
+                                @elseif(Auth::guard('trainer')->check()) 
+                                    Trener
+                                @else
+                                    --
+                                @endif
+                            </span>
                         </div>
                     </div>
                 </div>

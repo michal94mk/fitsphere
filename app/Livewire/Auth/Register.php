@@ -106,7 +106,8 @@ class Register extends Component
                 'is_approved'    => false,
             ]);
 
-            Auth::login($trainer);
+            // Użyj guard 'trainer' do logowania trenera
+            Auth::guard('trainer')->login($trainer);
             event(new Registered($trainer));
 
             session()->flash('registration_success', 'Udało się zarejestrować jako trener! Proszę potwierdzić swój adres e-mail. Konto będzie wymagało zatwierdzenia przez administratora.');

@@ -5,6 +5,7 @@ namespace App\Livewire;
 use Livewire\Component;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Auth;
 
 class Navigation extends Component
 {
@@ -53,6 +54,19 @@ class Navigation extends Component
         
         // Redirect to search results page with the query
         return $this->redirect(route('search', ['q' => $this->searchQuery]), navigate: true);
+    }
+
+    public function isAdmin()
+    {
+        if (Auth::check() && Auth::user()->role === 'admin') {
+            return true;
+        }
+        
+        if (Auth::guard('trainer')->check() && Auth::guard('trainer')->user()->is_approved) {
+            return true;
+        }
+        
+        return false;
     }
 
     public function render()

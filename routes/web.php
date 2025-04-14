@@ -95,7 +95,12 @@ Route::get('/profile/password', UpdatePassword::class)->name('profile.password')
 
 // Logout route
 Route::post('/logout', function () {
+    // Wyloguj zarówno z guardu 'web' jak i 'trainer'
+    if (Auth::guard('trainer')->check()) {
+        Auth::guard('trainer')->logout();
+    }
     Auth::logout();
+    
     return redirect('/home');
 })->name('logout');
 
@@ -162,27 +167,28 @@ Route::get('email/verify/{id}/{hash}', function ($id, $hash) {
             $user = \App\Models\Trainer::findOrFail($id);
             $isTrainer = true;
         } catch (\Exception $e) {
-            abort(404);
+            return redirect()->route('login')
+                ->with('error', 'Nie znaleziono użytkownika. Proszę zalogować się ponownie.');
         }
     }
 
     // Ensure that the hash matches the user's email verification hash
-    if (! hash_equals((string) $hash, (string) sha1($user->getEmailForVerification()))) {
-        abort(403);
+    if (!$user || !hash_equals((string) $hash, (string) sha1($user->getEmailForVerification()))) {
+        abort(403, 'Nieprawidłowy lub wygasły link weryfikacyjny.');
     }
 
     // If email is already verified, redirect to profile
     if ($user->hasVerifiedEmail()) {
-        return redirect()->route('profile')->with('verified', 'Your email address is already verified!');
+        return redirect()->route('profile')->with('verified', 'Twój adres email został już zweryfikowany!');
     }
 
     // Mark the email as verified and trigger the Verified event
     $user->markEmailAsVerified();
     event(new Verified($user));
 
-    $successMessage = 'Your email address has been successfully verified!';
+    $successMessage = 'Twój adres email został pomyślnie zweryfikowany!';
     if ($isTrainer) {
-        $successMessage = 'Your trainer account email has been successfully verified! An administrator will review your application.';
+        $successMessage = 'Twój adres email trenera został pomyślnie zweryfikowany! Administrator sprawdzi Twoje zgłoszenie.';
     }
 
     return redirect()->route('profile')->with('verified', $successMessage);

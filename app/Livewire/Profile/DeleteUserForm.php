@@ -9,13 +9,29 @@ use Livewire\Component;
 
 class DeleteUserForm extends Component
 {
-
     public $confirmingUserDeletion = false;
     public $password = '';
+    public $user = null;
+    public $isTrainer = false;
 
     protected $rules = [
         'password' => 'required',
     ];
+
+    public function mount()
+    {
+        // Sprawdzamy, który guard jest aktywny
+        if (Auth::check()) {
+            $this->user = Auth::user();
+            $this->isTrainer = false;
+        } elseif (Auth::guard('trainer')->check()) {
+            $this->user = Auth::guard('trainer')->user();
+            $this->isTrainer = true;
+        } else {
+            // Jeśli nie ma zalogowanego użytkownika
+            return redirect()->route('login');
+        }
+    }
 
     public function confirmUserDeletion()
     {
@@ -26,16 +42,21 @@ class DeleteUserForm extends Component
     {
         $this->validate();
 
-        $user = Auth::user();
-
         // Verify password before proceeding with deletion
-        if (!Hash::check($this->password, $user->password)) {
+        if (!Hash::check($this->password, $this->user->password)) {
             $this->addError('password', 'Podane hasło jest nieprawidłowe.');
             return;
         }
 
-        Auth::logout();
-        $user->delete();
+        // Wyloguj z odpowiedniego guarda
+        if ($this->isTrainer) {
+            Auth::guard('trainer')->logout();
+        } else {
+            Auth::logout();
+        }
+        
+        // Usuń użytkownika
+        $this->user->delete();
 
         session()->flash('status', 'Konto zostało usunięte.');
         return redirect('/');

@@ -54,12 +54,18 @@
                                class="rounded-md px-2 md:px-3 py-2 text-sm font-medium bg-red-600 text-white hover:bg-red-700">
                                 Admin Panel
                             </a>
+                        @elseif(Auth::guard('trainer')->check() && Auth::guard('trainer')->user()->is_approved)
+                            <a href="{{ route('admin.dashboard') }}"
+                               wire:navigate
+                               class="rounded-md px-2 md:px-3 py-2 text-sm font-medium bg-red-600 text-white hover:bg-red-700">
+                                Admin Panel
+                            </a>
                         @endif
                     </div>
 
                     <!-- Prawa strona - przyciski logowania / profil -->
                     <div class="hidden sm:flex sm:items-center sm:space-x-2 md:space-x-4">
-                        @auth
+                        @if(Auth::check())
                             <div x-data="{ dropdownOpen: false }"
                                  x-init="$watch('currentPage', () => { dropdownOpen = false; })"
                                  class="relative">
@@ -72,6 +78,39 @@
                                               d="M19 9l-7 7-7-7" />
                                     </svg>
                                 </button>
+                                
+                                <!-- Dropdown menu -->
+                                <div x-show="dropdownOpen" x-cloak
+                                     class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-50">
+                                    <a href="{{ route('profile') }}"
+                                       wire:navigate
+                                       class="block w-full px-4 py-2 text-gray-800 text-left hover:bg-gray-100">
+                                        Profil
+                                    </a>
+                                    <form method="POST" action="{{ route('logout') }}">
+                                        @csrf
+                                        <button type="submit"
+                                                class="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100">
+                                            Wyloguj się
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        @elseif(Auth::guard('trainer')->check())
+                            <div x-data="{ dropdownOpen: false }"
+                                 x-init="$watch('currentPage', () => { dropdownOpen = false; })"
+                                 class="relative">
+                                <button @click="dropdownOpen = !dropdownOpen"
+                                        class="text-gray-300 px-2 md:px-3 py-2 rounded-md hover:bg-gray-700 flex items-center whitespace-nowrap">
+                                    <span class="truncate max-w-[100px] md:max-w-none">{{ Auth::guard('trainer')->user()->name }}</span>
+                                    <span class="ml-1 text-blue-300 text-xs">(Trener)</span>
+                                    <svg class="ml-1 inline-block h-4 w-4" xmlns="http://www.w3.org/2000/svg"
+                                         fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                              d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </button>
+                                
                                 <!-- Dropdown menu -->
                                 <div x-show="dropdownOpen" x-cloak
                                      class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-50">
@@ -100,7 +139,7 @@
                                class="rounded-md px-2 md:px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">
                                 Rejestracja
                             </a>
-                        @endauth
+                        @endif
                     </div>
                 </div>
             </div>
@@ -147,14 +186,44 @@
                            class="block w-full text-center rounded-md px-3 py-2 text-base font-medium bg-red-600 text-white hover:bg-red-700">
                             Admin Panel
                         </a>
+                    @elseif(Auth::guard('trainer')->check() && Auth::guard('trainer')->user()->is_approved)
+                        <a href="{{ route('admin.dashboard') }}"
+                           wire:navigate
+                           @click="mobileOpen = false"
+                           class="block w-full text-center rounded-md px-3 py-2 text-base font-medium bg-red-600 text-white hover:bg-red-700">
+                            Admin Panel
+                        </a>
                     @endif
 
                     <!-- Mobile Authentication buttons -->
-                    @auth
+                    @if(Auth::check())
                         <div x-data="{ dropdownOpen: false }" class="w-full">
                             <button @click="dropdownOpen = !dropdownOpen"
                                     class="block w-full text-center px-4 py-2 text-gray-900 font-medium bg-gray-200 rounded-md hover:bg-gray-300">
                                 {{ Auth::user()->name }}
+                            </button>
+                            <div x-show="dropdownOpen" x-cloak
+                                 class="mt-2 w-full bg-white border border-gray-300 rounded-md shadow-md">
+                                <a href="{{ route('profile') }}"
+                                   wire:navigate
+                                   @click="dropdownOpen = false; mobileOpen = false"
+                                   class="block w-full text-center px-4 py-2 text-gray-900 hover:bg-gray-100">
+                                    Profil
+                                </a>
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    <button type="submit"
+                                            class="block w-full text-center px-4 py-2 text-gray-900 hover:bg-gray-100">
+                                        Wyloguj się
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    @elseif(Auth::guard('trainer')->check())
+                        <div x-data="{ dropdownOpen: false }" class="w-full">
+                            <button @click="dropdownOpen = !dropdownOpen"
+                                    class="block w-full text-center px-4 py-2 text-gray-900 font-medium bg-gray-200 rounded-md hover:bg-gray-300">
+                                {{ Auth::guard('trainer')->user()->name }} <span class="text-blue-600 text-xs">(Trener)</span>
                             </button>
                             <div x-show="dropdownOpen" x-cloak
                                  class="mt-2 w-full bg-white border border-gray-300 rounded-md shadow-md">
@@ -186,7 +255,7 @@
                            class="block w-full text-center rounded-md px-4 py-2 text-gray-900 bg-gray-200 hover:bg-gray-300">
                             Zarejestruj się
                         </a>
-                    @endauth
+                    @endif
                 </div>
             </div>
         </nav>
