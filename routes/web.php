@@ -8,7 +8,6 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DashboardController;
 use App\Livewire\HomePage;
-use App\Livewire\AboutPage;
 use App\Livewire\ContactPage;
 use App\Livewire\PostView;
 use App\Livewire\PostDetails;
@@ -66,8 +65,8 @@ Route::get('/', function () {
 Route::get('/home', HomePage::class)->name('home');
 Route::get('/posts', PostsPage::class)->name('posts.list');
 Route::get('/post/{postId}', PostDetails::class)->name('post.show');
-Route::get('/about', TrainersList::class)->name('trainers.list');
-Route::get('/trainer/{trainerId}', TrainerDetails::class)->name('trainer.show');
+Route::get('/trainers', TrainersList::class)->name('trainers.list');
+Route::get('/trainers/{trainerId}', TrainerDetails::class)->name('trainer.show');
 Route::get('/contact', ContactPage::class)->name('contact');
 Route::get('/terms', TermsPage::class)->name('terms');
 Route::get('/become-trainer', \App\Livewire\BecomeTrainer::class)->name('become.trainer');

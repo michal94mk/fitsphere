@@ -4,14 +4,15 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Models\User;
+use App\Models\Trainer;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Url;
 
 class TrainersList extends Component
 {
     use WithPagination;
 
-    #[\Livewire\Attributes\Url]
+    #[Url]
     public int $page = 1;
 
     protected string $paginationTheme = 'tailwind';
@@ -29,7 +30,7 @@ class TrainersList extends Component
     #[Layout('layouts.blog')]
     public function render()
     {
-        $trainers = User::where('role', 'trainer')->paginate(9);
+        $trainers = Trainer::paginate(9);
         return view('livewire.trainers-list', compact('trainers'));
     }
 } 

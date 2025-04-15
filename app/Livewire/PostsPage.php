@@ -6,6 +6,7 @@ use Livewire\Component;
 use App\Models\Post;
 use App\Models\Category;
 use Illuminate\Support\Facades\Route;
+use Livewire\Attributes\Layout;
 
 class PostsPage extends Component
 {
@@ -26,6 +27,7 @@ class PostsPage extends Component
         return $this->redirect(route('post.show', ['postId' => $postId]), navigate: true);
     }
     
+    #[Layout('layouts.blog')]
     public function render()
     {
         $query = Post::query();
@@ -60,6 +62,6 @@ class PostsPage extends Component
         return view('livewire.posts-page', [
             'posts' => $posts,
             'categories' => $categories,
-        ])->layout('layouts.blog');
+        ]);
     }
 }
