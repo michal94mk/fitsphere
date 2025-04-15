@@ -3,17 +3,23 @@
 namespace App\Livewire;
 
 use Livewire\Component;
+use Livewire\WithPagination;
 use Livewire\Attributes\Url;
+use Livewire\Attributes\Layout;
 use App\Models\Post;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Request;
 
 class SearchResultsPage extends Component
 {
+    use WithPagination;
+
     // The ID of the post currently selected for viewing details. Synced with the URL query string.
     #[Url]
     public ?int $selectedPostId = null;
     
     // Stores the current search term entered by the user.
+    #[Url(as: 'q')]
     public string $searchQuery = '';
 
     protected $listeners = [
@@ -23,8 +29,18 @@ class SearchResultsPage extends Component
 
     public function mount()
     {
-        // Initialize component state from session data on load.
-        $this->searchQuery = Session::get('searchQuery', '');
+        // Get query parameter or use the session value
+        $queryParam = Request::query('q');
+        
+        if ($queryParam) {
+            // If we have a query parameter, use it and store in session
+            $this->searchQuery = $queryParam;
+            Session::put('searchQuery', $this->searchQuery);
+        } else {
+            // Otherwise use session value if available
+            $this->searchQuery = Session::get('searchQuery', '');
+        }
+        
         $this->selectedPostId = Session::get('search_selectedPostId', null);
     }
 
@@ -52,12 +68,28 @@ class SearchResultsPage extends Component
     public function updateSearch($query)
     {       
         $this->searchQuery = $query;
+        Session::put('searchQuery', $query);
+        $this->resetPage();
         $this->resetSelectedPost(); // Clear selection when a new search is performed
     }
 
+    #[Layout('layouts.blog')]
     public function render()
     {
-        return view('livewire.search-results-page')
-            ->layout('layouts.blog');
+        if ($this->searchQuery && strlen(trim($this->searchQuery)) >= 3) {
+            $posts = Post::query()
+                ->where(function($query) {
+                    $query->where('title', 'like', '%'.$this->searchQuery.'%')
+                          ->orWhere('content', 'like', '%'.$this->searchQuery.'%');
+                })
+                ->latest()
+                ->paginate(9);
+        } else {
+            $posts = Post::query()->limit(0)->paginate(9);
+        }
+        
+        return view('livewire.search-results-page', [
+            'posts' => $posts
+        ]);
     }
 }

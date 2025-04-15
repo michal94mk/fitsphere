@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use Livewire\WithPagination;
+use Livewire\Attributes\Layout;
 use App\Models\Post;
 use App\Models\Comment;
 use Illuminate\Support\Facades\Auth;
@@ -44,6 +45,7 @@ class PostDetails extends Component
         $this->resetPage();
     }
 
+    #[Layout('layouts.blog')]
     public function render()
     {
         return view('livewire.post-details', [
@@ -51,6 +53,6 @@ class PostDetails extends Component
                 ->with('user')
                 ->latest()
                 ->paginate(5)
-        ])->layout('layouts.blog');
+        ]);
     }
 }

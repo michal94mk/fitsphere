@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use Livewire\Attributes\Url;
+use Livewire\Attributes\Layout;
 use App\Models\Post;
 
 class HomePage extends Component
@@ -18,11 +19,11 @@ class HomePage extends Component
     }
 
     // Render the view for the home page
+    #[Layout('layouts.blog')]
     public function render()
     {
         $posts = Post::withCount('comments')->latest()->take(5)->get();
 
-        return view('livewire.home-page', compact('posts'))
-            ->layout('layouts.blog');
+        return view('livewire.home-page', compact('posts'));
     }
 }

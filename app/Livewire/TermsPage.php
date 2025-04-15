@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use Livewire\Component;
+use Livewire\Attributes\Layout;
 
 class TermsPage extends Component
 {
@@ -15,9 +16,9 @@ class TermsPage extends Component
         }
     }
 
+    #[Layout('layouts.blog')]
     public function render()
     {
-        return view('livewire.terms-page')
-            ->layout('layouts.blog');
+        return view('livewire.terms-page');
     }
 }
