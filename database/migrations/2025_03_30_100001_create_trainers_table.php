@@ -21,6 +21,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->string('image')->nullable();
             $table->string('bio')->nullable();
+            $table->unsignedInteger('experience')->default(0);
             $table->boolean('is_approved')->default(false);
             $table->rememberToken();
             $table->timestamps();

@@ -5,6 +5,7 @@ namespace App\Livewire;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\User;
+use Livewire\Attributes\Layout;
 
 class TrainersList extends Component
 {
@@ -25,10 +26,10 @@ class TrainersList extends Component
         return $this->redirect(route('trainer.show', ['trainerId' => $trainerId]), navigate: true);
     }
 
+    #[Layout('layouts.blog')]
     public function render()
     {
         $trainers = User::where('role', 'trainer')->paginate(9);
-        return view('livewire.trainers-list', compact('trainers'))
-            ->layout('layouts.blog');
+        return view('livewire.trainers-list', compact('trainers'));
     }
 } 

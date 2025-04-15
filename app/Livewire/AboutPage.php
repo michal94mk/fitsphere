@@ -77,6 +77,7 @@ class AboutPage extends Component
         }
     }
 
+    
     public function render()
     {
         $trainers = User::where('role', 'trainer')->paginate(9);
