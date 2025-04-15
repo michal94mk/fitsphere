@@ -123,7 +123,7 @@ Route::middleware('auth', 'verified')->group(function () {
 // =============================
 // Trainer Routes - Only accessible by authenticated trainers
 // =============================
-Route::middleware('auth:trainers')->prefix('trainer')->name('trainer.')->group(function () {
+Route::middleware('auth:trainer')->prefix('trainer')->name('trainer.')->group(function () {
     Route::get('/reservations', TrainerReservations::class)->name('reservations');
     // Route::get('/profile', TrainerProfilePage::class)->name('profile');
 });

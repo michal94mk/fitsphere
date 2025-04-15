@@ -22,11 +22,6 @@ class AdminMiddleware
             return $next($request);
         }
         
-        // Sprawdź czy zalogowany trener ma is_approved = true
-        if (Auth::guard('trainer')->check() && Auth::guard('trainer')->user()->is_approved) {
-            return $next($request);
-        }
-        
         return redirect()->route('home')->with('error', 'Brak dostępu do panelu administratora.');
     }
 }

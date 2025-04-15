@@ -15,7 +15,7 @@ class TrainerReservations extends Component
     public function mount()
     {
         // Sprawdź, czy zalogowany jest trener
-        if (!Auth::guard('trainers')->check()) {
+        if (!Auth::guard('trainer')->check()) {
             return redirect()->route('trainer.login');
         }
     }
@@ -23,7 +23,7 @@ class TrainerReservations extends Component
     public function confirmReservation($id)
     {
         $reservation = Reservation::where('id', $id)
-            ->where('trainer_id', Auth::guard('trainers')->id())
+            ->where('trainer_id', Auth::guard('trainer')->id())
             ->first();
             
         if (!$reservation) {
@@ -38,7 +38,7 @@ class TrainerReservations extends Component
     public function cancelReservation($id)
     {
         $reservation = Reservation::where('id', $id)
-            ->where('trainer_id', Auth::guard('trainers')->id())
+            ->where('trainer_id', Auth::guard('trainer')->id())
             ->first();
             
         if (!$reservation) {
@@ -53,7 +53,7 @@ class TrainerReservations extends Component
     public function completeReservation($id)
     {
         $reservation = Reservation::where('id', $id)
-            ->where('trainer_id', Auth::guard('trainers')->id())
+            ->where('trainer_id', Auth::guard('trainer')->id())
             ->first();
             
         if (!$reservation) {
@@ -69,7 +69,7 @@ class TrainerReservations extends Component
     public function render()
     {
         return view('livewire.trainer-reservations', [
-            'reservations' => Reservation::where('trainer_id', Auth::guard('trainers')->id())
+            'reservations' => Reservation::where('trainer_id', Auth::guard('trainer')->id())
                 ->with('user')
                 ->latest()
                 ->paginate(10)

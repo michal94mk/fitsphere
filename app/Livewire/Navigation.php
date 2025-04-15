@@ -58,11 +58,8 @@ class Navigation extends Component
 
     public function isAdmin()
     {
+        // Tylko użytkownicy z rolą 'admin' mają dostęp do panelu administratora
         if (Auth::check() && Auth::user()->role === 'admin') {
-            return true;
-        }
-        
-        if (Auth::guard('trainer')->check() && Auth::guard('trainer')->user()->is_approved) {
             return true;
         }
         

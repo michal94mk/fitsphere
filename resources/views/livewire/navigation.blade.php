@@ -54,11 +54,13 @@
                                class="rounded-md px-2 md:px-3 py-2 text-sm font-medium bg-red-600 text-white hover:bg-red-700">
                                 Admin Panel
                             </a>
-                        @elseif(Auth::guard('trainer')->check() && Auth::guard('trainer')->user()->is_approved)
-                            <a href="{{ route('admin.dashboard') }}"
+                        @endif
+                        
+                        @if(Auth::guard('trainer')->check())
+                            <a href="{{ route('trainer.reservations') }}"
                                wire:navigate
-                               class="rounded-md px-2 md:px-3 py-2 text-sm font-medium bg-red-600 text-white hover:bg-red-700">
-                                Admin Panel
+                               class="rounded-md px-2 md:px-3 py-2 text-sm font-medium bg-blue-600 text-white hover:bg-blue-700">
+                                Panel Trenera
                             </a>
                         @endif
                     </div>
@@ -86,6 +88,11 @@
                                        wire:navigate
                                        class="block w-full px-4 py-2 text-gray-800 text-left hover:bg-gray-100">
                                         Profil
+                                    </a>
+                                    <a href="{{ route('user.reservations') }}"
+                                       wire:navigate
+                                       class="block w-full px-4 py-2 text-gray-800 text-left hover:bg-gray-100">
+                                        Moje rezerwacje
                                     </a>
                                     <form method="POST" action="{{ route('logout') }}">
                                         @csrf
@@ -118,6 +125,11 @@
                                        wire:navigate
                                        class="block w-full px-4 py-2 text-gray-800 text-left hover:bg-gray-100">
                                         Profil
+                                    </a>
+                                    <a href="{{ route('user.reservations') }}"
+                                       wire:navigate
+                                       class="block w-full px-4 py-2 text-gray-800 text-left hover:bg-gray-100">
+                                        Moje rezerwacje
                                     </a>
                                     <form method="POST" action="{{ route('logout') }}">
                                         @csrf
@@ -186,12 +198,14 @@
                            class="block w-full text-center rounded-md px-3 py-2 text-base font-medium bg-red-600 text-white hover:bg-red-700">
                             Admin Panel
                         </a>
-                    @elseif(Auth::guard('trainer')->check() && Auth::guard('trainer')->user()->is_approved)
-                        <a href="{{ route('admin.dashboard') }}"
+                    @endif
+                    
+                    @if(Auth::guard('trainer')->check())
+                        <a href="{{ route('trainer.reservations') }}"
                            wire:navigate
                            @click="mobileOpen = false"
-                           class="block w-full text-center rounded-md px-3 py-2 text-base font-medium bg-red-600 text-white hover:bg-red-700">
-                            Admin Panel
+                           class="block w-full text-center rounded-md px-3 py-2 text-base font-medium bg-blue-600 text-white hover:bg-blue-700">
+                            Panel Trenera
                         </a>
                     @endif
 
@@ -209,6 +223,12 @@
                                    @click="dropdownOpen = false; mobileOpen = false"
                                    class="block w-full text-center px-4 py-2 text-gray-900 hover:bg-gray-100">
                                     Profil
+                                </a>
+                                <a href="{{ route('user.reservations') }}"
+                                   wire:navigate
+                                   @click="dropdownOpen = false; mobileOpen = false"
+                                   class="block w-full text-center px-4 py-2 text-gray-900 hover:bg-gray-100">
+                                    Moje rezerwacje
                                 </a>
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
@@ -232,6 +252,12 @@
                                    @click="dropdownOpen = false; mobileOpen = false"
                                    class="block w-full text-center px-4 py-2 text-gray-900 hover:bg-gray-100">
                                     Profil
+                                </a>
+                                <a href="{{ route('user.reservations') }}"
+                                   wire:navigate
+                                   @click="dropdownOpen = false; mobileOpen = false"
+                                   class="block w-full text-center px-4 py-2 text-gray-900 hover:bg-gray-100">
+                                    Moje rezerwacje
                                 </a>
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
