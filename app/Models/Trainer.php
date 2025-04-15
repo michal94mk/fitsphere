@@ -7,6 +7,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Auth\MustVerifyEmail as MustVerifyEmailTrait;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Trainer extends Authenticatable implements MustVerifyEmail
 {
@@ -67,5 +68,33 @@ class Trainer extends Authenticatable implements MustVerifyEmail
     public function posts()
     {
         return $this->hasMany(Post::class, 'user_id');
+    }
+    
+    /**
+     * Get the reservations for the trainer.
+     */
+    public function reservations(): HasMany
+    {
+        return $this->hasMany(Reservation::class);
+    }
+
+    /**
+     * Send the email verification notification.
+     *
+     * @return void
+     */
+    public function sendEmailVerificationNotification()
+    {
+        $this->notify(new \Illuminate\Auth\Notifications\VerifyEmail);
+    }
+    
+    /**
+     * Get the email address that should be used for verification.
+     *
+     * @return string
+     */
+    public function getEmailForVerification()
+    {
+        return $this->email;
     }
 } 

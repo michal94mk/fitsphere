@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Trainer;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Auth\Events\Registered;
 use Livewire\Attributes\Layout;
 
@@ -91,11 +92,22 @@ class Register extends Component
                 'password' => Hash::make($this->password),
             ]);
 
-            Auth::login($user);
-            $user->sendEmailVerificationNotification();
-
-            // Use a distinct session flag to avoid conflicts with other form notifications
+            // Zamiast wywoływać event, bezpośrednio wywołujemy metodę wysyłającą email
+            // event(new Registered($user));
+            if (method_exists($user, 'sendEmailVerificationNotification')) {
+                $user->sendEmailVerificationNotification();
+            }
+            
+            // Nie logujemy użytkownika automatycznie, ponieważ najpierw musi zweryfikować email
+            // Auth::login($user);
+            
+            // Zapisz informację, że rejestracja zakończyła się pomyślnie
             session()->flash('registration_success', 'Udało się zarejestrować! Proszę potwierdzić swój adres e-mail.');
+            session()->flash('user_type', 'user');
+            session()->flash('email', $this->email);
+            
+            // Użycie bezpośredniego URLa zamiast nazwanej trasy
+            return Redirect::to('/registration-success/user');
         } else {
             // Register as trainer
             $trainer = Trainer::create([
@@ -106,14 +118,22 @@ class Register extends Component
                 'is_approved'    => false,
             ]);
 
-            // Użyj guard 'trainer' do logowania trenera
-            Auth::guard('trainer')->login($trainer);
-            event(new Registered($trainer));
+            // Nie logujemy trenera automatycznie, ponieważ najpierw musi zweryfikować email
+            // Auth::guard('trainer')->login($trainer);
+            
+            // Zamiast wywoływać event, bezpośrednio wywołujemy metodę wysyłającą email
+            // event(new Registered($trainer));
+            if (method_exists($trainer, 'sendEmailVerificationNotification')) {
+                $trainer->sendEmailVerificationNotification();
+            }
 
             session()->flash('registration_success', 'Udało się zarejestrować jako trener! Proszę potwierdzić swój adres e-mail. Konto będzie wymagało zatwierdzenia przez administratora.');
+            session()->flash('user_type', 'trainer');
+            session()->flash('email', $this->email);
+            
+            // Użycie bezpośredniego URLa zamiast nazwanej trasy
+            return Redirect::to('/registration-success/trainer');
         }
-
-        return $this->redirect(route('registration.success'), navigate: true);
     }
 
     /**

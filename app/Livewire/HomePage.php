@@ -22,7 +22,7 @@ class HomePage extends Component
     #[Layout('layouts.blog')]
     public function render()
     {
-        $posts = Post::withCount('comments')->latest()->take(5)->get();
+        $posts = Post::with('user')->withCount('comments')->latest()->take(5)->get();
 
         return view('livewire.home-page', compact('posts'));
     }

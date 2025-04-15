@@ -28,6 +28,34 @@
         </div>
     @endif
 
+    @if ($user && !$user->hasVerifiedEmail())
+        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
+            <div class="flex">
+                <div class="flex-shrink-0">
+                    <svg class="h-5 w-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <div class="ml-3">
+                    <h3 class="text-sm font-medium text-yellow-800">
+                        Twój adres email nie został jeszcze zweryfikowany
+                    </h3>
+                    <div class="mt-2 text-sm text-yellow-700">
+                        <p>
+                            Aby korzystać ze wszystkich funkcji serwisu, potwierdź swój adres email klikając w link, który wysłaliśmy na {{ $email }}.
+                        </p>
+                        <button wire:click="resendVerificationEmail" 
+                            wire:loading.attr="disabled"
+                            class="mt-3 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                            <span wire:loading.remove wire:target="resendVerificationEmail">Wyślij ponownie link weryfikacyjny</span>
+                            <span wire:loading wire:target="resendVerificationEmail">Wysyłanie...</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
+
     <form wire:submit.prevent="updateProfile" class="space-y-6">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             {{-- Login/username field --}}

@@ -30,7 +30,7 @@ class PostsPage extends Component
     #[Layout('layouts.blog')]
     public function render()
     {
-        $query = Post::query();
+        $query = Post::with(['user', 'category', 'views']);
         
         if (!empty($this->searchQuery)) {
             $query->where(function($q) {

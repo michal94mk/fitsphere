@@ -83,6 +83,27 @@ class UpdateProfileInformationForm extends Component
         session()->flash('status', 'Dane profilu zostały zaktualizowane.');
     }
 
+    /**
+     * Ponownie wysyła email z linkiem weryfikacyjnym.
+     */
+    public function resendVerificationEmail()
+    {
+        if (!$this->user) {
+            session()->flash('error', 'Użytkownik nie jest zalogowany.');
+            return;
+        }
+
+        if ($this->user->hasVerifiedEmail()) {
+            session()->flash('info', 'Twój adres email został już zweryfikowany.');
+            return;
+        }
+
+        // Wysyłanie emaila weryfikacyjnego
+        $this->user->sendEmailVerificationNotification();
+        
+        session()->flash('status', 'Link weryfikacyjny został wysłany ponownie na adres: ' . $this->user->email);
+    }
+
     public function render()
     {
         return view('livewire.profile.update-profile-information-form');

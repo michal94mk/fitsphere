@@ -25,6 +25,9 @@ use App\Livewire\Profile\UpdatePassword;
 use App\Livewire\TrainerProfilePage;
 use App\Livewire\TrainersList;
 use App\Livewire\TrainerDetails;
+use App\Livewire\CreateReservation;
+use App\Livewire\UserReservations;
+use App\Livewire\TrainerReservations;
 
 use App\Livewire\Admin\Dashboard as AdminDashboard;
 use App\Livewire\Admin\PostsIndex;
@@ -70,7 +73,7 @@ Route::get('/trainers/{trainerId}', TrainerDetails::class)->name('trainer.show')
 Route::get('/contact', ContactPage::class)->name('contact');
 Route::get('/terms', TermsPage::class)->name('terms');
 Route::get('/search', SearchResultsPage::class)->name('search');
-Route::get('registration-success', \App\Livewire\RegistrationSuccess::class)->name('registration.success');
+Route::get('/registration-success/{userType?}', \App\Livewire\Auth\RegistrationSuccess::class)->name('registration.success');
 
 // -----------------------------
 // Public Authentication Routes
@@ -80,11 +83,9 @@ Route::middleware('guest')->group(function () {
     Route::get('/register', Register::class)->name('register');
     Route::get('/forgot-password', ForgotPassword::class)->name('password.request');
     Route::get('/reset-password/{token}', ResetPassword::class)->name('password.reset');
-    Route::get('registration-success', \App\Livewire\RegistrationSuccess::class)->name('registration.success');
 });
 
 Route::get('/email/verify', VerifyEmail::class)->name('verification.notice');
-Route::get('/email/verify/{id}/{hash}', VerifyEmail::class)->name('verification.verify');
 Route::get('/password/confirm', ConfirmPassword::class)->name('password.confirm');
 
 // Profile routes
@@ -113,6 +114,18 @@ Route::middleware('auth', 'verified')->group(function () {
     
     // Post management (excluding index and show, handled by public routes)
     Route::resource('posts', PostController::class)->except(['index', 'show']);
+    
+    // Reservation system for users
+    Route::get('/reservation/create/{trainerId}', CreateReservation::class)->name('reservation.create');
+    Route::get('/user/reservations', UserReservations::class)->name('user.reservations');
+});
+
+// =============================
+// Trainer Routes - Only accessible by authenticated trainers
+// =============================
+Route::middleware('auth:trainers')->prefix('trainer')->name('trainer.')->group(function () {
+    Route::get('/reservations', TrainerReservations::class)->name('reservations');
+    // Route::get('/profile', TrainerProfilePage::class)->name('profile');
 });
 
 // =============================
@@ -150,44 +163,69 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
     Route::get('/trainers/{id}', TrainersShow::class)->name('trainers.show');
 });
 
-
 // Email verification route
-Route::get('email/verify/{id}/{hash}', function ($id, $hash) {
-    // Check if the ID belongs to a User
-    $user = null;
-    $isTrainer = false;
-    
+Route::get('/email/verify/{id}/{hash}', function ($id, $hash) {
     try {
-        $user = User::findOrFail($id);
-    } catch (\Exception $e) {
-        // If not found in users, try to find in trainers
+        // Próbujemy znaleźć zarówno użytkownika jak i trenera
+        $userModel = null;
+        $trainerModel = null;
+        $isTrainer = false;
+        $validatedUser = null;
+        
         try {
-            $user = \App\Models\Trainer::findOrFail($id);
-            $isTrainer = true;
+            // Próba znalezienia użytkownika
+            $userModel = User::find($id);
         } catch (\Exception $e) {
-            return redirect()->route('login')
-                ->with('error', 'Nie znaleziono użytkownika. Proszę zalogować się ponownie.');
+            // Ignorujemy błędy
         }
+        
+        try {
+            // Próba znalezienia trenera
+            $trainerModel = \App\Models\Trainer::find($id);
+        } catch (\Exception $e) {
+            // Ignorujemy błędy
+        }
+        
+        // Jeśli nie znaleziono ani użytkownika ani trenera, zwróć błąd
+        if (!$userModel && !$trainerModel) {
+            throw new \Exception('Nie znaleziono użytkownika o podanym ID.');
+        }
+        
+        // Sprawdź, który model pasuje do hasha (może być tylko jeden prawidłowy)
+        if ($userModel && hash_equals(sha1($userModel->getEmailForVerification()), (string) $hash)) {
+            $validatedUser = $userModel;
+            $isTrainer = false;
+        } elseif ($trainerModel && hash_equals(sha1($trainerModel->getEmailForVerification()), (string) $hash)) {
+            $validatedUser = $trainerModel;
+            $isTrainer = true;
+        } else {
+            throw new \Exception('Nieprawidłowy hash weryfikacyjny dla podanego użytkownika.');
+        }
+        
+        // Sprawdź, czy email jest już zweryfikowany
+        if ($validatedUser->hasVerifiedEmail()) {
+            $message = 'Twój adres email został już wcześniej zweryfikowany!';
+            return redirect('/login')->with('verified', $message);
+        }
+
+        // Oznacz email jako zweryfikowany i zapisz zmiany
+        $validatedUser->markEmailAsVerified();
+        
+        // Uruchom zdarzenie Verified
+        event(new Verified($validatedUser));
+        
+        // Komunikat o sukcesie i przekierowanie
+        $message = 'Twój adres email został pomyślnie zweryfikowany!';
+        
+        if ($isTrainer) {
+            $message .= ' Administrator wkrótce sprawdzi Twoje zgłoszenie.';
+        }
+        
+        // Przekierowanie do logowania
+        return redirect('/login')->with('verified', $message);
+        
+    } catch (\Exception $e) {
+        // W przypadku błędu, pokazujemy komunikat i przekierowujemy do logowania
+        return redirect('/login')->with('error', 'Wystąpił błąd podczas weryfikacji: ' . $e->getMessage());
     }
-
-    // Ensure that the hash matches the user's email verification hash
-    if (!$user || !hash_equals((string) $hash, (string) sha1($user->getEmailForVerification()))) {
-        abort(403, 'Nieprawidłowy lub wygasły link weryfikacyjny.');
-    }
-
-    // If email is already verified, redirect to profile
-    if ($user->hasVerifiedEmail()) {
-        return redirect()->route('profile')->with('verified', 'Twój adres email został już zweryfikowany!');
-    }
-
-    // Mark the email as verified and trigger the Verified event
-    $user->markEmailAsVerified();
-    event(new Verified($user));
-
-    $successMessage = 'Twój adres email został pomyślnie zweryfikowany!';
-    if ($isTrainer) {
-        $successMessage = 'Twój adres email trenera został pomyślnie zweryfikowany! Administrator sprawdzi Twoje zgłoszenie.';
-    }
-
-    return redirect()->route('profile')->with('verified', $successMessage);
-})->middleware(['signed', 'throttle:6,1'])->name('verification.verify');
+})->middleware(['signed'])->name('verification.verify');
