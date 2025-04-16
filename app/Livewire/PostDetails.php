@@ -7,7 +7,9 @@ use Livewire\WithPagination;
 use Livewire\Attributes\Layout;
 use App\Models\Post;
 use App\Models\Comment;
+use App\Models\PostView;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Request;
 
 class PostDetails extends Component
 {
@@ -21,6 +23,29 @@ class PostDetails extends Component
     {
         $this->postId = $postId;
         $this->post = Post::with('user')->findOrFail($this->postId);
+        
+        // Increment view count
+        $this->post->increment('view_count');
+        
+        // Also track detailed view information
+        $ip = Request::ip();
+        $userAgent = Request::header('User-Agent');
+        $userId = Auth::id() ?? null;
+        
+        // Optional: track unique views using IP + post combination
+        $existingView = PostView::where('post_id', $this->postId)
+            ->where('ip_address', $ip)
+            ->whereDate('created_at', now()->toDateString())
+            ->first();
+            
+        if (!$existingView) {
+            PostView::create([
+                'post_id' => $this->postId,
+                'ip_address' => $ip,
+                'user_agent' => $userAgent,
+                'user_id' => $userId
+            ]);
+        }
     }
 
     public function addComment()

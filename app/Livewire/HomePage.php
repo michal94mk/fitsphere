@@ -22,8 +22,23 @@ class HomePage extends Component
     #[Layout('layouts.blog')]
     public function render()
     {
-        $posts = Post::with('user')->withCount('comments')->latest()->take(5)->get();
+        // Najnowsze posty
+        $latestPosts = Post::with('user')
+            ->withCount('comments')
+            ->latest()
+            ->take(5)
+            ->get();
+            
+        // Najpopularniejsze posty według liczby wyświetleń
+        $popularPosts = Post::with('user')
+            ->withCount('comments')
+            ->orderBy('view_count', 'desc')
+            ->take(5)
+            ->get();
 
-        return view('livewire.home-page', compact('posts'));
+        return view('livewire.home-page', [
+            'posts' => $latestPosts,
+            'popularPosts' => $popularPosts
+        ]);
     }
 }

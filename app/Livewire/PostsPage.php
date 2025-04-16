@@ -30,7 +30,7 @@ class PostsPage extends Component
     #[Layout('layouts.blog')]
     public function render()
     {
-        $query = Post::with(['user', 'category', 'views']);
+        $query = Post::with(['user', 'category']);
         
         if (!empty($this->searchQuery)) {
             $query->where(function($q) {
@@ -48,7 +48,7 @@ class PostsPage extends Component
                 $query->oldest();
                 break;
             case 'popular':
-                $query->orderBy('views', 'desc');
+                $query->orderBy('view_count', 'desc');
                 break;
             case 'newest':
             default:
