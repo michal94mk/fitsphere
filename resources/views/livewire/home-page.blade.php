@@ -85,6 +85,29 @@
                         Przeglądaj artykuły
                     </a>
                 </div>
+                
+                <!-- Nowe funkcjonalności dietetyczne -->
+                <div class="bg-white rounded-lg shadow-md p-6 flex flex-col items-center text-center transform transition-all duration-300 hover:shadow-lg hover:scale-105">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-green-500 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                    </svg>
+                    <h4 class="text-lg font-semibold text-gray-800 mb-2">Kalkulator Diety</h4>
+                    <p class="text-gray-600 mb-4">Oblicz swoje zapotrzebowanie kaloryczne i makroskładniki</p>
+                    <a href="{{ route('nutrition-calculator') }}" wire:navigate class="mt-auto inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                        Wypróbuj kalkulator
+                    </a>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-md p-6 flex flex-col items-center text-center transform transition-all duration-300 hover:shadow-lg hover:scale-105">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-green-500 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                    </svg>
+                    <h4 class="text-lg font-semibold text-gray-800 mb-2">Planer Posiłków</h4>
+                    <p class="text-gray-600 mb-4">Stwórz spersonalizowany plan posiłków na podstawie swojego profilu</p>
+                    <a href="{{ route('meal-planner') }}" wire:navigate class="mt-auto inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                        Zaplanuj posiłki
+                    </a>
+                </div>
             </div>
         </div>
     </section>

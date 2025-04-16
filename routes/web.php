@@ -75,6 +75,10 @@ Route::get('/terms', TermsPage::class)->name('terms');
 Route::get('/search', SearchResultsPage::class)->name('search');
 Route::get('/registration-success/{userType?}', \App\Livewire\Auth\RegistrationSuccess::class)->name('registration.success');
 
+// Nutrition features
+Route::get('/nutrition-calculator', App\Livewire\NutritionCalculator::class)->name('nutrition-calculator');
+Route::get('/meal-planner', App\Livewire\MealPlanner::class)->name('meal-planner');
+
 // -----------------------------
 // Public Authentication Routes
 // -----------------------------

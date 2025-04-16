@@ -4,7 +4,7 @@
             <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
                 <div class="relative flex items-center justify-between h-16">
                     
-                    <!-- Mobile Menu button - przeniesiony na lewo -->
+                    <!-- Mobile Menu button -->
                     <div class="sm:hidden flex items-center justify-start">
                         <button @click="mobileOpen = !mobileOpen"
                                 class="text-gray-300 hover:text-white focus:outline-none">
@@ -46,6 +46,19 @@
                            wire:navigate
                            class="rounded-md px-2 md:px-3 py-2 text-sm font-medium {{ $currentPage == 'terms' ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
                             Terms
+                        </a>
+                        
+                        <!-- Linki do funkcjonalności żywieniowych -->
+                        <a href="{{ route('nutrition-calculator') }}"
+                           wire:navigate
+                           class="rounded-md px-2 md:px-3 py-2 text-sm font-medium {{ $currentPage == 'nutrition-calculator' ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
+                            Kalkulator Diety
+                        </a>
+                        
+                        <a href="{{ route('meal-planner') }}"
+                           wire:navigate
+                           class="rounded-md px-2 md:px-3 py-2 text-sm font-medium {{ $currentPage == 'meal-planner' ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
+                            Planer Posiłków
                         </a>
                         
                         @if(auth()->check() && auth()->user()->role === 'admin')
@@ -189,6 +202,21 @@
                        @click="mobileOpen = false"
                        class="block w-full text-center rounded-md px-3 py-2 text-base font-medium {{ $currentPage == 'terms' ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
                         Terms
+                    </a>
+                    
+                    <!-- Linki do funkcjonalności żywieniowych (wersja mobilna) -->
+                    <a href="{{ route('nutrition-calculator') }}"
+                       wire:navigate
+                       @click="mobileOpen = false"
+                       class="block w-full text-center rounded-md px-3 py-2 text-base font-medium {{ $currentPage == 'nutrition-calculator' ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
+                        Kalkulator Diety
+                    </a>
+                    
+                    <a href="{{ route('meal-planner') }}"
+                       wire:navigate
+                       @click="mobileOpen = false"
+                       class="block w-full text-center rounded-md px-3 py-2 text-base font-medium {{ $currentPage == 'meal-planner' ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
+                        Planer Posiłków
                     </a>
                     
                     @if(auth()->check() && auth()->user()->role === 'admin')
