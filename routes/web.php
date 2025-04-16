@@ -1,15 +1,7 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\PostController;
-use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\CommentController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\DashboardController;
 use App\Livewire\HomePage;
 use App\Livewire\ContactPage;
-use App\Livewire\PostView;
 use App\Livewire\PostDetails;
 use App\Livewire\PostsPage;
 use App\Livewire\TermsPage;
@@ -20,14 +12,17 @@ use App\Livewire\Auth\ForgotPassword;
 use App\Livewire\Auth\ResetPassword;
 use App\Livewire\Auth\VerifyEmail;
 use App\Livewire\Auth\ConfirmPassword;
+use App\Livewire\Auth\RegistrationSuccess;
 use App\Livewire\Profile\Profile;
 use App\Livewire\Profile\UpdatePassword;
-use App\Livewire\TrainerProfilePage;
 use App\Livewire\TrainersList;
 use App\Livewire\TrainerDetails;
 use App\Livewire\CreateReservation;
 use App\Livewire\UserReservations;
 use App\Livewire\TrainerReservations;
+use App\Livewire\NutritionCalculator;
+use App\Livewire\MealPlanner;
+use App\Livewire\CommentEdit;
 
 use App\Livewire\Admin\Dashboard as AdminDashboard;
 use App\Livewire\Admin\PostsIndex;
@@ -48,12 +43,9 @@ use App\Livewire\Admin\TrainersCreate;
 use App\Livewire\Admin\TrainersEdit;
 use App\Livewire\Admin\TrainersShow;
 
-use Illuminate\Auth\Events\Verified;
-use App\Models\User;
-use App\Models\Post;
-use App\Http\Middleware\AdminMiddleware;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use App\Livewire\Auth\VerifyEmailHandler;
 
 // =============================
 // Public Routes - Available to all users
@@ -73,11 +65,11 @@ Route::get('/trainers/{trainerId}', TrainerDetails::class)->name('trainer.show')
 Route::get('/contact', ContactPage::class)->name('contact');
 Route::get('/terms', TermsPage::class)->name('terms');
 Route::get('/search', SearchResultsPage::class)->name('search');
-Route::get('/registration-success/{userType?}', \App\Livewire\Auth\RegistrationSuccess::class)->name('registration.success');
+Route::get('/registration-success/{userType?}', RegistrationSuccess::class)->name('registration.success');
 
 // Nutrition features
-Route::get('/nutrition-calculator', App\Livewire\NutritionCalculator::class)->name('nutrition-calculator');
-Route::get('/meal-planner', App\Livewire\MealPlanner::class)->name('meal-planner');
+Route::get('/nutrition-calculator', NutritionCalculator::class)->name('nutrition-calculator');
+Route::get('/meal-planner', MealPlanner::class)->name('meal-planner');
 
 // -----------------------------
 // Public Authentication Routes
@@ -90,6 +82,9 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::get('/email/verify', VerifyEmail::class)->name('verification.notice');
+Route::get('/email/verify/{id}/{hash}', VerifyEmailHandler::class)
+    ->middleware(['signed'])
+    ->name('verification.verify');
 Route::get('/password/confirm', ConfirmPassword::class)->name('password.confirm');
 
 // Profile routes
@@ -112,12 +107,7 @@ Route::post('/logout', function () {
 // =============================
 Route::middleware('auth', 'verified')->group(function () {
     // Comments functionality
-    Route::post('posts/{post}/comments', [CommentController::class, 'store'])->name('comments.store');
-    Route::get('comments/{comment}/edit', [CommentController::class, 'edit'])->name('comments.edit');
-    Route::put('comments/{comment}', [CommentController::class, 'update'])->name('comments.update');
-    
-    // Post management (excluding index and show, handled by public routes)
-    Route::resource('posts', PostController::class)->except(['index', 'show']);
+    Route::get('comments/{commentId}/livewire-edit', CommentEdit::class)->name('comments.livewire-edit');
     
     // Reservation system for users
     Route::get('/reservation/create/{trainerId}', CreateReservation::class)->name('reservation.create');
@@ -166,70 +156,3 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
     Route::get('/trainers/{id}/edit', TrainersEdit::class)->name('trainers.edit');
     Route::get('/trainers/{id}', TrainersShow::class)->name('trainers.show');
 });
-
-// Email verification route
-Route::get('/email/verify/{id}/{hash}', function ($id, $hash) {
-    try {
-        // Próbujemy znaleźć zarówno użytkownika jak i trenera
-        $userModel = null;
-        $trainerModel = null;
-        $isTrainer = false;
-        $validatedUser = null;
-        
-        try {
-            // Próba znalezienia użytkownika
-            $userModel = User::find($id);
-        } catch (\Exception $e) {
-            // Ignorujemy błędy
-        }
-        
-        try {
-            // Próba znalezienia trenera
-            $trainerModel = \App\Models\Trainer::find($id);
-        } catch (\Exception $e) {
-            // Ignorujemy błędy
-        }
-        
-        // Jeśli nie znaleziono ani użytkownika ani trenera, zwróć błąd
-        if (!$userModel && !$trainerModel) {
-            throw new \Exception('Nie znaleziono użytkownika o podanym ID.');
-        }
-        
-        // Sprawdź, który model pasuje do hasha (może być tylko jeden prawidłowy)
-        if ($userModel && hash_equals(sha1($userModel->getEmailForVerification()), (string) $hash)) {
-            $validatedUser = $userModel;
-            $isTrainer = false;
-        } elseif ($trainerModel && hash_equals(sha1($trainerModel->getEmailForVerification()), (string) $hash)) {
-            $validatedUser = $trainerModel;
-            $isTrainer = true;
-        } else {
-            throw new \Exception('Nieprawidłowy hash weryfikacyjny dla podanego użytkownika.');
-        }
-        
-        // Sprawdź, czy email jest już zweryfikowany
-        if ($validatedUser->hasVerifiedEmail()) {
-            $message = 'Twój adres email został już wcześniej zweryfikowany!';
-            return redirect('/login')->with('verified', $message);
-        }
-
-        // Oznacz email jako zweryfikowany i zapisz zmiany
-        $validatedUser->markEmailAsVerified();
-        
-        // Uruchom zdarzenie Verified
-        event(new Verified($validatedUser));
-        
-        // Komunikat o sukcesie i przekierowanie
-        $message = 'Twój adres email został pomyślnie zweryfikowany!';
-        
-        if ($isTrainer) {
-            $message .= ' Administrator wkrótce sprawdzi Twoje zgłoszenie.';
-        }
-        
-        // Przekierowanie do logowania
-        return redirect('/login')->with('verified', $message);
-        
-    } catch (\Exception $e) {
-        // W przypadku błędu, pokazujemy komunikat i przekierowujemy do logowania
-        return redirect('/login')->with('error', 'Wystąpił błąd podczas weryfikacji: ' . $e->getMessage());
-    }
-})->middleware(['signed'])->name('verification.verify');
