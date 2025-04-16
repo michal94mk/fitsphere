@@ -4,7 +4,7 @@
         <div class="text-center mb-16">
             <h1 class="text-5xl font-extrabold text-gray-900 mb-4">
                 <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-blue-500">
-                    About Us
+                    Trainers
                 </span>
             </h1>
             <!-- Flash messages -->
@@ -14,9 +14,6 @@
                 </div>
             @endif
             <!-- Introduction text -->
-            <p class="text-xl text-gray-700 leading-relaxed mt-6 max-w-3xl mx-auto">
-                Witaj na naszym blogu! Jesteśmy pasjonatami zdrowego stylu życia, fitness i dobrego samopoczucia.
-            </p>
             <p class="text-xl text-gray-700 leading-relaxed mt-4 max-w-3xl mx-auto">
                 Nasz zespół składa się z entuzjastów zdrowia, dietetyków i ekspertów, którzy dostarczają wysokiej jakości treści.
             </p>

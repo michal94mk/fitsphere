@@ -159,7 +159,7 @@ class NutritionCalculator extends Component
         $this->loading = false;
     }
     
-    #[Layout('layouts.app')]
+    #[Layout('layouts.blog')]
     public function render()
     {
         return view('livewire.nutrition-calculator');

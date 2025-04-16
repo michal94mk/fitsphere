@@ -411,7 +411,7 @@ class MealPlanner extends Component
         $this->loadMealPlans();
     }
     
-    #[Layout('layouts.app')]
+    #[Layout('layouts.blog')]
     public function render()
     {
         return view('livewire.meal-planner');

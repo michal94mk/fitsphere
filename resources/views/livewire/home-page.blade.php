@@ -31,87 +31,72 @@
         </div>
     </section>
 
-    <!-- Quick Access Section - only for authenticated users -->
-    @if(Auth::check() || Auth::guard('trainer')->check())
+    <!-- Quick Access Section - visible for all users -->
     <section class="bg-blue-50 py-12 border-b border-blue-100">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h3 class="text-2xl font-bold text-center text-blue-800 mb-8">Szybki dostęp</h3>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                @if(Auth::check())
-                <div class="bg-white rounded-lg shadow-md p-6 flex flex-col items-center text-center transform transition-all duration-300 hover:shadow-lg hover:scale-105">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-blue-500 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    </svg>
-                    <h4 class="text-lg font-semibold text-gray-800 mb-2">Moje rezerwacje</h4>
-                    <p class="text-gray-600 mb-4">Sprawdź swoje zaplanowane treningi</p>
-                    <a href="{{ route('user.reservations') }}" wire:navigate class="mt-auto inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                        Przejdź do rezerwacji
-                    </a>
-                </div>
-                
-                <div class="bg-white rounded-lg shadow-md p-6 flex flex-col items-center text-center transform transition-all duration-300 hover:shadow-lg hover:scale-105">
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                <!-- Znajdź trenera -->
+                <a href="{{ route('trainers.list') }}" wire:navigate class="bg-white rounded-lg shadow-md p-6 flex flex-col items-center text-center transform transition-all duration-300 hover:shadow-lg hover:scale-105">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-blue-500 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                     </svg>
                     <h4 class="text-lg font-semibold text-gray-800 mb-2">Znajdź trenera</h4>
-                    <p class="text-gray-600 mb-4">Przeglądaj dostępnych trenerów i umów się na trening</p>
-                    <a href="{{ route('trainers.list') }}" wire:navigate class="mt-auto inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                        Znajdź trenera
-                    </a>
-                </div>
-                @endif
+                    <p class="text-sm text-gray-600">Przeglądaj dostępnych trenerów</p>
+                </a>
                 
-                @if(Auth::guard('trainer')->check())
-                <div class="bg-white rounded-lg shadow-md p-6 flex flex-col items-center text-center transform transition-all duration-300 hover:shadow-lg hover:scale-105">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-blue-500 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                    </svg>
-                    <h4 class="text-lg font-semibold text-gray-800 mb-2">Panel Trenera</h4>
-                    <p class="text-gray-600 mb-4">Zarządzaj swoimi rezerwacjami i profilem</p>
-                    <a href="{{ route('trainer.reservations') }}" wire:navigate class="mt-auto inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                        Przejdź do panelu
-                    </a>
-                </div>
-                @endif
-                
-                <div class="bg-white rounded-lg shadow-md p-6 flex flex-col items-center text-center transform transition-all duration-300 hover:shadow-lg hover:scale-105">
+                <!-- Artykuły i porady -->
+                <a href="{{ route('posts.list') }}" wire:navigate class="bg-white rounded-lg shadow-md p-6 flex flex-col items-center text-center transform transition-all duration-300 hover:shadow-lg hover:scale-105">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-blue-500 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
                     </svg>
                     <h4 class="text-lg font-semibold text-gray-800 mb-2">Artykuły i porady</h4>
-                    <p class="text-gray-600 mb-4">Przeczytaj najnowsze artykuły o zdrowiu i fitnessie</p>
-                    <a href="{{ route('posts.list') }}" wire:navigate class="mt-auto inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                        Przeglądaj artykuły
-                    </a>
-                </div>
+                    <p class="text-sm text-gray-600">Przeczytaj najnowsze artykuły</p>
+                </a>
                 
-                <!-- Nowe funkcjonalności dietetyczne -->
-                <div class="bg-white rounded-lg shadow-md p-6 flex flex-col items-center text-center transform transition-all duration-300 hover:shadow-lg hover:scale-105">
+                <!-- Kalkulator Diety -->
+                <a href="{{ route('nutrition-calculator') }}" wire:navigate class="bg-white rounded-lg shadow-md p-6 flex flex-col items-center text-center transform transition-all duration-300 hover:shadow-lg hover:scale-105">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-green-500 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
                     </svg>
                     <h4 class="text-lg font-semibold text-gray-800 mb-2">Kalkulator Diety</h4>
-                    <p class="text-gray-600 mb-4">Oblicz swoje zapotrzebowanie kaloryczne i makroskładniki</p>
-                    <a href="{{ route('nutrition-calculator') }}" wire:navigate class="mt-auto inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-                        Wypróbuj kalkulator
-                    </a>
-                </div>
+                    <p class="text-sm text-gray-600">Oblicz zapotrzebowanie kaloryczne</p>
+                </a>
                 
-                <div class="bg-white rounded-lg shadow-md p-6 flex flex-col items-center text-center transform transition-all duration-300 hover:shadow-lg hover:scale-105">
+                <!-- Planer Posiłków -->
+                <a href="{{ route('meal-planner') }}" wire:navigate class="bg-white rounded-lg shadow-md p-6 flex flex-col items-center text-center transform transition-all duration-300 hover:shadow-lg hover:scale-105">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-green-500 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                     </svg>
                     <h4 class="text-lg font-semibold text-gray-800 mb-2">Planer Posiłków</h4>
-                    <p class="text-gray-600 mb-4">Stwórz spersonalizowany plan posiłków na podstawie swojego profilu</p>
-                    <a href="{{ route('meal-planner') }}" wire:navigate class="mt-auto inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-                        Zaplanuj posiłki
-                    </a>
-                </div>
+                    <p class="text-sm text-gray-600">Stwórz plan posiłków</p>
+                </a>
+                
+                @if(Auth::check())
+                <!-- Moje rezerwacje - Only for logged in users -->
+                <a href="{{ route('user.reservations') }}" wire:navigate class="bg-white rounded-lg shadow-md p-6 flex flex-col items-center text-center transform transition-all duration-300 hover:shadow-lg hover:scale-105">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-blue-500 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    <h4 class="text-lg font-semibold text-gray-800 mb-2">Moje rezerwacje</h4>
+                    <p class="text-sm text-gray-600">Sprawdź swoje treningi</p>
+                </a>
+                @endif
+                
+                @if(Auth::guard('trainer')->check())
+                <!-- Panel Trenera - Only for trainers -->
+                <a href="{{ route('trainer.reservations') }}" wire:navigate class="bg-white rounded-lg shadow-md p-6 flex flex-col items-center text-center transform transition-all duration-300 hover:shadow-lg hover:scale-105">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-blue-500 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                    </svg>
+                    <h4 class="text-lg font-semibold text-gray-800 mb-2">Panel Trenera</h4>
+                    <p class="text-sm text-gray-600">Zarządzaj rezerwacjami</p>
+                </a>
+                @endif
             </div>
         </div>
     </section>
-    @endif
 
     <!-- Posts Section -->
     <section id="posts" class="bg-gradient-to-br from-gray-50 to-gray-100 py-20 border-t-8 border-blue-600">
