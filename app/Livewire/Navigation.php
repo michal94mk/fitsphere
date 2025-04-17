@@ -28,9 +28,13 @@ class Navigation extends Component
             $this->currentPage = 'home';
         } elseif ($path === 'post') {
             $this->currentPage = 'posts';
-        } elseif ($path === 'trainer') {
-            $this->currentPage = 'about'; // We keep 'about' for trainers for backwards compatibility
-        } elseif (in_array($path, ['home', 'posts', 'about', 'contact', 'terms', 'search', 'login', 'register', 'forgot-password', 'profile'])) {
+        } elseif ($path === 'trainer' || $path === 'trainers') {
+            $this->currentPage = 'trainers'; // Changed from 'about' to 'trainers' for clarity
+        } elseif ($path === 'nutrition-calculator') {
+            $this->currentPage = 'nutrition-calculator';
+        } elseif ($path === 'meal-planner') {
+            $this->currentPage = 'meal-planner';
+        } elseif (in_array($path, ['home', 'posts', 'contact', 'terms', 'search', 'login', 'register', 'forgot-password', 'profile'])) {
             $this->currentPage = $path;
         } else {
             $this->currentPage = 'home';

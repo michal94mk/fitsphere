@@ -6,6 +6,8 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use App\Models\Trainer;
+use Livewire\Attributes\Layout;
 
 class UsersCreate extends Component
 {
@@ -66,9 +68,9 @@ class UsersCreate extends Component
         }
     }
     
+    #[Layout('layouts.admin', ['header' => 'Dodaj nowego użytkownika'])]
     public function render()
     {
-        return view('livewire.admin.users-create')
-            ->layout('layouts.admin', ['header' => 'Dodaj nowego użytkownika']);
+        return view('livewire.admin.users-create');
     }
 } 

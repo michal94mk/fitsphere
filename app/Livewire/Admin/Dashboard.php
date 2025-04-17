@@ -10,6 +10,7 @@ use App\Mail\TrainerApproved;
 use Illuminate\Support\Facades\Mail;
 use Livewire\Component;
 use Carbon\Carbon;
+use Livewire\Attributes\Layout;
 
 class Dashboard extends Component
 {
@@ -74,9 +75,9 @@ class Dashboard extends Component
         }
     }
     
+    #[Layout('layouts.admin', ['header' => 'Dashboard'])]
     public function render()
     {
-        return view('livewire.admin.dashboard')
-            ->layout('layouts.admin', ['header' => 'Dashboard']);
+        return view('livewire.admin.dashboard');
     }
 } 
