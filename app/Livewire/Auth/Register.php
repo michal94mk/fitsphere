@@ -6,56 +6,34 @@ use Livewire\Component;
 use App\Models\User;
 use App\Models\Trainer;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Auth\Events\Registered;
 use Livewire\Attributes\Layout;
 
 /**
- * User registration component.
- * Handles the registration process for new users.
+ * Handles the user registration process for both regular users and trainers.
  */
 class Register extends Component
 {
-    /**
-     * User's name/login
-     * @var string
-     */
+    // Registration form fields
     public $name;
-    
-    /**
-     * User's email
-     * @var string
-     */
     public $email;
-    
-    /**
-     * User's password
-     * @var string
-     */
     public $password;
+    public $password_confirmation;
+    public $account_type = 'regular';
+    public $specialization;
     
     /**
-     * Password confirmation
-     * @var string
+     * Sets form to trainer mode if specified in URL parameters
      */
-    public $password_confirmation;
+    public function mount($account_type = null)
+    {
+        if ($account_type === 'trainer') {
+            $this->account_type = 'trainer';
+        }
+    }
 
     /**
-     * Account type (regular or trainer)
-     * @var string
-     */
-    public $account_type = 'regular';
-
-    /**
-     * Trainer specialization (only for trainer accounts)
-     * @var string
-     */
-    public $specialization;
-
-    /**
-     * Validation rules
-     * @var array
+     * Validation rules change based on account type selected
      */
     protected function rules()
     {
@@ -76,69 +54,81 @@ class Register extends Component
         return $rules;
     }
 
-    /**
-     * Process user registration.
-     * Creates a new user account and sends verification email.
-     */
     public function register()
     {
         $this->validate();
 
         if ($this->account_type === 'regular') {
-            // Register as regular user
-            $user = User::create([
-                'name'     => $this->name,
-                'email'    => $this->email,
-                'password' => Hash::make($this->password),
-            ]);
-
-            // Zamiast wywoływać event, bezpośrednio wywołujemy metodę wysyłającą email
-            // event(new Registered($user));
-            if (method_exists($user, 'sendEmailVerificationNotification')) {
-                $user->sendEmailVerificationNotification();
-            }
+            $user = $this->createRegularUser();
+            $this->sendVerificationEmail($user);
+            $this->setUserRegistrationSuccess();
             
-            // Nie logujemy użytkownika automatycznie, ponieważ najpierw musi zweryfikować email
-            // Auth::login($user);
-            
-            // Zapisz informację, że rejestracja zakończyła się pomyślnie
-            session()->flash('registration_success', 'Udało się zarejestrować! Proszę potwierdzić swój adres e-mail.');
-            session()->flash('user_type', 'user');
-            session()->flash('email', $this->email);
-            
-            // Użycie bezpośredniego URLa zamiast nazwanej trasy
             return Redirect::to('/registration-success/user');
         } else {
-            // Register as trainer
-            $trainer = Trainer::create([
-                'name'           => $this->name,
-                'email'          => $this->email,
-                'password'       => Hash::make($this->password),
-                'specialization' => $this->specialization,
-                'is_approved'    => false,
-            ]);
-
-            // Nie logujemy trenera automatycznie, ponieważ najpierw musi zweryfikować email
-            // Auth::guard('trainer')->login($trainer);
+            $trainer = $this->createTrainer();
+            $this->sendVerificationEmail($trainer);
+            $this->setTrainerRegistrationSuccess();
             
-            // Zamiast wywoływać event, bezpośrednio wywołujemy metodę wysyłającą email
-            // event(new Registered($trainer));
-            if (method_exists($trainer, 'sendEmailVerificationNotification')) {
-                $trainer->sendEmailVerificationNotification();
-            }
-
-            session()->flash('registration_success', 'Udało się zarejestrować jako trener! Proszę potwierdzić swój adres e-mail. Konto będzie wymagało zatwierdzenia przez administratora.');
-            session()->flash('user_type', 'trainer');
-            session()->flash('email', $this->email);
-            
-            // Użycie bezpośredniego URLa zamiast nazwanej trasy
             return Redirect::to('/registration-success/trainer');
         }
     }
-
+    
     /**
-     * Render the component.
+     * Creates a regular user account with hashed password
      */
+    private function createRegularUser()
+    {
+        return User::create([
+            'name'     => $this->name,
+            'email'    => $this->email,
+            'password' => Hash::make($this->password),
+        ]);
+    }
+    
+    /**
+     * Creates a trainer account that requires admin approval
+     */
+    private function createTrainer()
+    {
+        return Trainer::create([
+            'name'           => $this->name,
+            'email'          => $this->email,
+            'password'       => Hash::make($this->password),
+            'specialization' => $this->specialization,
+            'is_approved'    => false, 
+        ]);
+    }
+    
+    /**
+     * Sends verification email if the model supports it
+     */
+    private function sendVerificationEmail($user)
+    {
+        if (method_exists($user, 'sendEmailVerificationNotification')) {
+            $user->sendEmailVerificationNotification();
+        }
+    }
+    
+    /**
+     * Sets success messages for regular user registration
+     */
+    private function setUserRegistrationSuccess()
+    {
+        session()->flash('registration_success', 'Udało się zarejestrować! Proszę potwierdzić swój adres e-mail.');
+        session()->flash('user_type', 'user');
+        session()->flash('email', $this->email);
+    }
+    
+    /**
+     * Sets success messages for trainer registration
+     */
+    private function setTrainerRegistrationSuccess()
+    {
+        session()->flash('registration_success', 'Udało się zarejestrować jako trener! Proszę potwierdzić swój adres e-mail. Konto będzie wymagało zatwierdzenia przez administratora.');
+        session()->flash('user_type', 'trainer');
+        session()->flash('email', $this->email);
+    }
+
     #[Layout('layouts.blog')]
     public function render()
     {

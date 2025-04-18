@@ -9,17 +9,57 @@ use App\Models\Comment;
 use App\Mail\TrainerApproved;
 use Illuminate\Support\Facades\Mail;
 use Livewire\Component;
-use Carbon\Carbon;
 use Livewire\Attributes\Layout;
 
+/**
+ * Admin Dashboard Component
+ * 
+ * This component serves as the main dashboard for administrators,
+ * providing system statistics, recent users, pending trainers approval,
+ * and other key metrics for monitoring the application.
+ */
 class Dashboard extends Component
 {
+    /**
+     * General statistics counters for the dashboard
+     * 
+     * @var array
+     */
     public $stats = [];
+    
+    /**
+     * Collection of recently registered users
+     * 
+     * @var \Illuminate\Database\Eloquent\Collection
+     */
     public $recentUsers = [];
+    
+    /**
+     * Collection of registered trainers
+     * 
+     * @var \Illuminate\Database\Eloquent\Collection
+     */
     public $trainerUsers = [];
+    
+    /**
+     * Collection of trainers awaiting approval
+     * 
+     * @var \Illuminate\Database\Eloquent\Collection
+     */
     public $pendingTrainers = [];
+    
+    /**
+     * Collection of most popular posts by view count
+     * 
+     * @var \Illuminate\Database\Eloquent\Collection
+     */
     public $popularPosts = [];
     
+    /**
+     * Initialize the dashboard component and load required data
+     * 
+     * @return void
+     */
     public function mount()
     {
         // Basic statistics
@@ -51,6 +91,16 @@ class Dashboard extends Component
             ->get();
     }
     
+    /**
+     * Approve a trainer account and send notification email
+     * 
+     * This action changes a trainer's status to approved,
+     * refreshes the pending trainers list, updates dashboard stats,
+     * and sends an approval notification email to the trainer.
+     * 
+     * @param int $trainerId The ID of the trainer to approve
+     * @return void
+     */
     public function approveTrainer($trainerId)
     {
         $trainer = Trainer::findOrFail($trainerId);
@@ -66,7 +116,7 @@ class Dashboard extends Component
         // Update the stats
         $this->stats['pendingTrainers'] = Trainer::where('is_approved', false)->count();
         
-        // Wysyłka emaila z powiadomieniem
+        // Send notification email
         try {
             Mail::to($trainer->email)->send(new TrainerApproved($trainer));
             session()->flash('success', "Trener {$trainer->name} został zatwierdzony, a powiadomienie email zostało wysłane.");
@@ -75,6 +125,11 @@ class Dashboard extends Component
         }
     }
     
+    /**
+     * Render the admin dashboard view with collected data
+     * 
+     * @return \Illuminate\View\View
+     */
     #[Layout('layouts.admin', ['header' => 'Dashboard'])]
     public function render()
     {

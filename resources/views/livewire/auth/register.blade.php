@@ -79,7 +79,7 @@
                     <label class="block text-sm font-medium text-gray-700 mb-2">Typ konta</label>
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <input type="radio" id="user_type_regular" name="account_type" value="regular" wire:model.defer="account_type" checked class="hidden peer">
+                            <input type="radio" id="user_type_regular" name="account_type" value="regular" wire:model="account_type" checked class="hidden peer">
                             <label for="user_type_regular" class="flex flex-col items-center justify-center p-4 text-gray-500 bg-white rounded-lg border border-gray-200 cursor-pointer peer-checked:border-blue-500 peer-checked:bg-blue-50 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="mb-2 h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -89,7 +89,7 @@
                         </div>
                         
                         <div>
-                            <input type="radio" id="user_type_trainer" name="account_type" value="trainer" wire:model.defer="account_type" class="hidden peer">
+                            <input type="radio" id="user_type_trainer" name="account_type" value="trainer" wire:model="account_type" class="hidden peer">
                             <label for="user_type_trainer" class="flex flex-col items-center justify-center p-4 text-gray-500 bg-white rounded-lg border border-gray-200 cursor-pointer peer-checked:border-blue-500 peer-checked:bg-blue-50 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="mb-2 h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
@@ -125,6 +125,33 @@
                         @error('specialization') <p class="mt-2 text-sm text-red-600">{{ $message }}</p> @enderror
                     </div>
                 </div>
+
+                @if($account_type === 'trainer')
+                <div class="space-y-6">
+                    <div class="bg-blue-50 border-l-4 border-blue-400 p-4">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <svg class="h-5 w-5 text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm text-blue-700">
+                                    Wybierając konto trenera, zostaniesz poproszony o podanie specjalizacji. Twoje konto będzie musiało zostać zatwierdzone przez administratora.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="specialization" class="block text-sm font-medium text-gray-700">Specjalizacja</label>
+                        <div class="mt-1">
+                            <input wire:model.defer="specialization" id="specialization" name="specialization" type="text" class="py-3 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md" placeholder="Np. Trening siłowy, Dietetyka, Joga">
+                        </div>
+                        @error('specialization') <p class="mt-2 text-sm text-red-600">{{ $message }}</p> @enderror
+                    </div>
+                </div>
+                @endif
 
                 <div>
                     <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transform transition hover:scale-105">

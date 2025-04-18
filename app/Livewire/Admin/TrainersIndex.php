@@ -10,35 +10,100 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\Attributes\Layout;
 
+/**
+ * Admin Trainers Index Component
+ * 
+ * This component manages the list of trainers in the admin panel,
+ * providing filtering, sorting, approval, and deletion functionality.
+ */
 class TrainersIndex extends Component
 {
     use WithPagination;
 
+    /**
+     * Search query string parameter
+     * 
+     * @var string
+     */
     public $search = '';
+    
+    /**
+     * Filter trainers by approval status
+     * 
+     * @var string
+     */
     public $status = '';
+    
+    /**
+     * Current field to sort results by
+     * 
+     * @var string
+     */
     public $sortField = 'created_at';
+    
+    /**
+     * Current sorting direction ('asc' or 'desc')
+     * 
+     * @var string
+     */
     public $sortDirection = 'desc';
+    
+    /**
+     * ID of trainer being deleted (for confirmation modal)
+     * 
+     * @var int|null
+     */
     public $trainerIdBeingDeleted = null;
+    
+    /**
+     * Flag to show/hide the deletion confirmation modal
+     * 
+     * @var bool
+     */
     public $confirmingTrainerDeletion = false;
     
+    /**
+     * URL query string parameters to preserve state on page refresh
+     * 
+     * @var array
+     */
     protected $queryString = ['search', 'status', 'sortField', 'sortDirection'];
     
-    // Reset pagination when filters change
+    /**
+     * Reset pagination when search query changes
+     * 
+     * @return void
+     */
     public function updatingSearch()
     {
         $this->resetPage();
     }
 
+    /**
+     * Reset pagination when status filter changes
+     * 
+     * @return void
+     */
     public function updatingStatus()
     {
         $this->resetPage();
     }
     
+    /**
+     * Reset pagination when sort field changes
+     * 
+     * @return void
+     */
     public function updatingSortField()
     {
         $this->resetPage();
     }
 
+    /**
+     * Render the trainers index view with filtered and sorted results
+     * 
+     * @return \Illuminate\View\View
+     */
     #[Layout('layouts.admin', ['header' => 'Zarządzanie trenerami'])]
     public function render()
     {
@@ -64,6 +129,12 @@ class TrainersIndex extends Component
         ]);
     }
 
+    /**
+     * Approve a trainer and send notification email
+     * 
+     * @param int $id The ID of the trainer to approve
+     * @return void
+     */
     public function approveTrainer($id)
     {
         try {
@@ -71,7 +142,7 @@ class TrainersIndex extends Component
             $trainer->is_approved = true;
             $trainer->save();
             
-            // Wysyłka emaila z powiadomieniem
+            // Send notification email
             try {
                 Mail::to($trainer->email)->send(new TrainerApproved($trainer));
                 session()->flash('success', "Trener {$trainer->name} został zatwierdzony, a powiadomienie email zostało wysłane.");
@@ -83,6 +154,12 @@ class TrainersIndex extends Component
         }
     }
 
+    /**
+     * Change trainer status to pending (unapprove)
+     * 
+     * @param int $id The ID of the trainer to disapprove
+     * @return void
+     */
     public function disapproveTrainer($id)
     {
         try {
@@ -96,6 +173,12 @@ class TrainersIndex extends Component
         }
     }
 
+    /**
+     * Change sort field and direction
+     * 
+     * @param string $field The database column to sort by
+     * @return void
+     */
     public function setSorting($field)
     {
         if ($this->sortField === $field) {
@@ -106,12 +189,26 @@ class TrainersIndex extends Component
         }
     }
 
+    /**
+     * Show confirmation dialog before deleting a trainer
+     * 
+     * @param int $id The ID of the trainer to be deleted
+     * @return void
+     */
     public function confirmTrainerDeletion($id)
     {
         $this->trainerIdBeingDeleted = $id;
         $this->confirmingTrainerDeletion = true;
     }
 
+    /**
+     * Delete a trainer after confirmation
+     * 
+     * This method deletes the trainer record and their profile image
+     * if one exists in storage.
+     * 
+     * @return void
+     */
     public function deleteTrainer()
     {
         if (!$this->trainerIdBeingDeleted) {
@@ -123,7 +220,7 @@ class TrainersIndex extends Component
         try {
             $trainer = Trainer::findOrFail($this->trainerIdBeingDeleted);
             
-            // Usuń zdjęcie jeśli istnieje
+            // Delete profile image if it exists
             if ($trainer->image && Storage::disk('public')->exists($trainer->image)) {
                 Storage::disk('public')->delete($trainer->image);
             }
@@ -140,6 +237,11 @@ class TrainersIndex extends Component
         $this->trainerIdBeingDeleted = null;
     }
 
+    /**
+     * Cancel the trainer deletion process
+     * 
+     * @return void
+     */
     public function cancelDeletion()
     {
         $this->confirmingTrainerDeletion = false;

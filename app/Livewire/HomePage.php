@@ -3,42 +3,42 @@
 namespace App\Livewire;
 
 use Livewire\Component;
-use Livewire\Attributes\Url;
-use Livewire\Attributes\Layout;
 use App\Models\Post;
+use App\Models\Category;
+use Livewire\Attributes\Layout;
 
 class HomePage extends Component
 {
-    #[Url]
-    public ?int $selectedPostId = null;
+    public $latestPosts;
+    public $categories;
+    public $popularPosts;
+    public $posts;
 
-    // Go to a specific post details page using SPA navigation
-    public function viewPost($postId)
+    public function mount()
     {
-        return $this->redirect(route('post.show', ['postId' => $postId]), navigate: true);
+        // Najnowsze posty
+        $this->latestPosts = Post::with('user', 'categories')
+            ->withCount('comments')
+            ->latest()
+            ->take(3)
+            ->get();
+            
+        $this->categories = Category::withCount('posts')->get();
+        
+        // Popularne posty (według ilości wyświetleń)
+        $this->popularPosts = Post::with('user', 'categories')
+            ->withCount('comments')
+            ->orderBy('view_count', 'desc')
+            ->take(3)
+            ->get();
+            
+        // Ta zmienna też będzie zawierać najnowsze posty - pozostawiam dla kompatybilności z widokiem
+        $this->posts = $this->latestPosts;
     }
 
-    // Render the view for the home page
     #[Layout('layouts.blog')]
     public function render()
     {
-        // Najnowsze posty
-        $latestPosts = Post::with('user')
-            ->withCount('comments')
-            ->latest()
-            ->take(5)
-            ->get();
-            
-        // Najpopularniejsze posty według liczby wyświetleń
-        $popularPosts = Post::with('user')
-            ->withCount('comments')
-            ->orderBy('view_count', 'desc')
-            ->take(5)
-            ->get();
-
-        return view('livewire.home-page', [
-            'posts' => $latestPosts,
-            'popularPosts' => $popularPosts
-        ]);
+        return view('livewire.home-page');
     }
 }

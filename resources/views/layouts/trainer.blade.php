@@ -1,24 +1,10 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+@extends('layouts.app')
 
-    <title>{{ config('app.name', 'Laravel') }} - {{ $title ?? 'Trener' }}</title>
+@section('title', $title ?? 'Trener')
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+@section('body-class', 'bg-gray-100')
 
-    <!-- Scripts -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-    @livewireStyles
-    <style>
-        [x-cloak] { display: none !important; }
-    </style>
-</head>
-<body class="font-sans antialiased bg-gray-100">
+@section('body')
     <div class="flex h-screen overflow-hidden" x-data="{ sidebarOpen: false }">
         <!-- Sidebar backdrop (mobile) -->
         <div 
@@ -198,7 +184,4 @@
     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
         @csrf
     </form>
-    
-    @livewireScripts
-</body>
-</html> 
+@endsection 

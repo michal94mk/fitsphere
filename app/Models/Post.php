@@ -10,7 +10,17 @@ class Post extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'title', 'slug', 'excerpt', 'content', 'image', 'status', 'category_id', 'view_count'];
+    protected $fillable = [
+        'user_id', 
+        'title', 
+        'slug', 
+        'excerpt', 
+        'content', 
+        'image', 
+        'status', 
+        'category_id', 
+        'view_count'
+    ];
 
     protected static function boot()
     {
@@ -23,6 +33,12 @@ class Post extends Model
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+    
+    // Alias do relacji category, żeby można było używać $post->categories
+    public function categories()
+    {
+        return $this->category();
     }
 
     public function comments()
