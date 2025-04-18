@@ -92,78 +92,97 @@
             <!-- Posts grid layout -->
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
                 @foreach($posts as $post)
-                    <!-- Individual post card -->
-                    <div wire:key="post-{{ $post->id }}" class="bg-white rounded-2xl shadow-xl transition-all duration-300 hover:shadow-2xl hover:scale-[1.03] overflow-hidden flex flex-col h-full">
-                        <!-- Post image with overlay effect -->
-                        <div class="flex-none w-full aspect-square relative">
-                            <img src="{{ asset('storage/' . ($post->image ?? 'default.jpg')) }}" alt="{{ $post->title }}" 
-                                class="w-full h-full object-cover">
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
-                            
-                            <!-- Category badge -->
-                            @if($post->category)
-                                <div class="absolute top-3 right-3">
-                                    <span class="px-3 py-1 bg-gradient-to-r from-blue-500 to-blue-600 text-white text-xs font-bold rounded-full shadow-md">
+                    <!-- Modern post card design -->
+                    <div wire:key="post-{{ $post->id }}" class="group relative h-full">
+                        <!-- Card with hover effect -->
+                        <div class="relative h-full bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 flex flex-col">
+                            <!-- Post image with elegant overlay -->
+                            <div class="relative overflow-hidden">
+                                <!-- Hexagon shape overlay -->
+                                <div class="absolute -bottom-12 -right-12 w-24 h-24 bg-blue-50 rotate-45 z-0"></div>
+                                
+                                <!-- Image container with fixed aspect ratio -->
+                                <div class="aspect-[4/3] overflow-hidden">
+                                    <img 
+                                        src="{{ asset('storage/' . ($post->image ?? 'default.jpg')) }}" 
+                                        alt="{{ $post->title }}" 
+                                        class="w-full h-full object-cover object-center transform group-hover:scale-105 transition duration-700 ease-in-out"
+                                    >
+                                </div>
+                                
+                                <!-- Category badge -->
+                                @if($post->category)
+                                <div class="absolute top-4 left-4">
+                                    <span class="inline-block px-3 py-1 text-xs font-medium bg-blue-600/90 text-white backdrop-blur-sm rounded-md">
                                         {{ $post->category->name }}
                                     </span>
                                 </div>
-                            @endif
-                        </div>
-
-                        <!-- Post content -->
-                        <div class="p-6 flex flex-col flex-grow">
-                            <!-- Post title -->
-                            <h2 class="text-xl font-bold mb-3">
-                                {{ $post->title ?? 'Brak tytułu' }}
-                            </h2>
+                                @endif
+                            </div>
                             
-                            <!-- Post metadata -->
-                            <div class="flex items-center justify-between mb-3">
-                                <!-- Publication date -->
-                                <p class="text-gray-600 text-sm flex items-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                    </svg>
-                                    {{ optional($post->created_at)->format('d.m.Y') ?? 'Brak daty' }}
+                            <!-- Content area -->
+                            <div class="flex-1 p-6">
+                                <!-- Post title with hover effect -->
+                                <h2 class="text-xl font-bold text-gray-800 group-hover:text-blue-600 transition-colors duration-300">
+                                    {{ $post->title ?? 'Brak tytułu' }}
+                                </h2>
+                                
+                                <!-- Subtle divider line with gradient -->
+                                <div class="w-12 h-1 mt-2 mb-4 bg-gradient-to-r from-blue-500 to-blue-400 rounded"></div>
+                                
+                                <!-- Post excerpt with elegant typography -->
+                                <p class="text-gray-600 text-sm leading-relaxed mb-4">
+                                    {{ Str::limit($post->content, 90) ?? 'Brak podsumowania' }}
                                 </p>
                                 
-                                <!-- View count -->
-                                <div class="flex items-center">
-                                    <span class="flex items-center text-gray-600 text-sm">
+                                <!-- Author info with avatar -->
+                                <div class="flex items-center mb-4">
+                                    <div class="w-8 h-8 bg-gray-300 rounded-full overflow-hidden mr-2 flex-shrink-0">
+                                        <img src="{{ asset('storage/' . ($post->user->avatar ?? 'avatars/default.jpg')) }}" 
+                                            alt="{{ $post->user->name ?? 'Author' }}" 
+                                            class="w-full h-full object-cover">
+                                    </div>
+                                    <span class="text-gray-700 text-sm">
+                                        {{ $post->user->name ?? 'Nieznany autor' }}
+                                    </span>
+                                </div>
+                                
+                                <!-- Post metadata -->
+                                <div class="flex justify-between text-sm text-gray-500">
+                                    <!-- Publication date -->
+                                    <div class="flex items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                        </svg>
+                                        {{ optional($post->created_at)->format('d.m.Y') ?? 'Brak daty' }}
+                                    </div>
+                                    
+                                    <!-- View count -->
+                                    <div class="flex items-center">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                         </svg>
                                         {{ number_format($post->view_count) }}
-                                    </span>
+                                    </div>
                                 </div>
                             </div>
                             
-                            <!-- Post excerpt -->
-                            <p class="text-gray-700 text-base mb-4 break-all">
-                                {{ Str::limit($post->content, 100) ?? 'Brak podsumowania' }}
-                            </p>
-
-                            <!-- Author info -->
-                            <div class="flex items-center mb-4">
-                                <div class="w-8 h-8 bg-gray-300 rounded-full overflow-hidden mr-2">
-                                    <img src="{{ asset('storage/' . ($post->user->avatar ?? 'avatars/default.jpg')) }}" 
-                                        alt="{{ $post->user->name ?? 'Author' }}" 
-                                        class="w-full h-full object-cover">
-                                </div>
-                                <span class="text-gray-700 text-sm">
-                                    {{ $post->user->name ?? 'Nieznany autor' }}
-                                </span>
-                            </div>
-
-                            <!-- Read more button -->
-                            <div class="mt-auto flex justify-center">
-                                <a href="{{ route('post.show', ['postId' => $post->id]) }}" 
+                            <!-- Modern view article button -->
+                            <div class="border-t border-gray-100">
+                                <a 
+                                    href="{{ route('post.show', ['postId' => $post->id]) }}"
                                     wire:navigate
                                     wire:prefetch
-                                    class="block w-full px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition duration-300 shadow-md text-center">
-                                    <span wire:loading.remove>Czytaj więcej</span>
-                                    <span wire:loading>Ładowanie...</span>
+                                    class="flex items-center justify-between px-6 py-4 text-gray-800 hover:bg-blue-50 transition-colors duration-300 group"
+                                >
+                                    <span class="font-medium group-hover:text-blue-600 transition-colors duration-300">
+                                        <span wire:loading.remove>Czytaj artykuł</span>
+                                        <span wire:loading>Ładowanie...</span>
+                                    </span>
+                                    <svg class="w-5 h-5 text-blue-500 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                                    </svg>
                                 </a>
                             </div>
                         </div>

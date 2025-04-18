@@ -17,7 +17,7 @@ class HomePage extends Component
     public function mount()
     {
         // Najnowsze posty
-        $this->latestPosts = Post::with('user', 'categories')
+        $this->latestPosts = Post::with(['user', 'category'])
             ->withCount('comments')
             ->latest()
             ->take(3)
@@ -26,7 +26,7 @@ class HomePage extends Component
         $this->categories = Category::withCount('posts')->get();
         
         // Popularne posty (według ilości wyświetleń)
-        $this->popularPosts = Post::with('user', 'categories')
+        $this->popularPosts = Post::with(['user', 'category'])
             ->withCount('comments')
             ->orderBy('view_count', 'desc')
             ->take(3)
