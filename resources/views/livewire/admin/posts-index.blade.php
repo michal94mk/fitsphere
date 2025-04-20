@@ -134,14 +134,23 @@
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                 {{ $post->created_at->format('d.m.Y') }}
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                <a href="{{ route('admin.posts.edit', $post->id) }}" wire:navigate
-                                   class="text-indigo-600 hover:text-indigo-900 mr-3">
-                                    Edytuj
-                                </a>
-                                <button wire:click="confirmPostDeletion({{ $post->id }})" class="text-red-600 hover:text-red-900">
-                                    Usuń
-                                </button>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center space-x-2">
+                                    <!-- Przycisk edycji -->
+                                    <a href="{{ route('admin.posts.edit', $post->id) }}" class="bg-blue-100 text-blue-700 px-3 py-1 rounded-md hover:bg-blue-200 text-sm font-medium transition">
+                                        Edytuj
+                                    </a>
+                                    
+                                    <!-- Przycisk tłumaczeń -->
+                                    <a href="{{ route('admin.posts.translations', $post->id) }}" class="bg-green-100 text-green-700 px-3 py-1 rounded-md hover:bg-green-200 text-sm font-medium transition">
+                                        Tłumaczenia
+                                    </a>
+                                    
+                                    <!-- Przycisk usuwania -->
+                                    <button wire:click="confirmPostDeletion({{ $post->id }})" class="bg-red-100 text-red-700 px-3 py-1 rounded-md hover:bg-red-200 text-sm font-medium transition">
+                                        Usuń
+                                    </button>
+                                </div>
                             </td>
                         </tr>
                     @empty

@@ -28,5 +28,22 @@
     
     @livewireScripts
     @stack('scripts')
+    
+    <!-- Language Synchronization Script 
+         Ensures language consistency between browser storage and server-side state.
+         Triggers a language change event if needed during page initialization.
+    -->
+    <script>
+        document.addEventListener('livewire:init', () => {
+            // Check if we have a saved locale in browser storage
+            const savedLocale = localStorage.getItem('app_locale');
+            
+            // If locale in browser differs from server-side locale, notify components
+            if (savedLocale && savedLocale !== '{{ app()->getLocale() }}') {
+                // Broadcast the language change to all listening components
+                Livewire.dispatch('language-changed', { locale: savedLocale });
+            }
+        });
+    </script>
 </body>
 </html> 

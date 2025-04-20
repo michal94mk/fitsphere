@@ -42,6 +42,7 @@ use App\Livewire\Admin\TrainersIndex;
 use App\Livewire\Admin\TrainersCreate;
 use App\Livewire\Admin\TrainersEdit;
 use App\Livewire\Admin\TrainersShow;
+use App\Livewire\Admin\PostTranslations;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -133,6 +134,7 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
     Route::get('/posts', PostsIndex::class)->name('posts.index');
     Route::get('/posts/create', PostsCreate::class)->name('posts.create');
     Route::get('/posts/{id}/edit', PostsEdit::class)->name('posts.edit');
+    Route::get('/posts/{id}/translations', PostTranslations::class)->name('posts.translations');
     
     // Categories management
     Route::get('/categories', CategoriesIndex::class)->name('categories.index');

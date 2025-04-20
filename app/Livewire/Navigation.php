@@ -6,6 +6,7 @@ use Livewire\Component;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\On;
 
 class Navigation extends Component
 {
@@ -14,6 +15,11 @@ class Navigation extends Component
     public string $toastMessage = '';
 
     public function mount()
+    {
+        $this->updateCurrentPage();
+    }
+    
+    protected function updateCurrentPage()
     {
         // Set the current page based on the URL path
         $path = Request::path();
@@ -29,7 +35,7 @@ class Navigation extends Component
         } elseif ($path === 'post') {
             $this->currentPage = 'posts';
         } elseif ($path === 'trainer' || $path === 'trainers') {
-            $this->currentPage = 'trainers'; // Changed from 'about' to 'trainers' for clarity
+            $this->currentPage = 'trainers';
         } elseif ($path === 'nutrition-calculator') {
             $this->currentPage = 'nutrition-calculator';
         } elseif ($path === 'meal-planner') {
@@ -41,6 +47,15 @@ class Navigation extends Component
         }
     }
 
+    #[On('language-changed')]
+    public function handleLanguageChange($locale)
+    {
+        $this->searchQuery = '';
+        $this->toastMessage = '';
+        $this->updateCurrentPage();
+        $this->dispatch('$refresh');
+    }
+
     public function resetToast()
     {
         $this->toastMessage = '';
@@ -49,7 +64,7 @@ class Navigation extends Component
     public function goToSearch()
     {
         if (empty(trim($this->searchQuery)) || strlen(trim($this->searchQuery)) < 3) {
-            $this->toastMessage = 'Wprowadź minimum 3 znaki';
+            $this->toastMessage = __('common.search_min_chars');
             return;
         }
     

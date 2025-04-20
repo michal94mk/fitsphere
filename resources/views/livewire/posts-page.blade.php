@@ -124,7 +124,11 @@
                             <div class="flex-1 p-6">
                                 <!-- Post title with hover effect -->
                                 <h2 class="text-xl font-bold text-gray-800 group-hover:text-blue-600 transition-colors duration-300">
-                                    {{ $post->title ?? 'Brak tytułu' }}
+                                    @if($post->translations->isNotEmpty())
+                                        {{ $post->translations->first()->title }}
+                                    @else
+                                        {{ $post->title ?? 'Brak tytułu' }}
+                                    @endif
                                 </h2>
                                 
                                 <!-- Subtle divider line with gradient -->
@@ -132,7 +136,13 @@
                                 
                                 <!-- Post excerpt with elegant typography -->
                                 <p class="text-gray-600 text-sm leading-relaxed mb-4">
-                                    {{ Str::limit($post->content, 90) ?? 'Brak podsumowania' }}
+                                    @if($post->translations->isNotEmpty() && $post->translations->first()->excerpt)
+                                        {{ Str::limit($post->translations->first()->excerpt, 90) }}
+                                    @elseif($post->translations->isNotEmpty())
+                                        {{ Str::limit($post->translations->first()->content, 90) }}
+                                    @else
+                                        {{ Str::limit($post->content, 90) ?? 'Brak podsumowania' }}
+                                    @endif
                                 </p>
                                 
                                 <!-- Author info with avatar -->

@@ -81,6 +81,9 @@
 
                     <!-- Prawa strona - przyciski logowania / profil -->
                     <div class="hidden sm:flex sm:items-center sm:space-x-2 md:space-x-4">
+                        <!-- Language Switcher Component -->
+                        <livewire:language-switcher />
+                        
                         @if(Auth::check())
                             <div x-data="{ dropdownOpen: false }"
                                  x-init="$watch('currentPage', () => { dropdownOpen = false; })"
@@ -173,6 +176,10 @@
             <!-- Mobile Menu -->
             <div x-show="mobileOpen" x-transition class="sm:hidden bg-gray-800">
                 <div class="px-2 pt-2 pb-3 space-y-1">
+                    <!-- Language Switcher Component (mobile) -->
+                    <div class="flex justify-center mb-2 py-2">
+                        <livewire:language-switcher />
+                    </div>
                
                     <a href="{{ route('home') }}"
                        wire:navigate

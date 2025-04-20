@@ -18,19 +18,16 @@ class PostsEdit extends Component
 {
     use WithFileUploads;
     
-    /**
-     * Post model instance being edited
-     * 
-     * @var \App\Models\Post
-     */
-    public $post;
-    
-    /**
-     * Temporary uploaded image for the post
-     * 
-     * @var \Livewire\TemporaryUploadedFile|null
-     */
+    public $postId;
+    public $title;
+    public $slug;
+    public $excerpt;
+    public $content;
+    public $status;
+    public $category_id;
+    public $currentImage;
     public $image;
+    public $dataLoaded = false;
     
     /**
      * Define validation rules for post editing
@@ -40,13 +37,22 @@ class PostsEdit extends Component
     protected function rules()
     {
         return [
-            'post.title' => 'required|min:3',
-            'post.slug' => 'required|unique:posts,slug,' . $this->post->id,
-            'post.content' => 'required',
-            'post.status' => 'required|in:published,draft',
-            'post.category_id' => 'nullable|exists:categories,id',
+            'title' => 'required|min:3',
+            'slug' => 'required|unique:posts,slug,' . $this->postId,
+            'excerpt' => 'nullable|max:500',
+            'content' => 'required',
+            'status' => 'required|in:published,draft',
+            'category_id' => 'nullable|exists:categories,id',
             'image' => 'nullable|image|max:1024'
         ];
+    }
+    
+    /**
+     * Auto-generate slug from title
+     */
+    public function updatedTitle($value)
+    {
+        $this->slug = \Illuminate\Support\Str::slug($value);
     }
     
     /**
@@ -57,7 +63,17 @@ class PostsEdit extends Component
      */
     public function mount($id)
     {
-        $this->post = Post::findOrFail($id);
+        $this->postId = $id;
+        $post = Post::findOrFail($id);
+        
+        $this->title = $post->title;
+        $this->slug = $post->slug;
+        $this->excerpt = $post->excerpt;
+        $this->content = $post->content;
+        $this->status = $post->status;
+        $this->category_id = $post->category_id;
+        $this->currentImage = $post->image;
+        $this->dataLoaded = true;
     }
     
     /**
@@ -71,20 +87,32 @@ class PostsEdit extends Component
     {
         $this->validate();
         
-        if ($this->image) {
-            // Delete old image if it exists
-            if ($this->post->image && file_exists(storage_path('app/public/' . $this->post->image))) {
-                unlink(storage_path('app/public/' . $this->post->image));
+        try {
+            $post = Post::findOrFail($this->postId);
+            $post->title = $this->title;
+            $post->slug = $this->slug;
+            $post->excerpt = $this->excerpt;
+            $post->content = $this->content;
+            $post->status = $this->status;
+            $post->category_id = $this->category_id;
+            
+            if ($this->image) {
+                // Delete old image if it exists
+                if ($post->image && file_exists(storage_path('app/public/' . $post->image))) {
+                    unlink(storage_path('app/public/' . $post->image));
+                }
+                
+                $imagePath = $this->image->store('posts', 'public');
+                $post->image = $imagePath;
             }
             
-            $imagePath = $this->image->store('posts', 'public');
-            $this->post->image = $imagePath;
+            $post->save();
+            
+            session()->flash('success', 'Post został pomyślnie zaktualizowany.');
+            return redirect()->route('admin.posts.index');
+        } catch (\Exception $e) {
+            session()->flash('error', 'Wystąpił błąd podczas aktualizacji posta: ' . $e->getMessage());
         }
-        
-        $this->post->save();
-        
-        session()->flash('success', 'Post został pomyślnie zaktualizowany.');
-        return redirect()->route('admin.posts.index');
     }
     
     /**
@@ -96,7 +124,7 @@ class PostsEdit extends Component
     public function render()
     {
         return view('livewire.admin.posts-edit', [
-            'categories' => Category::all()
+            'categories' => Category::orderBy('name')->get()
         ]);
     }
 } 

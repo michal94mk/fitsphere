@@ -15,6 +15,9 @@ return Application::configure(basePath: dirname(__DIR__))
             'admin' => \App\Http\Middleware\AdminMiddleware::class,
             'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         ]);
+        
+        // Register the SetLocale middleware to run on all web requests
+        $middleware->web(append: [\App\Http\Middleware\SetLocale::class]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

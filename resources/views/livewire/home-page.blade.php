@@ -170,7 +170,11 @@
                         <div class="flex-1 p-6">
                             <!-- Post title with hover effect -->
                             <h3 class="text-xl font-bold text-gray-800 group-hover:text-blue-600 transition-colors duration-300">
-                                {{ $post->title ?? 'Brak tytułu' }}
+                                @if($post->translations->isNotEmpty())
+                                    {{ $post->translations->first()->title }}
+                                @else
+                                    {{ $post->title ?? 'Brak tytułu' }}
+                                @endif
                             </h3>
                             
                             <!-- Subtle divider line with gradient -->
@@ -178,7 +182,13 @@
                             
                             <!-- Post excerpt with elegant typography -->
                             <p class="text-gray-600 text-sm leading-relaxed mb-4">
-                                {{ \Illuminate\Support\Str::limit($post->excerpt ?? 'Brak opisu', 90) }}
+                                @if($post->translations->isNotEmpty() && $post->translations->first()->excerpt)
+                                    {{ \Illuminate\Support\Str::limit($post->translations->first()->excerpt, 90) }}
+                                @elseif($post->translations->isNotEmpty())
+                                    {{ \Illuminate\Support\Str::limit($post->translations->first()->content, 90) }}
+                                @else
+                                    {{ \Illuminate\Support\Str::limit($post->excerpt ?? 'Brak opisu', 90) }}
+                                @endif
                             </p>
                             
                             <!-- Author info -->
@@ -275,7 +285,11 @@
                     <div class="md:w-3/5 p-6 flex flex-col">
                         <!-- Title with divider -->
                         <h2 class="text-2xl font-bold text-gray-800 hover:text-blue-600 transition-colors duration-300">
-                            {{ $post->title ?? 'Brak tytułu' }}
+                            @if($post->translations->isNotEmpty())
+                                {{ $post->translations->first()->title }}
+                            @else
+                                {{ $post->title ?? 'Brak tytułu' }}
+                            @endif
                         </h2>
                         <div class="w-16 h-1 my-3 bg-gradient-to-r from-blue-500 to-blue-400 rounded"></div>
                         
@@ -289,7 +303,13 @@
                         
                         <!-- Post excerpt -->
                         <p class="text-gray-600 text-sm leading-relaxed mb-4">
-                            {{ $post->excerpt ?? 'Brak opisu' }}
+                            @if($post->translations->isNotEmpty() && $post->translations->first()->excerpt)
+                                {{ $post->translations->first()->excerpt }}
+                            @elseif($post->translations->isNotEmpty())
+                                {{ \Illuminate\Support\Str::limit($post->translations->first()->content, 150) }}
+                            @else
+                                {{ $post->excerpt ?? 'Brak opisu' }}
+                            @endif
                         </p>
                         
                         <!-- Post stats in two columns -->
