@@ -4,51 +4,41 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Session;
 
 /**
- * Manages language switching functionality across the application
+ * Language switcher component for multilingual application.
  * 
- * This component handles the interface for switching between available
- * languages and broadcasts changes to other components.
+ * Responsible for rendering the language selection interface
+ * and tracking the currently selected application language.
+ * Uses wire:navigate for seamless switching without full page refresh.
  */
 class LanguageSwitcher extends Component
 {
     /**
-     * Switch the application language without page reload
+     * Stores the currently selected application language.
      * 
-     * Changes the application locale and notifies all listening components
-     * about the language change through an event dispatcher.
+     * Used to highlight the active language in the interface.
      * 
-     * @param string $locale Language code (en/pl)
+     * @var string
+     */
+    public string $currentLocale;
+
+    /**
+     * Initializes the component with the currently selected language.
+     * 
+     * Retrieves the current application language and stores it in
+     * the component variable so the view can properly mark
+     * the active language.
+     * 
      * @return void
      */
-    public function switchLanguage($locale)
+    public function mount()
     {
-        // Validate the locale is in our supported languages list
-        if (in_array($locale, ['en', 'pl'])) {
-            // Update PHP session and application locale
-            Session::put('locale', $locale);
-            App::setLocale($locale);
-            
-            // Notify all listening components about the language change
-            // This triggers reactive updates without page reload
-            $this->dispatch('language-changed', locale: $locale);
-        }
+        $this->currentLocale = App::getLocale();
     }
 
     /**
-     * Get the currently active language code
-     * 
-     * @return string The current application locale
-     */
-    public function getCurrentLocale()
-    {
-        return App::getLocale();
-    }
-
-    /**
-     * Render the language switcher component view
+     * Renders the language switcher view.
      * 
      * @return \Illuminate\View\View
      */

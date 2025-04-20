@@ -25,48 +25,48 @@
                         <a href="{{ route('home') }}" 
                            wire:navigate
                            class="rounded-md px-2 md:px-3 py-2 text-sm font-medium {{ $currentPage == 'home' ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
-                            Home
+                            {{ __('common.home') }}
                         </a>
                         <a href="{{ route('posts.list') }}"
                            wire:navigate
                            class="rounded-md px-2 md:px-3 py-2 text-sm font-medium {{ $currentPage == 'posts' ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
-                            Posts
+                            <span data-i18n="common.posts">{{ __('common.posts') }}</span>
                         </a>
                         <a href="{{ route('trainers.list') }}"
                            wire:navigate
                            class="rounded-md px-2 md:px-3 py-2 text-sm font-medium {{ $currentPage == 'trainers' ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
-                            Trainers
+                            <span data-i18n="common.trainers">{{ __('common.trainers') }}</span>
                         </a>
                         
                         <!-- Linki do funkcjonalności żywieniowych -->
                         <a href="{{ route('nutrition-calculator') }}"
                            wire:navigate
                            class="rounded-md px-2 md:px-3 py-2 text-sm font-medium {{ $currentPage == 'nutrition-calculator' ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
-                            Kalkulator Diety
+                            <span data-i18n="common.nutrition_calculator">{{ __('common.nutrition_calculator') }}</span>
                         </a>
                         
                         <a href="{{ route('meal-planner') }}"
                            wire:navigate
                            class="rounded-md px-2 md:px-3 py-2 text-sm font-medium {{ $currentPage == 'meal-planner' ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
-                            Planer Posiłków
+                            <span data-i18n="common.meal_planner">{{ __('common.meal_planner') }}</span>
                         </a>
                         
                         <a href="{{ route('contact') }}"
                            wire:navigate
                            class="rounded-md px-2 md:px-3 py-2 text-sm font-medium {{ $currentPage == 'contact' ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
-                            Contact
+                            <span data-i18n="common.contact">{{ __('common.contact') }}</span>
                         </a>
                         <a href="{{ route('terms') }}"
                            wire:navigate
                            class="rounded-md px-2 md:px-3 py-2 text-sm font-medium {{ $currentPage == 'terms' ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
-                            Terms
+                            <span data-i18n="common.terms">{{ __('common.terms') }}</span>
                         </a>
                         
                         @if(auth()->check() && auth()->user()->role === 'admin')
                             <a href="{{ route('admin.dashboard') }}"
                                wire:navigate
                                class="rounded-md px-2 md:px-3 py-2 text-sm font-medium bg-red-600 text-white hover:bg-red-700">
-                                Admin Panel
+                                <span data-i18n="common.admin_panel">{{ __('common.admin_panel') }}</span>
                             </a>
                         @endif
                         
@@ -74,7 +74,7 @@
                             <a href="{{ route('trainer.reservations') }}"
                                wire:navigate
                                class="rounded-md px-2 md:px-3 py-2 text-sm font-medium bg-blue-600 text-white hover:bg-blue-700">
-                                Panel Trenera
+                                <span data-i18n="common.trainer_panel">{{ __('common.trainer_panel') }}</span>
                             </a>
                         @endif
                     </div>
@@ -104,18 +104,18 @@
                                     <a href="{{ route('profile') }}"
                                        wire:navigate
                                        class="block w-full px-4 py-2 text-gray-800 text-left hover:bg-gray-100">
-                                        Profil
+                                        <span data-i18n="common.profile">{{ __('common.profile') }}</span>
                                     </a>
                                     <a href="{{ route('user.reservations') }}"
                                        wire:navigate
                                        class="block w-full px-4 py-2 text-gray-800 text-left hover:bg-gray-100">
-                                        Moje rezerwacje
+                                        <span data-i18n="common.my_reservations">{{ __('common.my_reservations') }}</span>
                                     </a>
                                     <form method="POST" action="{{ route('logout') }}">
                                         @csrf
                                         <button type="submit"
                                                 class="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100">
-                                            Wyloguj się
+                                            <span data-i18n="common.logout">{{ __('common.logout') }}</span>
                                         </button>
                                     </form>
                                 </div>
@@ -141,18 +141,18 @@
                                     <a href="{{ route('profile') }}"
                                        wire:navigate
                                        class="block w-full px-4 py-2 text-gray-800 text-left hover:bg-gray-100">
-                                        Profil
+                                        <span data-i18n="common.profile">{{ __('common.profile') }}</span>
                                     </a>
                                     <a href="{{ route('user.reservations') }}"
                                        wire:navigate
                                        class="block w-full px-4 py-2 text-gray-800 text-left hover:bg-gray-100">
-                                        Moje rezerwacje
+                                        <span data-i18n="common.my_reservations">{{ __('common.my_reservations') }}</span>
                                     </a>
                                     <form method="POST" action="{{ route('logout') }}">
                                         @csrf
                                         <button type="submit"
                                                 class="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100">
-                                            Wyloguj się
+                                            <span data-i18n="common.logout">{{ __('common.logout') }}</span>
                                         </button>
                                     </form>
                                 </div>
@@ -161,12 +161,12 @@
                             <a href="{{ route('login') }}"
                                wire:navigate
                                class="rounded-md px-2 md:px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">
-                                Zaloguj
+                                <span data-i18n="common.login">{{ __('common.login') }}</span>
                             </a>
                             <a href="{{ route('register') }}"
                                wire:navigate
                                class="rounded-md px-2 md:px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">
-                                Rejestracja
+                                <span data-i18n="common.register">{{ __('common.register') }}</span>
                             </a>
                         @endif
                     </div>
@@ -185,19 +185,19 @@
                        wire:navigate
                        @click="mobileOpen = false"
                        class="block w-full text-center rounded-md px-3 py-2 text-base font-medium {{ $currentPage == 'home' ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
-                        Home
+                        {{ __('common.home') }}
                     </a>
                     <a href="{{ route('posts.list') }}"
                        wire:navigate
                        @click="mobileOpen = false"
                        class="block w-full text-center rounded-md px-3 py-2 text-base font-medium {{ $currentPage == 'posts' ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
-                        Posts
+                        <span data-i18n="common.posts">{{ __('common.posts') }}</span>
                     </a>
                     <a href="{{ route('trainers.list') }}"
                        wire:navigate
                        @click="mobileOpen = false"
                        class="block w-full text-center rounded-md px-3 py-2 text-base font-medium {{ $currentPage == 'trainers' ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
-                        Trainers
+                        <span data-i18n="common.trainers">{{ __('common.trainers') }}</span>
                     </a>
                     
                     <!-- Linki do funkcjonalności żywieniowych (wersja mobilna) -->
@@ -205,27 +205,27 @@
                        wire:navigate
                        @click="mobileOpen = false"
                        class="block w-full text-center rounded-md px-3 py-2 text-base font-medium {{ $currentPage == 'nutrition-calculator' ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
-                        Kalkulator Diety
+                        <span data-i18n="common.nutrition_calculator">{{ __('common.nutrition_calculator') }}</span>
                     </a>
                     
                     <a href="{{ route('meal-planner') }}"
                        wire:navigate
                        @click="mobileOpen = false"
                        class="block w-full text-center rounded-md px-3 py-2 text-base font-medium {{ $currentPage == 'meal-planner' ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
-                        Planer Posiłków
+                        <span data-i18n="common.meal_planner">{{ __('common.meal_planner') }}</span>
                     </a>
                     
                     <a href="{{ route('contact') }}"
                        wire:navigate
                        @click="mobileOpen = false"
                        class="block w-full text-center rounded-md px-3 py-2 text-base font-medium {{ $currentPage == 'contact' ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
-                        Contact
+                        <span data-i18n="common.contact">{{ __('common.contact') }}</span>
                     </a>
                     <a href="{{ route('terms') }}"
                        wire:navigate
                        @click="mobileOpen = false"
                        class="block w-full text-center rounded-md px-3 py-2 text-base font-medium {{ $currentPage == 'terms' ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
-                        Terms
+                        <span data-i18n="common.terms">{{ __('common.terms') }}</span>
                     </a>
                     
                     @if(auth()->check() && auth()->user()->role === 'admin')
@@ -233,7 +233,7 @@
                            wire:navigate
                            @click="mobileOpen = false"
                            class="block w-full text-center rounded-md px-3 py-2 text-base font-medium bg-red-600 text-white hover:bg-red-700">
-                            Admin Panel
+                            <span data-i18n="common.admin_panel">{{ __('common.admin_panel') }}</span>
                         </a>
                     @endif
                     
@@ -242,7 +242,7 @@
                            wire:navigate
                            @click="mobileOpen = false"
                            class="block w-full text-center rounded-md px-3 py-2 text-base font-medium bg-blue-600 text-white hover:bg-blue-700">
-                            Panel Trenera
+                            <span data-i18n="common.trainer_panel">{{ __('common.trainer_panel') }}</span>
                         </a>
                     @endif
 
@@ -259,19 +259,19 @@
                                    wire:navigate
                                    @click="dropdownOpen = false; mobileOpen = false"
                                    class="block w-full text-center px-4 py-2 text-gray-900 hover:bg-gray-100">
-                                    Profil
+                                    <span data-i18n="common.profile">{{ __('common.profile') }}</span>
                                 </a>
                                 <a href="{{ route('user.reservations') }}"
                                    wire:navigate
                                    @click="dropdownOpen = false; mobileOpen = false"
                                    class="block w-full text-center px-4 py-2 text-gray-900 hover:bg-gray-100">
-                                    Moje rezerwacje
+                                    <span data-i18n="common.my_reservations">{{ __('common.my_reservations') }}</span>
                                 </a>
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
                                     <button type="submit"
                                             class="block w-full text-center px-4 py-2 text-gray-900 hover:bg-gray-100">
-                                        Wyloguj się
+                                        <span data-i18n="common.logout">{{ __('common.logout') }}</span>
                                     </button>
                                 </form>
                             </div>
@@ -288,19 +288,19 @@
                                    wire:navigate
                                    @click="dropdownOpen = false; mobileOpen = false"
                                    class="block w-full text-center px-4 py-2 text-gray-900 hover:bg-gray-100">
-                                    Profil
+                                    <span data-i18n="common.profile">{{ __('common.profile') }}</span>
                                 </a>
                                 <a href="{{ route('user.reservations') }}"
                                    wire:navigate
                                    @click="dropdownOpen = false; mobileOpen = false"
                                    class="block w-full text-center px-4 py-2 text-gray-900 hover:bg-gray-100">
-                                    Moje rezerwacje
+                                    <span data-i18n="common.my_reservations">{{ __('common.my_reservations') }}</span>
                                 </a>
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
                                     <button type="submit"
                                             class="block w-full text-center px-4 py-2 text-gray-900 hover:bg-gray-100">
-                                        Wyloguj się
+                                        <span data-i18n="common.logout">{{ __('common.logout') }}</span>
                                     </button>
                                 </form>
                             </div>
@@ -310,13 +310,13 @@
                            wire:navigate
                            @click="mobileOpen = false"
                            class="block w-full text-center rounded-md px-4 py-2 text-gray-900 bg-gray-200 hover:bg-gray-300">
-                            Zaloguj się
+                            <span data-i18n="common.login">{{ __('common.login') }}</span>
                         </a>
                         <a href="{{ route('register') }}"
                            wire:navigate
                            @click="mobileOpen = false"
                            class="block w-full text-center rounded-md px-4 py-2 text-gray-900 bg-gray-200 hover:bg-gray-300">
-                            Zarejestruj się
+                            <span data-i18n="common.register">{{ __('common.register') }}</span>
                         </a>
                     @endif
                 </div>
@@ -330,14 +330,14 @@
                     <input type="text"
                            wire:model="searchQuery"
                            wire:keydown.enter="goToSearch"
-                           placeholder="Wyszukaj artykuły, porady, tematy..."
+                           placeholder="{{ __('common.search_placeholder') }}"
                            class="w-full p-3 pl-5 pr-24 rounded-lg border-0 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent shadow-md text-gray-700 text-base" />
                     <button wire:click="goToSearch"
                             class="absolute right-0 top-0 bottom-0 h-full text-white bg-blue-600 hover:bg-blue-700 rounded-r-lg px-5 transition-all duration-200 ease-in-out shadow-md flex items-center justify-center">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                         </svg>
-                        <span class="font-medium">Szukaj</span>
+                        <span class="font-medium" data-i18n="common.search">{{ __('common.search') }}</span>
                     </button>
                 </div>
                 

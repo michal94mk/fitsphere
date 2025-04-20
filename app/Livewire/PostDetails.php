@@ -5,13 +5,13 @@ namespace App\Livewire;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\On;
 use App\Models\Post;
 use App\Models\Comment;
 use App\Models\PostView;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\App;
-use Livewire\Attributes\On;
 
 class PostDetails extends Component
 {
@@ -27,10 +27,8 @@ class PostDetails extends Component
         $this->postId = $postId;
         $this->post = Post::with('user')->findOrFail($this->postId);
         
-        $livewireLocale = session()->get('livewire_locale');
-        
-        // Get translation for current locale if available
-        $this->loadTranslation($livewireLocale);
+        // Get translation for current locale
+        $this->loadTranslation();
         
         // Increment view count
         $this->post->increment('view_count');
@@ -57,33 +55,31 @@ class PostDetails extends Component
     }
     
     /**
-     * Load translation for the current locale
+     * Loads translation for the current locale
      * 
-     * Retrieves the appropriate translation for the post based on 
-     * the specified locale or falls back to the current application locale.
-     *
-     * @param string|null $locale Optional language code to load specific translation
+     * Retrieves the appropriate translation for the post based on
+     * the current application locale.
      */
-    protected function loadTranslation($locale = null)
+    protected function loadTranslation()
     {
-        $locale = $locale ?? App::getLocale();
+        $locale = App::getLocale();
         $this->translation = $this->post->translation($locale);
     }
     
     /**
-     * Listen for language change events and update content accordingly
+     * Handles the language change event.
      * 
-     * This handler is triggered when the language is switched anywhere
-     * in the application. It loads the post's translation for the new locale
-     * and refreshes the component display without a page reload.
-     *
-     * @param string $locale The new language code (en/pl)
+     * Reacts to asynchronous language change in the application.
+     * Reloads translations for the currently displayed post
+     * in the newly selected language without page reload.
+     * 
+     * @param string $locale The selected language code
+     * @return void
      */
-    #[On('language-changed')]
+    #[On('switch-locale')]
     public function handleLanguageChange($locale)
     {
-        $this->loadTranslation($locale);
-        $this->dispatch('$refresh');
+        $this->loadTranslation();
     }
 
     public function addComment()

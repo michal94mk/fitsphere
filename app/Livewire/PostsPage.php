@@ -50,23 +50,19 @@ class PostsPage extends Component
     }
     
     /**
-     * Listen for language change events and update post listings
+     * Handles the language change event.
      * 
-     * Updates the displayed posts when the application language changes.
-     * Stores the locale in session for persistence between requests
-     * and triggers a component refresh.
-     *
-     * @param string $locale The new language code (en/pl)
+     * Reacts to asynchronous language change in the application.
+     * Resets pagination to ensure proper display of
+     * posts list with translations in the newly selected language.
+     * 
+     * @param string $locale The selected language code
+     * @return void
      */
-    #[On('language-changed')]
+    #[On('switch-locale')]
     public function handleLanguageChange($locale)
     {
-        // Store the locale in Livewire session for persistence
-        session()->put('livewire_locale', $locale);
-        
-        // Reset pagination and refresh the post listing with new translations
         $this->resetPage();
-        $this->dispatch('$refresh');
     }
     
     #[Layout('layouts.blog')]
@@ -75,8 +71,7 @@ class PostsPage extends Component
         $query = Post::with(['user', 'category']);
         
         // Load post translations for the current locale
-        // Używaj wartości z sesji Livewire, jeśli istnieje
-        $locale = session()->get('livewire_locale', App::getLocale());
+        $locale = App::getLocale();
         $query->with(['translations' => function($query) use ($locale) {
             $query->where('locale', $locale);
         }]);

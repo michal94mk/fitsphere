@@ -13,11 +13,11 @@
         <div class="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <h1 class="text-5xl font-extrabold mb-4 transition duration-500 ease-in-out hover:scale-105">
                 <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-blue-600">
-                    Zdrowie & Fitness
+                    {{ __('home.hero_title') }}
                 </span>
             </h1>
             <p class="mt-2 text-xl text-gray-300 opacity-90 transition-all duration-500 hover:opacity-100 max-w-2xl mx-auto">
-                Trenuj, jedz zdrowo i dbaj o siebie!
+                {{ __('home.hero_subtitle') }}
             </p>
             
             <!-- Section Navigation -->
@@ -26,21 +26,21 @@
                     x-data="{ scrollTo() { document.getElementById('quick-access').scrollIntoView({ behavior: 'smooth' }); } }"
                     @click="scrollTo()" 
                     class="px-6 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-full hover:from-blue-600 hover:to-blue-700 transition duration-300 hover:scale-105 shadow-md text-sm font-medium">
-                    Szybki dostęp
+                    {{ __('home.quick_access') }}
                 </button>
 
                 <button 
                     x-data="{ scrollTo() { document.getElementById('popular-posts').scrollIntoView({ behavior: 'smooth' }); } }"
                     @click="scrollTo()" 
                     class="px-6 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-full hover:from-blue-600 hover:to-blue-700 transition duration-300 hover:scale-105 shadow-md text-sm font-medium">
-                    Popularne posty
+                    {{ __('home.popular_posts') }}
                 </button>
                 
                 <button 
                     x-data="{ scrollTo() { document.getElementById('posts').scrollIntoView({ behavior: 'smooth' }); } }"
                     @click="scrollTo()" 
                     class="px-6 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-full hover:from-blue-600 hover:to-blue-700 transition duration-300 hover:scale-105 shadow-md text-sm font-medium">
-                    Najnowsze posty
+                    {{ __('home.latest_posts') }}
                 </button>
                 
             </div>
@@ -57,7 +57,7 @@
     <!-- Quick Access Section -->
     <section id="quick-access" class="bg-blue-50 py-16 border-b border-blue-100">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h3 class="text-3xl font-bold text-center text-blue-800 mb-10">Szybki dostęp</h3>
+            <h3 class="text-3xl font-bold text-center text-blue-800 mb-10">{{ __('home.quick_access_title') }}</h3>
             
             <div class="flex flex-wrap justify-center gap-6">
                 <!-- Znajdź trenera -->
@@ -65,8 +65,8 @@
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-blue-500 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                     </svg>
-                    <h4 class="text-lg font-semibold text-gray-800 mb-2">Znajdź trenera</h4>
-                    <p class="text-sm text-gray-600">Przeglądaj dostępnych trenerów</p>
+                    <h4 class="text-lg font-semibold text-gray-800 mb-2">{{ __('home.find_trainer') }}</h4>
+                    <p class="text-sm text-gray-600">{{ __('home.find_trainer_desc') }}</p>
                 </a>
                 
                 <!-- Artykuły i porady -->
@@ -74,8 +74,8 @@
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-blue-500 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
                     </svg>
-                    <h4 class="text-lg font-semibold text-gray-800 mb-2">Artykuły i porady</h4>
-                    <p class="text-sm text-gray-600">Przeczytaj najnowsze artykuły</p>
+                    <h4 class="text-lg font-semibold text-gray-800 mb-2">{{ __('home.articles_tips') }}</h4>
+                    <p class="text-sm text-gray-600">{{ __('home.articles_tips_desc') }}</p>
                 </a>
                 
                 <!-- Kalkulator Diety -->
@@ -83,8 +83,8 @@
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-green-500 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
                     </svg>
-                    <h4 class="text-lg font-semibold text-gray-800 mb-2">Kalkulator Diety</h4>
-                    <p class="text-sm text-gray-600">Oblicz zapotrzebowanie kaloryczne</p>
+                    <h4 class="text-lg font-semibold text-gray-800 mb-2">{{ __('home.diet_calculator') }}</h4>
+                    <p class="text-sm text-gray-600">{{ __('home.diet_calculator_desc') }}</p>
                 </a>
                 
                 <!-- Planer Posiłków -->
@@ -92,8 +92,8 @@
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-green-500 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                     </svg>
-                    <h4 class="text-lg font-semibold text-gray-800 mb-2">Planer Posiłków</h4>
-                    <p class="text-sm text-gray-600">Stwórz plan posiłków</p>
+                    <h4 class="text-lg font-semibold text-gray-800 mb-2">{{ __('home.meal_planner') }}</h4>
+                    <p class="text-sm text-gray-600">{{ __('home.meal_planner_desc') }}</p>
                 </a>
                 
                 @if(Auth::check())
@@ -102,8 +102,8 @@
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-blue-500 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
-                    <h4 class="text-lg font-semibold text-gray-800 mb-2">Moje rezerwacje</h4>
-                    <p class="text-sm text-gray-600">Sprawdź swoje treningi</p>
+                    <h4 class="text-lg font-semibold text-gray-800 mb-2">{{ __('home.my_reservations') }}</h4>
+                    <p class="text-sm text-gray-600">{{ __('home.my_reservations_desc') }}</p>
                 </a>
                 @endif
                 
@@ -113,8 +113,8 @@
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-blue-500 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                     </svg>
-                    <h4 class="text-lg font-semibold text-gray-800 mb-2">Panel Trenera</h4>
-                    <p class="text-sm text-gray-600">Zarządzaj rezerwacjami</p>
+                    <h4 class="text-lg font-semibold text-gray-800 mb-2">{{ __('home.trainer_panel') }}</h4>
+                    <p class="text-sm text-gray-600">{{ __('home.trainer_panel_desc') }}</p>
                 </a>
                 @endif
             </div>
@@ -126,7 +126,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 class="text-4xl text-center font-bold mb-16">
                 <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-700 to-blue-600">
-                    Najpopularniejsze posty
+                    {{ __('home.popular_posts_title') }}
                 </span>
             </h2>
 
@@ -173,7 +173,7 @@
                                 @if($post->translations->isNotEmpty())
                                     {{ $post->translations->first()->title }}
                                 @else
-                                    {{ $post->title ?? 'Brak tytułu' }}
+                                    {{ $post->title ?? __('home.no_title') }}
                                 @endif
                             </h3>
                             
@@ -187,13 +187,13 @@
                                 @elseif($post->translations->isNotEmpty())
                                     {{ \Illuminate\Support\Str::limit($post->translations->first()->content, 90) }}
                                 @else
-                                    {{ \Illuminate\Support\Str::limit($post->excerpt ?? 'Brak opisu', 90) }}
+                                    {{ \Illuminate\Support\Str::limit($post->excerpt ?? __('home.no_description'), 90) }}
                                 @endif
                             </p>
                             
                             <!-- Author info -->
                             <p class="text-gray-500 text-sm mb-4">
-                                Autor: {{ optional($post->user)->name ?? 'Brak autora' }}
+                                {{ __('home.author') }}: {{ optional($post->user)->name ?? __('home.no_author') }}
                             </p>
                             
                             <!-- Post stats -->
@@ -222,7 +222,7 @@
                                 class="flex items-center justify-between px-6 py-4 text-gray-800 hover:bg-blue-50 transition-colors duration-300 group"
                             >
                                 <span class="font-medium group-hover:text-blue-600 transition-colors duration-300">
-                                    Czytaj artykuł
+                                    {{ __('home.read_article') }}
                                 </span>
                                 <svg class="w-5 h-5 text-blue-500 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
@@ -237,7 +237,7 @@
             <!-- View all posts button -->
             <div class="flex justify-center mt-12">
                 <a href="{{ route('posts.list', ['sortBy' => 'popular']) }}" wire:navigate class="px-8 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 transition duration-300 shadow-md text-center flex items-center space-x-2">
-                    <span>Zobacz wszystkie popularne posty</span>
+                    <span>{{ __('home.view_all_popular') }}</span>
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                     </svg>
@@ -250,8 +250,8 @@
     <section id="posts" class="bg-gradient-to-br from-gray-50 to-gray-100 py-20 border-t border-gray-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 class="text-4xl text-center font-bold mb-16">
-                <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-blue-500">
-                    Najnowsze posty
+                <span class="bg-clip-text text-transparent bg-gradient-to-r from-indigo-700 to-indigo-500">
+                    {{ __('home.latest_posts_title') }}
                 </span>
             </h2>
 
@@ -288,7 +288,7 @@
                             @if($post->translations->isNotEmpty())
                                 {{ $post->translations->first()->title }}
                             @else
-                                {{ $post->title ?? 'Brak tytułu' }}
+                                {{ $post->title ?? __('home.no_title') }}
                             @endif
                         </h2>
                         <div class="w-16 h-1 my-3 bg-gradient-to-r from-blue-500 to-blue-400 rounded"></div>
@@ -298,7 +298,7 @@
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                             </svg>
-                            Dodano: {{ optional($post->created_at)->format('d.m.Y') ?? 'Brak daty' }}
+                            Dodano: {{ optional($post->created_at)->format('d.m.Y') ?? __('home.no_date') }}
                         </p>
                         
                         <!-- Post excerpt -->
@@ -308,7 +308,7 @@
                             @elseif($post->translations->isNotEmpty())
                                 {{ \Illuminate\Support\Str::limit($post->translations->first()->content, 150) }}
                             @else
-                                {{ $post->excerpt ?? 'Brak opisu' }}
+                                {{ $post->excerpt ?? __('home.no_description') }}
                             @endif
                         </p>
                         
@@ -318,7 +318,7 @@
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                                 </svg>
-                                <span>{{ optional($post->user)->name ?? 'Brak autora' }}</span>
+                                <span>{{ optional($post->user)->name ?? __('home.no_author') }}</span>
                             </div>
                             <div class="flex items-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -342,7 +342,7 @@
                                 wire:navigate 
                                 class="inline-flex items-center justify-center text-gray-800 hover:text-blue-600 transition-colors duration-300 group"
                             >
-                                <span class="font-medium">Czytaj cały artykuł</span>
+                                <span class="font-medium">{{ __('home.read_full_article') }}</span>
                                 <svg class="w-5 h-5 ml-2 text-blue-500 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
                                 </svg>
@@ -355,7 +355,7 @@
             <!-- View all posts button -->
             <div class="flex justify-center mt-8">
                 <a href="{{ route('posts.list') }}" wire:navigate class="px-8 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 transition duration-300 shadow-md text-center flex items-center space-x-2">
-                    <span>Zobacz wszystkie posty</span>
+                    <span>{{ __('home.view_all_posts') }}</span>
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                     </svg>
@@ -378,45 +378,44 @@
             <div class="text-center md:text-left md:flex md:items-center md:justify-between">
                 <div class="md:w-2/3 mb-10 md:mb-0">
                     <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">
-                        Dołącz do naszej społeczności fitness!
+                        {{ __('home.cta_title') }}
                     </h2>
                     <p class="text-blue-100 text-lg mb-6 md:pr-10">
-                        Zarejestruj się już dziś, aby uzyskać dostęp do wszystkich funkcji platformy - 
-                        personalizowane treningi, rezerwacje z trenerami, śledzenie postępów i więcej.
+                        {{ __('home.cta_subtitle') }}
                     </p>
                     <ul class="text-left inline-block">
                         <li class="flex items-center text-blue-100 mb-3">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-blue-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                             </svg>
-                            Indywidualne rezerwacje treningów
+                            {{ __('home.cta_feature_1') }}
                         </li>
                         <li class="flex items-center text-blue-100 mb-3">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-blue-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                             </svg>
-                            Dostęp do specjalnych treści i porad
+                            {{ __('home.cta_feature_2') }}
                         </li>
                         <li class="flex items-center text-blue-100">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-blue-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                             </svg>
-                            Możliwość komentowania i zapisywania artykułów
+                            {{ __('home.cta_feature_3') }}
                         </li>
                     </ul>
                 </div>
                 <div class="md:w-1/3 flex flex-col items-center">
                     <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-sm transform transition-all duration-300 hover:scale-105">
-                        <h3 class="text-xl font-bold text-gray-800 mb-4 text-center">Rozpocznij teraz</h3>
+                        <h3 class="text-xl font-bold text-gray-800 mb-4 text-center">{{ __('home.cta_cta_title') }}</h3>
                         <div class="space-y-4">
                             <a href="{{ route('register') }}" class="block w-full bg-gradient-to-r from-blue-600 to-blue-500 text-white py-3 px-4 rounded-lg font-medium text-center hover:from-blue-700 hover:to-blue-600 transition duration-300 shadow-md">
-                                Zarejestruj się
+                                {{ __('home.cta_cta_button') }}
                             </a>
                             <a href="{{ route('login') }}" class="block w-full bg-white text-blue-600 border border-blue-300 py-3 px-4 rounded-lg font-medium text-center hover:bg-blue-50 transition duration-300">
-                                Zaloguj się
+                                {{ __('home.cta_login_button') }}
                             </a>
                             <p class="text-center text-gray-500 text-sm">
-                                Dołączenie zajmuje mniej niż 60 sekund
+                                {{ __('home.cta_cta_subtitle') }}
                             </p>
                         </div>
                     </div>

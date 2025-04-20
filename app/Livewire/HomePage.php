@@ -22,17 +22,14 @@ class HomePage extends Component
     }
     
     /**
-     * Load posts with translations for current locale
+     * Loads posts with translations for current locale
      * 
      * Fetches latest and most popular posts with their translations
-     * for the specified language. Uses locale from session if available
-     * or falls back to application default.
-     *
-     * @param string|null $locale Optional language code to load specific translations
+     * for the current application locale.
      */
-    protected function loadPosts($locale = null)
+    protected function loadPosts()
     {
-        $locale = $locale ?? session()->get('livewire_locale', App::getLocale());
+        $locale = App::getLocale();
         
         // Fetch latest posts with translations, user data, and comment counts
         $this->latestPosts = Post::with(['user', 'category'])
@@ -61,23 +58,19 @@ class HomePage extends Component
     }
     
     /**
-     * Listen for language change events and update homepage content
+     * Handles the language change event.
      * 
-     * Updates displayed posts when application language changes.
-     * Stores the selected locale in session for persistence and
-     * refreshes the component with translated content.
-     *
-     * @param string $locale The new language code (en/pl)
+     * Reacts to asynchronous language change in the application.
+     * Reloads posts with appropriate translations
+     * for the newly selected language.
+     * 
+     * @param string $locale The selected language code
+     * @return void
      */
-    #[On('language-changed')]
+    #[On('switch-locale')]
     public function handleLanguageChange($locale)
     {
-        // Store locale in session for persistence
-        session()->put('livewire_locale', $locale);
-        
-        // Reload posts with the new locale and refresh the view
-        $this->loadPosts($locale);
-        $this->dispatch('$refresh');
+        $this->loadPosts();
     }
 
     #[Layout('layouts.blog')]

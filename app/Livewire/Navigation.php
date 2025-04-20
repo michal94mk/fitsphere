@@ -46,14 +46,23 @@ class Navigation extends Component
             $this->currentPage = 'home';
         }
     }
-
-    #[On('language-changed')]
+    
+    /**
+     * Handles the language change event.
+     * 
+     * Reacts to asynchronous language change in the application.
+     * Resets search state and messages in navigation
+     * to maintain consistency after language change.
+     * 
+     * @param string $locale The selected language code
+     * @return void
+     */
+    #[On('switch-locale')]
     public function handleLanguageChange($locale)
     {
         $this->searchQuery = '';
         $this->toastMessage = '';
-        $this->updateCurrentPage();
-        $this->dispatch('$refresh');
+        $this->currentPage = '';
     }
 
     public function resetToast()
@@ -77,7 +86,7 @@ class Navigation extends Component
 
     public function isAdmin()
     {
-        // Tylko użytkownicy z rolą 'admin' mają dostęp do panelu administratora
+        // Only users with 'admin' role have access to the admin panel
         if (Auth::check() && Auth::user()->role === 'admin') {
             return true;
         }
