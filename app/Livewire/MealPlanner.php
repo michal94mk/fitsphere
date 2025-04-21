@@ -9,6 +9,7 @@ use App\Services\SpoonacularService;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Livewire\Attributes\Layout;
+use Illuminate\Support\Facades\App;
 
 class MealPlanner extends Component
 {
@@ -29,7 +30,7 @@ class MealPlanner extends Component
     
     protected $spoonacularService;
     
-    protected $listeners = ['dateSelected' => 'updateDate'];
+    protected $listeners = ['dateSelected' => 'updateDate', 'switch-locale' => 'handleLanguageChange'];
     
     public function boot(SpoonacularService $spoonacularService)
     {
@@ -409,6 +410,12 @@ class MealPlanner extends Component
         $this->startDate = Carbon::parse($this->startDate)->subWeek()->format('Y-m-d');
         $this->endDate = Carbon::parse($this->endDate)->subWeek()->format('Y-m-d');
         $this->loadMealPlans();
+    }
+    
+    public function handleLanguageChange($locale)
+    {
+        // Force re-render when language changes
+        $this->dispatch('$refresh');
     }
     
     #[Layout('layouts.blog')]

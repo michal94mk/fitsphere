@@ -26,7 +26,7 @@
         
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
             <div class="p-6 bg-white border-b border-gray-200">
-                <h2 class="text-2xl font-semibold mb-6">Planer Posiłków</h2>
+                <h2 class="text-2xl font-semibold mb-6">{{ __('meal_planner.title') }}</h2>
                 
                 @if (session()->has('message'))
                     <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4">
@@ -47,7 +47,7 @@
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
                             </svg>
-                            Poprzedni tydzień
+                            {{ __('meal_planner.prev_week') }}
                         </button>
                         
                         <div class="text-center">
@@ -55,7 +55,7 @@
                         </div>
                         
                         <button wire:click="nextWeek" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-md">
-                            Następny tydzień
+                            {{ __('meal_planner.next_week') }}
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                             </svg>
@@ -87,41 +87,41 @@
                 
                 <!-- Generator planu posiłków -->
                 <div class="mb-8 bg-gray-50 p-6 rounded-lg shadow-sm">
-                    <h3 class="text-xl font-semibold mb-4">Wygeneruj plan posiłków</h3>
+                    <h3 class="text-xl font-semibold mb-4">{{ __('meal_planner.generate_plan') }}</h3>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <div class="mb-4">
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Wybierz ograniczenia dietetyczne</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('meal_planner.dietary_preferences') }}</label>
                                 <div class="grid grid-cols-2 gap-2">
                                     <label class="inline-flex items-center">
                                         <input type="checkbox" wire:model="dietary" value="vegetarian" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                                        <span class="ml-2">Wegetariańska</span>
+                                        <span class="ml-2">{{ __('meal_planner.vegetarian') }}</span>
                                     </label>
                                     <label class="inline-flex items-center">
                                         <input type="checkbox" wire:model="dietary" value="vegan" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                                        <span class="ml-2">Wegańska</span>
+                                        <span class="ml-2">{{ __('meal_planner.vegan') }}</span>
                                     </label>
                                     <label class="inline-flex items-center">
                                         <input type="checkbox" wire:model="dietary" value="gluten-free" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                                        <span class="ml-2">Bezglutenowa</span>
+                                        <span class="ml-2">{{ __('meal_planner.gluten_free') }}</span>
                                     </label>
                                     <label class="inline-flex items-center">
                                         <input type="checkbox" wire:model="dietary" value="ketogenic" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                                        <span class="ml-2">Ketogeniczna</span>
+                                        <span class="ml-2">{{ __('meal_planner.keto') }}</span>
                                     </label>
                                 </div>
                             </div>
                             
                             <div class="mb-4">
-                                <label for="excludeIngredients" class="block text-sm font-medium text-gray-700 mb-1">Składniki do wykluczenia</label>
-                                <input type="text" wire:model="excludeIngredients" id="excludeIngredients" placeholder="np. orzechy, mleko, jaja" class="w-full rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                                <p class="mt-1 text-xs text-gray-500">Oddziel składniki przecinkami.</p>
+                                <label for="excludeIngredients" class="block text-sm font-medium text-gray-700 mb-1">{{ __('meal_planner.excluded_ingredients') }}</label>
+                                <input type="text" wire:model="excludeIngredients" id="excludeIngredients" placeholder="{{ __('meal_planner.excluded_ingredients_placeholder') }}" class="w-full rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                                <p class="mt-1 text-xs text-gray-500">{{ __('meal_planner.comma_separated') }}</p>
                             </div>
                             
                             <div>
                                 <button wire:click="generateMealPlan" class="px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150">
-                                    Generuj plan posiłków
+                                    {{ __('meal_planner.generate_plan') }}
                                 </button>
                             </div>
                         </div>
@@ -283,11 +283,11 @@
                 <!-- Lista posiłków na wybrany dzień -->
                 <div class="bg-gray-50 p-6 rounded-lg shadow-sm">
                     <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-xl font-semibold">Posiłki na {{ \Carbon\Carbon::parse($date)->locale('pl')->isoFormat('D MMMM YYYY') }}</h3>
+                        <h3 class="text-xl font-semibold">{{ __('meal_planner.meals_for') }} {{ \Carbon\Carbon::parse($date)->locale(App::getLocale())->isoFormat('D MMMM YYYY') }}</h3>
                         
                         @if (isset($dailyTotals[$date]))
                             <div class="text-sm">
-                                <span class="font-semibold">Suma kalorii:</span> {{ round($dailyTotals[$date]['calories']) }} kcal
+                                <span class="font-semibold">{{ __('meal_planner.total_calories') }}:</span> {{ round($dailyTotals[$date]['calories']) }} {{ __('meal_planner.kcal') }}
                             </div>
                         @endif
                     </div>
@@ -301,19 +301,19 @@
                                             <span class="inline-block mr-2">
                                                 @switch($meal->meal_type)
                                                     @case('breakfast')
-                                                        <span class="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs font-semibold rounded-full">Śniadanie</span>
+                                                        <span class="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs font-semibold rounded-full">{{ __('meal_planner.breakfast') }}</span>
                                                         @break
                                                     
                                                     @case('lunch')
-                                                        <span class="px-2 py-1 bg-green-100 text-green-800 text-xs font-semibold rounded-full">Obiad</span>
+                                                        <span class="px-2 py-1 bg-green-100 text-green-800 text-xs font-semibold rounded-full">{{ __('meal_planner.lunch') }}</span>
                                                         @break
                                                     
                                                     @case('dinner')
-                                                        <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs font-semibold rounded-full">Kolacja</span>
+                                                        <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs font-semibold rounded-full">{{ __('meal_planner.dinner') }}</span>
                                                         @break
                                                     
                                                     @case('snack')
-                                                        <span class="px-2 py-1 bg-purple-100 text-purple-800 text-xs font-semibold rounded-full">Przekąska</span>
+                                                        <span class="px-2 py-1 bg-purple-100 text-purple-800 text-xs font-semibold rounded-full">{{ __('meal_planner.snacks') }}</span>
                                                         @break
                                                 @endswitch
                                             </span>
@@ -327,7 +327,7 @@
                                                 </svg>
                                             </button>
                                             
-                                            <button wire:click="deleteMealPlan({{ $meal->id }})" class="text-gray-400 hover:text-red-500" onclick="confirm('Czy na pewno chcesz usunąć ten posiłek?') || event.stopImmediatePropagation()">
+                                            <button wire:click="deleteMealPlan({{ $meal->id }})" class="text-gray-400 hover:text-red-500" onclick="confirm('{{ __('meal_planner.confirm_delete') }}') || event.stopImmediatePropagation()">
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                                 </svg>
@@ -344,23 +344,23 @@
                                         
                                         <div class="sm:col-span-3">
                                             <div class="flex flex-wrap gap-4 mb-2 text-sm">
-                                                <div><span class="font-semibold">Kalorie:</span> {{ !is_null($meal->calories) && $meal->calories > 0 ? round($meal->calories) : 'bd.' }} kcal</div>
-                                                <div><span class="font-semibold">Białko:</span> {{ !is_null($meal->protein) && $meal->protein > 0 ? round($meal->protein) : 'bd.' }} g</div>
-                                                <div><span class="font-semibold">Węglowodany:</span> {{ !is_null($meal->carbs) && $meal->carbs > 0 ? round($meal->carbs) : 'bd.' }} g</div>
-                                                <div><span class="font-semibold">Tłuszcze:</span> {{ !is_null($meal->fat) && $meal->fat > 0 ? round($meal->fat) : 'bd.' }} g</div>
+                                                <div><span class="font-semibold">{{ __('meal_planner.calories') }}:</span> {{ !is_null($meal->calories) && $meal->calories > 0 ? round($meal->calories) : __('meal_planner.na') }} {{ __('meal_planner.kcal') }}</div>
+                                                <div><span class="font-semibold">{{ __('meal_planner.protein') }}:</span> {{ !is_null($meal->protein) && $meal->protein > 0 ? round($meal->protein) : __('meal_planner.na') }} {{ __('meal_planner.g') }}</div>
+                                                <div><span class="font-semibold">{{ __('meal_planner.carbs') }}:</span> {{ !is_null($meal->carbs) && $meal->carbs > 0 ? round($meal->carbs) : __('meal_planner.na') }} {{ __('meal_planner.g') }}</div>
+                                                <div><span class="font-semibold">{{ __('meal_planner.fat') }}:</span> {{ !is_null($meal->fat) && $meal->fat > 0 ? round($meal->fat) : __('meal_planner.na') }} {{ __('meal_planner.g') }}</div>
                                             </div>
                                             
                                             <div class="text-xs text-gray-500 mt-1">
                                                 @if(isset($meal->recipe_data['servings']) && $meal->recipe_data['servings'] > 0)
-                                                    <span>Podane wartości odżywcze na porcję. Liczba porcji: {{ $meal->recipe_data['servings'] }}</span>
+                                                    <span>{{ __('meal_planner.nutrition_per_serving') }} {{ __('meal_planner.servings') }}: {{ $meal->recipe_data['servings'] }}</span>
                                                 @else
-                                                    <span>Podane wartości odżywcze na porcję</span>
+                                                    <span>{{ __('meal_planner.nutrition_per_serving') }}</span>
                                                 @endif
                                             </div>
                                             
                                             @if ($meal->notes)
                                                 <div class="mt-2 text-sm text-gray-600">
-                                                    <span class="font-semibold">Notatki:</span> {{ $meal->notes }}
+                                                    <span class="font-semibold">{{ __('meal_planner.notes') }}:</span> {{ $meal->notes }}
                                                 </div>
                                             @endif
                                         </div>
@@ -370,8 +370,8 @@
                         </div>
                     @else
                         <div class="bg-white rounded-md shadow p-6 text-center">
-                            <p class="text-gray-500">Brak zaplanowanych posiłków na ten dzień.</p>
-                            <p class="mt-2 text-sm text-gray-400">Użyj generatora planu posiłków lub wyszukaj przepisy, aby dodać je do planu.</p>
+                            <p class="text-gray-500">{{ __('meal_planner.no_meals_planned') }}</p>
+                            <p class="mt-2 text-sm text-gray-400">{{ __('meal_planner.use_generator') }}</p>
                         </div>
                     @endif
                 </div>

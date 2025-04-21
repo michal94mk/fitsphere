@@ -6,6 +6,7 @@ use Livewire\Component;
 use Livewire\Attributes\Layout;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ContactFormMail;
+use Illuminate\Support\Facades\App;
 
 class ContactPage extends Component
 {
@@ -30,9 +31,9 @@ class ContactPage extends Component
 
         try {
             Mail::to('admin@reply.com')->send(new ContactFormMail($validatedData));
-            session()->flash('success', 'Message sent successfully.');
+            session()->flash('success', __('contact.success'));
         } catch (\Throwable $th) {
-            session()->flash('error', 'Failed to send message. Please try again later.');
+            session()->flash('error', __('contact.error'));
         }
 
         $this->reset(['name', 'email', 'message']);

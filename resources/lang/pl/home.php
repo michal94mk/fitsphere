@@ -35,7 +35,9 @@ return [
     // Latest Posts Section
     'latest_posts_title' => 'Najnowsze posty',
     'read_more' => 'Czytaj więcej',
+    'read_full_article' => 'Czytaj cały artykuł',
     'view_all_posts' => 'Zobacz wszystkie posty',
+    'no_date' => 'Brak daty',
     
     // Categories Section
     'categories_title' => 'Przeglądaj według kategorii',
@@ -45,7 +47,13 @@ return [
     // Call to Action Section
     'cta_title' => 'Gotowy na poprawę formy?',
     'cta_subtitle' => 'Nasi trenerzy pomogą Ci osiągnąć Twoje cele',
-    'cta_button' => 'Przeglądaj trenerów',
+    'cta_feature_1' => 'Spersonalizowane plany treningowe',
+    'cta_feature_2' => 'Porady żywieniowe od ekspertów',
+    'cta_feature_3' => 'Dostęp do zasobów fitness',
+    'cta_cta_title' => 'Dołącz do naszej społeczności już dziś',
+    'cta_cta_button' => 'Zarejestruj się',
+    'cta_login_button' => 'Zaloguj się',
+    'cta_cta_subtitle' => 'Bez zobowiązań, możesz anulować w dowolnym momencie',
     
     // Misc
     'scroll_to_top' => 'Przewiń do góry',

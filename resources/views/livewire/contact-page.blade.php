@@ -8,18 +8,18 @@
         <div class="text-center mb-16">
             <h1 class="text-5xl font-extrabold text-gray-900 mb-4">
                 <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-blue-500">
-                    Contact Us
+                    {{ __('contact.title') }}
                 </span>
             </h1>
             
             <p class="text-xl text-gray-700 leading-relaxed max-w-2xl mx-auto">
-                We'd love to hear from you! If you have any questions, feedback, or suggestions, feel free to reach out to us.
+                {{ __('contact.subtitle') }}
             </p>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div class="hidden lg:block bg-white bg-opacity-80 backdrop-filter backdrop-blur-sm rounded-2xl shadow-xl p-8">
-                <h2 class="text-2xl font-bold text-gray-800 mb-6">Get in Touch</h2>
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">{{ __('contact.subtitle') }}</h2>
                 
                 <div class="space-y-6">
                     <div class="flex items-start">
@@ -29,7 +29,7 @@
                             </svg>
                         </div>
                         <div class="ml-4">
-                            <h3 class="text-lg font-medium text-gray-900">Phone</h3>
+                            <h3 class="text-lg font-medium text-gray-900">{{ __('contact.phone_title') }}</h3>
                             <p class="mt-1 text-gray-600">+48 123 456 789</p>
                         </div>
                     </div>
@@ -41,7 +41,7 @@
                             </svg>
                         </div>
                         <div class="ml-4">
-                            <h3 class="text-lg font-medium text-gray-900">Email</h3>
+                            <h3 class="text-lg font-medium text-gray-900">{{ __('contact.email_title') }}</h3>
                             <p class="mt-1 text-gray-600">contact@example.com</p>
                         </div>
                     </div>
@@ -54,14 +54,14 @@
                             </svg>
                         </div>
                         <div class="ml-4">
-                            <h3 class="text-lg font-medium text-gray-900">Address</h3>
+                            <h3 class="text-lg font-medium text-gray-900">{{ __('contact.address_title') }}</h3>
                             <p class="mt-1 text-gray-600">Krakowska 12, 31-111 Kraków, Poland</p>
                         </div>
                     </div>
                 </div>
                 
                 <div class="mt-8">
-                    <h3 class="text-lg font-medium text-gray-900 mb-4">Follow Us</h3>
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">{{ __('common.follow_us') }}</h3>
                     <div class="flex space-x-4">
                         <a href="#" class="bg-gray-100 p-3 rounded-full text-gray-600 hover:text-blue-500 hover:bg-gray-200 transition-colors">
                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -114,10 +114,10 @@
                 @endif
 
                 <form wire:submit.prevent="send" method="post" class="bg-white shadow-2xl rounded-2xl p-8 space-y-6">
-                    <h2 class="text-2xl font-bold text-gray-800 mb-6 lg:hidden">Send Us a Message</h2>
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6 lg:hidden">{{ __('contact.subtitle') }}</h2>
                     
                     <div>
-                        <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Your Name</label>
+                        <label for="name" class="block text-sm font-medium text-gray-700 mb-1">{{ __('contact.name') }}</label>
                         <div class="relative rounded-md shadow-sm">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -126,14 +126,14 @@
                             </div>
                             <input type="text" id="name" wire:model="name" 
                                   class="pl-10 w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" 
-                                  placeholder="John Doe"
+                                  placeholder="{{ __('contact.name_placeholder') }}"
                                   required>
                         </div>
                         @error('name') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
                     </div>
                     
                     <div>
-                        <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Your Email</label>
+                        <label for="email" class="block text-sm font-medium text-gray-700 mb-1">{{ __('contact.email') }}</label>
                         <div class="relative rounded-md shadow-sm">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -142,18 +142,18 @@
                             </div>
                             <input type="email" id="email" wire:model="email" 
                                   class="pl-10 w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" 
-                                  placeholder="john@example.com"
+                                  placeholder="{{ __('contact.email_placeholder') }}"
                                   required>
                         </div>
                         @error('email') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
                     </div>
                     
                     <div>
-                        <label for="message" class="block text-sm font-medium text-gray-700 mb-1">Your Message</label>
+                        <label for="message" class="block text-sm font-medium text-gray-700 mb-1">{{ __('contact.message') }}</label>
                         <div class="relative rounded-md shadow-sm">
                             <textarea id="message" wire:model="message" rows="6" 
                                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors resize-none" 
-                                     placeholder="What would you like to tell us?"
+                                     placeholder="{{ __('contact.message_placeholder') }}"
                                      required></textarea>
                         </div>
                         @error('message') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
@@ -166,7 +166,7 @@
                                 <svg class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                                 </svg>
-                                <span>Send Message</span>
+                                <span>{{ __('contact.submit') }}</span>
                             </div>
                         </button>
                     </div>

@@ -1,0 +1,69 @@
+<?php
+
+return [
+    // Trainers list page
+    'title' => 'Nasi Trenerzy',
+    'subtitle' => 'Poznaj nasz profesjonalny zespół ekspertów fitness',
+    'search' => 'Wyszukaj Trenerów',
+    'search_placeholder' => 'Szukaj według imienia lub specjalizacji...',
+    'specializations' => 'Specjalizacje',
+    'all_specializations' => 'Wszystkie Specjalizacje',
+    'view_profile' => 'Zobacz Profil',
+    'book_session' => 'Zarezerwuj Sesję',
+    'no_trainers' => 'Nie znaleziono trenerów spełniających Twoje kryteria.',
+    
+    // Trainer profile
+    'profile_title' => 'Profil Trenera',
+    'about' => 'O mnie',
+    'experience' => 'Doświadczenie',
+    'years' => 'lat',
+    'education' => 'Wykształcenie',
+    'certifications' => 'Certyfikaty',
+    'specialization' => 'Specjalizacja',
+    'available_hours' => 'Dostępne Godziny',
+    'reviews' => 'Opinie',
+    'no_reviews' => 'Brak opinii.',
+    'schedule_session' => 'Zaplanuj Sesję',
+    'contact_trainer' => 'Kontakt z Trenerem',
+    'phone' => 'Telefon',
+    'email' => 'Email',
+    
+    // Booking
+    'booking_title' => 'Zarezerwuj Sesję z',
+    'select_date' => 'Wybierz Datę',
+    'select_time' => 'Wybierz Godzinę',
+    'duration' => 'Czas trwania',
+    'minutes' => 'minut',
+    'session_type' => 'Rodzaj Sesji',
+    'personal_training' => 'Trening Personalny',
+    'group_training' => 'Trening Grupowy',
+    'online_consultation' => 'Konsultacja Online',
+    'notes' => 'Notatki dla trenera',
+    'notes_placeholder' => 'Szczególne cele, problemy zdrowotne lub pytania...',
+    'confirm_booking' => 'Potwierdź Rezerwację',
+    'booking_success' => 'Twoja sesja została zarezerwowana pomyślnie!',
+    'booking_error' => 'Wystąpił błąd podczas rezerwacji sesji. Spróbuj ponownie.',
+    'login_required' => 'Musisz być zalogowany, aby zarezerwować sesję.',
+    
+    // Admin section
+    'admin_title' => 'Zarządzaj Trenerami',
+    'add_trainer' => 'Dodaj Trenera',
+    'edit_trainer' => 'Edytuj Trenera',
+    'delete_trainer' => 'Usuń Trenera',
+    'confirm_delete' => 'Czy na pewno chcesz usunąć tego trenera?',
+    'save_trainer' => 'Zapisz Trenera',
+    'update_trainer' => 'Aktualizuj Trenera',
+    'cancel' => 'Anuluj',
+    
+    // Trainer form fields
+    'name' => 'Imię',
+    'surname' => 'Nazwisko',
+    'bio' => 'Biografia',
+    'bio_placeholder' => 'Doświadczenie zawodowe, podejście do treningu, itp.',
+    'avatar' => 'Zdjęcie Profilowe',
+    'years_experience' => 'Lata Doświadczenia',
+    'select_specializations' => 'Wybierz Specjalizacje',
+    'add_education' => 'Dodaj Wykształcenie',
+    'add_certification' => 'Dodaj Certyfikat',
+    'available_dates' => 'Dostępne Daty',
+]; 

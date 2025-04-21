@@ -35,7 +35,9 @@ return [
     // Latest Posts Section
     'latest_posts_title' => 'Latest Posts',
     'read_more' => 'Read more',
+    'read_full_article' => 'Read full article',
     'view_all_posts' => 'View all posts',
+    'no_date' => 'No date',
     
     // Categories Section
     'categories_title' => 'Browse by Categories',
@@ -45,7 +47,13 @@ return [
     // Call to Action Section
     'cta_title' => 'Ready to improve your fitness?',
     'cta_subtitle' => 'Our trainers will help you achieve your goals',
-    'cta_button' => 'Browse Trainers',
+    'cta_feature_1' => 'Personalized training plans',
+    'cta_feature_2' => 'Nutrition advice from experts',
+    'cta_feature_3' => 'Access to fitness resources',
+    'cta_cta_title' => 'Join our community today',
+    'cta_cta_button' => 'Sign up now',
+    'cta_login_button' => 'Log in',
+    'cta_cta_subtitle' => 'No commitment, cancel anytime',
     
     // Misc
     'scroll_to_top' => 'Scroll to top',

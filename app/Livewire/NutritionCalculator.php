@@ -7,6 +7,7 @@ use App\Models\NutritionalProfile;
 use App\Services\SpoonacularService;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
+use Illuminate\Support\Facades\App;
 
 class NutritionCalculator extends Component
 {
@@ -33,6 +34,8 @@ class NutritionCalculator extends Component
     public $showDietaryInfo = false;
     
     protected $spoonacularService;
+    
+    protected $listeners = ['switch-locale' => 'handleLanguageChange'];
     
     public function boot(SpoonacularService $spoonacularService)
     {
@@ -64,7 +67,7 @@ class NutritionCalculator extends Component
     public function calculateNutrition()
     {
         if (!$this->weight || !$this->height || !$this->age || !$this->gender || !$this->activityLevel) {
-            $this->addError('profile', 'Aby obliczyć wartości odżywcze, wypełnij wszystkie wymagane pola profilu.');
+            $this->addError('profile', __('nutrition_calculator.profile_error'));
             return;
         }
         
@@ -119,13 +122,13 @@ class NutritionCalculator extends Component
         
         $profile->save();
         
-        session()->flash('message', 'Profil żywieniowy został zapisany pomyślnie!');
+        session()->flash('message', __('nutrition_calculator.profile_saved'));
     }
     
     public function searchRecipes()
     {
         if (empty($this->searchQuery)) {
-            session()->flash('error', 'Wprowadź wyszukiwaną frazę.');
+            session()->flash('error', __('nutrition_calculator.search_error'));
             return;
         }
         
@@ -157,6 +160,12 @@ class NutritionCalculator extends Component
         
         $this->searchResults = $results;
         $this->loading = false;
+    }
+    
+    public function handleLanguageChange($locale)
+    {
+        // Force re-render when language changes
+        $this->dispatch('$refresh');
     }
     
     #[Layout('layouts.blog')]

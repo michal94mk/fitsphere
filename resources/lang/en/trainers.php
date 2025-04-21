@@ -1,0 +1,69 @@
+<?php
+
+return [
+    // Trainers list page
+    'title' => 'Our Trainers',
+    'subtitle' => 'Meet our professional team of fitness experts',
+    'search' => 'Search Trainers',
+    'search_placeholder' => 'Search by name or specialization...',
+    'specializations' => 'Specializations',
+    'all_specializations' => 'All Specializations',
+    'view_profile' => 'View Profile',
+    'book_session' => 'Book a Session',
+    'no_trainers' => 'No trainers found matching your criteria.',
+    
+    // Trainer profile
+    'profile_title' => 'Trainer Profile',
+    'about' => 'About',
+    'experience' => 'Experience',
+    'years' => 'years',
+    'education' => 'Education',
+    'certifications' => 'Certifications',
+    'specialization' => 'Specialization',
+    'available_hours' => 'Available Hours',
+    'reviews' => 'Reviews',
+    'no_reviews' => 'No reviews yet.',
+    'schedule_session' => 'Schedule a Session',
+    'contact_trainer' => 'Contact Trainer',
+    'phone' => 'Phone',
+    'email' => 'Email',
+    
+    // Booking
+    'booking_title' => 'Book a Session with',
+    'select_date' => 'Select Date',
+    'select_time' => 'Select Time',
+    'duration' => 'Duration',
+    'minutes' => 'minutes',
+    'session_type' => 'Session Type',
+    'personal_training' => 'Personal Training',
+    'group_training' => 'Group Training',
+    'online_consultation' => 'Online Consultation',
+    'notes' => 'Notes for the trainer',
+    'notes_placeholder' => 'Any specific goals, health concerns, or questions...',
+    'confirm_booking' => 'Confirm Booking',
+    'booking_success' => 'Your session has been booked successfully!',
+    'booking_error' => 'There was an error booking your session. Please try again.',
+    'login_required' => 'You need to be logged in to book a session.',
+    
+    // Admin section
+    'admin_title' => 'Manage Trainers',
+    'add_trainer' => 'Add Trainer',
+    'edit_trainer' => 'Edit Trainer',
+    'delete_trainer' => 'Delete Trainer',
+    'confirm_delete' => 'Are you sure you want to delete this trainer?',
+    'save_trainer' => 'Save Trainer',
+    'update_trainer' => 'Update Trainer',
+    'cancel' => 'Cancel',
+    
+    // Trainer form fields
+    'name' => 'Name',
+    'surname' => 'Surname',
+    'bio' => 'Biography',
+    'bio_placeholder' => 'Professional background, approach to training, etc.',
+    'avatar' => 'Profile Picture',
+    'years_experience' => 'Years of Experience',
+    'select_specializations' => 'Select Specializations',
+    'add_education' => 'Add Education',
+    'add_certification' => 'Add Certification',
+    'available_dates' => 'Available Dates',
+]; 

@@ -4,7 +4,7 @@
         <div class="text-center mb-16">
             <h1 class="text-5xl font-extrabold text-gray-900 mb-4">
                 <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-blue-500">
-                    Trainers
+                    {{ __('trainers.title') }}
                 </span>
             </h1>
             <!-- Flash messages -->
@@ -15,7 +15,7 @@
             @endif
             <!-- Introduction text -->
             <p class="text-xl text-gray-700 leading-relaxed mt-4 max-w-3xl mx-auto">
-                Nasz zespół składa się z entuzjastów zdrowia, dietetyków i ekspertów, którzy dostarczają wysokiej jakości treści.
+                {{ __('trainers.subtitle') }}
             </p>
         </div>
 
@@ -25,7 +25,7 @@
             <div class="flex items-center justify-center mb-12">
                 <div class="h-0.5 bg-gray-200 w-16 mr-4"></div>
                 <h2 class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-blue-500">
-                    Poznaj Naszych Trenerów
+                    {{ __('trainers.title') }}
                 </h2>
                 <div class="h-0.5 bg-gray-200 w-16 ml-4"></div>
             </div>
@@ -80,7 +80,7 @@
                                     <svg class="w-4 h-4 mr-1 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                     </svg>
-                                    <span>{{ $trainer->experience }} lat doświadczenia</span>
+                                    <span>{{ $trainer->experience }} {{ __('trainers.years') }} {{ __('trainers.experience') }}</span>
                                 </div>
                                 @endif
                                 
@@ -112,8 +112,8 @@
                                     class="flex items-center justify-between px-6 py-4 text-gray-800 hover:bg-blue-50 transition-colors duration-300 group"
                                 >
                                     <span class="font-medium group-hover:text-blue-600 transition-colors duration-300">
-                                        <span wire:loading.remove>Zobacz profil</span>
-                                        <span wire:loading>Ładowanie...</span>
+                                        <span wire:loading.remove>{{ __('trainers.view_profile') }}</span>
+                                        <span wire:loading>{{ __('common.loading') }}...</span>
                                     </span>
                                     <svg class="w-5 h-5 text-blue-500 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />

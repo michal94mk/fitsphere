@@ -3,7 +3,7 @@
         <div class="text-center mb-16">
             <h1 class="text-5xl font-extrabold text-gray-900 mb-4">
                 <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-blue-500">
-                    Posts
+                    {{ __('posts.title') }}
                 </span>
             </h1>
         </div>
@@ -15,13 +15,13 @@
                 <div class="w-full sm:w-auto p-4 sm:p-0">
                     <div class="flex items-center justify-center sm:justify-start sm:border-r border-gray-200 h-full">
                         <div class="sm:pl-8 py-4 sm:pr-8">
-                            <p class="text-gray-500 text-sm mb-1 font-medium">Filtry kategorii</p>
+                            <p class="text-gray-500 text-sm mb-1 font-medium">{{ __('posts.categories') }}</p>
                             <div class="flex flex-wrap gap-2 mt-2">
                                 <!-- All categories button -->
                                 <button wire:click="$set('category', '')" 
                                     class="px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-200 
                                     {{ $category === '' ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-md' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' }}">
-                                    Wszystkie
+                                    {{ __('posts.all_categories') }}
                                 </button>
                                 
                                 <!-- Individual category buttons -->
@@ -39,7 +39,7 @@
                 
                 <!-- Sorting options -->
                 <div class="w-full sm:w-auto p-4 border-t sm:border-t-0 border-gray-200 sm:border-none sm:pr-8">
-                    <p class="text-gray-500 text-sm mb-1 font-medium">Sortowanie</p>
+                    <p class="text-gray-500 text-sm mb-1 font-medium">{{ __('common.sort') }}</p>
                     <div class="flex space-x-3">
                         <!-- Newest first option -->
                         <button wire:click="$set('sortBy', 'newest')" 
@@ -48,7 +48,7 @@
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12" />
                             </svg>
-                            Najnowsze
+                            {{ __('common.newest') }}
                         </button>
                         
                         <!-- Oldest first option -->
@@ -58,7 +58,7 @@
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h13M3 8h9m-9 4h9m5-4v12m0 0l-4-4m4 4l4-4" />
                             </svg>
-                            Najstarsze
+                            {{ __('common.oldest') }}
                         </button>
                         
                         <!-- Popular option -->
@@ -69,7 +69,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                             </svg>
-                            Popularne
+                            {{ __('common.popular') }}
                         </button>
                     </div>
                 </div>
@@ -83,9 +83,9 @@
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                <h3 class="text-xl font-bold text-gray-700 mb-2">Brak postów</h3>
+                <h3 class="text-xl font-bold text-gray-700 mb-2">{{ __('posts.no_posts') }}</h3>
                 <p class="text-gray-600">
-                    Nie ma jeszcze żadnych postów. Wróć później!
+                    {{ __('posts.no_posts') }}
                 </p>
             </div>
         @else
@@ -127,7 +127,7 @@
                                     @if($post->translations->isNotEmpty())
                                         {{ $post->translations->first()->title }}
                                     @else
-                                        {{ $post->title ?? 'Brak tytułu' }}
+                                        {{ $post->title ?? __('common.no_title') }}
                                     @endif
                                 </h2>
                                 
@@ -141,7 +141,7 @@
                                     @elseif($post->translations->isNotEmpty())
                                         {{ Str::limit($post->translations->first()->content, 90) }}
                                     @else
-                                        {{ Str::limit($post->content, 90) ?? 'Brak podsumowania' }}
+                                        {{ Str::limit($post->content, 90) ?? __('common.no_summary') }}
                                     @endif
                                 </p>
                                 
@@ -153,7 +153,7 @@
                                             class="w-full h-full object-cover">
                                     </div>
                                     <span class="text-gray-700 text-sm">
-                                        {{ $post->user->name ?? 'Nieznany autor' }}
+                                        {{ $post->user->name ?? __('common.unknown_author') }}
                                     </span>
                                 </div>
                                 
@@ -164,7 +164,7 @@
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                         </svg>
-                                        {{ optional($post->created_at)->format('d.m.Y') ?? 'Brak daty' }}
+                                        {{ optional($post->created_at)->format('d.m.Y') ?? __('common.no_date') }}
                                     </div>
                                     
                                     <!-- View count -->
@@ -173,7 +173,7 @@
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                         </svg>
-                                        {{ number_format($post->view_count) }}
+                                        {{ number_format($post->view_count) }} {{ __('posts.view_count') }}
                                     </div>
                                 </div>
                             </div>
@@ -187,8 +187,8 @@
                                     class="flex items-center justify-between px-6 py-4 text-gray-800 hover:bg-blue-50 transition-colors duration-300 group"
                                 >
                                     <span class="font-medium group-hover:text-blue-600 transition-colors duration-300">
-                                        <span wire:loading.remove>Czytaj artykuł</span>
-                                        <span wire:loading>Ładowanie...</span>
+                                        <span wire:loading.remove>{{ __('posts.read_more') }}</span>
+                                        <span wire:loading>{{ __('common.loading') }}...</span>
                                     </span>
                                     <svg class="w-5 h-5 text-blue-500 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />

@@ -16,6 +16,7 @@ return [
     'my_reservations' => 'My Reservations',
     'logout' => 'Logout',
     'switch_language' => 'Switch Language',
+    'follow_us' => 'Follow Us',
     
     // Wyszukiwarka
     'search' => 'Search',
@@ -28,5 +29,17 @@ return [
     'add_comment' => 'Add Comment',
     'edit' => 'Edit',
     'write_comment' => 'Write a comment...',
-    'login_to_comment' => 'You need to be logged in to add a comment.'
+    'login_to_comment' => 'You need to be logged in to add a comment.',
+    
+    // Common UI elements
+    'loading' => 'Loading',
+    'sort' => 'Sort',
+    'newest' => 'Newest',
+    'oldest' => 'Oldest',
+    'popular' => 'Popular',
+    'no_title' => 'No title',
+    'no_date' => 'No date',
+    'no_summary' => 'No summary',
+    'unknown_author' => 'Unknown author',
+    'views' => 'Views',
 ]; 
