@@ -106,12 +106,9 @@ class UpdateUserProfile extends Component
         }
         
         $user->save();
-<<<<<<< HEAD
-=======
         
         // Refresh the user instance to ensure image property is updated
         $this->user = $user->fresh();
->>>>>>> 2a4a97e (fix: ensure user profile images persist after page refresh)
 
         session()->flash('status', 'Profil został zaktualizowany!');
     }
@@ -150,13 +147,10 @@ class UpdateUserProfile extends Component
     #[Layout('layouts.blog')]
     public function render()
     {
-<<<<<<< HEAD
-=======
         // Reload the user from the database to ensure we have the latest data
         if (Auth::check()) {
             $this->user = User::find(Auth::id());
         }
->>>>>>> 2a4a97e (fix: ensure user profile images persist after page refresh)
         return view('livewire.profile.update-user-profile');
     }
 } 
