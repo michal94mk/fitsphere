@@ -6,6 +6,8 @@ use App\Models\Category;
 use App\Models\Post;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Livewire\Attributes\Layout;
+use Livewire\Attributes\Computed;
 
 class CategoriesShow extends Component
 {
@@ -31,10 +33,17 @@ class CategoriesShow extends Component
         session()->flash('success', 'Post został pomyślnie usunięty.');
     }
     
+    #[Computed]
+    public function header()
+    {
+        return 'Posty w kategorii: ' . $this->category->getTranslatedName();
+    }
+    
+    #[Layout('layouts.admin', ['header' => 'header'])]
     public function render()
     {
         return view('livewire.admin.categories-show', [
             'posts' => Post::where('category_id', $this->category->id)->latest()->paginate(10)
-        ])->layout('layouts.admin', ['header' => 'Posty w kategorii: ' . $this->category->name]);
+        ]);
     }
 } 

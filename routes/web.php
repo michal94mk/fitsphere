@@ -43,6 +43,7 @@ use App\Livewire\Admin\TrainersCreate;
 use App\Livewire\Admin\TrainersEdit;
 use App\Livewire\Admin\TrainersShow;
 use App\Livewire\Admin\PostTranslations;
+use App\Livewire\Admin\CategoryTranslations;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -165,7 +166,7 @@ Route::middleware('auth', 'verified')->group(function () {
 // =============================
 Route::middleware('auth:trainer')->prefix('trainer')->name('trainer.')->group(function () {
     Route::get('/reservations', TrainerReservations::class)->name('reservations');
-    // Route::get('/profile', TrainerProfilePage::class)->name('profile');
+    Route::get('/profile', \App\Livewire\Profile\TrainerProfile::class)->name('profile');
 });
 
 // =============================
@@ -185,6 +186,7 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
     Route::get('/categories', CategoriesIndex::class)->name('categories.index');
     Route::get('/categories/create', CategoriesCreate::class)->name('categories.create');
     Route::get('/categories/{id}/edit', CategoriesEdit::class)->name('categories.edit');
+    Route::get('/categories/{id}/translations', CategoryTranslations::class)->name('categories.translations');
     Route::get('/categories/{id}', CategoriesShow::class)->name('categories.show');
     
     // Comments management

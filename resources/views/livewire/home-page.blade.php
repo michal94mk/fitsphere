@@ -1,4 +1,10 @@
 <div>
+    @if (session('success'))
+        <div class="py-3 px-4 bg-green-100 text-green-700 rounded-md shadow-sm mx-auto max-w-7xl mt-4">
+            {{ session('success') }}
+        </div>
+    @endif
+
     <!-- Hero Section -->
     <section class="relative bg-gradient-to-br from-gray-900 to-gray-800 text-white h-screen text-center flex flex-col justify-center overflow-hidden">
         <!-- Background video -->
@@ -160,7 +166,7 @@
                             @if($post->category)
                             <div class="absolute top-4 right-4">
                                 <span class="inline-block px-3 py-1 text-xs font-medium bg-blue-600/90 text-white backdrop-blur-sm rounded-md">
-                                    {{ $post->category->name }}
+                                    {{ $post->category->getTranslatedName() }}
                                 </span>
                             </div>
                             @endif
@@ -275,7 +281,7 @@
                         @if(isset($post->category) && $post->category)
                         <div class="absolute top-4 left-4">
                             <span class="inline-block px-3 py-1 text-xs font-medium bg-blue-600/90 text-white backdrop-blur-sm rounded-md">
-                                {{ $post->category->name }}
+                                {{ $post->category->getTranslatedName() }}
                             </span>
                         </div>
                         @endif

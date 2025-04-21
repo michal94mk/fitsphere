@@ -29,7 +29,7 @@
                                     <button wire:click="$set('category', '{{ $cat->id }}')" 
                                         class="px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-200
                                         {{ $category == $cat->id ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-md' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' }}">
-                                        {{ $cat->name }}
+                                        {{ $cat->getTranslatedName() }}
                                     </button>
                                 @endforeach
                             </div>
@@ -114,7 +114,7 @@
                                 @if($post->category)
                                 <div class="absolute top-4 left-4">
                                     <span class="inline-block px-3 py-1 text-xs font-medium bg-blue-600/90 text-white backdrop-blur-sm rounded-md">
-                                        {{ $post->category->name }}
+                                        {{ $post->category->getTranslatedName() }}
                                     </span>
                                 </div>
                                 @endif

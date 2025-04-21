@@ -13,7 +13,7 @@
             </div>
             <!-- Środkowa część: tytuł -->
             <h1 class="text-2xl font-bold text-center flex-grow">
-                Posty w kategorii: {{ $category->name }}
+                Posty w kategorii: {{ $category->getTranslatedName() }}
             </h1>
             <!-- Prawa strona: pusta, żeby wyśrodkować tytuł -->
             <div class="w-32"></div>

@@ -78,6 +78,9 @@
                                 <a href="{{ route('admin.categories.edit', $category) }}" wire:navigate class="text-indigo-600 hover:text-indigo-900 mr-3">
                                     Edytuj
                                 </a>
+                                <a href="{{ route('admin.categories.translations', $category->id) }}" wire:navigate class="text-green-600 hover:text-green-900 mr-3">
+                                    Tłumaczenia
+                                </a>
                                 <button wire:click="confirmCategoryDeletion({{ $category->id }})" class="text-red-600 hover:text-red-900">
                                     Usuń
                                 </button>
