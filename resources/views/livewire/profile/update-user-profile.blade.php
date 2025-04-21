@@ -96,8 +96,8 @@
                 <div class="w-24 h-24 bg-gray-100 rounded-lg overflow-hidden flex items-center justify-center border">
                     @if ($newImage)
                         <img src="{{ $newImage->temporaryUrl() }}" alt="Podgląd zdjęcia" class="w-full h-full object-cover">
-                    @elseif ($image)
-                        <img src="{{ Storage::url($image) }}" alt="Zdjęcie profilowe" class="w-full h-full object-cover">
+                    @elseif ($user && !empty($user->image))
+                        <img src="{{ asset('storage/' . $user->image) }}" alt="Zdjęcie profilowe" class="w-full h-full object-cover">
                     @else
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
