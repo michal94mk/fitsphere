@@ -65,21 +65,21 @@
             <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100 transform transition-all duration-300 hover:shadow-2xl">
                 <div class="h-2 bg-gradient-to-r from-blue-500 to-blue-600"></div>
                 <div class="p-8">
-                    <livewire:profile.update-user-profile />
+                    <livewire:user.profile.update-user-profile />
                 </div>
             </div>
 
             <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100 transform transition-all duration-300 hover:shadow-2xl">
                 <div class="h-2 bg-gradient-to-r from-indigo-500 to-blue-500"></div>
                 <div class="p-8">
-                    <livewire:profile.update-password />
+                    <livewire:user.profile.update-password />
                 </div>
             </div>
 
             <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100 transform transition-all duration-300 hover:shadow-2xl">
                 <div class="h-2 bg-gradient-to-r from-red-500 to-red-600"></div>
                 <div class="p-8">
-                    <livewire:profile.delete-user-account />
+                    <livewire:user.profile.delete-user-account />
                 </div>
             </div>
         </div>

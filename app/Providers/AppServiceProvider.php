@@ -9,6 +9,7 @@ use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Support\Facades\Event;
 use App\Models\Trainer;
 
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -26,19 +27,19 @@ class AppServiceProvider extends ServiceProvider
     {
         Model::preventLazyLoading(!app()->isProduction());
         
-        // Wyłączamy wszystkie istniejące listenery dla zdarzenia Registered
+        // Clear existing listeners for the Registered event
         $events = $this->app['events'];
         $events->forget(Registered::class);
         
-        // Dodajemy tylko nasz własny listener, który obsługuje oba typy użytkowników
+        // Register custom listener that handles both user types
         Event::listen(Registered::class, function (Registered $event) {
-            // Sprawdzamy typ użytkownika i wywołujemy odpowiednią metodę
-            // Zawsze wywołujemy tylko jedną metodę, aby uniknąć duplikacji emaili
+            // Select appropriate notification method based on user type
+            // Only one method is called to prevent duplicate emails
             if ($event->user instanceof Trainer) {
-                // Dla Trenerów użyj ich własnej metody
+                // For Trainers, use their class-specific method
                 $event->user->sendEmailVerificationNotification();
             } else {
-                // Dla zwykłych użytkowników, użyj standardowego handlera
+                // For regular users, use the standard handler
                 (new SendEmailVerificationNotification)->handle($event);
             }
         });

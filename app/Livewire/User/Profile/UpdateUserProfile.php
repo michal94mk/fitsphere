@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Livewire\Profile;
+namespace App\Livewire\User\Profile;
 
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Livewire\WithFileUploads;
-use Livewire\Attributes\Layout;
 use App\Models\User;
 
 /**
@@ -140,17 +139,16 @@ class UpdateUserProfile extends Component
     }
 
     /**
-     * Render the profile update form with blog layout.
+     * Render the profile update form.
      * 
      * @return \Illuminate\View\View
      */
-    #[Layout('layouts.blog')]
     public function render()
     {
         // Reload the user from the database to ensure we have the latest data
         if (Auth::check()) {
             $this->user = User::find(Auth::id());
         }
-        return view('livewire.profile.update-user-profile');
+        return view('livewire.user.profile.update-user-profile');
     }
 } 

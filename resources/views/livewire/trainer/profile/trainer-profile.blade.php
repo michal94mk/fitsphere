@@ -11,7 +11,7 @@
 
         <div class="mt-5 md:mt-0 md:col-span-2">
             <!-- Komponent do aktualizacji profilu trenera -->
-            <livewire:profile.update-trainer-profile />
+            <livewire:trainer.profile.update-trainer-profile />
         </div>
     </div>
 
@@ -33,7 +33,7 @@
 
         <div class="mt-5 md:mt-0 md:col-span-2">
             <!-- Komponent do aktualizacji hasła -->
-            <livewire:profile.update-password />
+            <livewire:trainer.profile.update-trainer-password />
         </div>
     </div>
 
@@ -55,7 +55,7 @@
 
         <div class="mt-5 md:mt-0 md:col-span-2">
             <!-- Komponent do usuwania konta -->
-            <livewire:profile.delete-trainer-account />
+            <livewire:trainer.profile.delete-trainer-account />
         </div>
     </div>
 </div> 

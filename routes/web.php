@@ -49,6 +49,10 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Livewire\Auth\VerifyEmailHandler;
 
+// Importing the User Profile components
+use App\Livewire\User\Profile\UserProfile;
+use App\Livewire\User\Profile\UpdatePassword as UserUpdatePassword;
+
 // =============================
 // Public Routes - Available to all users
 // =============================
@@ -135,12 +139,11 @@ Route::get('/email/verify/{id}/{hash}', VerifyEmailHandler::class)
 Route::get('/password/confirm', ConfirmPassword::class)->name('password.confirm');
 
 // Profile routes
-Route::get('/profile', Profile::class)->name('profile');
-Route::get('/profile/password', UpdatePassword::class)->name('profile.password');
+Route::get('/profile', UserProfile::class)->name('profile');
+Route::get('/profile/password', UserUpdatePassword::class)->name('profile.password');
 
 // Logout route
 Route::post('/logout', function () {
-    // Wyloguj zarówno z guardu 'web' jak i 'trainer'
     if (Auth::guard('trainer')->check()) {
         Auth::guard('trainer')->logout();
     }
@@ -166,7 +169,7 @@ Route::middleware('auth', 'verified')->group(function () {
 // =============================
 Route::middleware('auth:trainer')->prefix('trainer')->name('trainer.')->group(function () {
     Route::get('/reservations', TrainerReservations::class)->name('reservations');
-    Route::get('/profile', \App\Livewire\Profile\TrainerProfile::class)->name('profile');
+    Route::get('/profile', \App\Livewire\Trainer\Profile\TrainerProfile::class)->name('profile');
 });
 
 // =============================

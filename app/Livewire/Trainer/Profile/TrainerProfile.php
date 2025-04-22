@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Profile;
+namespace App\Livewire\Trainer\Profile;
 
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
@@ -18,6 +18,6 @@ class TrainerProfile extends Component
     #[Layout('layouts.blog')]
     public function render()
     {
-        return view('livewire.profile.trainer-profile');
+        return view('livewire.trainer.profile.trainer-profile');
     }
 } 

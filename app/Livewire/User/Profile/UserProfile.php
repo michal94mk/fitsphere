@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Profile;
+namespace App\Livewire\User\Profile;
 
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
@@ -13,7 +13,7 @@ use Livewire\Attributes\Layout;
  * such as profile information management, password updates, and account deletion.
  * It ensures that only authenticated users can access the profile page.
  */
-class Profile extends Component
+class UserProfile extends Component
 {
     /**
      * Initialize the component and check authentication.
@@ -37,6 +37,6 @@ class Profile extends Component
     #[Layout('layouts.blog')]
     public function render()
     {
-        return view('livewire.profile.profile');
+        return view('livewire.user.profile.user-profile');
     }
 } 
