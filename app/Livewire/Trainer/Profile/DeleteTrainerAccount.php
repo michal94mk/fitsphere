@@ -26,12 +26,16 @@ class DeleteTrainerAccount extends Component
     public function mount()
     {
         Log::info('DeleteTrainerAccount zmontowany');
-        $this->debugInfo = 'Komponent zmontowany pomyślnie';
     }
 
     public function validatePasswordAndOpenModal()
     {
         Log::info('validatePasswordAndOpenModal wywołany');
+        
+        if (empty($this->password)) {
+            $this->errorMessage = 'Hasło jest wymagane.';
+            return;
+        }
         
         $this->validate([
             'password' => 'required',
@@ -103,14 +107,14 @@ class DeleteTrainerAccount extends Component
         // Zapamiętuję ID trenera przed wylogowaniem
         $trainerId = $trainer->id;
 
-        // Usuwam zdjęcie profilowe jeśli istnieje
-        if (!empty($trainer->image) && Storage::disk('public')->exists($trainer->image)) {
-            Storage::disk('public')->delete($trainer->image);
+        // Usuwam zdjęcie profilowe jeśli istnieje (podobnie jak w User)
+        if ($trainer->profile_image && $trainer->profile_image !== 'trainers/default-avatar.png') {
+            Storage::disk('public')->delete($trainer->profile_image);
         }
 
         // Usuwam konto
         try {
-            Trainer::where('id', $trainerId)->delete();
+            Trainer::find($trainerId)->delete();
             Log::info("Trener {$trainerId} usunięty");
             
             // Wylogowuję trenera
@@ -121,7 +125,7 @@ class DeleteTrainerAccount extends Component
             session()->regenerateToken();
             
             // Przekierowuję do strony głównej z komunikatem
-            return redirect()->route('home')->with('success', 'Twoje konto zostało pomyślnie usunięte.');
+            return redirect()->route('home')->with('status', 'Twoje konto zostało usunięte.');
         } catch (\Exception $e) {
             Log::error("Błąd podczas usuwania trenera: " . $e->getMessage());
             $this->errorMessage = 'Wystąpił błąd podczas usuwania konta: ' . $e->getMessage();

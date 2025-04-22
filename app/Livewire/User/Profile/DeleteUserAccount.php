@@ -26,12 +26,17 @@ class DeleteUserAccount extends Component
 
     public function mount()
     {
-        $this->debugInfo = 'Komponent zainicjalizowany';
+        // Debug info removed as requested
     }
 
     public function validatePasswordAndOpenModal()
     {
         Log::info('validatePasswordAndOpenModal wywołany');
+        
+        if (empty($this->password)) {
+            $this->errorMessage = 'Hasło jest wymagane.';
+            return;
+        }
         
         $this->validate([
             'password' => 'required',
