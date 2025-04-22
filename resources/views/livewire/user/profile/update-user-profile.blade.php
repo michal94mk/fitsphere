@@ -3,7 +3,7 @@
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
         </svg>
-        Informacje osobowe
+        {{ __('profile.personal_info') }}
     </h2>
 
     @if (session()->has('status'))
@@ -38,17 +38,17 @@
                 </div>
                 <div class="ml-3">
                     <h3 class="text-sm font-medium text-yellow-800">
-                        Twój adres email nie został jeszcze zweryfikowany
+                        {{ __('profile.verification_required') }}
                     </h3>
                     <div class="mt-2 text-sm text-yellow-700">
                         <p>
-                            Aby korzystać ze wszystkich funkcji serwisu, potwierdź swój adres email klikając w link, który wysłaliśmy na {{ $email }}.
+                            {{ __('profile.verification_instructions') }} {{ $email }}.
                         </p>
                         <button wire:click="resendVerificationEmail" 
                             wire:loading.attr="disabled"
                             class="mt-3 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                            <span wire:loading.remove wire:target="resendVerificationEmail">Wyślij ponownie link weryfikacyjny</span>
-                            <span wire:loading wire:target="resendVerificationEmail">Wysyłanie...</span>
+                            <span wire:loading.remove wire:target="resendVerificationEmail">{{ __('profile.resend_link') }}</span>
+                            <span wire:loading wire:target="resendVerificationEmail">{{ __('profile.sending') }}</span>
                         </button>
                     </div>
                 </div>
@@ -60,7 +60,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             {{-- Login/username field --}}
             <div>
-                <label for="name" class="block text-sm font-medium mb-1 text-gray-700">Login</label>
+                <label for="name" class="block text-sm font-medium mb-1 text-gray-700">{{ __('profile.username') }}</label>
                 <div class="relative group">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400 group-hover:text-blue-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -69,13 +69,13 @@
                     </div>
                     <input type="text" id="name" wire:model="name" 
                         class="w-full bg-gray-50 text-gray-800 border border-gray-300 rounded-lg p-3 pl-10 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 shadow-sm"
-                        placeholder="Twój login">
+                        placeholder="{{ __('profile.your_username') }}">
                 </div>
                 @error('name') <p class="text-red-600 text-sm mt-1 flex items-center"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg> {{ $message }}</p> @enderror
             </div>
 
             <div>
-                <label for="email" class="block text-sm font-medium mb-1 text-gray-700">Email</label>
+                <label for="email" class="block text-sm font-medium mb-1 text-gray-700">{{ __('profile.email') }}</label>
                 <div class="relative group">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400 group-hover:text-blue-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -91,13 +91,13 @@
 
         {{-- Image upload section --}}
         <div class="mt-6">
-            <label class="block text-sm font-medium mb-2 text-gray-700">Zdjęcie profilowe</label>
+            <label class="block text-sm font-medium mb-2 text-gray-700">{{ __('profile.profile_image') }}</label>
             <div class="flex items-start space-x-4">
                 <div class="w-24 h-24 bg-gray-100 rounded-lg overflow-hidden flex items-center justify-center border">
                     @if ($newImage)
-                        <img src="{{ $newImage->temporaryUrl() }}" alt="Podgląd zdjęcia" class="w-full h-full object-cover">
+                        <img src="{{ $newImage->temporaryUrl() }}" alt="{{ __('profile.image_preview') }}" class="w-full h-full object-cover">
                     @elseif ($user && !empty($user->image))
-                        <img src="{{ asset('storage/' . $user->image) }}" alt="Zdjęcie profilowe" class="w-full h-full object-cover">
+                        <img src="{{ asset('storage/' . $user->image) }}" alt="{{ __('profile.profile_image') }}" class="w-full h-full object-cover">
                     @else
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -107,23 +107,61 @@
                 
                 <div>
                     <label for="newImage" class="px-4 py-2 border border-blue-500 text-blue-500 rounded-md hover:bg-blue-50 cursor-pointer inline-block">
-                        Wybierz nowe zdjęcie
+                        {{ __('profile.choose_new_image') }}
                     </label>
                     <input id="newImage" type="file" wire:model="newImage" class="hidden" accept="image/*">
                     @error('newImage') <p class="text-red-600 text-sm mt-1 flex items-center"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg> {{ $message }}</p> @enderror
-                    <p class="text-xs text-gray-500 mt-1">JPG, PNG lub GIF. Maksymalnie 1MB.</p>
+                    <p class="text-xs text-gray-500 mt-1">{{ __('profile.file_formats') }}</p>
                 </div>
             </div>
         </div>
 
         <div class="pt-4 flex justify-end">
-            <button type="submit" 
-                class="px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-300 hover:scale-105 shadow-md flex items-center transform hover:-translate-y-1">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                </svg>
-                <span>Zapisz zmiany</span>
-            </button>
+            <div class="flex items-center justify-between w-full">
+                @if (session()->has('status') || session()->has('info_button') || session()->has('error'))
+                    <div class="inline-flex items-center">
+                        @if (session()->has('status'))
+                            <div class="text-green-600 font-medium flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                </svg>
+                                {{ session('status') }}
+                            </div>
+                        @endif
+                        @if (session()->has('info_button'))
+                            <div class="text-blue-600 font-medium flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                {{ session('info_button') }}
+                            </div>
+                        @endif
+                        @if (session()->has('error'))
+                            <div class="text-red-600 font-medium flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                </svg>
+                                {{ session('error') }}
+                            </div>
+                        @endif
+                    </div>
+                @else
+                    <div></div>
+                @endif
+                <button type="submit" 
+                    class="px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-300 hover:scale-105 shadow-md flex items-center transform hover:-translate-y-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span>{{ __('profile.save_changes') }}</span>
+                    <span wire:loading wire:target="updateProfile" class="ml-2">
+                        <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                    </span>
+                </button>
+            </div>
         </div>
     </form>
 </div> 

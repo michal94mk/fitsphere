@@ -34,7 +34,7 @@ class DeleteUserAccount extends Component
         Log::info('validatePasswordAndOpenModal wywołany');
         
         if (empty($this->password)) {
-            $this->errorMessage = 'Hasło jest wymagane.';
+            $this->errorMessage = __('profile.password_required');
             return;
         }
         
@@ -45,7 +45,7 @@ class DeleteUserAccount extends Component
         $user = Auth::user();
 
         if (!Hash::check($this->password, $user->password)) {
-            $this->errorMessage = 'Podane hasło jest nieprawidłowe.';
+            $this->errorMessage = __('profile.password_incorrect');
             $this->debugInfo = 'Nieprawidłowe hasło';
             return;
         }
@@ -78,7 +78,7 @@ class DeleteUserAccount extends Component
         
         // Upewnij się, że hasło zostało wcześniej zweryfikowane
         if (!$this->passwordValidated) {
-            $this->errorMessage = 'Najpierw należy zweryfikować hasło.';
+            $this->errorMessage = __('profile.verify_first');
             $this->debugInfo = 'Próba usunięcia konta bez weryfikacji hasła';
             return;
         }
@@ -103,7 +103,7 @@ class DeleteUserAccount extends Component
         session()->regenerateToken();
 
         // Przekierowanie na stronę główną
-        return redirect()->route('home')->with('status', 'Twoje konto zostało usunięte.');
+        return redirect()->route('home')->with('status', __('profile.account_deleted'));
     }
 
     /**

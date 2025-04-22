@@ -114,7 +114,7 @@ class Register extends Component
      */
     private function setUserRegistrationSuccess()
     {
-        session()->flash('registration_success', 'Udało się zarejestrować! Proszę potwierdzić swój adres e-mail.');
+        session()->flash('registration_success', __('profile.user_registration_success'));
         session()->flash('user_type', 'user');
         session()->flash('email', $this->email);
     }
@@ -124,7 +124,7 @@ class Register extends Component
      */
     private function setTrainerRegistrationSuccess()
     {
-        session()->flash('registration_success', 'Udało się zarejestrować jako trener! Proszę potwierdzić swój adres e-mail. Konto będzie wymagało zatwierdzenia przez administratora.');
+        session()->flash('registration_success', __('profile.trainer_registration_success'));
         session()->flash('user_type', 'trainer');
         session()->flash('email', $this->email);
     }

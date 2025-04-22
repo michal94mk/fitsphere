@@ -77,7 +77,7 @@ class UpdateUserProfile extends Component
             
         // If nothing changed, show a message and return
         if (!$emailChanged && !$profileChanged) {
-            session()->flash('info', 'Nie wprowadzono żadnych zmian w profilu.');
+            session()->flash('info_button', __('profile.no_changes'));
             return;
         }
         
@@ -109,7 +109,7 @@ class UpdateUserProfile extends Component
         // Refresh the user instance to ensure image property is updated
         $this->user = $user->fresh();
 
-        session()->flash('status', 'Profil został zaktualizowany!');
+        session()->flash('status', __('profile.profile_updated'));
     }
 
     /**
@@ -123,19 +123,19 @@ class UpdateUserProfile extends Component
     public function resendVerificationEmail()
     {
         if (!$this->user) {
-            session()->flash('error', 'Użytkownik nie jest zalogowany.');
+            session()->flash('error', __('profile.user_not_logged_in'));
             return;
         }
 
         if ($this->user->hasVerifiedEmail()) {
-            session()->flash('info', 'Twój adres email został już zweryfikowany.');
+            session()->flash('info', __('profile.email_already_verified'));
             return;
         }
 
         // Send verification email
         $this->user->sendEmailVerificationNotification();
         
-        session()->flash('status', 'Link weryfikacyjny został wysłany ponownie na adres: ' . $this->user->email);
+        session()->flash('status', __('profile.verification_sent', ['email' => $this->user->email]));
     }
 
     /**

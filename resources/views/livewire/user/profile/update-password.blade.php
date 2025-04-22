@@ -15,15 +15,15 @@
 
             <section>
                 <header>
-                    <h2 class="text-lg font-medium text-gray-900">Zmiana hasła</h2>
+                    <h2 class="text-lg font-medium text-gray-900">{{ __('profile.change_password') }}</h2>
                     <p class="mt-1 text-sm text-gray-600">
-                        Upewnij się, że Twoje konto używa długiego, losowego hasła, aby zachować bezpieczeństwo.
+                        {{ __('profile.password_security_notice') }}
                     </p>
                 </header>
 
                 <form wire:submit.prevent="updatePassword" class="mt-6 space-y-6">
                     <div>
-                        <label for="current_password" class="block text-sm font-medium text-gray-700">Obecne hasło</label>
+                        <label for="current_password" class="block text-sm font-medium text-gray-700">{{ __('profile.current_password') }}</label>
                         <input type="password" id="current_password" wire:model="current_password"
                             class="mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200">
                         @error('current_password')
@@ -32,7 +32,7 @@
                     </div>
 
                     <div>
-                        <label for="new_password" class="block text-sm font-medium text-gray-700">Nowe hasło</label>
+                        <label for="new_password" class="block text-sm font-medium text-gray-700">{{ __('profile.new_password') }}</label>
                         <input type="password" id="new_password" wire:model="new_password"
                             class="mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200">
                         @error('new_password')
@@ -41,14 +41,14 @@
                     </div>
 
                     <div>
-                        <label for="new_password_confirmation" class="block text-sm font-medium text-gray-700">Potwierdź nowe hasło</label>
+                        <label for="new_password_confirmation" class="block text-sm font-medium text-gray-700">{{ __('profile.confirm_new_password') }}</label>
                         <input type="password" id="new_password_confirmation" wire:model="new_password_confirmation"
                             class="mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200">
                     </div>
 
                     <div class="flex items-center gap-4">
                         <button type="submit" class="py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                            Zapisz
+                            {{ __('profile.save') }}
                         </button>
                     </div>
                 </form>

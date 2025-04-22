@@ -10,10 +10,10 @@
             </div>
             <h1 class="text-4xl font-extrabold mb-4">
                 <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-blue-500">
-                    Twój profil
+                    {{ __('profile.your_profile') }}
                 </span>
             </h1>
-            <p class="text-gray-600 max-w-xl mx-auto">Zarządzaj swoimi ustawieniami, danymi osobowymi i preferencjami bezpieczeństwa</p>
+            <p class="text-gray-600 max-w-xl mx-auto">{{ __('profile.manage_profile_info') }}</p>
         </div>
 
         @if (session()->has('registration_success'))
@@ -33,7 +33,7 @@
                 <div class="p-8">
                     <div class="space-y-3">
                         <div class="flex justify-between text-sm">
-                            <span class="text-gray-500">Członek od</span>
+                            <span class="text-gray-500">{{ __('profile.member_since') }}</span>
                             <span class="font-medium text-gray-800">
                                 @if(Auth::check())
                                     {{ Auth::user()->created_at->format('d.m.Y') }}
@@ -45,12 +45,12 @@
                             </span>
                         </div>
                         <div class="flex justify-between text-sm">
-                            <span class="text-gray-500">Rola</span>
+                            <span class="text-gray-500">{{ __('profile.role') }}</span>
                             <span class="font-medium text-gray-800">
                                 @if(Auth::check())
-                                    {{ ucfirst(Auth::user()->role ?? 'użytkownik') }}
+                                    {{ ucfirst(Auth::user()->role ?? __('profile.user')) }}
                                 @elseif(Auth::guard('trainer')->check()) 
-                                    Trener
+                                    {{ __('profile.trainer') }}
                                 @else
                                     --
                                 @endif

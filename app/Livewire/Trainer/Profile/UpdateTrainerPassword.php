@@ -5,6 +5,7 @@ namespace App\Livewire\Trainer\Profile;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\App;
 
 /**
  * Handles password updates for trainers.
@@ -37,6 +38,21 @@ class UpdateTrainerPassword extends Component
     }
 
     /**
+     * Customize validation messages for password fields.
+     *
+     * @return array
+     */
+    protected function messages()
+    {
+        return [
+            'current_password.required' => __('validation.password.current_required'),
+            'new_password.required' => __('validation.password.new_required'),
+            'new_password.min' => __('validation.password.min', ['min' => 8]),
+            'new_password.confirmed' => __('validation.password.confirmed'),
+        ];
+    }
+
+    /**
      * Process the password update after validation.
      * 
      * Verifies the current password, updates to the new password if valid,
@@ -49,12 +65,12 @@ class UpdateTrainerPassword extends Component
         $this->validate();
 
         if (!$this->user) {
-            session()->flash('error', 'Trener nie jest zalogowany.');
+            session()->flash('error', __('profile.not_logged_in'));
             return;
         }
 
         if (!Hash::check($this->current_password, $this->user->password)) {
-            session()->flash('error', 'Aktualne hasło jest nieprawidłowe.');
+            session()->flash('error', __('profile.current_password_incorrect'));
             return;
         }
 
@@ -62,7 +78,7 @@ class UpdateTrainerPassword extends Component
 
         $this->reset(['current_password', 'new_password', 'new_password_confirmation']);
         
-        session()->flash('status', 'Hasło zostało zmienione.');
+        session()->flash('status', __('profile.password_updated'));
     }
 
     /**

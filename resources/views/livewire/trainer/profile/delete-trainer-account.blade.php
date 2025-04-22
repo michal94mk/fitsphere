@@ -1,21 +1,20 @@
 <div>
     <div class="p-4">
-        <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">{{ __('Usuń konto trenera') }}</h3>
+        <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">{{ __('profile.delete_trainer_account') }}</h3>
 
         <div class="mt-3">
             <p class="text-sm text-gray-600 dark:text-gray-400">
-                {{ __('Po usunięciu konta wszystkie jego zasoby i dane zostaną trwale usunięte.') }}
+                {{ __('profile.deletion_warning') }}
             </p>
         </div>
 
-        <!-- Pole hasła przeniesione tutaj, przed przyciskiem Delete -->
         <div class="mt-4">
             <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                {{ __('Hasło') }}
+                {{ __('profile.password') }}
             </label>
             <input id="password" type="password" 
                 class="mt-1 block w-3/4 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" 
-                placeholder="{{ __('Podaj swoje hasło') }}"
+                placeholder="{{ __('profile.enter_password') }}"
                 wire:model="password" />
             
             @if($errorMessage)
@@ -28,12 +27,11 @@
         <div class="mt-5">
             <button wire:click="validatePasswordAndOpenModal" wire:loading.attr="disabled" 
                 class="inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 active:bg-red-700 focus:outline-none focus:border-red-700 focus:ring focus:ring-red-300 disabled:opacity-25 transition">
-                {{ __('Usuń konto') }}
+                {{ __('profile.delete_account') }}
             </button>
         </div>
     </div>
 
-    <!-- Modal do potwierdzenia usunięcia - teraz bez pola hasła -->
     <div
         x-data="{ show: @entangle('showDeleteModal') }"
         x-show="show"
@@ -79,20 +77,20 @@
                                     </svg>
                                 </div>
                                 <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-                                    <h3 class="text-base font-semibold leading-6 text-gray-900 dark:text-white" id="modal-title">{{ __('Potwierdź usunięcie konta') }}</h3>
+                                    <h3 class="text-base font-semibold leading-6 text-gray-900 dark:text-white" id="modal-title">{{ __('profile.confirm_deletion') }}</h3>
                                     <div class="mt-2">
                                         <p class="text-sm text-gray-500 dark:text-gray-400">
-                                            {{ __('Czy na pewno chcesz usunąć swoje konto trenera? Ta operacja jest nieodwracalna. Wszystkie Twoje dane zostaną trwale usunięte.') }}
+                                            {{ __('profile.confirm_trainer_deletion_message') }}
                                         </p>
                                     </div>
                                 </div>
                             </div>
                             <div class="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
                                 <button wire:click="deleteAccount" type="button" class="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto">
-                                    {{ __('Tak, usuń moje konto') }}
+                                    {{ __('profile.yes_delete') }}
                                 </button>
                                 <button wire:click="closeModal" type="button" class="mt-3 inline-flex w-full justify-center rounded-md bg-white dark:bg-gray-700 px-3 py-2 text-sm font-semibold text-gray-900 dark:text-gray-200 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 sm:mt-0 sm:w-auto">
-                                    {{ __('Anuluj') }}
+                                    {{ __('profile.cancel') }}
                                 </button>
                             </div>
                         </div>

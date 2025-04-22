@@ -63,7 +63,7 @@ class UpdateTrainerProfile extends Component
             
         // If nothing changed, show a message and return
         if (!$emailChanged && !$profileChanged) {
-            session()->flash('info', 'Nie wprowadzono żadnych zmian w profilu.');
+            session()->flash('info_button', __('profile.no_changes'));
             return;
         }
         
@@ -95,7 +95,7 @@ class UpdateTrainerProfile extends Component
         
         $trainer->save();
 
-        session()->flash('status', 'Profil został zaktualizowany!');
+        session()->flash('status', __('profile.profile_updated'));
     }
 
     /**
@@ -104,19 +104,19 @@ class UpdateTrainerProfile extends Component
     public function resendVerificationEmail()
     {
         if (!$this->user) {
-            session()->flash('error', 'Użytkownik nie jest zalogowany.');
+            session()->flash('error', __('profile.user_not_logged_in'));
             return;
         }
 
         if ($this->user->hasVerifiedEmail()) {
-            session()->flash('info', 'Twój adres email został już zweryfikowany.');
+            session()->flash('info', __('profile.email_already_verified'));
             return;
         }
 
         // Wysyłanie emaila weryfikacyjnego
         $this->user->sendEmailVerificationNotification();
         
-        session()->flash('status', 'Link weryfikacyjny został wysłany ponownie na adres: ' . $this->user->email);
+        session()->flash('status', __('profile.verification_sent', ['email' => $this->user->email]));
     }
 
     public function render()
