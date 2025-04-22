@@ -138,16 +138,6 @@
                                 <!-- Dropdown menu -->
                                 <div x-show="dropdownOpen" x-cloak
                                      class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-50">
-                                    <a href="{{ route('profile') }}"
-                                       wire:navigate
-                                       class="block w-full px-4 py-2 text-gray-800 text-left hover:bg-gray-100">
-                                        <span data-i18n="common.profile">{{ __('common.profile') }}</span>
-                                    </a>
-                                    <a href="{{ route('user.reservations') }}"
-                                       wire:navigate
-                                       class="block w-full px-4 py-2 text-gray-800 text-left hover:bg-gray-100">
-                                        <span data-i18n="common.my_reservations">{{ __('common.my_reservations') }}</span>
-                                    </a>
                                     <form method="POST" action="{{ route('logout') }}">
                                         @csrf
                                         <button type="submit"
@@ -284,18 +274,6 @@
                             </button>
                             <div x-show="dropdownOpen" x-cloak
                                  class="mt-2 w-full bg-white border border-gray-300 rounded-md shadow-md">
-                                <a href="{{ route('profile') }}"
-                                   wire:navigate
-                                   @click="dropdownOpen = false; mobileOpen = false"
-                                   class="block w-full text-center px-4 py-2 text-gray-900 hover:bg-gray-100">
-                                    <span data-i18n="common.profile">{{ __('common.profile') }}</span>
-                                </a>
-                                <a href="{{ route('user.reservations') }}"
-                                   wire:navigate
-                                   @click="dropdownOpen = false; mobileOpen = false"
-                                   class="block w-full text-center px-4 py-2 text-gray-900 hover:bg-gray-100">
-                                    <span data-i18n="common.my_reservations">{{ __('common.my_reservations') }}</span>
-                                </a>
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
                                     <button type="submit"

@@ -1,6 +1,7 @@
 <button 
     x-data="{ show: false }" 
     x-show="show" 
+    x-cloak
     x-transition 
     @scroll.window="show = window.scrollY > 200" 
     @click="window.scrollTo({ top: 0, behavior: 'smooth' })"
