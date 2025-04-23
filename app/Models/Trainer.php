@@ -97,4 +97,20 @@ class Trainer extends Authenticatable implements MustVerifyEmail
     {
         return $this->email;
     }
+    
+    /**
+     * Get the profile photo URL attribute.
+     *
+     * @return string
+     */
+    public function getProfilePhotoUrlAttribute()
+    {
+        if ($this->image) {
+            return asset('storage/' . $this->image);
+        }
+        
+        // Use Gravatar as fallback
+        $hash = md5(strtolower(trim($this->email)));
+        return "https://www.gravatar.com/avatar/{$hash}?d=mp&s=160";
+    }
 } 

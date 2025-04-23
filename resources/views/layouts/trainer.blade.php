@@ -59,8 +59,8 @@
                 <!-- User profile area -->
                 <div class="p-4 border-t border-gray-700">
                     <div class="flex items-center">
-                        <div class="w-8 h-8 rounded-full bg-blue-500 mr-3 flex items-center justify-center text-white font-bold">
-                            {{ substr(Auth::guard('trainer')->user()->name, 0, 1) }}
+                        <div class="w-8 h-8 rounded-full overflow-hidden mr-3">
+                            <img src="{{ Auth::guard('trainer')->user()->profile_photo_url }}" alt="{{ Auth::guard('trainer')->user()->name }}" class="w-full h-full object-cover">
                         </div>
                         <div>
                             <p class="text-sm font-medium text-white">{{ Auth::guard('trainer')->user()->name }}</p>

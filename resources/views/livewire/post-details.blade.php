@@ -144,8 +144,8 @@
                         <div class="bg-gray-50 rounded-lg border border-gray-200 p-4">
                             <div class="flex items-start">
                                 <div class="flex-shrink-0 mr-3">
-                                    <div class="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
-                                        <span class="text-blue-500 font-medium text-sm">{{ strtoupper(substr($comment->user->name, 0, 2)) }}</span>
+                                    <div class="h-10 w-10 rounded-full overflow-hidden">
+                                        <img src="{{ $comment->user->profile_photo_url }}" alt="{{ $comment->user->name }}" class="h-10 w-10 object-cover">
                                     </div>
                                 </div>
                                 <div class="flex-1 min-w-0">

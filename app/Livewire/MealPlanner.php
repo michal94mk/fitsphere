@@ -119,10 +119,12 @@ class MealPlanner extends Component
     
     public function generateMealPlan()
     {
-        $user = Auth::user();
-        if (!$user) {
+        if (!Auth::check()) {
+            $this->dispatch('login-required', ['message' => __('meal_planner.login_required')]);
             return;
         }
+        
+        $user = Auth::user();
         
         $this->loading = true;
         
@@ -187,11 +189,12 @@ class MealPlanner extends Component
             return;
         }
         
-        $user = Auth::user();
-        if (!$user) {
-            session()->flash('error', 'Musisz być zalogowany, aby dodawać posiłki do planu.');
+        if (!Auth::check()) {
+            $this->dispatch('login-required', ['message' => __('meal_planner.login_required')]);
             return;
         }
+        
+        $user = Auth::user();
         
         try {
             \Illuminate\Support\Facades\Log::info('Rozpoczęcie dodawania posiłku do planu', [

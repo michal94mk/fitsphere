@@ -147,8 +147,8 @@
                                 
                                 <!-- Author info with avatar -->
                                 <div class="flex items-center mb-4">
-                                    <div class="w-8 h-8 bg-gray-300 rounded-full overflow-hidden mr-2 flex-shrink-0">
-                                        <img src="{{ asset('storage/' . ($post->user->avatar ?? 'avatars/default.jpg')) }}" 
+                                    <div class="w-8 h-8 rounded-full overflow-hidden mr-2 flex-shrink-0">
+                                        <img src="{{ $post->user->profile_photo_url ?? 'https://ui-avatars.com/api/?name='.urlencode($post->user->name ?? 'Author') }}" 
                                             alt="{{ $post->user->name ?? 'Author' }}" 
                                             class="w-full h-full object-cover">
                                     </div>

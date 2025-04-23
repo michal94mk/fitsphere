@@ -63,4 +63,8 @@ return [
     'meal_added' => 'Posiłek dodany pomyślnie',
     'meal_updated' => 'Posiłek zaktualizowany pomyślnie',
     'meal_removed' => 'Posiłek usunięty pomyślnie',
+    'login_required' => 'Musisz być zalogowany, aby skorzystać z tej funkcji. Zaloguj się lub utwórz konto.',
+    'login_required_title' => 'Wymagane logowanie',
+    'login' => 'Zaloguj się',
+    'create_account' => 'Utwórz konto',
 ]; 

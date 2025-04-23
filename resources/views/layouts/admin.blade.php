@@ -89,8 +89,8 @@
                     <div class="flex items-center">
                         @if(Auth::check())
                             <div class="flex items-center">
-                                <div class="w-8 h-8 rounded-full bg-indigo-600 mr-3 flex items-center justify-center text-white font-bold">
-                                    {{ substr(Auth::user()->name, 0, 1) }}
+                                <div class="w-8 h-8 rounded-full overflow-hidden mr-3">
+                                    <img src="{{ Auth::user()->profile_photo_url }}" alt="{{ Auth::user()->name }}" class="w-full h-full object-cover">
                                 </div>
                                 <div>
                                     <p class="text-sm font-medium text-white">{{ Auth::user()->name }}</p>

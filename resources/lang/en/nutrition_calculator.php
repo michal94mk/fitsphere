@@ -56,4 +56,9 @@ return [
     'max_calories' => 'Maximum calories per serving',
     'search_results' => 'Search Results',
     'add_to_plan' => 'Add to Meal Plan',
+    'login_required' => 'You need to be logged in to use this feature. Please login or create an account.',
+    'login_required_title' => 'Login Required',
+    'login' => 'Login',
+    'create_account' => 'Create Account',
+    'cancel' => 'Cancel',
 ]; 

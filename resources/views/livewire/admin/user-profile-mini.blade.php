@@ -3,9 +3,9 @@
     Wykorzystane: wire:click, @auth, @method
 --}}
 <div class="flex items-center">
-    {{-- Avatar użytkownika z pierwszej litery imienia --}}
-    <div class="w-8 h-8 rounded-full bg-indigo-600 mr-3 flex items-center justify-center text-white font-bold">
-        {{ substr($user->name, 0, 1) }}
+    {{-- Avatar użytkownika --}}
+    <div class="w-8 h-8 rounded-full overflow-hidden mr-3">
+        <img src="{{ $user->profile_photo_url }}" alt="{{ $user->name }}" class="w-full h-full object-cover">
     </div>
     
     {{-- Dane użytkownika --}}

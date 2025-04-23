@@ -56,4 +56,9 @@ return [
     'max_calories' => 'Maksymalna liczba kalorii na porcję',
     'search_results' => 'Wyniki wyszukiwania',
     'add_to_plan' => 'Dodaj do planu',
+    'login_required' => 'Musisz być zalogowany, aby skorzystać z tej funkcji. Zaloguj się lub utwórz konto.',
+    'login_required_title' => 'Wymagane logowanie',
+    'login' => 'Zaloguj się',
+    'create_account' => 'Utwórz konto',
+    'cancel' => 'Anuluj',
 ]; 

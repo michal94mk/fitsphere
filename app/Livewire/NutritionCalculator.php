@@ -66,6 +66,11 @@ class NutritionCalculator extends Component
     
     public function calculateNutrition()
     {
+        if (!Auth::check()) {
+            $this->dispatch('login-required', ['message' => __('nutrition_calculator.login_required')]);
+            return;
+        }
+
         if (!$this->weight || !$this->height || !$this->age || !$this->gender || !$this->activityLevel) {
             $this->addError('profile', __('nutrition_calculator.profile_error'));
             return;
@@ -94,10 +99,12 @@ class NutritionCalculator extends Component
     
     public function saveProfile()
     {
-        $user = Auth::user();
-        if (!$user) {
+        if (!Auth::check()) {
+            $this->dispatch('login-required', ['message' => __('nutrition_calculator.login_required')]);
             return;
         }
+        
+        $user = Auth::user();
         
         $profile = $user->nutritionalProfile;
         
@@ -127,6 +134,11 @@ class NutritionCalculator extends Component
     
     public function searchRecipes()
     {
+        if (!Auth::check()) {
+            $this->dispatch('login-required', ['message' => __('nutrition_calculator.login_required')]);
+            return;
+        }
+        
         if (empty($this->searchQuery)) {
             session()->flash('error', __('nutrition_calculator.search_error'));
             return;

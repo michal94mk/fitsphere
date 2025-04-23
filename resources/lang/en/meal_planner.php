@@ -59,4 +59,9 @@ return [
     'confirm_delete' => 'Are you sure you want to delete this meal?',
     'no_meals_planned' => 'No meals planned for this day.',
     'use_generator' => 'Use the meal plan generator or search for recipes to add them to your plan.',
+    'login_required' => 'You need to be logged in to use this feature. Please login or create an account.',
+    'login_required_title' => 'Login Required',
+    'login' => 'Login',
+    'create_account' => 'Create Account',
+    'cancel' => 'Cancel',
 ]; 

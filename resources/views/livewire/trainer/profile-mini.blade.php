@@ -1,11 +1,7 @@
-{{-- 
-    Mini profil trenera - pokazuje znajomość Livewire
-    Wykorzystuje metody z komponentu PHP i atrybut Computed
---}}
 <div class="flex items-center">
-    {{-- Avatar trenera z pierwszej litery imienia --}}
-    <div class="w-8 h-8 rounded-full bg-blue-500 mr-3 flex items-center justify-center text-white font-bold">
-        {{ substr($this->trainer->name, 0, 1) }}
+    {{-- Avatar trenera --}}
+    <div class="w-8 h-8 rounded-full overflow-hidden mr-3">
+        <img src="{{ $this->trainer->profile_photo_url }}" alt="{{ $this->trainer->name }}" class="w-full h-full object-cover">
     </div>
     
     {{-- Dane trenera - przykład użycia Computed --}}
