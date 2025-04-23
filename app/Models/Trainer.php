@@ -113,4 +113,80 @@ class Trainer extends Authenticatable implements MustVerifyEmail
         $hash = md5(strtolower(trim($this->email)));
         return "https://www.gravatar.com/avatar/{$hash}?d=mp&s=160";
     }
+
+    /**
+     * Get all translations for this trainer
+     */
+    public function translations()
+    {
+        return $this->hasMany(TrainerTranslation::class);
+    }
+
+    /**
+     * Get translation for the specified locale
+     * 
+     * @param string|null $locale
+     * @return \App\Models\TrainerTranslation|null
+     */
+    public function translation($locale = null)
+    {
+        $locale = $locale ?: app()->getLocale();
+        return $this->translations()->where('locale', $locale)->first();
+    }
+
+    /**
+     * Check if the trainer has a translation for the specified locale
+     * 
+     * @param string|null $locale
+     * @return bool
+     */
+    public function hasTranslation($locale = null)
+    {
+        $locale = $locale ?: app()->getLocale();
+        return $this->translations()->where('locale', $locale)->exists();
+    }
+
+    /**
+     * Get translated specialization in current locale or fallback to original
+     * 
+     * @return string|null
+     */
+    public function getTranslatedSpecialization()
+    {
+        $translation = $this->translation();
+        return $translation && $translation->specialization ? $translation->specialization : $this->specialization;
+    }
+
+    /**
+     * Get translated description in current locale or fallback to original
+     * 
+     * @return string|null
+     */
+    public function getTranslatedDescription()
+    {
+        $translation = $this->translation();
+        return $translation && $translation->description ? $translation->description : $this->description;
+    }
+
+    /**
+     * Get translated bio in current locale or fallback to original
+     * 
+     * @return string|null
+     */
+    public function getTranslatedBio()
+    {
+        $translation = $this->translation();
+        return $translation && $translation->bio ? $translation->bio : $this->bio;
+    }
+
+    /**
+     * Get translated specialties in current locale or fallback to original
+     * 
+     * @return string|null
+     */
+    public function getTranslatedSpecialties()
+    {
+        $translation = $this->translation();
+        return $translation && $translation->specialties ? $translation->specialties : $this->specialties;
+    }
 } 

@@ -37,7 +37,6 @@ use App\Livewire\Admin\UsersIndex;
 use App\Livewire\Admin\UsersCreate;
 use App\Livewire\Admin\UsersEdit;
 use App\Livewire\Admin\UsersShow;
-use App\Livewire\Admin\UsersDashboard;
 use App\Livewire\Admin\TrainersIndex;
 use App\Livewire\Admin\TrainersCreate;
 use App\Livewire\Admin\TrainersEdit;
@@ -196,7 +195,6 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
     Route::get('/comments', CommentsIndex::class)->name('comments.index');
     
     // Users management
-    Route::get('/users/dashboard', UsersDashboard::class)->name('users.dashboard');
     Route::get('/users', UsersIndex::class)->name('users.index');
     Route::get('/users/create', UsersCreate::class)->name('users.create');
     Route::get('/users/{id}/edit', UsersEdit::class)->name('users.edit');
@@ -207,4 +205,14 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
     Route::get('/trainers/create', TrainersCreate::class)->name('trainers.create');
     Route::get('/trainers/{id}/edit', TrainersEdit::class)->name('trainers.edit');
     Route::get('/trainers/{id}', TrainersShow::class)->name('trainers.show');
+});
+
+// Admin - Translations routes
+Route::prefix('admin')->middleware(['auth', 'verified', 'admin'])->group(function () {
+    // Existing routes
+    Route::get('/posts/{id}/translations', App\Livewire\Admin\PostTranslations::class)->name('admin.posts.translations');
+    Route::get('/categories/{id}/translations', App\Livewire\Admin\CategoryTranslations::class)->name('admin.categories.translations');
+    
+    // New route for trainer translations
+    Route::get('/trainers/{id}/translations', App\Livewire\Admin\TrainerTranslations::class)->name('admin.trainers.translations');
 });

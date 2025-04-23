@@ -54,7 +54,7 @@
                                 <!-- Specialization tag -->
                                 <div class="absolute top-4 left-4">
                                     <span class="inline-block px-3 py-1 text-xs font-medium bg-blue-600/90 text-white backdrop-blur-sm rounded-md">
-                                        {{ $trainer->specialization }}
+                                        {{ $trainer->getTranslatedSpecialization() ?: 'Trener' }}
                                     </span>
                                 </div>
                             </div>
@@ -62,16 +62,12 @@
                             <!-- Content area -->
                             <div class="flex-1 p-6">
                                 <!-- Trainer name -->
-                                <h3 class="font-bold text-xl text-gray-800 group-hover:text-blue-600 transition-colors duration-300">
-                                    {{ $trainer->name }}
-                                </h3>
-                                
-                                <!-- Subtle divider line with gradient -->
-                                <div class="w-12 h-1 mt-2 mb-4 bg-gradient-to-r from-blue-500 to-blue-400 rounded"></div>
-                                
-                                <!-- Bio with elegant typography -->
-                                <p class="text-gray-600 text-sm leading-relaxed">
-                                    {{ Str::limit($trainer->bio, 90) }}
+                                <h3 class="mt-4 text-lg font-semibold text-gray-800 group-hover:text-blue-600 transition-all duration-300">{{ $trainer->name }}</h3>
+                                <p class="text-sm text-blue-600 font-medium">
+                                    {{ $trainer->getTranslatedSpecialization() ?? 'Trener' }}
+                                </p>
+                                <p class="mt-2 text-sm text-gray-600 line-clamp-3">
+                                    {{ Str::limit($trainer->getTranslatedDescription() ?? 'Brak opisu', 120) }}
                                 </p>
                                 
                                 <!-- Experience & credentials -->

@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use App\Models\Trainer;
+use Illuminate\Support\Facades\App;
 use Livewire\Attributes\Layout;
 
 class TrainerDetails extends Component
@@ -14,7 +15,12 @@ class TrainerDetails extends Component
     public function mount($trainerId)
     {
         $this->trainerId = $trainerId;
-        $this->loadTrainer();
+        
+        // Load trainer with appropriate translation for current locale
+        $locale = App::getLocale();
+        $this->trainer = Trainer::with(['translations' => function($query) use ($locale) {
+            $query->where('locale', $locale);
+        }])->findOrFail($trainerId);
     }
 
     public function loadTrainer()

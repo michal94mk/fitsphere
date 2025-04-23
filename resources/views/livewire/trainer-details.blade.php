@@ -77,22 +77,22 @@
                         <div class="w-full md:w-2/3">
                             <h2 class="text-3xl font-bold text-gray-800 mb-2">{{ $trainer->name }}</h2>
                             <p class="text-lg text-blue-600 font-medium mb-4">
-                                {{ isset($trainer->specialization) ? $trainer->specialization : 'Profil użytkownika' }}
+                                {{ $trainer->getTranslatedSpecialization() ?: 'Profil trenera' }}
                             </p>
                             
                             <div class="prose prose-blue max-w-none">
                                 <div class="text-gray-700 mb-6">
-                                    @if(isset($trainer->bio) && $trainer->bio)
-                                        {!! nl2br(e($trainer->bio)) !!}
+                                    @if($trainer->getTranslatedBio())
+                                        {!! nl2br(e($trainer->getTranslatedBio())) !!}
                                     @else
                                         <p class="italic text-gray-500">Brak informacji biograficznych.</p>
                                     @endif
                                 </div>
                                 
-                                @if(isset($trainer->specialties) && $trainer->specialties)
+                                @if($trainer->getTranslatedSpecialties())
                                 <h3 class="text-xl font-semibold text-gray-800 mt-6 mb-2">Specjalizacje</h3>
                                 <div class="flex flex-wrap gap-2 mb-6">
-                                    @foreach(explode(',', $trainer->specialties) as $specialty)
+                                    @foreach(explode(',', $trainer->getTranslatedSpecialties()) as $specialty)
                                         <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
                                             {{ trim($specialty) }}
                                         </span>
