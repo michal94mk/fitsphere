@@ -43,36 +43,39 @@ class MealPlanner extends Component
         $this->startDate = Carbon::now()->startOfWeek()->format('Y-m-d');
         $this->endDate = Carbon::now()->endOfWeek()->format('Y-m-d');
         
-        $this->loadMealPlans();
-        
-        // Jeśli użytkownik ma profil, załaduj ograniczenia dietetyczne
-        $user = Auth::user();
-        if ($user && $user->nutritionalProfile && is_array($user->nutritionalProfile->dietary_restrictions)) {
-            $this->dietary = $user->nutritionalProfile->dietary_restrictions;
+        // Load meal plans only if user is logged in
+        if (Auth::check()) {
+            $this->loadMealPlans();
+            
+            // Load dietary restrictions if user has a profile
+            $user = Auth::user();
+            if ($user && $user->nutritionalProfile && is_array($user->nutritionalProfile->dietary_restrictions)) {
+                $this->dietary = $user->nutritionalProfile->dietary_restrictions;
+            }
         }
         
-        // Sprawdź, czy w URL jest parametr recipeId (dodawanie posiłku z kalkulatora diety)
+        // Check if recipeId parameter exists in URL (adding meal from nutrition calculator)
         $recipeId = request()->query('recipeId');
-        if ($recipeId) {
-            \Illuminate\Support\Facades\Log::info('Wykryto parametr recipeId w URL', [
+        if ($recipeId && Auth::check()) {
+            \Illuminate\Support\Facades\Log::info('Recipe ID detected in URL', [
                 'recipeId' => $recipeId
             ]);
             
-            // Ustaw loading na true, aby pokazać użytkownikowi, że trwa ładowanie
+            // Set loading to true to show user that loading is in progress
             $this->loading = true;
             
-            // Pobierz informacje o przepisie
+            // Get recipe information
             $recipe = $this->spoonacularService->getRecipeInformation((int)$recipeId);
             
             if ($recipe) {
-                $recipe['name'] = $recipe['title'] ?? 'Przepis bez nazwy';
+                $recipe['name'] = $recipe['title'] ?? 'Unnamed Recipe';
                 $this->selectedRecipe = $recipe;
-                \Illuminate\Support\Facades\Log::info('Pomyślnie załadowano przepis z parametru URL', [
+                \Illuminate\Support\Facades\Log::info('Successfully loaded recipe from URL parameter', [
                     'recipe_name' => $recipe['name']
                 ]);
             } else {
-                session()->flash('error', 'Nie udało się pobrać informacji o przepisie o ID: ' . $recipeId);
-                \Illuminate\Support\Facades\Log::error('Błąd ładowania przepisu z parametru URL', [
+                session()->flash('error', 'Could not retrieve recipe information for ID: ' . $recipeId);
+                \Illuminate\Support\Facades\Log::error('Error loading recipe from URL parameter', [
                     'recipeId' => $recipeId
                 ]);
             }
@@ -126,15 +129,20 @@ class MealPlanner extends Component
         
         $user = Auth::user();
         
-        $this->loading = true;
-        
+        // Check if user has a nutritional profile
         $profile = $user->nutritionalProfile;
-        
-        if (!$profile || !$profile->target_calories) {
-            session()->flash('error', 'Najpierw uzupełnij profil żywieniowy z docelową kalorycznością!');
-            $this->loading = false;
+        if (!$profile) {
+            session()->flash('error', __('meal_planner.profile_required'));
             return;
         }
+        
+        // Check if profile has target calories
+        if (!$profile->target_calories) {
+            session()->flash('error', __('meal_planner.calories_required'));
+            return;
+        }
+        
+        $this->loading = true;
         
         $params = [];
         
@@ -146,15 +154,15 @@ class MealPlanner extends Component
             $params['exclude'] = $this->excludeIngredients;
         }
         
-        // Dodanie parametrów zwiększających różnorodność posiłków
+        // Add parameters to increase meal variety
         $params['addRecipeInformation'] = true;
         $params['fillIngredients'] = true;
         
-        // Unikatowe posiłki w dniu
-        $params['limitLicense'] = false;  // Pozwala uzyskać więcej różnorodnych wyników
-        $params['sort'] = 'random';       // Losowe sortowanie wyników
+        // Unique meals in a day
+        $params['limitLicense'] = false;  // Allows more diverse results
+        $params['sort'] = 'random';       // Random sorting of results
         
-        \Illuminate\Support\Facades\Log::info('Generowanie planu posiłków z dodatkowymi parametrami', [
+        \Illuminate\Support\Facades\Log::info('Generating meal plan with additional parameters', [
             'target_calories' => $profile->target_calories,
             'params' => $params
         ]);

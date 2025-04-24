@@ -60,7 +60,28 @@ class NutritionCalculator extends Component
             $this->goal = $profile->goal;
             $this->dietaryRestrictions = $profile->dietary_restrictions ?? [];
             
-            $this->calculateNutrition();
+            // Only show dietary info if all required fields are filled
+            if ($this->weight && $this->height && $this->age && $this->gender && $this->activityLevel) {
+                $this->showDietaryInfo = true;
+                
+                // Create temporary profile for calculations
+                $tempProfile = new NutritionalProfile([
+                    'age' => $this->age,
+                    'gender' => $this->gender,
+                    'weight' => $this->weight,
+                    'height' => $this->height,
+                    'activity_level' => $this->activityLevel,
+                    'goal' => $this->goal,
+                ]);
+                
+                $this->bmi = $tempProfile->calculateBMI();
+                $this->dailyCalories = $tempProfile->calculateDailyCalories();
+                
+                // Calculate macronutrients
+                $this->protein = round(($this->dailyCalories * 0.30) / 4, 0); // 4 calories per gram of protein
+                $this->carbs = round(($this->dailyCalories * 0.40) / 4, 0);   // 4 calories per gram of carbs
+                $this->fat = round(($this->dailyCalories * 0.30) / 9, 0);     // 9 calories per gram of fat
+            }
         }
     }
     
@@ -72,7 +93,7 @@ class NutritionCalculator extends Component
         }
 
         if (!$this->weight || !$this->height || !$this->age || !$this->gender || !$this->activityLevel) {
-            $this->addError('profile', __('nutrition_calculator.profile_error'));
+            session()->flash('error', __('nutrition_calculator.profile_error'));
             return;
         }
         
@@ -101,6 +122,12 @@ class NutritionCalculator extends Component
     {
         if (!Auth::check()) {
             $this->dispatch('login-required', ['message' => __('nutrition_calculator.login_required')]);
+            return;
+        }
+        
+        // Validate required fields
+        if (!$this->weight || !$this->height || !$this->age || !$this->gender || !$this->activityLevel) {
+            session()->flash('error', __('nutrition_calculator.profile_error'));
             return;
         }
         
@@ -140,7 +167,7 @@ class NutritionCalculator extends Component
         }
         
         if (empty($this->searchQuery)) {
-            session()->flash('error', __('nutrition_calculator.search_error'));
+            session()->flash('search_error', __('nutrition_calculator.search_error'));
             return;
         }
         

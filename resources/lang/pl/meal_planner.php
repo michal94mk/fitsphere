@@ -67,4 +67,6 @@ return [
     'login_required_title' => 'Wymagane logowanie',
     'login' => 'Zaloguj się',
     'create_account' => 'Utwórz konto',
+    'profile_required' => 'Najpierw uzupełnij swój profil żywieniowy w Kalkulatorze Odżywiania.',
+    'calories_required' => 'Najpierw ustaw swój docelowy poziom kalorii w Kalkulatorze Odżywiania.',
 ]; 

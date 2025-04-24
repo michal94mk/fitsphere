@@ -64,4 +64,6 @@ return [
     'login' => 'Login',
     'create_account' => 'Create Account',
     'cancel' => 'Cancel',
+    'profile_required' => 'Please complete your nutritional profile in the Nutrition Calculator first.',
+    'calories_required' => 'Please set your target calories in the Nutrition Calculator first.',
 ]; 

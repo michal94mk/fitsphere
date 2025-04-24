@@ -44,24 +44,6 @@
                 <div class="p-6 bg-white border-b border-gray-200">
                     <h2 class="text-2xl font-semibold mb-6">{{ __('nutrition_calculator.title') }}</h2>
                     
-                    @if (session()->has('message'))
-                        <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4">
-                            {{ session('message') }}
-                        </div>
-                    @endif
-                    
-                    @if (session()->has('error'))
-                        <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4">
-                            {{ session('error') }}
-                        </div>
-                    @endif
-                    
-                    @error('profile')
-                        <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                    
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <!-- Formularz profilu -->
                         <div>
@@ -157,6 +139,19 @@
                                         {{ __('nutrition_calculator.save_profile') }}
                                     </button>
                                 </div>
+                                
+                                <!-- Profile messages -->
+                                @if (session()->has('message'))
+                                    <div class="mt-4 bg-green-100 border-l-4 border-green-500 text-green-700 p-4">
+                                        {{ session('message') }}
+                                    </div>
+                                @endif
+                                
+                                @if (session()->has('error'))
+                                    <div class="mt-4 bg-red-100 border-l-4 border-red-500 text-red-700 p-4">
+                                        {{ session('error') }}
+                                    </div>
+                                @endif
                             </div>
                         </div>
                         
@@ -210,6 +205,19 @@
                                         </button>
                                     </div>
                                 </div>
+                                
+                                <!-- Search messages -->
+                                @if (session()->has('success'))
+                                    <div class="mb-4 bg-green-100 border-l-4 border-green-500 text-green-700 p-3 text-sm">
+                                        {{ session('success') }}
+                                    </div>
+                                @endif
+                                
+                                @if (session()->has('search_error'))
+                                    <div class="mb-4 bg-red-100 border-l-4 border-red-500 text-red-700 p-3 text-sm">
+                                        {{ session('search_error') }}
+                                    </div>
+                                @endif
                                 
                                 <div class="mb-4">
                                     <label for="dietFilters" class="block text-sm font-medium text-gray-700 mb-1">{{ __('nutrition_calculator.diet_optional') }}</label>
@@ -309,18 +317,6 @@
 
     <div class="container mx-auto p-4">
         @if(!empty(config('services.spoonacular.key')))
-            @if (session()->has('success'))
-                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
-                    <span class="block sm:inline">{{ session('success') }}</span>
-                </div>
-            @endif
-
-            @if (session()->has('error'))
-                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
-                    <span class="block sm:inline">{{ session('error') }}</span>
-                </div>
-            @endif
-
             <!-- Login required modal -->
             <div 
                 x-data="{ open: false, message: '' }"
