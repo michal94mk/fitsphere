@@ -72,6 +72,16 @@ class User extends Authenticatable implements MustVerifyEmail
     }
     
     /**
+     * Get bio attribute (compatibility with "description" field)
+     * 
+     * @return string|null
+     */
+    public function getBioAttribute()
+    {
+        return $this->description;
+    }
+    
+    /**
      * Get the reservations for the user.
      */
     public function reservations(): HasMany

@@ -95,10 +95,15 @@ class UsersIndex extends Component
     public function render()
     {
         $query = User::query()
+            ->select('users.*') // Upewnij się, że pobieramy wszystkie pola
             ->when($this->search, function ($query) {
                 $query->where(function ($query) {
-                    $query->where('name', 'like', '%' . $this->search . '%')
-                        ->orWhere('email', 'like', '%' . $this->search . '%');
+                    $search = '%' . $this->search . '%';
+                    $query->where('name', 'like', $search)
+                        ->orWhere('email', 'like', $search)
+                        ->orWhere('specialization', 'like', $search)
+                        ->orWhere('description', 'like', $search)
+                        ->orWhere('id', 'like', $search);
                 });
             })
             ->when($this->role != 'all', function ($query) {
@@ -107,6 +112,15 @@ class UsersIndex extends Component
             ->orderBy($this->sortField, $this->sortDirection);
         
         $users = $query->paginate(10);
+        
+        // Upewnij się, że wszystkie potrzebne atrybuty są dostępne
+        $users->each(function ($user) {
+            // Pobierz URL zdjęcia profilowego
+            $user->append('profile_photo_url');
+            
+            // Ustaw wartość "bio" na podstawie "description" 
+            $user->bio = $user->description;
+        });
         
         return view('livewire.admin.users-index', [
             'users' => $users,

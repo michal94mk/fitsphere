@@ -48,7 +48,6 @@
                             class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                         <option value="all">Wszystkie</option>
                         <option value="user">Użytkownik</option>
-                        <option value="trainer">Trener</option>
                         <option value="admin">Administrator</option>
                     </select>
                 </div>
@@ -59,6 +58,8 @@
                         <option value="created_at">Data utworzenia</option>
                         <option value="name">Nazwa</option>
                         <option value="email">Email</option>
+                        <option value="role">Rola</option>
+                        <option value="id">ID</option>
                     </select>
                 </div>
                 <div class="md:w-48">
@@ -78,21 +79,28 @@
                 <thead class="bg-gray-50">
                     <tr>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Użytkownik
+                            ID / Nazwa
                         </th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                             Email
                         </th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Status
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                             Rola
                         </th>
-                        @if($role === 'trainer')
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Specjalizacja
-                            </th>
-                        @endif
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                             Data utworzenia
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Ostatnia aktualizacja
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Bio / Opis
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Zdjęcie
                         </th>
                         <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                             Akcje
@@ -121,6 +129,7 @@
                                         <div class="text-sm font-medium text-gray-900">
                                             {{ $user->name }}
                                         </div>
+                                        <div class="text-xs text-gray-500">ID: {{ $user->id }}</div>
                                     </div>
                                 </div>
                             </td>
@@ -128,19 +137,46 @@
                                 <div class="text-sm text-gray-900">{{ $user->email }}</div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
+                                @if($user->email_verified_at)
+                                    <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                        Zweryfikowany
+                                    </span>
+                                    <div class="text-xs text-gray-500 mt-1">
+                                        {{ $user->email_verified_at->format('d.m.Y H:i') }}
+                                    </div>
+                                @else
+                                    <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                                        Niezweryfikowany
+                                    </span>
+                                @endif
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
                                 <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                    {{ $user->role === 'admin' ? 'bg-red-100 text-red-800' : 
-                                       ($user->role === 'trainer' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800') }}">
+                                    {{ $user->role === 'admin' ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800' }}">
                                     {{ ucfirst($user->role) }}
                                 </span>
                             </td>
-                            @if($role === 'trainer')
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900">{{ $user->specialization ?? 'Brak' }}</div>
-                                </td>
-                            @endif
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                {{ $user->created_at->format('d.m.Y') }}
+                                {{ $user->created_at ? $user->created_at->format('d.m.Y H:i') : 'N/A' }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                {{ $user->updated_at ? $user->updated_at->format('d.m.Y H:i') : 'N/A' }}
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="text-sm text-gray-900">
+                                    @if ($user->bio || $user->description)
+                                        {{ Str::limit($user->bio ?? $user->description, 30, '...') }}
+                                    @else
+                                        Brak
+                                    @endif
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                @if($user->image)
+                                    <img src="{{ asset('storage/' . $user->image) }}" alt="{{ $user->name }}" class="w-16 h-16 object-cover rounded">
+                                @else
+                                    <span class="text-gray-500 text-sm">Brak zdjęcia</span>
+                                @endif
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                 <div class="flex items-center justify-end space-x-2">
@@ -160,7 +196,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="{{ $role === 'trainer' ? 6 : 5 }}" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
+                            <td colspan="9" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
                                 Nie znaleziono użytkowników.
                             </td>
                         </tr>
