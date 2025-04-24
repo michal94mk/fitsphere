@@ -28,7 +28,7 @@
                     <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Wyszukaj</label>
                     <input wire:model.live.debounce.300ms="search" type="text" id="search"
                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                           placeholder="Treść komentarza, nazwa użytkownika lub tytuł artykułu...">
+                           placeholder="Treść komentarza, nazwa użytkownika lub tytuł postu...">
                 </div>
                 <div class="md:w-48">
                     <label for="sortField" class="block text-sm font-medium text-gray-700 mb-1">Sortuj według</label>
@@ -58,7 +58,7 @@
                             Użytkownik
                         </th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Artykuł
+                            Post
                         </th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                             Treść
@@ -93,7 +93,7 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="text-sm text-gray-900">
-                                    {{ $comment->post->title ?? 'Usunięty artykuł' }}
+                                    {{ $comment->post->title ?? 'Usunięty post' }}
                                 </div>
                             </td>
                             <td class="px-6 py-4">
@@ -105,7 +105,7 @@
                                 {{ $comment->created_at->format('d.m.Y H:i') }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                <button wire:click="confirmCommentDeletion({{ $comment->id }})" class="text-red-600 hover:text-red-900">
+                                <button wire:click="confirmCommentDeletion({{ $comment->id }})" class="bg-red-100 text-red-700 px-3 py-1 rounded-md hover:bg-red-200 text-sm font-medium transition">
                                     Usuń
                                 </button>
                             </td>

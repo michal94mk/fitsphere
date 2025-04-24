@@ -42,7 +42,7 @@
                         </svg>
                     </div>
                     <div>
-                        <div class="text-sm font-medium text-gray-500">Artykuły</div>
+                        <div class="text-sm font-medium text-gray-500">Posty</div>
                         <div class="text-2xl font-semibold text-gray-900">{{ $stats['posts'] }}</div>
                     </div>
                 </div>

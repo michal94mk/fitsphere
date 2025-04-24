@@ -63,7 +63,7 @@
                     <div>
                         <label for="excerpt" class="block text-sm font-medium text-gray-700">Streszczenie</label>
                         <textarea id="excerpt" wire:model.defer="excerpt" rows="3" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"></textarea>
-                        <p class="mt-1 text-sm text-gray-500">Krótkie streszczenie artykułu (maksymalnie 500 znaków)</p>
+                        <p class="mt-1 text-sm text-gray-500">Krótkie streszczenie postu (maksymalnie 500 znaków)</p>
                         @error('excerpt')
                             <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                         @enderror

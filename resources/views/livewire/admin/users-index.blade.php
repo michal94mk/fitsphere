@@ -143,13 +143,19 @@
                                 {{ $user->created_at->format('d.m.Y') }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                <a href="{{ route('admin.users.edit', $user->id) }}" wire:navigate
-                                   class="text-indigo-600 hover:text-indigo-900 mr-3">
-                                    Edytuj
-                                </a>
-                                <button wire:click="confirmUserDeletion({{ $user->id }})" class="text-red-600 hover:text-red-900">
-                                    Usuń
-                                </button>
+                                <div class="flex items-center justify-end space-x-2">
+                                    <!-- Przycisk edycji -->
+                                    <a href="{{ route('admin.users.edit', $user->id) }}" wire:navigate
+                                       class="bg-blue-100 text-blue-700 px-3 py-1 rounded-md hover:bg-blue-200 text-sm font-medium transition">
+                                        Edytuj
+                                    </a>
+                                    
+                                    <!-- Przycisk usuwania -->
+                                    <button wire:click="confirmUserDeletion({{ $user->id }})" 
+                                            class="bg-red-100 text-red-700 px-3 py-1 rounded-md hover:bg-red-200 text-sm font-medium transition">
+                                        Usuń
+                                    </button>
+                                </div>
                             </td>
                         </tr>
                     @empty

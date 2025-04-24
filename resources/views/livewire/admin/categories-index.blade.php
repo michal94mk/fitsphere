@@ -75,15 +75,22 @@
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                <a href="{{ route('admin.categories.edit', $category) }}" wire:navigate class="text-indigo-600 hover:text-indigo-900 mr-3">
-                                    Edytuj
-                                </a>
-                                <a href="{{ route('admin.categories.translations', $category->id) }}" wire:navigate class="text-green-600 hover:text-green-900 mr-3">
-                                    Tłumaczenia
-                                </a>
-                                <button wire:click="confirmCategoryDeletion({{ $category->id }})" class="text-red-600 hover:text-red-900">
-                                    Usuń
-                                </button>
+                                <div class="flex items-center justify-end space-x-2">
+                                    <!-- Przycisk edycji -->
+                                    <a href="{{ route('admin.categories.edit', $category) }}" wire:navigate class="bg-blue-100 text-blue-700 px-3 py-1 rounded-md hover:bg-blue-200 text-sm font-medium transition">
+                                        Edytuj
+                                    </a>
+                                    
+                                    <!-- Przycisk tłumaczeń -->
+                                    <a href="{{ route('admin.categories.translations', $category->id) }}" wire:navigate class="bg-green-100 text-green-700 px-3 py-1 rounded-md hover:bg-green-200 text-sm font-medium transition">
+                                        Tłumaczenia
+                                    </a>
+                                    
+                                    <!-- Przycisk usuwania -->
+                                    <button wire:click="confirmCategoryDeletion({{ $category->id }})" class="bg-red-100 text-red-700 px-3 py-1 rounded-md hover:bg-red-200 text-sm font-medium transition">
+                                        Usuń
+                                    </button>
+                                </div>
                             </td>
                         </tr>
                     @empty
@@ -141,6 +148,9 @@
                             <div class="mt-2">
                                 <p class="text-sm text-gray-500">
                                     Czy na pewno chcesz usunąć tę kategorię? Ta operacja jest nieodwracalna.
+                                </p>
+                                <p class="text-sm text-gray-500 mt-2">
+                                    Usunięcie kategorii może wpłynąć na posty, które są do niej przypisane.
                                 </p>
                             </div>
                         </div>

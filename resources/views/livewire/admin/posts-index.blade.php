@@ -1,18 +1,18 @@
 <x-slot name="header">
-    Zarządzanie artykułami
+    Zarządzanie postami
 </x-slot>
 
 <div>
     <div class="container mx-auto p-6">
         <!-- Header with title and buttons -->
         <div class="flex justify-between items-center mb-6">
-            <h1 class="text-2xl font-bold">Lista artykułów</h1>
+            <h1 class="text-2xl font-bold">Lista postów</h1>
             <a href="{{ route('admin.posts.create') }}" wire:navigate
                class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition flex items-center">
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                 </svg>
-                Dodaj artykuł
+                Dodaj post
             </a>
         </div>
 
@@ -72,7 +72,7 @@
                 <thead class="bg-gray-50">
                     <tr>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Artykuł
+                            Post
                         </th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                             Autor
@@ -156,7 +156,7 @@
                     @empty
                         <tr>
                             <td colspan="6" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
-                                Nie znaleziono artykułów.
+                                Nie znaleziono postów.
                             </td>
                         </tr>
                     @endforelse
@@ -203,11 +203,11 @@
                         </div>
                         <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
                             <h3 class="text-lg font-medium leading-6 text-gray-900" id="modal-title">
-                                Usuń artykuł
+                                Usuń post
                             </h3>
                             <div class="mt-2">
                                 <p class="text-sm text-gray-500">
-                                    Czy na pewno chcesz usunąć ten artykuł? Ta operacja jest nieodwracalna.
+                                    Czy na pewno chcesz usunąć ten post? Ta operacja jest nieodwracalna.
                                 </p>
                             </div>
                         </div>
