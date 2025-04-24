@@ -2,8 +2,8 @@
     <div class="bg-gradient-to-br from-gray-50 to-gray-100 py-8 md:py-12">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-8">
-                <h1 class="text-4xl font-extrabold mb-4">
-                    <span class="bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-indigo-500">
+                <h1 class="text-5xl font-extrabold mb-4">
+                    <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-blue-500">
                         {{ __('nutrition_calculator.title') }}
                     </span>
                 </h1>

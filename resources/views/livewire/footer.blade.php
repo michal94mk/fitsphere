@@ -2,8 +2,8 @@
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
             <div>
-                <h3 class="text-xl font-bold text-white mb-4">Zdrowie & Fitness Blog</h3>
-                <p class="text-gray-400 mb-4">Dołącz do naszego newslettera, aby otrzymywać najnowsze porady i artykuły dotyczące zdrowia, fitness i dobrego samopoczucia.</p>
+                <h3 class="text-xl font-bold text-white mb-4">{{ __('footer.title') }}</h3>
+                <p class="text-gray-400 mb-4">{{ __('footer.newsletter_text') }}</p>
                 <div class="flex space-x-4 mt-6">
                     <a href="#" class="text-gray-400 hover:text-blue-500 transition-colors">
                         <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
@@ -32,7 +32,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                                 </svg>
                             </div>
-                            <input type="email" wire:model="email" placeholder="Twój adres email" 
+                            <input type="email" wire:model="email" placeholder="{{ __('footer.email_placeholder') }}" 
                                 class="pl-10 w-full px-4 py-3 bg-gray-700 border border-gray-600 text-white rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                                 required>
                         </div>
@@ -40,7 +40,7 @@
                     <button type="submit" 
                         class="px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-medium rounded-r-lg hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-150">
                         <div class="flex items-center">
-                            <span>Subskrybuj</span>
+                            <span>{{ __('footer.subscribe_button') }}</span>
                             <svg class="ml-2 w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                             </svg>
@@ -54,7 +54,7 @@
         </div>
         
         <div class="mt-12 pt-8 border-t border-gray-700 text-center">
-            <p class="text-gray-400">&copy; 2024 Zdrowie & Fitness Blog. Wszelkie prawa zastrzeżone.</p>
+            <p class="text-gray-400">&copy; 2024 {{ __('footer.copyright') }}</p>
         </div>
     </div>
 </footer>
