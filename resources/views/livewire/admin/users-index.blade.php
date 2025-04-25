@@ -253,8 +253,4 @@
             </div>
         </div>
     </div>
-
-    <style>
-        [x-cloak] { display: none !important; }
-    </style>
 </div> 

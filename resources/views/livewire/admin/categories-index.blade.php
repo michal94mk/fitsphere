@@ -64,6 +64,7 @@
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nazwa</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Data utworzenia</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Data aktualizacji</th>
                         <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Akcje</th>
                     </tr>
                 </thead>
@@ -73,6 +74,10 @@
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $category->id }}</td>
                             <td class="px-6 py-4 whitespace-nowrap font-semibold text-sm text-gray-900">{{ $category->name }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                {{ $category->created_at ? $category->created_at->format('d.m.Y H:i') : 'N/A' }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                {{ $category->updated_at ? $category->updated_at->format('d.m.Y H:i') : 'N/A' }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                 <div class="flex items-center justify-end space-x-2">
@@ -95,7 +100,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="4" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
+                            <td colspan="5" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
                                 Nie znaleziono kategorii.
                             </td>
                         </tr>
@@ -167,8 +172,4 @@
             </div>
         </div>
     </div>
-
-    <style>
-        [x-cloak] { display: none !important; }
-    </style>
 </div>

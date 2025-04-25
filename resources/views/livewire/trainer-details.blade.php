@@ -7,8 +7,14 @@
         @if($trainer)
             <div class="bg-white rounded-xl shadow-xl overflow-hidden">
                 <!-- Nagłówek profilu -->
-                <div class="bg-gradient-to-r from-blue-500 to-blue-600 px-6 py-4">
+                <div class="bg-gradient-to-r from-blue-500 to-blue-600 px-6 py-4 flex justify-between items-center">
                     <h1 class="text-2xl font-bold text-white">Profil trenera</h1>
+                    <a href="{{ route('trainers.list') }}" wire:navigate class="inline-flex items-center px-4 py-2 bg-white bg-opacity-20 backdrop-blur-sm border border-transparent rounded-md font-medium text-white hover:bg-opacity-30 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-blue-600 focus:ring-white transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                        </svg>
+                        Powrót
+                    </a>
                 </div>
                 
                 <!-- Dane trenera -->
@@ -49,25 +55,6 @@
                                     <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
                                         <path d="M22.675 0h-21.35c-.732 0-1.325.593-1.325 1.325v21.351c0 .731.593 1.324 1.325 1.324h11.495v-9.294h-3.128v-3.622h3.128v-2.671c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12v9.293h6.116c.73 0 1.323-.593 1.323-1.325v-21.35c0-.732-.593-1.325-1.325-1.325z"/>
                                     </svg>
-                                </a>
-                                @endif
-                            </div>
-                            
-                            <!-- Przycisk rezerwacji -->
-                            <div class="mt-6">
-                                @if(!Auth::guard('trainer')->check())
-                                <a href="{{ route('reservation.create', $trainer->id) }}" class="w-full inline-flex justify-center items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 shadow-sm transition-colors">
-                                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                    </svg>
-                                    Zarezerwuj termin
-                                </a>
-                                
-                                <a href="{{ route('user.reservations') }}" class="w-full inline-flex justify-center items-center px-6 py-3 mt-2 border border-gray-300 text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 shadow-sm transition-colors">
-                                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                                    </svg>
-                                    Moje rezerwacje
                                 </a>
                                 @endif
                             </div>
@@ -124,10 +111,28 @@
                         </div>
                     </div>
                 </div>
+                
+                <!-- Przycisk powrotu w dolnej części karty -->
+                <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 flex justify-center md:justify-start">
+                    <a href="{{ route('trainers.list') }}" wire:navigate class="inline-flex items-center px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                        </svg>
+                        Powrót do listy trenerów
+                    </a>
+                </div>
             </div>
         @else
             <div class="bg-white p-6 rounded-lg shadow-md">
                 <p class="text-gray-600">Nie znaleziono profilu wybranego trenera.</p>
+                <div class="mt-4">
+                    <a href="{{ route('trainers.list') }}" wire:navigate class="inline-flex items-center px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                        </svg>
+                        Powrót do listy trenerów
+                    </a>
+                </div>
             </div>
         @endif
     </div>
