@@ -3,49 +3,49 @@
 </x-slot>
 
 <div>
-    <div class="container mx-auto p-6">
+    <div class="container mx-auto p-4">
         <!-- Header with title and buttons -->
-        <div class="flex justify-between items-center mb-6">
+        <div class="flex justify-between items-center mb-4">
             <h1 class="text-2xl font-bold">Lista kategorii</h1>
             <a href="{{ route('admin.categories.create') }}" wire:navigate
-               class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition flex items-center">
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+               class="bg-blue-600 text-white px-3 py-2 rounded-md hover:bg-blue-700 transition flex items-center">
+                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                 </svg>
-                Dodaj kategorię
+                Dodaj
             </a>
         </div>
 
         @if (session('success'))
-            <div class="mb-4 p-4 bg-green-600 text-white rounded">
+            <div class="mb-4 p-3 bg-green-600 text-white rounded">
                 {{ session('success') }}
             </div>
         @endif
 
         @if (session('error'))
-            <div class="mb-4 p-4 bg-red-600 text-white rounded">
+            <div class="mb-4 p-3 bg-red-600 text-white rounded">
                 {{ session('error') }}
             </div>
         @endif
 
         <!-- Search and filters -->
-        <div class="mb-6 bg-white p-4 rounded-lg shadow">
-            <div class="flex flex-col md:flex-row gap-4">
+        <div class="mb-4 bg-white p-3 rounded-lg shadow">
+            <div class="flex flex-col md:flex-row gap-3">
                 <div class="flex-1">
                     <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Wyszukaj</label>
                     <input wire:model.live.debounce.300ms="search" type="text" id="search"
                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                            placeholder="Nazwa kategorii...">
                 </div>
-                <div class="md:w-48">
-                    <label for="sortField" class="block text-sm font-medium text-gray-700 mb-1">Sortuj według</label>
+                <div class="md:w-40">
+                    <label for="sortField" class="block text-sm font-medium text-gray-700 mb-1">Sortuj</label>
                     <select wire:model.live="sortField" id="sortField"
                             class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                         <option value="created_at">Data utworzenia</option>
                         <option value="name">Nazwa</option>
                     </select>
                 </div>
-                <div class="md:w-48">
+                <div class="md:w-40">
                     <label for="sortDirection" class="block text-sm font-medium text-gray-700 mb-1">Kierunek</label>
                     <select wire:model.live="sortDirection" id="sortDirection"
                             class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
@@ -58,41 +58,38 @@
 
         <!-- Categories table -->
         <div class="overflow-x-auto bg-white shadow-md rounded-lg">
-            <table class="min-w-full divide-y divide-gray-200">
+            <table class="w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                     <tr>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nazwa</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Data utworzenia</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Data aktualizacji</th>
-                        <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Akcje</th>
+                        <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                        <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nazwa</th>
+                        <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Data</th>
+                        <th scope="col" class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Akcje</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
                     @forelse($categories as $category)
                         <tr>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $category->id }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap font-semibold text-sm text-gray-900">{{ $category->name }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                {{ $category->created_at ? $category->created_at->format('d.m.Y H:i') : 'N/A' }}
+                            <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">{{ $category->id }}</td>
+                            <td class="px-4 py-3 whitespace-nowrap font-semibold text-sm text-gray-900">{{ $category->name }}</td>
+                            <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
+                                <div>Utw: {{ $category->created_at ? $category->created_at->format('d.m.Y') : 'N/A' }}</div>
+                                <div>Akt: {{ $category->updated_at ? $category->updated_at->format('d.m.Y') : 'N/A' }}</div>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                {{ $category->updated_at ? $category->updated_at->format('d.m.Y H:i') : 'N/A' }}
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                <div class="flex items-center justify-end space-x-2">
+                            <td class="px-4 py-3 whitespace-nowrap text-right text-sm font-medium">
+                                <div class="flex flex-wrap items-center justify-end gap-1">
                                     <!-- Przycisk edycji -->
-                                    <a href="{{ route('admin.categories.edit', $category) }}" wire:navigate class="bg-blue-100 text-blue-700 px-3 py-1 rounded-md hover:bg-blue-200 text-sm font-medium transition">
+                                    <a href="{{ route('admin.categories.edit', $category) }}" wire:navigate class="bg-blue-100 text-blue-700 px-2 py-1 rounded-md hover:bg-blue-200 text-xs font-medium transition">
                                         Edytuj
                                     </a>
                                     
                                     <!-- Przycisk tłumaczeń -->
-                                    <a href="{{ route('admin.categories.translations', $category->id) }}" wire:navigate class="bg-green-100 text-green-700 px-3 py-1 rounded-md hover:bg-green-200 text-sm font-medium transition">
+                                    <a href="{{ route('admin.categories.translations', $category->id) }}" wire:navigate class="bg-green-100 text-green-700 px-2 py-1 rounded-md hover:bg-green-200 text-xs font-medium transition">
                                         Tłumaczenia
                                     </a>
                                     
                                     <!-- Przycisk usuwania -->
-                                    <button wire:click="confirmCategoryDeletion({{ $category->id }})" class="bg-red-100 text-red-700 px-3 py-1 rounded-md hover:bg-red-200 text-sm font-medium transition">
+                                    <button wire:click="confirmCategoryDeletion({{ $category->id }})" class="bg-red-100 text-red-700 px-2 py-1 rounded-md hover:bg-red-200 text-xs font-medium transition">
                                         Usuń
                                     </button>
                                 </div>
@@ -100,7 +97,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
+                            <td colspan="4" class="px-4 py-3 whitespace-nowrap text-sm text-gray-500 text-center">
                                 Nie znaleziono kategorii.
                             </td>
                         </tr>
