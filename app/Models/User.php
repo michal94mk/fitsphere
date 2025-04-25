@@ -25,10 +25,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'email',
         'password',
         'role',
-        'specialization',
-        'description',
         'image',
-        'bio',
     ];
     
 
@@ -69,16 +66,6 @@ class User extends Authenticatable implements MustVerifyEmail
         // Użyj gravatara jako fallbacku
         $hash = md5(strtolower(trim($this->email)));
         return "https://www.gravatar.com/avatar/{$hash}?d=mp&s=160";
-    }
-    
-    /**
-     * Get bio attribute (compatibility with "description" field)
-     * 
-     * @return string|null
-     */
-    public function getBioAttribute()
-    {
-        return $this->description;
     }
     
     /**

@@ -97,9 +97,6 @@
                             Ostatnia aktualizacja
                         </th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Bio / Opis
-                        </th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                             Zdjęcie
                         </th>
                         <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -161,15 +158,6 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                 {{ $user->updated_at ? $user->updated_at->format('d.m.Y H:i') : 'N/A' }}
-                            </td>
-                            <td class="px-6 py-4">
-                                <div class="text-sm text-gray-900">
-                                    @if ($user->bio || $user->description)
-                                        {{ Str::limit($user->bio ?? $user->description, 30, '...') }}
-                                    @else
-                                        Brak
-                                    @endif
-                                </div>
                             </td>
                             <td class="px-6 py-4">
                                 @if($user->image)

@@ -101,8 +101,6 @@ class UsersIndex extends Component
                     $search = '%' . $this->search . '%';
                     $query->where('name', 'like', $search)
                         ->orWhere('email', 'like', $search)
-                        ->orWhere('specialization', 'like', $search)
-                        ->orWhere('description', 'like', $search)
                         ->orWhere('id', 'like', $search);
                 });
             })
@@ -117,9 +115,6 @@ class UsersIndex extends Component
         $users->each(function ($user) {
             // Pobierz URL zdjęcia profilowego
             $user->append('profile_photo_url');
-            
-            // Ustaw wartość "bio" na podstawie "description" 
-            $user->bio = $user->description;
         });
         
         return view('livewire.admin.users-index', [

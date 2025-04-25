@@ -1,16 +1,6 @@
 <div>
     <div class="container mx-auto p-6">
-        <div class="flex items-center justify-between mb-4">
-            <div class="flex space-x-2">
-                <a href="{{ route('admin.posts.index') }}" class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 transition">
-                    Cofnij
-                </a>
-            </div>
-            <h1 class="text-2xl font-bold text-center flex-grow">
-                Dodaj nowy post
-            </h1>
-            <div class="w-32"></div>
-        </div>
+        <h1 class="text-2xl font-bold mb-6">Dodaj nowy post</h1>
 
         @if (session()->has('error'))
             <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4" role="alert">
@@ -93,11 +83,11 @@
                     @enderror
                 </div>
 
-                <div class="flex justify-between">
+                <div class="px-6 py-3 bg-gray-50 flex justify-between mt-6 -mx-6 -mb-6">
                     <a href="{{ route('admin.posts.index') }}" class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 transition">
-                        Anuluj
+                        Wróć do listy
                     </a>
-                    <button type="submit" class="bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600 transition">
+                    <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition">
                         Zapisz
                     </button>
                 </div>

@@ -1,94 +1,86 @@
 <div>
     <div class="container mx-auto p-6">
-        <div class="flex items-center justify-between mb-4">
-            <a href="{{ route('admin.users.dashboard') }}" class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 transition">
-                Wróć do listy użytkowników
-            </a>
-        </div>
+        <h1 class="text-2xl font-bold mb-6">Dodaj nowego użytkownika</h1>
 
-        <div class="bg-white p-6 rounded-lg shadow-md">
-            <h2 class="text-2xl font-bold mb-4">Dodaj nowego użytkownika</h2>
-
+        <div class="bg-white rounded-lg shadow overflow-hidden">
             <form wire:submit="store" enctype="multipart/form-data">
-                <!-- Imię -->
-                <div class="mb-4">
-                    <label for="name" class="block text-sm font-medium text-gray-700">Imię</label>
-                    <input type="text" id="name" wire:model="name" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md" required>
-                    @error('name')
-                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <!-- Email -->
-                <div class="mb-4">
-                    <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-                    <input type="email" id="email" wire:model="email" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md" required>
-                    @error('email')
-                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <!-- Hasło -->
-                <div class="mb-4">
-                    <label for="password" class="block text-sm font-medium text-gray-700">Hasło</label>
-                    <input type="password" id="password" wire:model="password" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md" required>
-                    @error('password')
-                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <!-- Potwierdzenie hasła -->
-                <div class="mb-4">
-                    <label for="password_confirmation" class="block text-sm font-medium text-gray-700">Potwierdź hasło</label>
-                    <input type="password" id="password_confirmation" wire:model="password_confirmation" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md" required>
-                </div>
-
-                <!-- Rola -->
-                <div class="mb-4">
-                    <label for="role" class="block text-sm font-medium text-gray-700">Rola</label>
-                    <select id="role" wire:model="role" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md" required>
-                        <option value="admin">admin</option>
-                        <option value="user">user</option>
-                        <option value="trainer">trainer</option>
-                    </select>
-                    @error('role')
-                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <!-- Pola dodatkowe dla trenerów (pokazywane tylko, gdy rola == 'trainer') -->
-                @if ($role === 'trainer')
-                    <!-- Specjalizacja -->
-                    <div class="mb-4">
-                        <label for="specialization" class="block text-sm font-medium text-gray-700">Specjalizacja</label>
-                        <input type="text" id="specialization" wire:model="specialization" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md">
-                        @error('specialization')
-                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
+                <div class="p-6 space-y-6">
+                    <!-- Dane podstawowe -->
+                    <div>
+                        <h2 class="text-lg font-medium text-gray-900 border-b pb-2">Dane podstawowe</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                            <div>
+                                <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Imię</label>
+                                <input type="text" id="name" wire:model="name" 
+                                    class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
+                                @error('name') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                            </div>
+                            
+                            <div>
+                                <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                                <input type="email" id="email" wire:model="email" 
+                                    class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
+                                @error('email') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                            </div>
+                        </div>
                     </div>
 
-                    <!-- Opis -->
-                    <div class="mb-4">
-                        <label for="description" class="block text-sm font-medium text-gray-700">Opis</label>
-                        <textarea id="description" wire:model="description" rows="4" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md"></textarea>
-                        @error('description')
-                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
+                    <!-- Hasło -->
+                    <div>
+                        <h2 class="text-lg font-medium text-gray-900 border-b pb-2">Hasło</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                            <div>
+                                <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Hasło</label>
+                                <input type="password" id="password" wire:model="password" 
+                                    class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
+                                @error('password') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                            </div>
+                            
+                            <div>
+                                <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-1">Potwierdź hasło</label>
+                                <input type="password" id="password_confirmation" wire:model="password_confirmation" 
+                                    class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
+                            </div>
+                        </div>
                     </div>
 
-                    <!-- Zdjęcie -->
-                    <div class="mb-4">
-                        <label for="image" class="block text-sm font-medium text-gray-700">Zdjęcie</label>
-                        <input type="file" id="image" wire:model="image" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md">
-                        @error('image')
-                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
+                    <!-- Profil użytkownika -->
+                    <div>
+                        <h2 class="text-lg font-medium text-gray-900 border-b pb-2">Profil użytkownika</h2>
+                        <div class="mt-4">
+                            <div>
+                                <label for="role" class="block text-sm font-medium text-gray-700 mb-1">Rola</label>
+                                <select id="role" wire:model="role" 
+                                    class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
+                                    <option value="admin">Admin</option>
+                                    <option value="user">Użytkownik</option>
+                                </select>
+                                @error('role') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                            </div>
+                        </div>
                     </div>
-                @endif
 
-                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition">
-                    Dodaj użytkownika
-                </button>
+                    <!-- Zdjęcie profilowe -->
+                    <div>
+                        <h2 class="text-lg font-medium text-gray-900 border-b pb-2">Zdjęcie profilowe</h2>
+                        <div class="mt-4">
+                            <label for="image" class="block text-sm font-medium text-gray-700 mb-1">Zdjęcie</label>
+                            <input type="file" id="image" wire:model="image" 
+                                class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                            @error('image') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="px-6 py-3 bg-gray-50 flex justify-between">
+                    <a href="{{ route('admin.users.index') }}" wire:navigate 
+                        class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 transition">
+                        Wróć do listy
+                    </a>
+                    <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition">
+                        Dodaj użytkownika
+                    </button>
+                </div>
             </form>
         </div>
     </div>

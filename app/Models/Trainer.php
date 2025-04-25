@@ -34,6 +34,7 @@ class Trainer extends Authenticatable implements MustVerifyEmail
         'image',
         'bio',
         'is_approved',
+        'specialties',
     ];
 
     /**

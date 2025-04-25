@@ -4,13 +4,7 @@
 
 <div>
     <div class="container mx-auto p-6">
-        <div class="flex items-center justify-between mb-6">
-            <h1 class="text-2xl font-bold">Dodaj nową kategorię</h1>
-            <a href="{{ route('admin.categories.index') }}" wire:navigate
-               class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 transition">
-                Powrót do listy
-            </a>
-        </div>
+        <h1 class="text-2xl font-bold mb-6">Dodaj nową kategorię</h1>
 
         <div class="bg-white rounded-lg shadow overflow-hidden">
             <form wire:submit="save">
@@ -29,7 +23,11 @@
                     </div>
                 </div>
                 
-                <div class="px-6 py-3 bg-gray-50 text-right">
+                <div class="px-6 py-3 bg-gray-50 flex justify-between">
+                    <a href="{{ route('admin.categories.index') }}" wire:navigate 
+                       class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 transition">
+                        Wróć do listy
+                    </a>
                     <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition">
                         Utwórz kategorię
                     </button>
