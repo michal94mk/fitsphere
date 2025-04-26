@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Post;
 use App\Models\Trainer;
 use App\Models\Comment;
+use App\Models\Category;
 use App\Mail\TrainerApproved;
 use Illuminate\Support\Facades\Mail;
 use Livewire\Component;
@@ -70,9 +71,11 @@ class Dashboard extends Component
             'comments' => Comment::count() ?? 0,
             'bookings' => 0, // Placeholder for bookings stats
             'pendingTrainers' => Trainer::where('is_approved', false)->count(),
+            'publishedPosts' => Post::where('status', 'published')->count(),
+            'draftPosts' => Post::where('status', 'draft')->count(),
         ];
         
-        // Recent users
+        // Recent users - include additional role information
         $this->recentUsers = User::latest()->take(5)->get();
             
         // All trainers
@@ -86,6 +89,8 @@ class Dashboard extends Component
             
         // Popular posts
         $this->popularPosts = Post::withCount('views')
+            ->withCount('comments')
+            ->with('user')
             ->orderBy('views_count', 'desc')
             ->take(5)
             ->get();
