@@ -8,7 +8,8 @@ use App\Models\Trainer;
 use App\Models\Comment;
 use App\Models\Category;
 use App\Mail\TrainerApproved;
-use Illuminate\Support\Facades\Mail;
+use App\Services\EmailService;
+use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
 
@@ -55,6 +56,24 @@ class Dashboard extends Component
      * @var \Illuminate\Database\Eloquent\Collection
      */
     public $popularPosts = [];
+    
+    /**
+     * Email service instance
+     * 
+     * @var EmailService
+     */
+    protected $emailService;
+    
+    /**
+     * Constructor with dependency injection
+     * 
+     * @param EmailService $emailService
+     */
+    public function __construct(EmailService $emailService)
+    {
+        $this->emailService = $emailService;
+        parent::__construct();
+    }
     
     /**
      * Initialize the dashboard component and load required data
@@ -108,25 +127,50 @@ class Dashboard extends Component
      */
     public function approveTrainer($trainerId)
     {
-        $trainer = Trainer::findOrFail($trainerId);
-        $trainer->is_approved = true;
-        $trainer->save();
-        
-        // Update the pending trainers list
-        $this->pendingTrainers = Trainer::where('is_approved', false)
-            ->latest()
-            ->take(5)
-            ->get();
-            
-        // Update the stats
-        $this->stats['pendingTrainers'] = Trainer::where('is_approved', false)->count();
-        
-        // Send notification email
         try {
-            Mail::to($trainer->email)->send(new TrainerApproved($trainer));
-            session()->flash('success', "Trener {$trainer->name} został zatwierdzony, a powiadomienie email zostało wysłane.");
+            // Find and update the trainer
+            $trainer = Trainer::findOrFail($trainerId);
+            $trainer->is_approved = true;
+            $trainer->save();
+            
+            // Update the pending trainers list
+            $this->pendingTrainers = Trainer::where('is_approved', false)
+                ->latest()
+                ->take(5)
+                ->get();
+                
+            // Update the stats
+            $this->stats['pendingTrainers'] = Trainer::where('is_approved', false)->count();
+            
+            // Send notification email using the email service
+            $result = $this->emailService->send(
+                $trainer->email,
+                new TrainerApproved($trainer),
+                "Trainer {$trainer->name} has been approved and notification email has been sent."
+            );
+            
+            // Flash appropriate message based on the result
+            if ($result['status'] === 'success') {
+                session()->flash('success', $result['message']);
+            } else {
+                // Still show success for trainer approval, but note the email issue
+                session()->flash('success', "Trainer {$trainer->name} has been approved, but there was an error sending the notification email: {$result['message']}");
+                // Log additional details
+                Log::warning('Failed to send trainer approval email', [
+                    'trainer_id' => $trainerId,
+                    'trainer_email' => $trainer->email
+                ]);
+            }
         } catch (\Exception $e) {
-            session()->flash('success', "Trener {$trainer->name} został zatwierdzony, ale wystąpił błąd podczas wysyłania powiadomienia email: {$e->getMessage()}");
+            // Log the exception with all details
+            Log::error('Error in trainer approval process', [
+                'trainer_id' => $trainerId,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            // Flash error message
+            session()->flash('error', "An error occurred while approving the trainer: {$e->getMessage()}");
         }
     }
     

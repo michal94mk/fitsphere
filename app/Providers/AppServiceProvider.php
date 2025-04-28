@@ -8,6 +8,8 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Support\Facades\Event;
 use App\Models\Trainer;
+use App\Services\EmailService;
+use App\Services\LogService;
 
 
 class AppServiceProvider extends ServiceProvider
@@ -17,7 +19,15 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // Register Email Service as a singleton
+        $this->app->singleton(EmailService::class, function ($app) {
+            return new EmailService();
+        });
+        
+        // Register Log Service as a singleton
+        $this->app->singleton(LogService::class, function ($app) {
+            return new LogService();
+        });
     }
 
     /**

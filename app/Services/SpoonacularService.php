@@ -16,20 +16,17 @@ class SpoonacularService
         $this->apiKey = config('services.spoonacular.key');
         
         if (empty($this->apiKey) || $this->apiKey === 'your_spoonacular_api_key_here') {
-            Log::warning('Brak klucza API Spoonacular lub używany jest domyślny przykładowy klucz.');
+            Log::warning('Missing or default Spoonacular API key detected.');
         }
     }
 
-    /**
-     * Wyszukaj przepisy według zapytania i parametrów żywieniowych
-     */
     public function searchRecipes(string $query, array $params = [])
     {
         if (empty($this->apiKey) || $this->apiKey === 'your_spoonacular_api_key_here') {
-            Log::error('Próba wyszukiwania przepisów bez prawidłowego klucza API Spoonacular');
+            Log::error('Attempt to search recipes without valid Spoonacular API key');
             return [
                 'results' => [],
-                'error' => 'Brak prawidłowego klucza API Spoonacular. Administrator powinien skonfigurować klucz w pliku .env.'
+                'error' => 'Valid Spoonacular API key is missing. Administrator should configure it in .env file.'
             ];
         }
         
@@ -37,14 +34,13 @@ class SpoonacularService
         
         return Cache::remember($cacheKey, 60 * 24, function () use ($query, $params) {
             try {
-                Log::info('Wywołanie API Spoonacular do wyszukiwania przepisów', [
+                Log::info('Calling Spoonacular API for recipe search', [
                     'query' => $query,
-                    'params' => array_diff_key($params, ['apiKey' => '']) // Logowanie bez klucza API
+                    'params' => array_diff_key($params, ['apiKey' => ''])
                 ]);
                 
-                // Tworzenie żądania HTTP z możliwością wyłączenia weryfikacji SSL w środowisku dev
                 $httpClient = Http::withOptions([
-                    'verify' => !app()->environment('local') // Wyłącz weryfikację SSL tylko w środowisku lokalnym
+                    'verify' => !app()->environment('local')
                 ]);
                 
                 $response = $httpClient->get($this->baseUrl . '/recipes/complexSearch', array_merge([
@@ -58,47 +54,41 @@ class SpoonacularService
                 
                 if ($response->successful()) {
                     $data = $response->json();
-                    Log::info('Otrzymano odpowiedź z API Spoonacular', ['count' => count($data['results'] ?? [])]);
+                    Log::info('Received Spoonacular API response', ['count' => count($data['results'] ?? [])]);
                     return $data;
                 }
                 
-                Log::error('Błąd wyszukiwania przepisów: ' . $response->body(), [
+                Log::error('Recipe search error: ' . $response->body(), [
                     'status' => $response->status(), 
                     'headers' => $response->headers()
                 ]);
-                return ['results' => [], 'error' => 'Nie udało się wyszukać przepisów. Spróbuj ponownie później. Kod błędu: ' . $response->status()];
+                return ['results' => [], 'error' => 'Failed to search recipes. Please try again later. Error code: ' . $response->status()];
             } catch (\Exception $e) {
-                Log::error('Wyjątek przy wyszukiwaniu przepisów: ' . $e->getMessage(), [
+                Log::error('Exception when searching recipes: ' . $e->getMessage(), [
                     'exception' => get_class($e),
                     'trace' => $e->getTraceAsString()
                 ]);
-                return ['results' => [], 'error' => 'Wystąpił błąd przy wyszukiwaniu przepisów: ' . $e->getMessage()];
+                return ['results' => [], 'error' => 'An error occurred while searching recipes: ' . $e->getMessage()];
             }
         });
     }
 
-    /**
-     * Pobierz informacje o przepisie na podstawie ID
-     */
     public function getRecipeInformation(int $recipeId)
     {
         if (empty($this->apiKey) || $this->apiKey === 'your_spoonacular_api_key_here') {
-            Log::error('Próba pobierania informacji o przepisie bez prawidłowego klucza API Spoonacular');
+            Log::error('Attempt to get recipe information without valid Spoonacular API key');
             return null;
         }
         
         $cacheKey = 'recipe_info_' . $recipeId;
-        
-        // Usunięcie wcześniej buforowanych danych, aby zapewnić świeże dane
         Cache::forget($cacheKey);
         
         try {
-            // Tworzenie żądania HTTP z możliwością wyłączenia weryfikacji SSL w środowisku dev
             $httpClient = Http::withOptions([
-                'verify' => !app()->environment('local') // Wyłącz weryfikację SSL tylko w środowisku lokalnym
+                'verify' => !app()->environment('local')
             ]);
             
-            Log::info('Wykonuję zapytanie o informacje o przepisie', [
+            Log::info('Querying recipe information', [
                 'recipe_id' => $recipeId,
                 'include_nutrition' => true,
                 'api_key_length' => strlen($this->apiKey),
@@ -113,8 +103,7 @@ class SpoonacularService
             if ($response->successful()) {
                 $data = $response->json();
                 
-                // Log kompletnego obiektu response dla debugowania
-                Log::info('Pełna odpowiedź API dla przepisu', [
+                Log::info('Full API response for recipe', [
                     'recipe_id' => $recipeId,
                     'status_code' => $response->status(),
                     'response_headers' => $response->headers(),
@@ -122,9 +111,8 @@ class SpoonacularService
                     'has_nutrition' => isset($data['nutrition']),
                 ]);
                 
-                // Dodanie logów sprawdzających dane dotyczące odżywiania
                 if (isset($data['nutrition'])) {
-                    Log::info('Otrzymano dane odżywcze dla przepisu', [
+                    Log::info('Received nutrition data for recipe', [
                         'recipe_id' => $recipeId,
                         'nutrition_keys' => array_keys($data['nutrition']),
                         'has_nutrients' => isset($data['nutrition']['nutrients']),
@@ -133,7 +121,6 @@ class SpoonacularService
                             array_slice($data['nutrition']['nutrients'], 0, min(5, count($data['nutrition']['nutrients']))) : []
                     ]);
                     
-                    // Sprawdź czy są główne wartości odżywcze
                     $nutrients = $data['nutrition']['nutrients'] ?? [];
                     $caloriesInfo = collect($nutrients)->firstWhere('name', 'Calories');
                     $proteinInfo = collect($nutrients)->firstWhere('name', 'Protein');
@@ -145,7 +132,7 @@ class SpoonacularService
                     $hasCarbs = $carbsInfo !== null;
                     $hasFat = $fatInfo !== null;
                     
-                    Log::info('Status głównych wartości odżywczych', [
+                    Log::info('Main nutritional values status', [
                         'recipe_id' => $recipeId,
                         'has_calories' => $hasCalories,
                         'calories_value' => $hasCalories ? $caloriesInfo['amount'] : null,
@@ -157,12 +144,12 @@ class SpoonacularService
                         'fat_value' => $hasFat ? $fatInfo['amount'] : null
                     ]);
                 } else {
-                    Log::warning('Brak danych odżywczych dla przepisu pomimo parametru includeNutrition=true', [
+                    Log::warning('No nutrition data for recipe despite includeNutrition=true parameter', [
                         'recipe_id' => $recipeId
                     ]);
                     
-                    // Pobierz szczegółowe informacje o wartościach odżywczych z osobnego endpointu
-                    Log::info('Spróbujmy pobrać dane odżywcze z endpointu nutritionWidget');
+                    // Try to get nutrition data from a separate endpoint as fallback
+                    Log::info('Attempting to fetch nutrition data from nutritionWidget endpoint');
                     
                     try {
                         $nutritionResponse = $httpClient->get($this->baseUrl . '/recipes/' . $recipeId . '/nutritionWidget.json', [
@@ -171,28 +158,27 @@ class SpoonacularService
                         
                         if ($nutritionResponse->successful()) {
                             $nutritionData = $nutritionResponse->json();
-                            Log::info('Otrzymano dane z endpointu nutritionWidget', [
+                            Log::info('Received data from nutritionWidget endpoint', [
                                 'data_keys' => array_keys($nutritionData),
-                                'calories' => $nutritionData['calories'] ?? 'brak',
-                                'protein' => $nutritionData['protein'] ?? 'brak',
-                                'carbs' => $nutritionData['carbs'] ?? 'brak',
-                                'fat' => $nutritionData['fat'] ?? 'brak'
+                                'calories' => $nutritionData['calories'] ?? 'missing',
+                                'protein' => $nutritionData['protein'] ?? 'missing',
+                                'carbs' => $nutritionData['carbs'] ?? 'missing',
+                                'fat' => $nutritionData['fat'] ?? 'missing'
                             ]);
                             
-                            // Przekształć wartości odżywcze na liczby
+                            // Extract numeric values from strings like "110 kcal"
                             $calories = floatval(preg_replace('/[^0-9.]/', '', $nutritionData['calories'] ?? '0'));
                             $protein = floatval(preg_replace('/[^0-9.]/', '', $nutritionData['protein'] ?? '0'));
                             $carbs = floatval(preg_replace('/[^0-9.]/', '', $nutritionData['carbs'] ?? '0'));
                             $fat = floatval(preg_replace('/[^0-9.]/', '', $nutritionData['fat'] ?? '0'));
                             
-                            Log::info('Przekształcone wartości odżywcze', [
+                            Log::info('Converted nutrition values', [
                                 'calories' => $calories,
                                 'protein' => $protein,
                                 'carbs' => $carbs,
                                 'fat' => $fat
                             ]);
                             
-                            // Dodaj dane odżywcze do głównych danych
                             $data['nutrition'] = [
                                 'nutrients' => [
                                     ['name' => 'Calories', 'amount' => $calories, 'unit' => 'kcal'],
@@ -202,59 +188,52 @@ class SpoonacularService
                                 ]
                             ];
                         } else {
-                            Log::error('Błąd pobierania danych odżywczych z nutritionWidget: ' . $nutritionResponse->body());
+                            Log::error('Error fetching nutrition data from nutritionWidget: ' . $nutritionResponse->body());
                         }
                     } catch (\Exception $e) {
-                        Log::error('Wyjątek przy pobieraniu danych odżywczych z nutritionWidget: ' . $e->getMessage());
+                        Log::error('Exception when fetching nutrition data from nutritionWidget: ' . $e->getMessage());
                     }
                 }
                 
                 return $data;
             }
             
-            Log::error('Błąd pobierania informacji o przepisie: ' . $response->body());
+            Log::error('Error fetching recipe information: ' . $response->body());
             return null;
         } catch (\Exception $e) {
-            Log::error('Wyjątek przy pobieraniu informacji o przepisie: ' . $e->getMessage());
+            Log::error('Exception when fetching recipe information: ' . $e->getMessage());
             return null;
         }
     }
 
-    /**
-     * Wygeneruj plan posiłków na podstawie celów żywieniowych
-     */
     public function generateMealPlan(int $targetCalories, array $params = [])
     {
         if (empty($this->apiKey) || $this->apiKey === 'your_spoonacular_api_key_here') {
-            Log::error('Próba generowania planu posiłków bez prawidłowego klucza API Spoonacular');
+            Log::error('Attempt to generate meal plan without valid Spoonacular API key');
             return null;
         }
         
-        // Dodaj unikalny identyfikator czasowy do klucza cache, aby uniknąć powtarzania posiłków
+        // Add unique timestamp identifier to cache key to avoid meal repetition
         $cacheKey = 'meal_plan_' . $targetCalories . md5(serialize($params) . now()->format('YmdHi'));
-        
-        // Usuń stary cache, aby zawsze otrzymać świeże dane
         Cache::forget($cacheKey);
         
         try {
-            Log::info('Wywołanie API Spoonacular do generowania planu posiłków', [
+            Log::info('Calling Spoonacular API to generate meal plan', [
                 'targetCalories' => $targetCalories,
                 'params' => array_diff_key($params, ['apiKey' => ''])
             ]);
             
-            // Tworzenie żądania HTTP z możliwością wyłączenia weryfikacji SSL w środowisku dev
             $httpClient = Http::withOptions([
-                'verify' => !app()->environment('local') // Wyłącz weryfikację SSL tylko w środowisku lokalnym
+                'verify' => !app()->environment('local')
             ]);
             
-            // Dodaj parametr zapewniający różnorodność posiłków
             $apiParams = array_merge([
                 'apiKey' => $this->apiKey,
                 'targetCalories' => $targetCalories,
                 'timeFrame' => 'day',
             ], $params);
             
-            // Dodaj dodatkowe parametry dla różnorodności, jeśli nie zostały wcześniej określone
+            // Add diversity parameters if not already set
             if (!isset($apiParams['sort'])) {
                 $apiParams['sort'] = 'random';
             }
@@ -268,26 +247,25 @@ class SpoonacularService
             if ($response->successful()) {
                 $data = $response->json();
                 
-                // Logowanie otrzymanych danych dla debugowania
                 if (isset($data['meals']) && is_array($data['meals'])) {
-                    Log::info('Otrzymano plan posiłków z API Spoonacular', [
+                    Log::info('Received meal plan from Spoonacular API', [
                         'meals_count' => count($data['meals']),
                         'meal_titles' => collect($data['meals'])->pluck('title')->toArray()
                     ]);
                 } else {
-                    Log::warning('Otrzymano plan posiłków z API, ale struktura jest inna niż oczekiwano');
+                    Log::warning('Received meal plan from API, but structure is different than expected');
                 }
                 
                 return $data;
             }
             
-            Log::error('Błąd generowania planu posiłków: ' . $response->body(), [
+            Log::error('Error generating meal plan: ' . $response->body(), [
                 'status' => $response->status(),
                 'headers' => $response->headers()
             ]);
             return null;
         } catch (\Exception $e) {
-            Log::error('Wyjątek przy generowaniu planu posiłków: ' . $e->getMessage(), [
+            Log::error('Exception when generating meal plan: ' . $e->getMessage(), [
                 'exception' => get_class($e),
                 'trace' => $e->getTraceAsString()
             ]);
@@ -295,13 +273,10 @@ class SpoonacularService
         }
     }
 
-    /**
-     * Uzyskaj informacje o wartościach odżywczych produktu
-     */
     public function getFoodInformation(string $query)
     {
         if (empty($this->apiKey) || $this->apiKey === 'your_spoonacular_api_key_here') {
-            Log::error('Próba pobierania informacji o produkcie bez prawidłowego klucza API Spoonacular');
+            Log::error('Attempt to get food information without valid Spoonacular API key');
             return null;
         }
         
@@ -309,9 +284,8 @@ class SpoonacularService
         
         return Cache::remember($cacheKey, 60 * 24 * 7, function () use ($query) {
             try {
-                // Tworzenie żądania HTTP z możliwością wyłączenia weryfikacji SSL w środowisku dev
                 $httpClient = Http::withOptions([
-                    'verify' => !app()->environment('local') // Wyłącz weryfikację SSL tylko w środowisku lokalnym
+                    'verify' => !app()->environment('local')
                 ]);
                 
                 $response = $httpClient->get($this->baseUrl . '/food/ingredients/search', [
@@ -325,12 +299,12 @@ class SpoonacularService
                     return $response->json();
                 }
                 
-                Log::error('Błąd wyszukiwania informacji o produkcie: ' . $response->body());
+                Log::error('Error searching food information: ' . $response->body());
                 return null;
             } catch (\Exception $e) {
-                Log::error('Wyjątek przy wyszukiwaniu informacji o produkcie: ' . $e->getMessage());
+                Log::error('Exception when searching food information: ' . $e->getMessage());
                 return null;
             }
         });
     }
-} 
+}
