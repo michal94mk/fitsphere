@@ -65,23 +65,15 @@ class Dashboard extends Component
     protected $emailService;
     
     /**
-     * Constructor with dependency injection
-     * 
-     * @param EmailService $emailService
-     */
-    public function __construct(EmailService $emailService)
-    {
-        $this->emailService = $emailService;
-        parent::__construct();
-    }
-    
-    /**
      * Initialize the dashboard component and load required data
      * 
+     * @param EmailService $emailService
      * @return void
      */
-    public function mount()
+    public function mount(EmailService $emailService)
     {
+        $this->emailService = $emailService;
+        
         // Basic statistics
         $this->stats = [
             'users' => User::count(),
