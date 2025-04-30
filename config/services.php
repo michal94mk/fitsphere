@@ -36,6 +36,18 @@ return [
     ],
 
     'spoonacular' => [
-        'key' => env('SPOONACULAR_API_KEY'),
+        'key' => env('SPOONACULAR_API_KEY', 'your_spoonacular_api_key_here'),
+    ],
+
+    'mailgun' => [
+        'domain' => env('MAILGUN_DOMAIN'),
+        'secret' => env('MAILGUN_SECRET'),
+        'endpoint' => env('MAILGUN_ENDPOINT', 'api.mailgun.net'),
+        'scheme' => 'https',
+    ],
+
+    'libretranslate' => [
+        'url' => env('LIBRETRANSLATE_URL', 'https://libretranslate.com'),
+        'key' => env('LIBRETRANSLATE_API_KEY'),
     ],
 ];

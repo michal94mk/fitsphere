@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Event;
 use App\Models\Trainer;
 use App\Services\EmailService;
 use App\Services\LogService;
+use App\Services\TranslationService;
 
 
 class AppServiceProvider extends ServiceProvider

@@ -49,6 +49,52 @@ We would like to extend our thanks to the following sponsors for funding Laravel
 - **[byte5](https://byte5.de)**
 - **[OP.GG](https://op.gg)**
 
+## Features
+
+- Modern responsive design using Tailwind CSS
+- Multi-language support (English and Polish)
+- Advanced blogging system with categories and tags
+- User management and role-based permissions
+- Nutrition Calculator with automated recipe translations
+  - Uses LibreTranslate API for accurate recipe translations (English ↔ Polish)
+  - Automatically translates recipes to Polish when using Polish language
+  - Bidirectional translation support for recipe searches
+  - Manual translation toggle for user control
+  - Caching mechanism to reduce API calls
+- Meal planning system
+- Contact form with email notifications
+- Social media integration
+
+## Configuration
+
+### Translation Setup
+
+The nutrition calculator uses LibreTranslate API for recipe translations. To set it up:
+
+1. Visit [LibreTranslate](https://libretranslate.com/) and create an account
+2. Get a free API key from the LibreTranslate dashboard
+3. Add these variables to your `.env` file:
+   ```
+   LIBRETRANSLATE_URL=https://libretranslate.com
+   LIBRETRANSLATE_API_KEY=your_api_key_here
+   ```
+
+Alternatively, you can [self-host LibreTranslate](https://github.com/LibreTranslate/LibreTranslate) on your own server for unlimited translation without API key requirements. In this case, update the URL:
+```
+LIBRETRANSLATE_URL=http://your-server-address:5000
+```
+
+### Spoonacular API
+
+The nutrition calculator and meal planner use Spoonacular API for recipe data:
+
+1. Create an account at [Spoonacular Food API](https://spoonacular.com/food-api)
+2. Get your API key from the dashboard
+3. Add the API key to your `.env` file:
+   ```
+   SPOONACULAR_API_KEY=your_spoonacular_api_key_here
+   ```
+
 ## Contributing
 
 Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
