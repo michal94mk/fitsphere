@@ -243,11 +243,14 @@ class NutritionCalculator extends Component
         
         // If search was translated, show the translated term to the user
         if ($wasTranslated) {
-            $message = __('nutrition_calculator.translation_detail', [
-                'original' => $originalQuery,
-                'translated' => $searchTerm
-            ]);
-            session()->flash('info', $message);
+            // Only show translation information if the website is in Polish
+            if (App::getLocale() === 'pl') {
+                $message = __('nutrition_calculator.translation_detail', [
+                    'original' => $originalQuery,
+                    'translated' => $searchTerm
+                ]);
+                session()->flash('info', $message);
+            }
         }
         
         $this->searchResults = $results;

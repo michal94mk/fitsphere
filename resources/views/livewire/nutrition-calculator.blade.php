@@ -41,7 +41,7 @@
             @endif
             
             <!-- Informacja o konfiguracji LibreTranslate -->
-            @if(empty(config('services.libretranslate.key')))
+            @if(empty(config('services.libretranslate.key')) && App::getLocale() === 'pl')
                 <div class="mb-6 bg-blue-50 border-l-4 border-blue-400 p-4">
                     <div class="flex">
                         <div class="flex-shrink-0">
@@ -56,6 +56,7 @@
                                 <ul class="mt-1 ml-4 list-disc">
                                     <li>Tłumaczenia mogą nie być doskonałe lub mogą zawierać błędy</li>
                                     <li>Czas tłumaczenia może być dłuższy przy rozbudowanych przepisach</li>
+                                    <li>Przy dłuższych tekstach mogą wystąpić problemy z tłumaczeniem ze względu na ograniczenia darmowego API</li>
                                     <li>W razie problemów z tłumaczeniem, możesz zawsze przełączyć się na oryginalną wersję</li>
                                 </ul>
                             </div>
@@ -240,6 +241,12 @@
                                 @if (session()->has('search_error'))
                                     <div class="mb-4 bg-red-100 border-l-4 border-red-500 text-red-700 p-3 text-sm">
                                         {{ session('search_error') }}
+                                    </div>
+                                @endif
+                                
+                                @if (session()->has('info'))
+                                    <div class="mb-4 bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-3 text-sm">
+                                        {{ session('info') }}
                                     </div>
                                 @endif
                                 
@@ -580,6 +587,7 @@
                         </div>
                         
                         <div class="flex justify-end mt-2">
+                            @if(App::getLocale() === 'pl' || $translateRecipe)
                             <button 
                                 wire:click="toggleRecipeTranslation" 
                                 class="inline-flex items-center text-sm font-medium {{ $translateRecipe ? 'text-blue-600' : 'text-gray-600' }} hover:text-blue-500 focus:outline-none"
@@ -591,6 +599,7 @@
                                     {{ $translateRecipe ? __('nutrition_calculator.show_original') : __('nutrition_calculator.translate_to_polish') }}
                                 </span>
                             </button>
+                            @endif
                         </div>
                         
                         @if($autoTranslate && $translateRecipe)
