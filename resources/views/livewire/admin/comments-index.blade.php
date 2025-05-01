@@ -1,12 +1,12 @@
 <x-slot name="header">
-    Zarządzanie komentarzami
+    Comments Management
 </x-slot>
 
 <div>
     <div class="container mx-auto p-4">
         <!-- Header with title and buttons -->
         <div class="flex justify-between items-center mb-4">
-            <h1 class="text-2xl font-bold">Lista komentarzy</h1>
+            <h1 class="text-2xl font-bold">Comments List</h1>
         </div>
 
         @if (session('success'))
@@ -25,25 +25,25 @@
         <div class="mb-4 bg-white p-3 rounded-lg shadow">
             <div class="flex flex-col md:flex-row gap-3">
                 <div class="flex-1">
-                    <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Wyszukaj</label>
+                    <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Search</label>
                     <input wire:model.live.debounce.300ms="search" type="text" id="search"
                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                           placeholder="Treść komentarza, nazwa użytkownika lub tytuł postu...">
+                           placeholder="Comment content, username or post title...">
                 </div>
                 <div class="md:w-40">
-                    <label for="sortField" class="block text-sm font-medium text-gray-700 mb-1">Sortuj</label>
+                    <label for="sortField" class="block text-sm font-medium text-gray-700 mb-1">Sort By</label>
                     <select wire:model.live="sortField" id="sortField"
                             class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                        <option value="created_at">Data utworzenia</option>
-                        <option value="updated_at">Data aktualizacji</option>
+                        <option value="created_at">Creation Date</option>
+                        <option value="updated_at">Update Date</option>
                     </select>
                 </div>
                 <div class="md:w-40">
-                    <label for="sortDirection" class="block text-sm font-medium text-gray-700 mb-1">Kierunek</label>
+                    <label for="sortDirection" class="block text-sm font-medium text-gray-700 mb-1">Direction</label>
                     <select wire:model.live="sortDirection" id="sortDirection"
                             class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                        <option value="desc">Malejąco</option>
-                        <option value="asc">Rosnąco</option>
+                        <option value="desc">Descending</option>
+                        <option value="asc">Ascending</option>
                     </select>
                 </div>
             </div>
@@ -55,16 +55,16 @@
                 <thead class="bg-gray-50">
                     <tr>
                         <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Użytkownik
+                            User
                         </th>
                         <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Komentarz
+                            Comment
                         </th>
                         <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Data
+                            Date
                         </th>
                         <th scope="col" class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Akcje
+                            Actions
                         </th>
                     </tr>
                 </thead>
@@ -80,10 +80,10 @@
                                     </div>
                                     <div class="ml-3">
                                         <div class="text-xs font-medium text-gray-900">
-                                            {{ $comment->user->name ?? 'Nieznany użytkownik' }}
+                                            {{ $comment->user->name ?? 'Unknown user' }}
                                         </div>
                                         <div class="text-xs text-gray-500">
-                                            Post: {{ Str::limit($comment->post->title ?? 'Usunięty post', 20) }}
+                                            Post: {{ Str::limit($comment->post->title ?? 'Deleted post', 20) }}
                                         </div>
                                     </div>
                                 </div>
@@ -94,13 +94,13 @@
                                 </div>
                             </td>
                             <td class="px-4 py-3 whitespace-nowrap text-xs text-gray-500">
-                                <div>Utw: {{ $comment->created_at->format('d.m.Y') }}</div>
-                                <div>Akt: {{ $comment->updated_at->format('d.m.Y') }}</div>
+                                <div>Created: {{ $comment->created_at->format('d.m.Y') }}</div>
+                                <div>Updated: {{ $comment->updated_at->format('d.m.Y') }}</div>
                             </td>
                             <td class="px-4 py-3 whitespace-nowrap text-right text-sm font-medium">
                                 <div class="flex flex-wrap items-center justify-end gap-1">
                                     <button wire:click="confirmCommentDeletion({{ $comment->id }})" class="bg-red-100 text-red-700 px-2 py-1 rounded-md hover:bg-red-200 text-xs font-medium transition">
-                                        Usuń
+                                        Delete
                                     </button>
                                 </div>
                             </td>
@@ -108,7 +108,7 @@
                     @empty
                         <tr>
                             <td colspan="4" class="px-4 py-3 whitespace-nowrap text-sm text-gray-500 text-center">
-                                Nie znaleziono komentarzy.
+                                No comments found.
                             </td>
                         </tr>
                     @endforelse
@@ -155,11 +155,11 @@
                         </div>
                         <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
                             <h3 class="text-lg font-medium leading-6 text-gray-900" id="modal-title">
-                                Usuń komentarz
+                                Delete Comment
                             </h3>
                             <div class="mt-2">
                                 <p class="text-sm text-gray-500">
-                                    Czy na pewno chcesz usunąć ten komentarz? Ta operacja jest nieodwracalna.
+                                    Are you sure you want to delete this comment? This action cannot be undone.
                                 </p>
                             </div>
                         </div>
@@ -167,10 +167,10 @@
                 </div>
                 <div class="px-4 py-3 bg-gray-50 sm:px-6 sm:flex sm:flex-row-reverse">
                     <button type="button" wire:click="deleteComment" class="inline-flex justify-center w-full px-4 py-2 text-base font-medium text-white bg-red-600 border border-transparent rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm">
-                        Usuń
+                        Delete
                     </button>
                     <button type="button" wire:click="cancelDeletion" class="inline-flex justify-center w-full px-4 py-2 mt-3 text-base font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
-                        Anuluj
+                        Cancel
                     </button>
                 </div>
             </div>

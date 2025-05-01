@@ -18,13 +18,13 @@ class LibreTranslateService
     }
     
     /**
-     * Tłumaczy tekst pomiędzy dwoma językami
+     * Translates text between two languages
      * 
-     * @param string $text Tekst do przetłumaczenia
-     * @param string $source Kod języka źródłowego (np. 'en')
-     * @param string $target Kod języka docelowego (np. 'pl')
-     * @param string $format Format tekstu ('text' lub 'html')
-     * @return string|null Przetłumaczony tekst lub null w przypadku błędu
+     * @param string $text Text to translate
+     * @param string $source Source language code (e.g. 'en')
+     * @param string $target Target language code (e.g. 'pl')
+     * @param string $format Text format ('text' or 'html')
+     * @return string|null Translated text or null in case of error
      */
     public function translate($text, $source, $target, $format = 'text')
     {
@@ -32,12 +32,12 @@ class LibreTranslateService
             return $text;
         }
         
-        // Sprawdź czy tekst zawiera tagi HTML
+        // Check if the text contains HTML tags
         if ($format === 'text' && preg_match('/<[^>]+>/', $text)) {
             $format = 'html';
         }
         
-        // Sprawdź w cache czy tłumaczenie już istnieje
+        // Check in cache if translation already exists
         $cacheKey = 'translation_' . md5($text . $source . $target . $format);
         if (Cache::has($cacheKey)) {
             return Cache::get($cacheKey);
@@ -55,7 +55,7 @@ class LibreTranslateService
             if ($response->successful()) {
                 $data = $response->json();
                 if (isset($data['translatedText'])) {
-                    // Zachowaj tłumaczenie w cache na 24 godziny
+                    // Store translation in cache for 24 hours
                     Cache::put($cacheKey, $data['translatedText'], 60 * 60 * 24);
                     return $data['translatedText'];
                 }
@@ -79,10 +79,10 @@ class LibreTranslateService
     }
     
     /**
-     * Wykrywa język tekstu
+     * Detects the language of a text
      * 
-     * @param string $text Tekst do analizy
-     * @return string|null Kod języka lub null w przypadku błędu
+     * @param string $text Text to analyze
+     * @return string|null Language code or null in case of error
      */
     public function detectLanguage($text)
     {
@@ -92,7 +92,7 @@ class LibreTranslateService
         
         try {
             $response = Http::timeout(5)->post($this->apiUrl . '/detect', [
-                'q' => substr($text, 0, 500), // Ogranicz do 500 znaków dla oszczędności
+                'q' => substr($text, 0, 500), // Limit to 500 characters for efficiency
                 'api_key' => $this->apiKey,
             ]);
             
@@ -114,9 +114,9 @@ class LibreTranslateService
     }
     
     /**
-     * Pobiera dostępne języki z API
+     * Get available languages from API
      * 
-     * @return array Lista dostępnych języków
+     * @return array List of available languages
      */
     public function getLanguages()
     {
@@ -133,7 +133,7 @@ class LibreTranslateService
             
             if ($response->successful()) {
                 $languages = $response->json();
-                Cache::put($cacheKey, $languages, 60 * 60 * 24); // Cache na 24h
+                Cache::put($cacheKey, $languages, 60 * 60 * 24); // Cache for 24h
                 return $languages;
             }
             
@@ -148,12 +148,12 @@ class LibreTranslateService
     }
     
     /**
-     * Tłumaczy wiele fragmentów tekstu jednocześnie
+     * Translate multiple text fragments simultaneously
      * 
-     * @param array $texts Tablica z tekstami do tłumaczenia
-     * @param string $source Kod języka źródłowego
-     * @param string $target Kod języka docelowego
-     * @return array Tablica z przetłumaczonymi tekstami
+     * @param array $texts Array with texts to translate
+     * @param string $source Source language code
+     * @param string $target Target language code
+     * @return array Array with translated texts
      */
     public function batchTranslate(array $texts, $source, $target)
     {

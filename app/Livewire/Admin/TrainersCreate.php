@@ -13,18 +13,18 @@ class TrainersCreate extends Component
 {
     use WithFileUploads;
     
-    #[Rule('required|string|max:255', message: 'Imię i nazwisko są wymagane.')]
+    #[Rule('required|string|max:255', message: 'Name is required.')]
     public $name = '';
     
-    #[Rule('required|string|email|max:255|unique:trainers', message: 'Ten adres email jest już zajęty lub nieprawidłowy.')]
+    #[Rule('required|string|email|max:255|unique:trainers', message: 'This email is already taken or invalid.')]
     public $email = '';
     
-    #[Rule('required|string|min:8|confirmed', message: 'Hasło musi mieć co najmniej 8 znaków.')]
+    #[Rule('required|string|min:8|confirmed', message: 'Password must be at least 8 characters.')]
     public $password = '';
     
     public $password_confirmation = '';
     
-    #[Rule('required|string|max:255', message: 'Specjalizacja jest wymagana.')]
+    #[Rule('required|string|max:255', message: 'Specialization is required.')]
     public $specialization = '';
     
     #[Rule('nullable|string')]
@@ -33,7 +33,7 @@ class TrainersCreate extends Component
     #[Rule('nullable|string')]
     public $biography = '';
     
-    #[Rule('nullable|image|max:1024', message: 'Zdjęcie musi być obrazem o maksymalnym rozmiarze 1MB.')]
+    #[Rule('nullable|image|max:1024', message: 'Photo must be an image with maximum size of 1MB.')]
     public $photo = null;
     
     #[Rule('boolean')]
@@ -56,19 +56,19 @@ class TrainersCreate extends Component
     ];
 
     protected $messages = [
-        'name.required' => 'Imię i nazwisko są wymagane.',
-        'email.required' => 'Adres email jest wymagany.',
-        'email.email' => 'Wprowadź poprawny adres email.',
-        'email.unique' => 'Ten adres email jest już zajęty.',
-        'password.required' => 'Hasło jest wymagane.',
-        'password.min' => 'Hasło musi mieć co najmniej 8 znaków.',
-        'password.confirmed' => 'Potwierdzenie hasła nie zgadza się.',
-        'specialization.required' => 'Specjalizacja jest wymagana.',
-        'photo.image' => 'Wybrany plik musi być obrazem.',
-        'photo.max' => 'Zdjęcie nie może być większe niż 1MB.',
+        'name.required' => 'Name is required.',
+        'email.required' => 'Email address is required.',
+        'email.email' => 'Please enter a valid email address.',
+        'email.unique' => 'This email address is already taken.',
+        'password.required' => 'Password is required.',
+        'password.min' => 'Password must be at least 8 characters.',
+        'password.confirmed' => 'Password confirmation does not match.',
+        'specialization.required' => 'Specialization is required.',
+        'photo.image' => 'Selected file must be an image.',
+        'photo.max' => 'Photo cannot be larger than 1MB.',
     ];
 
-    #[Layout('layouts.admin', ['header' => 'Dodaj nowego trenera'])]
+    #[Layout('layouts.admin', ['header' => 'Add New Trainer'])]
     public function render()
     {
         return view('livewire.admin.trainers-create');
@@ -97,13 +97,13 @@ class TrainersCreate extends Component
             ]);
             
             $successMessage = $this->is_approved 
-                ? 'Trener został pomyślnie dodany i zatwierdzony!' 
-                : 'Trener został pomyślnie dodany! Musi zweryfikować swój adres email, aby aktywować konto.';
+                ? 'Trainer has been successfully added and approved!' 
+                : 'Trainer has been successfully added! They need to verify their email address to activate the account.';
             
             session()->flash('success', $successMessage);
             return redirect()->route('admin.trainers.index');
         } catch (\Exception $e) {
-            session()->flash('error', 'Wystąpił błąd podczas dodawania trenera: ' . $e->getMessage());
+            session()->flash('error', 'An error occurred while adding the trainer: ' . $e->getMessage());
         }
     }
 

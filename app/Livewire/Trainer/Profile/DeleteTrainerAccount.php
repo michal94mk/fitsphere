@@ -25,15 +25,15 @@ class DeleteTrainerAccount extends Component
 
     public function mount()
     {
-        Log::info('DeleteTrainerAccount zmontowany');
+        Log::info('DeleteTrainerAccount mounted');
     }
 
     public function validatePasswordAndOpenModal()
     {
-        Log::info('validatePasswordAndOpenModal wywołany');
+        Log::info('validatePasswordAndOpenModal called');
         
         if (empty($this->password)) {
-            $this->errorMessage = 'Hasło jest wymagane.';
+            $this->errorMessage = 'Password is required.';
             return;
         }
         
@@ -44,38 +44,38 @@ class DeleteTrainerAccount extends Component
         $trainer = Auth::guard('trainer')->user();
 
         if (!$trainer) {
-            $this->errorMessage = 'Nie jesteś zalogowany jako trener.';
-            $this->debugInfo = 'Brak trenera';
+            $this->errorMessage = 'You are not logged in as a trainer.';
+            $this->debugInfo = 'No trainer';
             return;
         }
 
-        // Weryfikacja hasła
+        // Password verification
         if (!password_verify($this->password, $trainer->password)) {
-            $this->errorMessage = 'Podane hasło jest nieprawidłowe.';
-            $this->debugInfo = 'Nieprawidłowe hasło';
+            $this->errorMessage = 'The provided password is incorrect.';
+            $this->debugInfo = 'Incorrect password';
             return;
         }
 
-        // Hasło zostało zweryfikowane, możemy otworzyć modal
+        // Password has been verified, we can open the modal
         $this->passwordValidated = true;
         $this->errorMessage = '';
         $this->showDeleteModal = true;
-        $this->debugInfo = 'Hasło zweryfikowane, modal otwarty';
+        $this->debugInfo = 'Password verified, modal opened';
     }
 
     public function openModal()
     {
-        Log::info('openModal wywołany');
+        Log::info('openModal called');
         $this->reset(['errorMessage']);
         $this->showDeleteModal = true;
-        $this->debugInfo = 'Modal otwarty';
+        $this->debugInfo = 'Modal opened';
     }
 
     public function closeModal()
     {
-        Log::info('closeModal wywołany');
+        Log::info('closeModal called');
         $this->showDeleteModal = false;
-        $this->debugInfo = 'Modal zamknięty';
+        $this->debugInfo = 'Modal closed';
     }
 
     /**
@@ -88,47 +88,47 @@ class DeleteTrainerAccount extends Component
      */
     public function deleteAccount()
     {
-        Log::info('deleteAccount wywołany');
+        Log::info('deleteAccount called');
         
-        // Upewnij się, że hasło zostało wcześniej zweryfikowane
+        // Make sure the password has been previously verified
         if (!$this->passwordValidated) {
-            $this->errorMessage = 'Najpierw należy zweryfikować hasło.';
-            $this->debugInfo = 'Próba usunięcia konta bez weryfikacji hasła';
+            $this->errorMessage = 'You must verify your password first.';
+            $this->debugInfo = 'Attempt to delete account without password verification';
             return;
         }
 
         $trainer = Auth::guard('trainer')->user();
 
         if (!$trainer) {
-            $this->errorMessage = 'Nie jesteś zalogowany jako trener.';
+            $this->errorMessage = 'You are not logged in as a trainer.';
             return;
         }
 
-        // Zapamiętuję ID trenera przed wylogowaniem
+        // Remember trainer ID before logout
         $trainerId = $trainer->id;
 
-        // Usuwam zdjęcie profilowe jeśli istnieje (podobnie jak w User)
+        // Delete profile photo if it exists (similar to User)
         if ($trainer->profile_image && $trainer->profile_image !== 'trainers/default-avatar.png') {
             Storage::disk('public')->delete($trainer->profile_image);
         }
 
-        // Usuwam konto
+        // Delete account
         try {
             Trainer::find($trainerId)->delete();
-            Log::info("Trener {$trainerId} usunięty");
+            Log::info("Trainer {$trainerId} deleted");
             
-            // Wylogowuję trenera
+            // Log out the trainer
             Auth::guard('trainer')->logout();
             
-            // Niszczę sesję
+            // Destroy session
             session()->invalidate();
             session()->regenerateToken();
             
-            // Przekierowuję do strony głównej z komunikatem
-            return redirect()->route('home')->with('status', 'Twoje konto zostało usunięte.');
+            // Redirect to home page with a message
+            return redirect()->route('home')->with('status', 'Your account has been deleted.');
         } catch (\Exception $e) {
-            Log::error("Błąd podczas usuwania trenera: " . $e->getMessage());
-            $this->errorMessage = 'Wystąpił błąd podczas usuwania konta: ' . $e->getMessage();
+            Log::error("Error while deleting trainer: " . $e->getMessage());
+            $this->errorMessage = 'An error occurred while deleting your account: ' . $e->getMessage();
             return;
         }
     }

@@ -108,10 +108,10 @@ class PostsEdit extends Component
             
             $post->save();
             
-            session()->flash('success', 'Post został pomyślnie zaktualizowany.');
+            session()->flash('success', 'Post has been successfully updated.');
             return redirect()->route('admin.posts.index');
         } catch (\Exception $e) {
-            session()->flash('error', 'Wystąpił błąd podczas aktualizacji posta: ' . $e->getMessage());
+            session()->flash('error', 'An error occurred while updating the post: ' . $e->getMessage());
         }
     }
     
@@ -120,7 +120,7 @@ class PostsEdit extends Component
      * 
      * @return \Illuminate\View\View
      */
-    #[Layout('layouts.admin', ['header' => 'Edytuj post'])]
+    #[Layout('layouts.admin', ['header' => 'Edit Post'])]
     public function render()
     {
         return view('livewire.admin.posts-edit', [

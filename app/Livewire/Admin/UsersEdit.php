@@ -17,7 +17,7 @@ class UsersEdit extends Component
     
     public $userId;
     
-    #[FormRule('required|string|max:255', message: 'Imię jest wymagane.')]
+    #[FormRule('required|string|max:255', message: 'Name is required.')]
     public $name = '';
     
     public $email = '';
@@ -26,10 +26,10 @@ class UsersEdit extends Component
     
     public $password_confirmation = '';
     
-    #[FormRule('required|string|in:admin,user', message: 'Rola jest wymagana.')]
+    #[FormRule('required|string|in:admin,user', message: 'Role is required.')]
     public $role = '';
     
-    #[FormRule('nullable|image|max:1024', message: 'Zdjęcie musi być obrazem o maksymalnym rozmiarze 1MB.')]
+    #[FormRule('nullable|image|max:1024', message: 'Photo must be an image with maximum size of 1MB.')]
     public $photo = null;
     
     public $currentImage = '';
@@ -46,7 +46,7 @@ class UsersEdit extends Component
         $this->role = $user->role;
         $this->currentImage = $user->image;
         
-        // Ustaw existing_photo na podstawie currentImage
+        // Set existing_photo based on currentImage
         if ($this->currentImage) {
             $this->existing_photo = asset('storage/' . $this->currentImage);
         }
@@ -63,16 +63,16 @@ class UsersEdit extends Component
     public function messages()
     {
         return [
-            'email.required' => 'Adres email jest wymagany.',
-            'email.email' => 'Wprowadź poprawny adres email.',
-            'email.unique' => 'Ten adres email jest już zajęty.',
-            'password.required' => 'Hasło jest wymagane gdy zmieniasz hasło.',
-            'password.min' => 'Hasło musi mieć co najmniej 8 znaków.',
-            'password.confirmed' => 'Potwierdzenie hasła nie zgadza się.',
+            'email.required' => 'Email address is required.',
+            'email.email' => 'Please enter a valid email address.',
+            'email.unique' => 'This email address is already taken.',
+            'password.required' => 'Password is required when changing password.',
+            'password.min' => 'Password must be at least 8 characters.',
+            'password.confirmed' => 'Password confirmation does not match.',
         ];
     }
 
-    #[Layout('layouts.admin', ['header' => 'Edytuj użytkownika'])]
+    #[Layout('layouts.admin', ['header' => 'Edit User'])]
     public function render()
     {
         return view('livewire.admin.users-edit');
@@ -80,14 +80,14 @@ class UsersEdit extends Component
 
     public function save()
     {
-        // Walidacja podstawowa
+        // Basic validation
         $this->validate([
             'name' => 'required|string|max:255',
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($this->userId)],
             'role' => 'required|in:admin,user',
         ]);
         
-        // Walidacja hasła tylko gdy włączono zmianę hasła
+        // Password validation only when password change is enabled
         if ($this->changePassword) {
             $this->validate([
                 'password' => 'required|string|min:8|confirmed',
@@ -121,10 +121,10 @@ class UsersEdit extends Component
             
             $user->save();
             
-            session()->flash('success', 'Dane użytkownika zostały zaktualizowane!');
+            session()->flash('success', 'User information has been updated!');
             return redirect()->route('admin.users.index');
         } catch (\Exception $e) {
-            session()->flash('error', 'Wystąpił błąd podczas aktualizacji użytkownika: ' . $e->getMessage());
+            session()->flash('error', 'An error occurred while updating the user: ' . $e->getMessage());
         }
     }
 
@@ -156,9 +156,9 @@ class UsersEdit extends Component
                 // Reset the new photo too if it exists
                 $this->photo = null;
                 
-                session()->flash('success', 'Zdjęcie zostało usunięte.');
+                session()->flash('success', 'Photo has been removed.');
             } catch (\Exception $e) {
-                session()->flash('error', 'Nie udało się usunąć zdjęcia: ' . $e->getMessage());
+                session()->flash('error', 'Failed to remove photo: ' . $e->getMessage());
             }
         }
     }

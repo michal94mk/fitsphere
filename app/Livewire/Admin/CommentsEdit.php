@@ -11,7 +11,7 @@ class CommentsEdit extends Component
 {
     public $commentId;
     
-    #[Rule('required|string', message: 'Treść komentarza jest wymagana.')]
+    #[Rule('required|string', message: 'Comment content is required.')]
     public $content = '';
 
     public $userName = '';
@@ -25,13 +25,13 @@ class CommentsEdit extends Component
         $comment = Comment::with(['user', 'post'])->findOrFail($id);
         
         $this->content = $comment->content;
-        $this->userName = $comment->user->name ?? 'Nieznany użytkownik';
-        $this->userEmail = $comment->user->email ?? 'Brak adresu email';
-        $this->postTitle = $comment->post->title ?? 'Usunięty artykuł';
+        $this->userName = $comment->user->name ?? 'Unknown user';
+        $this->userEmail = $comment->user->email ?? 'No email address';
+        $this->postTitle = $comment->post->title ?? 'Deleted post';
         $this->createdAt = $comment->created_at->format('d.m.Y H:i');
     }
 
-    #[Layout('layouts.admin', ['header' => 'Edytuj komentarz'])]
+    #[Layout('layouts.admin', ['header' => 'Edit Comment'])]
     public function render()
     {
         return view('livewire.admin.comments-edit');
@@ -48,10 +48,10 @@ class CommentsEdit extends Component
             
             $comment->save();
             
-            session()->flash('success', 'Komentarz został zaktualizowany!');
+            session()->flash('success', 'Comment has been updated!');
             return redirect()->route('admin.comments.index');
         } catch (\Exception $e) {
-            session()->flash('error', 'Wystąpił błąd podczas aktualizacji komentarza: ' . $e->getMessage());
+            session()->flash('error', 'An error occurred while updating the comment: ' . $e->getMessage());
         }
     }
 } 

@@ -48,7 +48,7 @@ class CategoriesIndex extends Component
     public function deleteCategory()
     {
         if (!$this->categoryIdBeingDeleted) {
-            session()->flash('error', "Nie można usunąć kategorii, brak identyfikatora.");
+            session()->flash('error', "Cannot delete category, missing identifier.");
             $this->confirmingCategoryDeletion = false;
             return;
         }
@@ -58,9 +58,9 @@ class CategoriesIndex extends Component
             $categoryName = $category->name;
             $category->delete();
             
-            session()->flash('success', "Kategoria '{$categoryName}' została pomyślnie usunięta.");
+            session()->flash('success', "Category '{$categoryName}' has been successfully deleted.");
         } catch (\Exception $e) {
-            session()->flash('error', "Wystąpił błąd podczas usuwania kategorii: {$e->getMessage()}");
+            session()->flash('error', "An error occurred while deleting the category: {$e->getMessage()}");
         }
         
         $this->confirmingCategoryDeletion = false;
@@ -73,7 +73,7 @@ class CategoriesIndex extends Component
         $this->categoryIdBeingDeleted = null;
     }
 
-    #[Layout('layouts.admin', ['header' => 'Zarządzanie kategoriami'])]
+    #[Layout('layouts.admin', ['header' => 'Category Management'])]
     public function render()
     {
         $categories = Category::query()

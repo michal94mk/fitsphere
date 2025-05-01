@@ -11,17 +11,11 @@ class ActivityLog extends Component
     public $activities = [];
     public $loading = true;
     
-    /**
-     * Mount the component and load recent activities
-     */
     public function mount()
     {
         $this->loadActivities();
     }
     
-    /**
-     * Load recent activities from various tables
-     */
     private function loadActivities()
     {
         // Get recent post activities
@@ -98,9 +92,6 @@ class ActivityLog extends Component
         $this->loading = false;
     }
     
-    /**
-     * Render the activity log component
-     */
     public function render()
     {
         return view('livewire.admin.components.activity-log');

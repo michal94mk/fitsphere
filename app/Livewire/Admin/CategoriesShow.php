@@ -24,19 +24,19 @@ class CategoriesShow extends Component
     {
         $post = Post::findOrFail($id);
         
-        // Usuń plik obrazka jeśli istnieje
+        // Delete image file if it exists
         if ($post->image && file_exists(storage_path('app/public/' . $post->image))) {
             unlink(storage_path('app/public/' . $post->image));
         }
         
         $post->delete();
-        session()->flash('success', 'Post został pomyślnie usunięty.');
+        session()->flash('success', 'Post has been successfully deleted.');
     }
     
     #[Computed]
     public function header()
     {
-        return 'Posty w kategorii: ' . $this->category->getTranslatedName();
+        return 'Posts in category: ' . $this->category->getTranslatedName();
     }
     
     #[Layout('layouts.admin', ['header' => 'header'])]

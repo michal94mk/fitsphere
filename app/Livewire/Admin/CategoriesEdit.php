@@ -12,7 +12,7 @@ class CategoriesEdit extends Component
 {
     public $categoryId;
     
-    #[FormRule('required|string|max:255', message: 'Nazwa kategorii jest wymagana.')]
+    #[FormRule('required|string|max:255', message: 'Category name is required.')]
     public $name = '';
 
     public function mount($id)
@@ -33,13 +33,13 @@ class CategoriesEdit extends Component
     public function messages()
     {
         return [
-            'name.required' => 'Nazwa kategorii jest wymagana.',
-            'name.max' => 'Nazwa kategorii nie może być dłuższa niż 255 znaków.',
-            'name.unique' => 'Kategoria o tej nazwie już istnieje.',
+            'name.required' => 'Category name is required.',
+            'name.max' => 'Category name cannot be longer than 255 characters.',
+            'name.unique' => 'A category with this name already exists.',
         ];
     }
 
-    #[Layout('layouts.admin', ['header' => 'Edytuj kategorię'])]
+    #[Layout('layouts.admin', ['header' => 'Edit Category'])]
     public function render()
     {
         return view('livewire.admin.categories-edit');
@@ -56,10 +56,10 @@ class CategoriesEdit extends Component
             
             $category->save();
             
-            session()->flash('success', 'Kategoria została zaktualizowana!');
+            session()->flash('success', 'Category has been updated!');
             return redirect()->route('admin.categories.index');
         } catch (\Exception $e) {
-            session()->flash('error', 'Wystąpił błąd podczas aktualizacji kategorii: ' . $e->getMessage());
+            session()->flash('error', 'An error occurred while updating the category: ' . $e->getMessage());
         }
     }
 } 

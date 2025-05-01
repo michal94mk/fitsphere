@@ -48,7 +48,7 @@ class CommentsIndex extends Component
     public function deleteComment()
     {
         if (!$this->commentIdBeingDeleted) {
-            session()->flash('error', "Nie można usunąć komentarza, brak identyfikatora.");
+            session()->flash('error', "Cannot delete comment, missing identifier.");
             $this->confirmingCommentDeletion = false;
             return;
         }
@@ -57,9 +57,9 @@ class CommentsIndex extends Component
             $comment = Comment::findOrFail($this->commentIdBeingDeleted);
             $comment->delete();
             
-            session()->flash('success', "Komentarz został pomyślnie usunięty.");
+            session()->flash('success', "Comment successfully deleted.");
         } catch (\Exception $e) {
-            session()->flash('error', "Wystąpił błąd podczas usuwania komentarza: {$e->getMessage()}");
+            session()->flash('error', "An error occurred while deleting the comment: {$e->getMessage()}");
         }
         
         $this->confirmingCommentDeletion = false;
@@ -72,7 +72,7 @@ class CommentsIndex extends Component
         $this->commentIdBeingDeleted = null;
     }
 
-    #[Layout('layouts.admin', ['header' => 'Zarządzanie komentarzami'])]
+    #[Layout('layouts.admin', ['header' => 'Comments Management'])]
     public function render()
     {
         $comments = Comment::with(['user', 'post'])

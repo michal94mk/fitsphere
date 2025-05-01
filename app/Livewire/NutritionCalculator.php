@@ -113,7 +113,7 @@ class NutritionCalculator extends Component
             return;
         }
         
-        // Tworzenie tymczasowego obiektu profilu do obliczeń
+        // Create temporary profile for calculations
         $profile = new NutritionalProfile([
             'age' => $this->age,
             'gender' => $this->gender,
@@ -126,10 +126,10 @@ class NutritionCalculator extends Component
         $this->bmi = $profile->calculateBMI();
         $this->dailyCalories = $profile->calculateDailyCalories();
         
-        // Obliczanie makroskładników
-        $this->protein = round(($this->dailyCalories * 0.30) / 4, 0); // 4 kalorie na gram białka
-        $this->carbs = round(($this->dailyCalories * 0.40) / 4, 0);   // 4 kalorie na gram węglowodanów
-        $this->fat = round(($this->dailyCalories * 0.30) / 9, 0);     // 9 kalorii na gram tłuszczu
+        // Calculate macronutrients
+        $this->protein = round(($this->dailyCalories * 0.30) / 4, 0); // 4 calories per gram of protein
+        $this->carbs = round(($this->dailyCalories * 0.40) / 4, 0);   // 4 calories per gram of carbs
+        $this->fat = round(($this->dailyCalories * 0.30) / 9, 0);     // 9 calories per gram of fat
         
         $this->showDietaryInfo = true;
     }
@@ -203,7 +203,7 @@ class NutritionCalculator extends Component
             $params['maxCalories'] = $this->maxCalories;
         }
         
-        // Jeśli użytkownik ma profil z ograniczeniami dietetycznymi
+        // If user has a profile with dietary restrictions
         $user = Auth::user();
         if ($user && $user->nutritionalProfile && !empty($user->nutritionalProfile->dietary_restrictions)) {
             if (!isset($params['intolerances'])) {
@@ -220,7 +220,7 @@ class NutritionCalculator extends Component
         $wasTranslated = false;
         
         if (App::getLocale() === 'pl') {
-            // Sprawdź czy mamy dostęp do API tłumaczenia
+            // Check if we have access to translation API
             if (config('services.libretranslate.key') || config('services.libretranslate.url') !== 'https://libretranslate.com') {
                 $translatedQuery = $this->translateService->translate($originalQuery, 'pl', 'en');
                 
@@ -229,7 +229,7 @@ class NutritionCalculator extends Component
                     $wasTranslated = true;
                 }
             } else {
-                // Jako fallback, spróbuj użyć tłumaczenia Spoonacular
+                // As a fallback, try using Spoonacular's translation
                 $spoonacularTranslated = $this->spoonacularService->translate($originalQuery, 'pl', 'en');
                 if ($spoonacularTranslated && $spoonacularTranslated !== $originalQuery) {
                     $searchTerm = $spoonacularTranslated;
@@ -257,11 +257,6 @@ class NutritionCalculator extends Component
         $this->loading = false;
     }
     
-    /**
-     * View the details of a recipe
-     * 
-     * @param int $recipeId
-     */
     public function viewRecipeDetails($recipeId)
     {
         if (!Auth::check()) {
@@ -300,12 +295,12 @@ class NutritionCalculator extends Component
                         $this->selectedRecipe = $recipe;
                     }
                     
-                    // Najpierw pokaż modal
+                    // First show the modal
                     $this->showRecipeModal = true;
                     $this->loading = false;
                     
-                    // Jeśli język to polski, ustaw flagę tłumaczenia
-                    // Właściwe tłumaczenie rozpocznie się po pełnym załadowaniu modala (w JS)
+                    // If language is Polish, set translation flag
+                    // Actual translation will start after modal is fully loaded (in JS)
                     if ($this->autoTranslate) {
                         $this->translateRecipe = true;
                     }
@@ -331,12 +326,12 @@ class NutritionCalculator extends Component
             
             $this->selectedRecipe = $recipe;
             
-            // Najpierw pokaż modal
+            // First show the modal
             $this->showRecipeModal = true;
             $this->loading = false;
             
-            // Jeśli język to polski, ustaw flagę tłumaczenia
-            // Właściwe tłumaczenie rozpocznie się po pełnym załadowaniu modala (w JS)
+            // If language is Polish, set translation flag
+            // Actual translation will start after modal is fully loaded (in JS)
             if ($this->autoTranslate) {
                 $this->translateRecipe = true;
             }
@@ -346,38 +341,28 @@ class NutritionCalculator extends Component
         }
     }
     
-    /**
-     * Rozpoczyna sekwencyjne tłumaczenie po pełnym załadowaniu modala
-     * Ta metoda jest wywoływana z poziomu JS po załadowaniu modala
-     */
     public function startSequentialTranslation()
     {
         $this->performTranslation();
     }
     
-    /**
-     * Etapowe tłumaczenie - tłumaczy każdą część oddzielnie, aby nie blokować interfejsu
-     */
     public function performTranslation()
     {
         if (!$this->selectedRecipe) {
             return;
         }
         
-        // Powiadom interfejs, że rozpoczyna się tłumaczenie
+        // Notify interface that translation is starting
         $this->dispatch('translationStarted');
         
-        // Tłumacz tytuł - najpierw, bo jest najważniejszy
+        // Translate title first as it's most important
         $this->translateTitle();
     }
     
-    /**
-     * Tłumaczy tytuł przepisu
-     */
     public function translateTitle()
     {
         if (!$this->selectedRecipe || !isset($this->selectedRecipe['title']) || empty($this->selectedRecipe['title'])) {
-            // Przejdź od razu do tłumaczenia instrukcji
+            // Go directly to translating instructions
             $this->translateInstructions();
             return;
         }
@@ -387,25 +372,22 @@ class NutritionCalculator extends Component
         try {
             $this->translatedTitle = $this->translateService->translate($this->selectedRecipe['title'], 'en', 'pl', 'text');
             
-            // Powiadom interfejs, że tytuł został przetłumaczony i pokaż go
+            // Notify interface that title has been translated and show it
             $this->dispatch('titleTranslated');
             
-            // Przejdź do tłumaczenia instrukcji
+            // Move on to translating instructions
             $this->translateInstructions();
         } catch (\Exception $e) {
             \Illuminate\Support\Facades\Log::error('Error translating title: ' . $e->getMessage());
-            $this->translatedTitle = $this->selectedRecipe['title']; // Użyj oryginalnego tytułu
-            $this->translateInstructions(); // Kontynuuj z instrukcjami
+            $this->translatedTitle = $this->selectedRecipe['title']; // Use original title
+            $this->translateInstructions(); // Continue with instructions
         }
     }
     
-    /**
-     * Tłumaczy instrukcje przepisu
-     */
     public function translateInstructions()
     {
         if (!$this->selectedRecipe) {
-            // Przejdź do składników
+            // Move to ingredients
             $this->translateIngredients();
             return;
         }
@@ -416,10 +398,10 @@ class NutritionCalculator extends Component
             if (isset($this->selectedRecipe['instructions']) && !empty($this->selectedRecipe['instructions'])) {
                 $this->translatedInstructions = $this->translateService->translate($this->selectedRecipe['instructions'], 'en', 'pl', 'html');
                 
-                // Powiadom interfejs, że instrukcje zostały przetłumaczone
+                // Notify interface that instructions have been translated
                 $this->dispatch('instructionsTranslated');
                 
-                // Przejdź do składników
+                // Move to ingredients
                 $this->translateIngredients();
             } elseif (isset($this->selectedRecipe['analyzedInstructions']) && is_array($this->selectedRecipe['analyzedInstructions']) && 
                       count($this->selectedRecipe['analyzedInstructions']) > 0 && isset($this->selectedRecipe['analyzedInstructions'][0]['steps'])) {
@@ -431,7 +413,7 @@ class NutritionCalculator extends Component
                 
                 $translatedSteps = [];
                 
-                // Tłumacz kroki pojedynczo, aby nie blokować zbyt długo
+                // Translate steps individually to avoid blocking interface
                 foreach ($steps as $index => $step) {
                     try {
                         $translatedStep = $this->translateService->translate($step, 'en', 'pl', 'text');
@@ -441,11 +423,11 @@ class NutritionCalculator extends Component
                             $translatedSteps[$index] = $step;
                         }
                     } catch (\Exception $e) {
-                        $translatedSteps[$index] = $step; // Użyj oryginalnego tekstu
+                        $translatedSteps[$index] = $step; // Use original text
                     }
                 }
                 
-                // Formatuj kroki jako listę HTML
+                // Format steps as HTML list
                 $htmlList = '<ol class="list-decimal pl-5 space-y-2">';
                 foreach ($translatedSteps as $step) {
                     $htmlList .= '<li class="text-gray-700">' . htmlspecialchars($step) . '</li>';
@@ -454,29 +436,26 @@ class NutritionCalculator extends Component
                 
                 $this->translatedInstructions = $htmlList;
                 
-                // Powiadom interfejs, że instrukcje zostały przetłumaczone
+                // Notify interface that instructions have been translated
                 $this->dispatch('instructionsTranslated');
                 
-                // Przejdź do składników
+                // Move to ingredients
                 $this->translateIngredients();
             } else {
-                // Brak instrukcji, przejdź do składników
+                // No instructions, move to ingredients
                 $this->translateIngredients();
             }
         } catch (\Exception $e) {
             \Illuminate\Support\Facades\Log::error('Error translating instructions: ' . $e->getMessage());
-            // W przypadku błędu, przejdź do składników
+            // In case of error, move to ingredients
             $this->translateIngredients();
         }
     }
     
-    /**
-     * Tłumaczy składniki przepisu
-     */
     public function translateIngredients()
     {
         if (!$this->selectedRecipe || !isset($this->selectedRecipe['extendedIngredients']) || !is_array($this->selectedRecipe['extendedIngredients'])) {
-            // Zakończ tłumaczenie
+            // Finish translation
             $this->finishTranslation();
             return;
         }
@@ -486,7 +465,7 @@ class NutritionCalculator extends Component
         try {
             $ingredients = $this->selectedRecipe['extendedIngredients'];
             
-            // Tłumacz składniki pojedynczo
+            // Translate ingredients individually
             foreach ($ingredients as $index => $ingredient) {
                 $originalText = $ingredient['original'] ?? ($ingredient['amount'] . ' ' . $ingredient['unit'] . ' ' . $ingredient['name']);
                 
@@ -498,77 +477,61 @@ class NutritionCalculator extends Component
                         $this->translatedIngredients[$index] = $originalText;
                     }
                 } catch (\Exception $e) {
-                    $this->translatedIngredients[$index] = $originalText; // Użyj oryginalnego tekstu
+                    $this->translatedIngredients[$index] = $originalText;
                 }
             }
             
-            // Powiadom interfejs, że składniki zostały przetłumaczone
+            // Notify interface that ingredients have been translated
             $this->dispatch('ingredientsTranslated');
             
-            // Zakończ tłumaczenie
+            // Finish translation process
             $this->finishTranslation();
         } catch (\Exception $e) {
             \Illuminate\Support\Facades\Log::error('Error translating ingredients: ' . $e->getMessage());
-            $this->finishTranslation(); // Zakończ mimo błędu
+            $this->finishTranslation(); // Finish even with errors
         }
     }
     
-    /**
-     * Kończy proces tłumaczenia
-     */
     private function finishTranslation()
     {
-        $this->loading = false;
-        
-        // Powiadom interfejs, że tłumaczenie zostało zakończone
-        $this->dispatch('translationComplete');
+        // Set the flag that translation is complete
+        $this->dispatch('translationCompleted');
     }
     
-    /**
-     * Toggle translation of recipe
-     */
     public function toggleRecipeTranslation()
     {
         $this->translateRecipe = !$this->translateRecipe;
         
-        if ($this->translateRecipe && $this->selectedRecipe) {
-            // Rozpocznij tłumaczenie
-            $this->startSequentialTranslation();
+        if ($this->translateRecipe) {
+            // Start translation sequence
+            $this->performTranslation();
         } else {
-            // Jeśli przełączamy z powrotem na tekst oryginalny, informujemy interfejs
-            $this->dispatch('switchingToOriginal');
+            // Reset all translations to show original content
+            $this->translatedTitle = null;
+            $this->translatedInstructions = null;
+            $this->translatedIngredients = [];
             
-            // Po krótkim opóźnieniu powiadom, że tłumaczenie zostało zakończone
-            // To da czas na pokazanie animacji
-            $this->dispatch('translationComplete');
+            // Notify JS that we've toggled back to original language
+            $this->dispatch('translationToggled', $this->translateRecipe);
         }
     }
     
-    /**
-     * Handle language change
-     */
     public function handleLanguageChange($locale)
     {
-        // Update the auto-translate flag based on the new locale
+        // Update auto-translate setting based on new locale
         $this->autoTranslate = $locale === 'pl';
         
-        // If a recipe is already displayed and we're switching to Polish, translate it
-        if ($this->autoTranslate && $this->selectedRecipe && !$this->translateRecipe) {
+        // If recipe modal is open and new locale is Polish, trigger translation
+        if ($this->showRecipeModal && $this->selectedRecipe && $locale === 'pl' && !$this->translateRecipe) {
             $this->translateRecipe = true;
             $this->performTranslation();
         }
-        
-        // Force re-render when language changes
-        $this->dispatch('$refresh');
     }
     
-    /**
-     * Close the recipe details modal
-     */
     public function closeRecipeModal()
     {
-        $this->selectedRecipe = null;
         $this->showRecipeModal = false;
+        $this->selectedRecipe = null;
         $this->translateRecipe = false;
         $this->translatedInstructions = null;
         $this->translatedIngredients = [];

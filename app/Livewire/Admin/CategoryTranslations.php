@@ -73,7 +73,7 @@ class CategoryTranslations extends Component
         $translation->delete();
         
         $this->loadTranslations();
-        session()->flash('success', 'Tłumaczenie zostało usunięte.');
+        session()->flash('success', 'Translation has been deleted.');
     }
     
     /**
@@ -96,7 +96,7 @@ class CategoryTranslations extends Component
             // Check if translation for this locale already exists
             $exists = $this->category->translations()->where('locale', $this->locale)->exists();
             if ($exists) {
-                session()->flash('error', 'Tłumaczenie dla wybranego języka już istnieje.');
+                session()->flash('error', 'Translation for the selected language already exists.');
                 return;
             }
             
@@ -115,7 +115,7 @@ class CategoryTranslations extends Component
         $this->loadTranslations();
         $this->resetFormFields();
         
-        session()->flash('success', 'Tłumaczenie zostało zapisane.');
+        session()->flash('success', 'Translation has been saved.');
     }
     
     /**
@@ -129,7 +129,7 @@ class CategoryTranslations extends Component
     /**
      * Render the component
      */
-    #[Layout('layouts.admin', ['header' => 'Zarządzaj tłumaczeniami kategorii'])]
+    #[Layout('layouts.admin', ['header' => 'Manage Category Translations'])]
     public function render()
     {
         return view('livewire.admin.category-translations', [

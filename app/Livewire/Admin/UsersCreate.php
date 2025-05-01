@@ -45,11 +45,11 @@ class UsersCreate extends Component
         
         $user->save();
         
-        session()->flash('success', 'Użytkownik został pomyślnie utworzony.');
+        session()->flash('success', 'User has been successfully created.');
         return redirect()->route('admin.users.index');
     }
     
-    #[Layout('layouts.admin', ['header' => 'Dodaj nowego użytkownika'])]
+    #[Layout('layouts.admin', ['header' => 'Add New User'])]
     public function render()
     {
         return view('livewire.admin.users-create');

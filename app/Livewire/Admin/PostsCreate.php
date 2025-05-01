@@ -58,14 +58,14 @@ class PostsCreate extends Component
             
             $post->save();
             
-            session()->flash('success', 'Post został pomyślnie utworzony.');
+            session()->flash('success', 'Post has been successfully created.');
             return redirect()->route('admin.posts.index');
         } catch (\Exception $e) {
-            session()->flash('error', 'Wystąpił błąd podczas tworzenia posta: ' . $e->getMessage());
+            session()->flash('error', 'An error occurred while creating the post: ' . $e->getMessage());
         }
     }
     
-    #[Layout('layouts.admin', ['header' => 'Dodaj nowy post'])]
+    #[Layout('layouts.admin', ['header' => 'Add New Post'])]
     public function render()
     {
         return view('livewire.admin.posts-create', [

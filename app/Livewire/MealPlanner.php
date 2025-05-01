@@ -99,7 +99,7 @@ class MealPlanner extends Component
         
         $this->mealPlans = MealPlan::getForDateRange($user->id, $this->startDate, $this->endDate);
         
-        // Grupuj posiłki według dnia i obliczaj łączne wartości odżywcze
+        // Group meals by day and calculate total nutritional values
         $this->dailyTotals = MealPlan::getDailyTotalsForDateRange($user->id, $this->startDate, $this->endDate);
     }
     
@@ -184,7 +184,7 @@ class MealPlanner extends Component
         if ($this->selectedRecipe) {
             $this->selectedRecipe['name'] = $recipeName;
         } else {
-            session()->flash('error', 'Nie udało się pobrać informacji o przepisie.');
+            session()->flash('error', 'Failed to retrieve recipe information.');
         }
         
         $this->loading = false;
@@ -193,7 +193,7 @@ class MealPlanner extends Component
     public function saveMealToPlan()
     {
         if (!$this->selectedRecipe) {
-            session()->flash('error', 'Najpierw wybierz przepis!');
+            session()->flash('error', 'Please select a recipe first!');
             return;
         }
         
@@ -205,7 +205,7 @@ class MealPlanner extends Component
         $user = Auth::user();
         
         try {
-            \Illuminate\Support\Facades\Log::info('Rozpoczęcie dodawania posiłku do planu', [
+            \Illuminate\Support\Facades\Log::info('Starting to add meal to plan', [
                 'user_id' => $user->id,
                 'recipe_name' => $this->selectedRecipe['name'],
                 'date' => $this->date,
@@ -216,16 +216,16 @@ class MealPlanner extends Component
                 'recipe_keys' => array_keys($this->selectedRecipe)
             ]);
             
-            // Dodatkowy log struktury danych
+            // Additional log of data structure
             if (isset($this->selectedRecipe['nutrition'])) {
-                \Illuminate\Support\Facades\Log::info('Struktura danych nutrition:', [
+                \Illuminate\Support\Facades\Log::info('Nutrition data structure:', [
                     'nutrition_keys' => array_keys($this->selectedRecipe['nutrition']),
                     'has_nutrients' => isset($this->selectedRecipe['nutrition']['nutrients'])
                 ]);
                 
                 if (isset($this->selectedRecipe['nutrition']['nutrients'])) {
                     $nutrientsCount = count($this->selectedRecipe['nutrition']['nutrients']);
-                    \Illuminate\Support\Facades\Log::info('Struktura nutrients:', [
+                    \Illuminate\Support\Facades\Log::info('Nutrients structure:', [
                         'count' => $nutrientsCount,
                         'sample' => $nutrientsCount > 0 ? 
                             array_slice($this->selectedRecipe['nutrition']['nutrients'], 0, min(5, $nutrientsCount)) : []
@@ -233,9 +233,9 @@ class MealPlanner extends Component
                 }
             }
             
-            // Pobierz wartości makroskładników
+            // Get macronutrient values
             $nutrients = $this->selectedRecipe['nutrition']['nutrients'] ?? [];
-            \Illuminate\Support\Facades\Log::info('Tablica nutrients:', [
+            \Illuminate\Support\Facades\Log::info('Nutrients array:', [
                 'nutrients_count' => count($nutrients),
                 'first_5' => array_slice($nutrients, 0, min(5, count($nutrients)))
             ]);
@@ -245,10 +245,10 @@ class MealPlanner extends Component
             $carbsInfo = collect($nutrients)->firstWhere('name', 'Carbohydrates');
             $fatInfo = collect($nutrients)->firstWhere('name', 'Fat');
             
-            // Oblicz wartości w przeliczeniu na porcję
+            // Calculate values per serving
             $servings = $this->selectedRecipe['servings'] ?? 1;
             
-            // Sprawdź czy mamy liczbowe wartości, jeśli nie, spróbuj przekształcić tekstowe
+            // Check if we have numeric values, if not, try to transform text values
             $calories = 0;
             $protein = 0;
             $carbs = 0;
@@ -259,7 +259,7 @@ class MealPlanner extends Component
                     (float)$caloriesInfo['amount'] : 
                     floatval(preg_replace('/[^0-9.]/', '', $caloriesInfo['amount']));
             } elseif (isset($this->selectedRecipe['nutrition']['calories'])) {
-                // Alternatywne sprawdzenie w innym miejscu struktury
+                // Alternative check in another part of the structure
                 $calories = is_numeric($this->selectedRecipe['nutrition']['calories']) ? 
                     (float)$this->selectedRecipe['nutrition']['calories'] : 
                     floatval(preg_replace('/[^0-9.]/', '', $this->selectedRecipe['nutrition']['calories']));
@@ -295,10 +295,10 @@ class MealPlanner extends Component
                     floatval(preg_replace('/[^0-9.]/', '', $this->selectedRecipe['nutrition']['fat']));
             }
             
-            // API zwraca wartości na całe danie, więc nie musimy mnożyć przez liczbę porcji
-            // Zawartość wartości odżywczych jest zachowywana na porcję
+            // API returns values for the entire dish, so we don't need to multiply by the number of servings
+            // Nutritional values are saved per serving
             
-            \Illuminate\Support\Facades\Log::info('Wartości odżywcze szczegółowo', [
+            \Illuminate\Support\Facades\Log::info('Detailed nutritional values', [
                 'calories_raw' => $caloriesInfo, 
                 'protein_raw' => $proteinInfo,
                 'carbs_raw' => $carbsInfo,
@@ -316,14 +316,14 @@ class MealPlanner extends Component
                 ]
             ]);
             
-            // Dodatkowe sprawdzenie czy wartości są zerowe
+            // Additional check if values are zero
             if ($calories <= 0 && $protein <= 0 && $carbs <= 0 && $fat <= 0) {
-                // Spróbujmy znaleźć wartości odżywcze w innym miejscu struktury danych
-                \Illuminate\Support\Facades\Log::info('Wykryto zerowe wartości odżywcze - próba znalezienia alternatywnych źródeł danych');
+                // Try to find nutritional values elsewhere in the data structure
+                \Illuminate\Support\Facades\Log::info('Zero nutritional values detected - trying to find alternative data sources');
                 
-                // Szukamy w stringach w nutritionWidget
+                // Look in strings in nutritionWidget
                 if (isset($this->selectedRecipe['nutrition']['caloricBreakdown'])) {
-                    \Illuminate\Support\Facades\Log::info('Znaleziono caloricBreakdown:', [
+                    \Illuminate\Support\Facades\Log::info('Found caloricBreakdown:', [
                         'data' => $this->selectedRecipe['nutrition']['caloricBreakdown']
                     ]);
                 }
@@ -335,7 +335,7 @@ class MealPlanner extends Component
                 'date' => $this->date,
                 'meal_type' => $this->mealType,
                 'recipe_data' => $this->selectedRecipe,
-                'calories' => max(0, $calories),  // Upewniamy się, że nie zapisujemy wartości ujemnych
+                'calories' => max(0, $calories),  // Ensure we don't save negative values
                 'protein' => max(0, $protein),
                 'carbs' => max(0, $carbs),
                 'fat' => max(0, $fat),
@@ -344,7 +344,7 @@ class MealPlanner extends Component
             
             $result = $mealPlan->save();
             
-            \Illuminate\Support\Facades\Log::info('Wynik zapisywania posiłku', [
+            \Illuminate\Support\Facades\Log::info('Meal saving result', [
                 'success' => $result,
                 'meal_plan_id' => $mealPlan->id,
                 'saved_data' => [
@@ -356,22 +356,22 @@ class MealPlanner extends Component
             ]);
             
             if (!$result) {
-                throw new \Exception('Nie udało się zapisać planu posiłku');
+                throw new \Exception('Failed to save meal plan');
             }
             
-            session()->flash('message', 'Przepis został dodany do planu posiłków!');
+            session()->flash('message', 'Recipe has been added to your meal plan!');
             
             $this->selectedRecipe = null;
             $this->notes = '';
             
             $this->loadMealPlansForDate($this->date);
         } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::error('Błąd przy zapisywaniu posiłku do planu', [
+            \Illuminate\Support\Facades\Log::error('Error saving meal to plan', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
             
-            session()->flash('error', 'Wystąpił błąd przy dodawaniu posiłku: ' . $e->getMessage());
+            session()->flash('error', 'An error occurred while adding the meal: ' . $e->getMessage());
         }
     }
     
@@ -382,13 +382,13 @@ class MealPlanner extends Component
             ->first();
         
         if (!$mealPlan) {
-            session()->flash('error', 'Nie znaleziono planu posiłku.');
+            session()->flash('error', 'Meal plan not found.');
             return;
         }
         
         $mealPlan->delete();
         
-        session()->flash('message', 'Plan posiłku został usunięty.');
+        session()->flash('message', 'Meal plan has been deleted.');
         
         $this->loadMealPlansForDate($this->date);
     }

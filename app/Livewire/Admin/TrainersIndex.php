@@ -104,7 +104,7 @@ class TrainersIndex extends Component
      * 
      * @return \Illuminate\View\View
      */
-    #[Layout('layouts.admin', ['header' => 'Zarządzanie trenerami'])]
+    #[Layout('layouts.admin', ['header' => 'Trainer Management'])]
     public function render()
     {
         $trainers = Trainer::query()
@@ -145,12 +145,12 @@ class TrainersIndex extends Component
             // Send notification email
             try {
                 Mail::to($trainer->email)->send(new TrainerApproved($trainer));
-                session()->flash('success', "Trener {$trainer->name} został zatwierdzony, a powiadomienie email zostało wysłane.");
+                session()->flash('success', "Trainer {$trainer->name} has been approved and notification email has been sent.");
             } catch (\Exception $e) {
-                session()->flash('success', "Trener {$trainer->name} został zatwierdzony, ale wystąpił błąd podczas wysyłania powiadomienia email: {$e->getMessage()}");
+                session()->flash('success', "Trainer {$trainer->name} has been approved but there was an error sending the notification email: {$e->getMessage()}");
             }
         } catch (\Exception $e) {
-            session()->flash('error', "Wystąpił błąd podczas zatwierdzania trenera: {$e->getMessage()}");
+            session()->flash('error', "An error occurred while approving the trainer: {$e->getMessage()}");
         }
     }
 
@@ -167,9 +167,9 @@ class TrainersIndex extends Component
             $trainer->is_approved = false;
             $trainer->save();
             
-            session()->flash('success', "Status trenera {$trainer->name} został zmieniony na oczekujący.");
+            session()->flash('success', "Trainer {$trainer->name}'s status has been changed to pending.");
         } catch (\Exception $e) {
-            session()->flash('error', "Wystąpił błąd podczas zmiany statusu trenera: {$e->getMessage()}");
+            session()->flash('error', "An error occurred while changing the trainer's status: {$e->getMessage()}");
         }
     }
 
@@ -212,7 +212,7 @@ class TrainersIndex extends Component
     public function deleteTrainer()
     {
         if (!$this->trainerIdBeingDeleted) {
-            session()->flash('error', "Nie można usunąć trenera, brak identyfikatora.");
+            session()->flash('error', "Cannot delete trainer, missing identifier.");
             $this->confirmingTrainerDeletion = false;
             return;
         }
@@ -228,9 +228,9 @@ class TrainersIndex extends Component
             $trainerName = $trainer->name;
             $trainer->delete();
             
-            session()->flash('success', "Trener {$trainerName} został usunięty.");
+            session()->flash('success', "Trainer {$trainerName} has been deleted.");
         } catch (\Exception $e) {
-            session()->flash('error', "Wystąpił błąd podczas usuwania trenera: {$e->getMessage()}");
+            session()->flash('error', "An error occurred while deleting the trainer: {$e->getMessage()}");
         }
         
         $this->confirmingTrainerDeletion = false;

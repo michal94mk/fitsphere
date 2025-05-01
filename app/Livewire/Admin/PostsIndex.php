@@ -54,7 +54,7 @@ class PostsIndex extends Component
     public function deletePost()
     {
         if (!$this->postIdBeingDeleted) {
-            session()->flash('error', "Nie można usunąć artykułu, brak identyfikatora.");
+            session()->flash('error', "Cannot delete article, missing identifier.");
             $this->confirmingPostDeletion = false;
             return;
         }
@@ -62,7 +62,7 @@ class PostsIndex extends Component
         try {
             $post = Post::findOrFail($this->postIdBeingDeleted);
             
-            // Usuń plik obrazka jeśli istnieje
+            // Delete image file if exists
             if ($post->image && file_exists(storage_path('app/public/' . $post->image))) {
                 unlink(storage_path('app/public/' . $post->image));
             }
@@ -70,9 +70,9 @@ class PostsIndex extends Component
             $postTitle = $post->title;
             $post->delete();
             
-            session()->flash('success', "Artykuł '{$postTitle}' został pomyślnie usunięty.");
+            session()->flash('success', "Article '{$postTitle}' has been successfully deleted.");
         } catch (\Exception $e) {
-            session()->flash('error', "Wystąpił błąd podczas usuwania artykułu: {$e->getMessage()}");
+            session()->flash('error', "An error occurred while deleting the article: {$e->getMessage()}");
         }
         
         $this->confirmingPostDeletion = false;
@@ -85,7 +85,7 @@ class PostsIndex extends Component
         $this->postIdBeingDeleted = null;
     }
 
-    #[Layout('layouts.admin', ['header' => 'Zarządzanie artykułami'])]
+    #[Layout('layouts.admin', ['header' => 'Articles Management'])]
     public function render()
     {
         $posts = Post::query()

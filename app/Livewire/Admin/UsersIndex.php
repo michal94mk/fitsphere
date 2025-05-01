@@ -60,7 +60,7 @@ class UsersIndex extends Component
     public function deleteUser()
     {
         if (!$this->userIdBeingDeleted) {
-            session()->flash('error', "Nie można usunąć użytkownika, brak identyfikatora.");
+            session()->flash('error', "Cannot delete user, missing identifier.");
             $this->confirmingUserDeletion = false;
             return;
         }
@@ -68,7 +68,7 @@ class UsersIndex extends Component
         try {
             $user = User::findOrFail($this->userIdBeingDeleted);
             
-            // Usuń zdjęcie użytkownika jeśli istnieje
+            // Delete user image if exists
             if ($user->image && Storage::disk('public')->exists($user->image)) {
                 Storage::disk('public')->delete($user->image);
             }
@@ -76,9 +76,9 @@ class UsersIndex extends Component
             $userName = $user->name;
             $user->delete();
             
-            session()->flash('success', "Użytkownik '{$userName}' został pomyślnie usunięty.");
+            session()->flash('success', "User '{$userName}' has been successfully deleted.");
         } catch (\Exception $e) {
-            session()->flash('error', "Wystąpił błąd podczas usuwania użytkownika: {$e->getMessage()}");
+            session()->flash('error', "An error occurred while deleting the user: {$e->getMessage()}");
         }
         
         $this->confirmingUserDeletion = false;
@@ -91,11 +91,11 @@ class UsersIndex extends Component
         $this->userIdBeingDeleted = null;
     }
     
-    #[Layout('layouts.admin', ['header' => 'Zarządzanie użytkownikami'])]
+    #[Layout('layouts.admin', ['header' => 'User Management'])]
     public function render()
     {
         $query = User::query()
-            ->select('users.*') // Upewnij się, że pobieramy wszystkie pola
+            ->select('users.*') // Make sure we select all fields
             ->when($this->search, function ($query) {
                 $query->where(function ($query) {
                     $search = '%' . $this->search . '%';
@@ -111,9 +111,9 @@ class UsersIndex extends Component
         
         $users = $query->paginate(10);
         
-        // Upewnij się, że wszystkie potrzebne atrybuty są dostępne
+        // Make sure all needed attributes are available
         $users->each(function ($user) {
-            // Pobierz URL zdjęcia profilowego
+            // Get profile photo URL
             $user->append('profile_photo_url');
         });
         

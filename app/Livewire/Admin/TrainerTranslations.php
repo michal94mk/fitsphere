@@ -78,7 +78,7 @@ class TrainerTranslations extends Component
         $translation->delete();
         
         $this->loadTranslations();
-        session()->flash('success', 'Tłumaczenie zostało usunięte.');
+        session()->flash('success', 'Translation has been deleted.');
     }
     
     /**
@@ -101,7 +101,7 @@ class TrainerTranslations extends Component
             // Check if translation for this locale already exists
             $exists = $this->trainer->translations()->where('locale', $this->locale)->exists();
             if ($exists) {
-                session()->flash('error', 'Tłumaczenie dla wybranego języka już istnieje.');
+                session()->flash('error', 'Translation for the selected language already exists.');
                 return;
             }
             
@@ -121,7 +121,7 @@ class TrainerTranslations extends Component
         $this->loadTranslations();
         $this->resetFormFields();
         
-        session()->flash('success', 'Tłumaczenie zostało zapisane.');
+        session()->flash('success', 'Translation has been saved.');
     }
     
     /**
@@ -135,7 +135,7 @@ class TrainerTranslations extends Component
     /**
      * Render the component
      */
-    #[Layout('layouts.admin', ['header' => 'Zarządzaj tłumaczeniami trenera'])]
+    #[Layout('layouts.admin', ['header' => 'Manage Trainer Translations'])]
     public function render()
     {
         return view('livewire.admin.trainer-translations', [
