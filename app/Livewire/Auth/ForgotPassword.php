@@ -21,10 +21,10 @@ class ForgotPassword extends Component
         $status = Password::sendResetLink(['email' => $this->email]);
 
         if ($status == Password::RESET_LINK_SENT) {
-            session()->flash('message', 'Link resetujący hasło został wysłany!');
+            session()->flash('message', 'Password reset link has been sent!');
             $this->reset('email');
         } else {
-            $this->addError('email', 'Nie znaleziono użytkownika o podanym adresie email.');
+            $this->addError('email', 'No user found with this email address.');
         }
     }
 

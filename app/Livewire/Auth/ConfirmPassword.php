@@ -24,7 +24,7 @@ class ConfirmPassword extends Component
             return redirect()->intended(url()->previous());
         }
 
-        $this->addError('password', 'Hasło jest nieprawidłowe.');
+        $this->addError('password', 'The password is incorrect.');
     }
 
     #[Layout('layouts.blog')]

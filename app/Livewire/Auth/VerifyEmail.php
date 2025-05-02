@@ -15,7 +15,7 @@ class VerifyEmail extends Component
 
     public function mount()
     {
-        // Sprawdzamy, który guard jest aktywny
+        // Check which guard is active
         if (Auth::check()) {
             $this->user = Auth::user();
             $this->isTrainer = false;
@@ -23,7 +23,7 @@ class VerifyEmail extends Component
             $this->user = Auth::guard('trainer')->user();
             $this->isTrainer = true;
         } else {
-            // Jeśli nie ma zalogowanego użytkownika, przekieruj na stronę logowania
+            // If no user is logged in, redirect to login page
             return redirect()->route('login');
         }
     }
@@ -31,23 +31,23 @@ class VerifyEmail extends Component
     public function resendVerificationLink()
     {
         if (!$this->user) {
-            session()->flash('error', 'Użytkownik nie jest zalogowany.');
+            session()->flash('error', 'User is not logged in.');
             return;
         }
         
         if (!($this->user instanceof MustVerifyEmail)) {
-            session()->flash('error', 'Ten typ konta nie wymaga weryfikacji email.');
+            session()->flash('error', 'This account type does not require email verification.');
             return;
         }
 
         if ($this->user->hasVerifiedEmail()) {
-            session()->flash('status', 'Twój adres email został już zweryfikowany.');
+            session()->flash('status', 'Your email address has already been verified.');
             return;
         }
 
         $this->user->sendEmailVerificationNotification();
         $this->resent = true;
-        session()->flash('status', 'Link weryfikacyjny został wysłany ponownie na adres: ' . $this->user->email);
+        session()->flash('status', 'Verification link has been resent to: ' . $this->user->email);
     }
 
     #[Layout('layouts.blog')]

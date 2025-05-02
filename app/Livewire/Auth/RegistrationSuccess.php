@@ -23,11 +23,11 @@ class RegistrationSuccess extends Component
     public function resendVerificationEmail()
     {
         if (empty($this->email)) {
-            session()->flash('error', 'Adres email nie jest dostępny. Spróbuj zalogować się lub zarejestrować ponownie.');
+            session()->flash('error', 'Email address is not available. Try logging in or registering again.');
             return;
         }
         
-        // Znajdź użytkownika lub trenera na podstawie adresu email
+        // Find user or trainer based on email address
         if ($this->userType == 'trainer') {
             $user = Trainer::where('email', $this->email)->first();
         } else {
@@ -35,26 +35,26 @@ class RegistrationSuccess extends Component
         }
         
         if (!$user) {
-            session()->flash('error', 'Nie znaleziono konta z podanym adresem email.');
+            session()->flash('error', 'No account found with this email address.');
             return;
         }
         
         if ($user->hasVerifiedEmail()) {
-            session()->flash('info', 'Ten adres email został już zweryfikowany. Możesz się zalogować.');
+            session()->flash('info', 'This email address has already been verified. You can log in.');
             return;
         }
         
-        // Wyślij ponownie email weryfikacyjny bezpośrednio, bez wywoływania zdarzenia
+        // Send verification email directly without triggering event
         // event(new Registered($user));
         if (method_exists($user, 'sendEmailVerificationNotification')) {
             $user->sendEmailVerificationNotification();
         }
         
         $this->resent = true;
-        session()->flash('success', 'Link weryfikacyjny został wysłany ponownie na adres: ' . $this->email);
+        session()->flash('success', 'Verification link has been resent to: ' . $this->email);
     }
     
-    #[Layout('layouts.blog', ['title' => 'Rejestracja zakończona pomyślnie'])]
+    #[Layout('layouts.blog', ['title' => 'Registration Completed Successfully'])]
     public function render()
     {
         return view('livewire.auth.registration-success');

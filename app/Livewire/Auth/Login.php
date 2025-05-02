@@ -20,13 +20,13 @@ class Login extends Component
     {
         $this->validate();
 
-        // Próba logowania jako zwykły użytkownik
+        // Try to login as a regular user
         if (Auth::attempt(['email' => $this->email, 'password' => $this->password])) {
             session()->regenerate();
             return $this->redirect(route('home'), navigate: true);
         }
 
-        // Jeśli nie udało się zalogować jako użytkownik, sprawdź czy to trener
+        // If login as a user failed, check if it's a trainer
         if (Auth::guard('trainer')->attempt(['email' => $this->email, 'password' => $this->password])) {
             session()->regenerate();
             return $this->redirect(route('home'), navigate: true);
