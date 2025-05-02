@@ -9,23 +9,23 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
+/**
+ * Email sent when a user submits the contact form
+ */
 class ContactFormMail extends Mailable
 {
     use Queueable, SerializesModels;
 
+    /**
+     * Contact form data
+     */
     public $contactData;
 
-    /**
-     * Create a new message instance.
-     */
     public function __construct($contactData)
     {
         $this->contactData = $contactData;
     }
 
-    /**
-     * Get the message envelope.
-     */
     public function envelope(): Envelope
     {
         $subject = 'New Contact Form Submission - ' . $this->contactData['name'];
@@ -34,9 +34,6 @@ class ContactFormMail extends Mailable
         );
     }
 
-    /**
-     * Get the message content definition.
-     */
     public function content(): Content
     {
         return new Content(
@@ -44,9 +41,6 @@ class ContactFormMail extends Mailable
         );
     }
 
-    /**
-     * Get the attachments for the message.
-     */
     public function attachments(): array
     {
         return [];
