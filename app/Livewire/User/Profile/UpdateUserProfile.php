@@ -10,11 +10,7 @@ use Livewire\WithFileUploads;
 use App\Models\User;
 
 /**
- * Handles user profile information updates.
- * 
- * This component allows users to update their basic profile information,
- * including name, email, and profile image. It also handles email verification
- * management and provides feedback through flash messages.
+ * Manages user profile information updates
  */
 class UpdateUserProfile extends Component
 {
@@ -36,7 +32,7 @@ class UpdateUserProfile extends Component
      */
     public function mount()
     {
-        // Check if a regular user is logged in
+        // Check if user is logged in
         if (!Auth::check()) {
             return redirect()->route('login');
         }
@@ -58,7 +54,6 @@ class UpdateUserProfile extends Component
      */
     public function updateProfile()
     {
-        // Validation
         $this->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => [
@@ -66,7 +61,7 @@ class UpdateUserProfile extends Component
                 'email',
                 Rule::unique('users')->ignore($this->user->id),
             ],
-            'newImage' => ['nullable', 'image', 'max:1024'], // 1MB max size
+            'newImage' => ['nullable', 'image', 'max:1024'], // 1MB max
         ]);
         
         // Check if anything changed
@@ -75,38 +70,35 @@ class UpdateUserProfile extends Component
             $this->user->name !== $this->name ||
             $this->newImage;
             
-        // If nothing changed, show a message and return
         if (!$emailChanged && !$profileChanged) {
             session()->flash('info_button', __('profile.no_changes'));
             return;
         }
         
-        // Update user
         $user = $this->user;
         
         $user->name = $this->name;
         $user->email = $this->email;
         
-        // Upload image if provided
+        // Handle profile image
         if ($this->newImage) {
-            // Delete old image if exists
             if ($user->image && Storage::disk('public')->exists($user->image)) {
                 Storage::disk('public')->delete($user->image);
             }
             
-            // Store the new image
             $imagePath = $this->newImage->store('users', 'public');
             $user->image = $imagePath;
             $this->image = $imagePath;
         }
         
+        // Reset verification if email changed
         if ($emailChanged) {
             $user->email_verified_at = null;
         }
         
         $user->save();
         
-        // Refresh the user instance to ensure image property is updated
+        // Refresh user data
         $this->user = $user->fresh();
 
         session()->flash('status', __('profile.profile_updated'));
@@ -132,7 +124,6 @@ class UpdateUserProfile extends Component
             return;
         }
 
-        // Send verification email
         $this->user->sendEmailVerificationNotification();
         
         session()->flash('status', __('profile.verification_sent', ['email' => $this->user->email]));
@@ -145,7 +136,7 @@ class UpdateUserProfile extends Component
      */
     public function render()
     {
-        // Reload the user from the database to ensure we have the latest data
+        // Reload latest user data
         if (Auth::check()) {
             $this->user = User::find(Auth::id());
         }

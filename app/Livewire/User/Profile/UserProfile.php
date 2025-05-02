@@ -7,11 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
 
 /**
- * Handles the main user profile page display.
- * 
- * This component serves as the container for various profile-related components
- * such as profile information management, password updates, and account deletion.
- * It ensures that only authenticated users can access the profile page.
+ * Main user profile component
  */
 class UserProfile extends Component
 {

@@ -8,10 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\App;
 
 /**
- * Handles password updates for users.
- * 
- * This component provides a secure way for users to update
- * their passwords with appropriate validation and feedback.
+ * Handles user password updates
  */
 class UpdatePassword extends Component
 {
@@ -38,9 +35,7 @@ class UpdatePassword extends Component
     }
 
     /**
-     * Customize validation messages for password fields.
-     *
-     * @return array
+     * Custom validation messages
      */
     protected function messages()
     {
@@ -53,12 +48,7 @@ class UpdatePassword extends Component
     }
 
     /**
-     * Process the password update after validation.
-     * 
-     * Verifies the current password, updates to the new password if valid,
-     * and provides appropriate feedback messages.
-     * 
-     * @return void
+     * Process password update
      */
     public function updatePassword()
     {
