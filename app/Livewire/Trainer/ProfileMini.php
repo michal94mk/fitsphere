@@ -8,10 +8,6 @@ use Livewire\Attributes\Computed;
 
 class ProfileMini extends Component
 {
-    /**
-     * Inicjalizacja komponentu
-     * Sprawdzenie, czy zalogowany jest trener
-     */
     public function mount()
     {
         if (!Auth::guard('trainer')->check()) {
@@ -19,19 +15,12 @@ class ProfileMini extends Component
         }
     }
     
-    /**
-     * Przykład użycia atrybutu #[Computed]
-     * Cachowanie rezultatu metody, dopóki zależności nie ulegną zmianie
-     */
     #[Computed]
     public function trainer()
     {
         return Auth::guard('trainer')->user();
     }
     
-    /**
-     * Obsługa wylogowania trenera
-     */
     public function logout()
     {
         Auth::guard('trainer')->logout();
@@ -41,11 +30,8 @@ class ProfileMini extends Component
         return redirect()->route('login');
     }
     
-    /**
-     * Renderowanie widoku
-     */
     public function render()
     {
         return view('livewire.trainer.profile-mini');
     }
-} 
+}

@@ -20,32 +20,32 @@ class VerifyEmailHandler extends Component
         $this->hash = $hash;
         
         try {
-            // Próbujemy znaleźć zarówno użytkownika jak i trenera
+            // Try to find both user and trainer
             $userModel = null;
             $trainerModel = null;
             $isTrainer = false;
             $validatedUser = null;
             
             try {
-                // Próba znalezienia użytkownika
+                // Try to find a user
                 $userModel = User::find($id);
             } catch (\Exception $e) {
-                // Ignorujemy błędy
+                // Ignore errors
             }
             
             try {
-                // Próba znalezienia trenera
+                // Try to find a trainer
                 $trainerModel = Trainer::find($id);
             } catch (\Exception $e) {
-                // Ignorujemy błędy
+                // Ignore errors
             }
             
-            // Jeśli nie znaleziono ani użytkownika ani trenera, zwróć błąd
+            // If neither user nor trainer found, return error
             if (!$userModel && !$trainerModel) {
-                throw new \Exception('Nie znaleziono użytkownika o podanym ID.');
+                throw new \Exception('User not found with the provided ID.');
             }
             
-            // Sprawdź, który model pasuje do hasha (może być tylko jeden prawidłowy)
+            // Check which model matches the hash (only one can be valid)
             if ($userModel && hash_equals(sha1($userModel->getEmailForVerification()), (string) $hash)) {
                 $validatedUser = $userModel;
                 $isTrainer = false;
@@ -53,35 +53,35 @@ class VerifyEmailHandler extends Component
                 $validatedUser = $trainerModel;
                 $isTrainer = true;
             } else {
-                throw new \Exception('Nieprawidłowy hash weryfikacyjny dla podanego użytkownika.');
+                throw new \Exception('Invalid verification hash for the provided user.');
             }
             
-            // Sprawdź, czy email jest już zweryfikowany
+            // Check if email is already verified
             if ($validatedUser->hasVerifiedEmail()) {
-                $this->message = 'Twój adres email został już wcześniej zweryfikowany!';
+                $this->message = 'Your email address has already been verified!';
                 return redirect('/login')->with('verified', $this->message);
             }
 
-            // Oznacz email jako zweryfikowany i zapisz zmiany
+            // Mark email as verified and save changes
             $validatedUser->markEmailAsVerified();
             
-            // Uruchom zdarzenie Verified
+            // Trigger Verified event
             event(new Verified($validatedUser));
             
-            // Komunikat o sukcesie i przekierowanie
-            $this->message = 'Twój adres email został pomyślnie zweryfikowany!';
+            // Success message and redirect
+            $this->message = 'Your email address has been successfully verified!';
             
             if ($isTrainer) {
-                $this->message .= ' Administrator wkrótce sprawdzi Twoje zgłoszenie.';
+                $this->message .= ' An administrator will review your application soon.';
             }
             
-            // Przekierowanie do logowania
+            // Redirect to login
             return redirect('/login')->with('verified', $this->message);
             
         } catch (\Exception $e) {
-            // W przypadku błędu, pokazujemy komunikat i przekierowujemy do logowania
+            // In case of error, show message and redirect to login
             $this->error = true;
-            $this->message = 'Wystąpił błąd podczas weryfikacji: ' . $e->getMessage();
+            $this->message = 'An error occurred during verification: ' . $e->getMessage();
             return redirect('/login')->with('error', $this->message);
         }
     }

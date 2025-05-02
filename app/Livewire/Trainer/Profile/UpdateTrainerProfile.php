@@ -7,6 +7,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use Livewire\WithFileUploads;
 
+/**
+ * Manages trainer profile information updates
+ */
 class UpdateTrainerProfile extends Component
 {
     use WithFileUploads;
@@ -21,7 +24,7 @@ class UpdateTrainerProfile extends Component
 
     public function mount()
     {
-        // Check if a trainer is logged in
+        // Redirect if not logged in
         if (!Auth::guard('trainer')->check()) {
             return redirect()->route('login');
         }
@@ -34,9 +37,11 @@ class UpdateTrainerProfile extends Component
         $this->image = $this->user->image;
     }
 
+    /**
+     * Updates the trainer profile information
+     */
     public function updateProfile()
     {
-        // Validation for trainer
         $this->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => [
@@ -46,7 +51,7 @@ class UpdateTrainerProfile extends Component
             ],
             'specialization' => ['nullable', 'string', 'max:255'],
             'bio' => ['nullable', 'string', 'max:5000'],
-            'newImage' => ['nullable', 'image', 'max:1024'], // 1MB max size
+            'newImage' => ['nullable', 'image', 'max:1024'], // 1MB max
         ]);
 
         // Check if anything changed
@@ -57,13 +62,11 @@ class UpdateTrainerProfile extends Component
             $this->user->bio !== $this->bio ||
             $this->newImage;
 
-        // If nothing changed, show a message and return
         if (!$emailChanged && !$profileChanged) {
             session()->flash('info_button', __('profile.no_changes'));
             return;
         }
 
-        // Update trainer
         $trainer = $this->user;
 
         $trainer->name = $this->name;
@@ -71,19 +74,18 @@ class UpdateTrainerProfile extends Component
         $trainer->specialization = $this->specialization;
         $trainer->bio = $this->bio;
 
-        // Upload image if provided
+        // Handle profile image update
         if ($this->newImage) {
-            // Delete old image if exists
             if ($trainer->image && file_exists(storage_path('app/public/' . $trainer->image))) {
                 unlink(storage_path('app/public/' . $trainer->image));
             }
 
-            // Store the new image
             $imagePath = $this->newImage->store('trainers', 'public');
             $trainer->image = $imagePath;
             $this->image = $imagePath;
         }
 
+        // Reset email verification if email changed
         if ($emailChanged) {
             $trainer->email_verified_at = null;
         }
@@ -94,7 +96,7 @@ class UpdateTrainerProfile extends Component
     }
 
     /**
-     * Resends the verification email.
+     * Sends a new verification email to the trainer
      */
     public function resendVerificationEmail()
     {
@@ -108,7 +110,6 @@ class UpdateTrainerProfile extends Component
             return;
         }
 
-        // Send verification email
         $this->user->sendEmailVerificationNotification();
 
         session()->flash('status', __('profile.verification_sent', ['email' => $this->user->email]));

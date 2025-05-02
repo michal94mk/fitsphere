@@ -8,10 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\App;
 
 /**
- * Handles password updates for trainers.
- * 
- * This component provides a secure way for trainers to update
- * their passwords with appropriate validation and feedback.
+ * Handles trainer password update functionality
  */
 class UpdateTrainerPassword extends Component
 {
@@ -23,11 +20,6 @@ class UpdateTrainerPassword extends Component
         'new_password' => 'required|min:8|confirmed',
     ];
 
-    /**
-     * Initialize the component with the authenticated trainer data.
-     * 
-     * @return \Illuminate\Http\RedirectResponse|void
-     */
     public function mount()
     {
         if (!Auth::guard('trainer')->check()) {
@@ -38,9 +30,7 @@ class UpdateTrainerPassword extends Component
     }
 
     /**
-     * Customize validation messages for password fields.
-     *
-     * @return array
+     * Custom validation messages
      */
     protected function messages()
     {
@@ -53,12 +43,7 @@ class UpdateTrainerPassword extends Component
     }
 
     /**
-     * Process the password update after validation.
-     * 
-     * Verifies the current password, updates to the new password if valid,
-     * and provides appropriate feedback messages.
-     * 
-     * @return void
+     * Updates the trainer password after validation
      */
     public function updatePassword()
     {
@@ -81,11 +66,6 @@ class UpdateTrainerPassword extends Component
         session()->flash('status', __('profile.password_updated'));
     }
 
-    /**
-     * Render the password update form.
-     * 
-     * @return \Illuminate\View\View
-     */
     public function render()
     {
         return view('livewire.trainer.profile.update-trainer-password');
