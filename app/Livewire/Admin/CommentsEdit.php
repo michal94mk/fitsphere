@@ -7,6 +7,9 @@ use Livewire\Component;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Rule;
 
+/**
+ * Admin comment editing component
+ */
 class CommentsEdit extends Component
 {
     public $commentId;
@@ -37,6 +40,9 @@ class CommentsEdit extends Component
         return view('livewire.admin.comments-edit');
     }
 
+    /**
+     * Save the edited comment
+     */
     public function save()
     {
         $this->validate();

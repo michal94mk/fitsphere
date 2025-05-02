@@ -83,9 +83,9 @@ class CreateReservation extends Component
             ->orderBy('start_time')
             ->get(['start_time', 'end_time']);
             
-        // Define training hours (e.g., 8:00 AM to 8:00 PM)
-        $startHour = 8; // 8:00 AM
-        $endHour = 20;  // 8:00 PM
+        // Define training hours
+        $startHour = 8;
+        $endHour = 20;
         
         $selectedDate = Carbon::parse($this->date);
         $isToday = $selectedDate->isToday();

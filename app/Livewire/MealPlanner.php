@@ -11,6 +11,10 @@ use Carbon\Carbon;
 use Livewire\Attributes\Layout;
 use Illuminate\Support\Facades\App;
 
+/**
+ * Meal planning component that integrates with Spoonacular API
+ * Allows users to create, manage and track daily meal plans
+ */
 class MealPlanner extends Component
 {
     public $date;

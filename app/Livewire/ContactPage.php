@@ -10,6 +10,9 @@ use App\Exceptions\EmailSendingException;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\App;
 
+/**
+ * Handles contact form submission and email sending
+ */
 class ContactPage extends Component
 {
     public string $name = '';
@@ -34,6 +37,9 @@ class ContactPage extends Component
         $this->resetErrorBag($propertyName);
     }
 
+    /**
+     * Process form submission and send email
+     */
     public function send()
     {
         try {

@@ -10,6 +10,10 @@ use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
 use Illuminate\Support\Facades\App;
 
+/**
+ * Nutrition calculator component with recipe search functionality
+ * Provides BMI calculation, calorie needs, and macronutrient recommendations
+ */
 class NutritionCalculator extends Component
 {
     public $age;

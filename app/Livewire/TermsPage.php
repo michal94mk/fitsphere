@@ -4,12 +4,17 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use Livewire\Attributes\Layout;
-use Illuminate\Support\Facades\App;
 
+/**
+ * Terms and conditions page component
+ */
 class TermsPage extends Component
 {
     protected $listeners = ['pageChanged' => 'handlePageChanged', 'switch-locale' => 'handleLanguageChange'];
 
+    /**
+     * Handle page changes to reset terms viewed status
+     */
     public function handlePageChanged($page)
     {
         if ($page !== 'terms') {
@@ -17,9 +22,11 @@ class TermsPage extends Component
         }
     }
     
+    /**
+     * Handle language changes and refresh the component
+     */
     public function handleLanguageChange($locale)
     {
-        // Force re-render when language changes
         $this->dispatch('$refresh');
     }
 

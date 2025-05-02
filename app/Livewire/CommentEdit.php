@@ -7,6 +7,9 @@ use App\Models\Comment;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
 
+/**
+ * Handles comment editing functionality
+ */
 class CommentEdit extends Component
 {
     public $comment;
@@ -16,15 +19,18 @@ class CommentEdit extends Component
     {
         $this->comment = Comment::findOrFail($commentId);
         
-        // Sprawdzenie, czy użytkownik ma uprawnienia do edycji komentarza
+        // Check if user has permission to edit this comment
         if ($this->comment->user_id !== Auth::id()) {
-            session()->flash('error', 'Nie masz uprawnień do edytowania tego komentarza.');
+            session()->flash('error', 'You do not have permission to edit this comment.');
             return redirect()->route('post.show', ['postId' => $this->comment->post_id]);
         }
         
         $this->content = $this->comment->content;
     }
     
+    /**
+     * Update the comment content
+     */
     public function update()
     {
         $this->validate([
@@ -32,7 +38,7 @@ class CommentEdit extends Component
         ]);
         
         if ($this->comment->user_id !== Auth::id()) {
-            session()->flash('error', 'Nie masz uprawnień do edytowania tego komentarza.');
+            session()->flash('error', 'You do not have permission to edit this comment.');
             return redirect()->route('post.show', ['postId' => $this->comment->post_id]);
         }
         
@@ -40,7 +46,7 @@ class CommentEdit extends Component
             'content' => $this->content
         ]);
         
-        session()->flash('success', 'Komentarz został zaktualizowany.');
+        session()->flash('success', 'Comment has been updated.');
         return redirect()->route('post.show', ['postId' => $this->comment->post_id]);
     }
     
