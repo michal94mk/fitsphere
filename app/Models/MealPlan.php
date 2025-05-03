@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Collection;
 
 class MealPlan extends Model
 {
@@ -34,18 +35,12 @@ class MealPlan extends Model
         'is_favorite' => 'boolean',
     ];
 
-    /**
-     * Get the user that owns the meal plan.
-     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    /**
-     * Get meal plans for a specific date range.
-     */
-    public static function getForDateRange($userId, $startDate, $endDate)
+    public static function getForDateRange($userId, $startDate, $endDate): Collection
     {
         return self::where('user_id', $userId)
             ->whereBetween('date', [$startDate, $endDate])
@@ -54,10 +49,7 @@ class MealPlan extends Model
             ->get();
     }
 
-    /**
-     * Get daily nutritional totals for a given date.
-     */
-    public static function getDailyTotals($userId, $date)
+    public static function getDailyTotals($userId, $date): array
     {
         $meals = self::where('user_id', $userId)
             ->where('date', $date)
@@ -80,10 +72,7 @@ class MealPlan extends Model
         return $totals;
     }
 
-    /**
-     * Get daily nutritional totals for a given date range.
-     */
-    public static function getDailyTotalsForDateRange($userId, $startDate, $endDate)
+    public static function getDailyTotalsForDateRange($userId, $startDate, $endDate): array
     {
         $meals = self::where('user_id', $userId)
             ->whereBetween('date', [$startDate, $endDate])

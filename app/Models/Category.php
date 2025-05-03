@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\App;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Category extends Model
 {
@@ -12,60 +13,35 @@ class Category extends Model
 
     protected $fillable = ['name', 'description'];
 
-    public function posts()
+    public function posts(): HasMany
     {
         return $this->hasMany(Post::class);
     }
 
-    /**
-     * Get all translations for this category
-     */
-    public function translations()
+    public function translations(): HasMany
     {
         return $this->hasMany(CategoryTranslation::class);
     }
     
-    /**
-     * Get translation for the specified locale
-     * 
-     * @param string|null $locale
-     * @return \App\Models\CategoryTranslation|null
-     */
     public function translation($locale = null)
     {
         $locale = $locale ?: App::getLocale();
         return $this->translations()->where('locale', $locale)->first();
     }
-    
-    /**
-     * Check if the category has a translation for the specified locale
-     * 
-     * @param string|null $locale
-     * @return bool
-     */
-    public function hasTranslation($locale = null)
+
+    public function hasTranslation($locale = null): bool
     {
         $locale = $locale ?: App::getLocale();
         return $this->translations()->where('locale', $locale)->exists();
     }
     
-    /**
-     * Get translated name in current locale or fallback to original
-     * 
-     * @return string
-     */
-    public function getTranslatedName()
+    public function getTranslatedName(): string
     {
         $translation = $this->translation();
         return $translation ? $translation->name : $this->name;
     }
-    
-    /**
-     * Get translated description in current locale or fallback to original
-     * 
-     * @return string|null
-     */
-    public function getTranslatedDescription()
+
+    public function getTranslatedDescription(): ?string
     {
         $translation = $this->translation();
         return $translation ? $translation->description : null;

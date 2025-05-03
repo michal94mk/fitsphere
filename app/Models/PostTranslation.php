@@ -9,11 +9,6 @@ class PostTranslation extends Model
 {
     use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
     protected $fillable = [
         'post_id',
         'locale',
@@ -23,9 +18,6 @@ class PostTranslation extends Model
         'content'
     ];
 
-    /**
-     * Get the post that this translation belongs to
-     */
     public function post()
     {
         return $this->belongsTo(Post::class);

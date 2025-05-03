@@ -26,17 +26,11 @@ class Reservation extends Model
         'end_time' => 'datetime:H:i',
     ];
 
-    /**
-     * Get the user that owns the reservation.
-     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    /**
-     * Get the trainer that owns the reservation.
-     */
     public function trainer(): BelongsTo
     {
         return $this->belongsTo(Trainer::class);
