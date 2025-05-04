@@ -24,9 +24,33 @@ class Navigation extends Component
         // Set the current page based on the URL path
         $path = Request::path();
         
+        // Handle special paths first
+        if ($path === 'blog') {
+            $this->currentPage = 'posts';
+            return;
+        }
+        
+        if ($path === 'nutrition/calculator') {
+            $this->currentPage = 'nutrition-calculator';
+            return;
+        }
+        
+        if ($path === 'nutrition/meal-planner') {
+            $this->currentPage = 'meal-planner';
+            return;
+        }
+        
         // Extract base path for pages with parameters
         if (str_contains($path, '/')) {
-            $path = explode('/', $path)[0];
+            $firstSegment = explode('/', $path)[0];
+            
+            // Check if first segment matches special cases
+            if ($firstSegment === 'blog') {
+                $this->currentPage = 'posts';
+                return;
+            } else {
+                $path = $firstSegment;
+            }
         }
         
         // Map path to page names
@@ -36,10 +60,6 @@ class Navigation extends Component
             $this->currentPage = 'posts';
         } elseif ($path === 'trainer' || $path === 'trainers') {
             $this->currentPage = 'trainers';
-        } elseif ($path === 'nutrition-calculator') {
-            $this->currentPage = 'nutrition-calculator';
-        } elseif ($path === 'meal-planner') {
-            $this->currentPage = 'meal-planner';
         } elseif (in_array($path, ['home', 'posts', 'contact', 'terms', 'search', 'login', 'register', 'forgot-password', 'profile'])) {
             $this->currentPage = $path;
         } else {
