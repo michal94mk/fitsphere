@@ -141,7 +141,7 @@ class NutritionCalculator extends Component
     public function saveProfile()
     {
         if (!Auth::check()) {
-            $this->dispatch('login-required', ['message' => __('nutrition_calculator.login_required')]);
+            session()->flash('error', 'Musisz być zalogowany, aby zapisać profil.');
             return;
         }
         
@@ -176,7 +176,7 @@ class NutritionCalculator extends Component
         
         $profile->save();
         
-        session()->flash('message', __('nutrition_calculator.profile_saved'));
+        session()->flash('success', __('nutrition_calculator.profile_saved'));
     }
     
     public function searchRecipes()

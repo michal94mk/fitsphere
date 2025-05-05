@@ -39,9 +39,9 @@
                         </a>
                         
                         <!-- Linki do funkcjonalności żywieniowych -->
-                        <a href="{{ route('nutrition-calculator') }}"
+                        <a href="{{ route('nutrition.calculator') }}"
                            wire:navigate
-                           class="rounded-md px-2 md:px-3 py-2 text-sm font-medium {{ $currentPage == 'nutrition-calculator' ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
+                           class="rounded-md px-2 md:px-3 py-2 text-sm font-medium {{ $currentPage == 'nutrition.calculator' ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
                             <span data-i18n="common.nutrition_calculator">{{ __('common.nutrition_calculator') }}</span>
                         </a>
                         
@@ -191,10 +191,10 @@
                     </a>
                     
                     <!-- Linki do funkcjonalności żywieniowych (wersja mobilna) -->
-                    <a href="{{ route('nutrition-calculator') }}"
+                    <a href="{{ route('nutrition.calculator') }}"
                        wire:navigate
                        @click="mobileOpen = false"
-                       class="block w-full text-center rounded-md px-3 py-2 text-base font-medium {{ $currentPage == 'nutrition-calculator' ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
+                       class="block w-full text-center rounded-md px-3 py-2 text-base font-medium {{ $currentPage == 'nutrition.calculator' ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
                         <span data-i18n="common.nutrition_calculator">{{ __('common.nutrition_calculator') }}</span>
                     </a>
                     

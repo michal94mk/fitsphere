@@ -100,10 +100,8 @@ Route::prefix('trainers')->group(function () {
 });
 
 // Nutrition features
-Route::prefix('nutrition')->group(function () {
-    Route::get('/calculator', NutritionCalculator::class)->name('nutrition-calculator');
-    Route::get('/meal-planner', MealPlanner::class)->name('meal-planner');
-});
+Route::get('/nutrition-calculator', NutritionCalculator::class)->name('nutrition.calculator');
+Route::get('/meal-planner', MealPlanner::class)->name('meal-planner');
 
 // -----------------------------------------
 // AUTHENTICATION ROUTES

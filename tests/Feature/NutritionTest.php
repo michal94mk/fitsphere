@@ -7,6 +7,7 @@ use App\Models\NutritionalProfile;
 use App\Models\MealPlan;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class NutritionTest extends TestCase
 {
@@ -18,10 +19,11 @@ class NutritionTest extends TestCase
         $this->withoutExceptionHandling();
     }
 
-    public function test_nutrition_calculator_page_can_be_viewed()
+    #[Test]
+    public function nutrition_calculator_page_can_be_viewed()
     {
         // Visit the nutrition calculator page
-        $response = $this->get(route('nutrition-calculator'));
+        $response = $this->get(route('nutrition.calculator'));
 
         // Assert response is successful
         $response->assertStatus(200);
@@ -30,7 +32,8 @@ class NutritionTest extends TestCase
         $response->assertSee('Nutrition Calculator', false);
     }
 
-    public function test_meal_planner_page_can_be_viewed()
+    #[Test]
+    public function meal_planner_page_can_be_viewed()
     {
         // Visit the meal planner page
         $response = $this->get(route('meal-planner'));

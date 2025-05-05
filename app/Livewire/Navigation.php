@@ -30,12 +30,12 @@ class Navigation extends Component
             return;
         }
         
-        if ($path === 'nutrition/calculator') {
-            $this->currentPage = 'nutrition-calculator';
+        if ($path === 'nutrition-calculator') {
+            $this->currentPage = 'nutrition.calculator';
             return;
         }
         
-        if ($path === 'nutrition/meal-planner') {
+        if ($path === 'meal-planner') {
             $this->currentPage = 'meal-planner';
             return;
         }
