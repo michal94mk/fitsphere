@@ -53,7 +53,18 @@ This document summarizes the test structure created for the Laravel blog applica
     - `test_subscriber_can_be_created`: Tests subscriber creation
     - `test_subscriber_validation`: Tests email validation for subscribers
 
-11. **ExampleTest.php**
+11. **EmailTest.php**
+    - `test_contact_form_mail_can_be_created`: Tests contact form email creation
+    - `test_subscription_confirmation_mail_can_be_created`: Tests subscription confirmation email creation
+    - `test_trainer_approved_mail_can_be_created`: Tests trainer approval email creation
+
+12. **EmailServiceTest.php**
+    - `test_send_email_successfully`: Tests successful email sending via service
+    - `test_send_email_with_custom_success_message`: Tests custom success messages
+    - `test_send_email_failure_without_exception`: Tests handling of email failures without exceptions
+    - `test_send_email_failure_with_exception`: Tests handling of email failures with exceptions
+
+13. **ExampleTest.php**
     - `test_that_true_is_true`: Basic example test
 
 ## Feature Tests
@@ -88,7 +99,13 @@ This document summarizes the test structure created for the Laravel blog applica
    - `test_profile_information_can_be_updated`: Tests updating profile information
    - `test_profile_photo_can_be_uploaded`: Tests profile photo upload
 
-6. **ExampleTest.php**
+6. **EmailTest.php**
+   - `test_contact_form_sends_email`: Tests contact form email sending via Livewire
+   - `test_newsletter_subscription_sends_confirmation_email`: Tests newsletter subscription confirmation
+   - `test_trainer_approval_sends_email`: Tests trainer approval email sending process
+   - `test_user_registration_sends_verification_email`: Tests verification email during registration
+
+7. **ExampleTest.php**
    - `test_the_application_returns_a_successful_response`: Tests basic application response
 
 ## Feature/Auth Tests
@@ -148,7 +165,7 @@ This document summarizes the test structure created for the Laravel blog applica
 
 ## Current Status
 
-All 87 tests are now passing successfully. The test suite covers unit tests for all models and feature tests for all major application functionality, including Livewire components.
+All 94 tests are now passing successfully. The test suite covers unit tests for all models, email functionality, and feature tests for all major application functionality, including Livewire components.
 
 ## Execution Scripts
 
@@ -175,6 +192,27 @@ Two scripts have been created to run the tests:
    - Adapted assertions in tests to work with Livewire
    - Fixed session assertions to check database state instead of session values
    - Modified content assertions to look for text that actually appears in rendered pages
+   - Added comprehensive email testing for mailables and email service
+
+## Email Testing
+
+New tests have been added to thoroughly test email functionality:
+
+1. **Unit tests for email classes**
+   - Testing of email templates and content
+   - Verification of email envelope and subject line
+   - Testing of dynamic data in emails
+
+2. **Email service tests**  
+   - Testing successful email sending
+   - Testing custom success messages
+   - Testing error handling with and without exceptions
+
+3. **Integration tests for email workflows**
+   - Testing contact form email sending
+   - Testing newsletter subscription confirmation
+   - Testing trainer approval notifications
+   - Testing registration verification emails
 
 ## Known Issues
 
