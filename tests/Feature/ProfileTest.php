@@ -5,8 +5,7 @@ namespace Tests\Feature;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
-use Livewire\Livewire;
-use App\Livewire\User\Profile\UserProfile;
+
 
 class ProfileTest extends TestCase
 {

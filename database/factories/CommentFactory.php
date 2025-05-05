@@ -17,7 +17,6 @@ class CommentFactory extends Factory
             'post_id' => Post::factory(),
             'user_id' => User::factory(),
             'content' => $this->faker->paragraph,
-            'status' => $this->faker->randomElement(['approved', 'pending', 'spam']),
         ];
     }
     

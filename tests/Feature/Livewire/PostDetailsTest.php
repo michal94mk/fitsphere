@@ -8,7 +8,6 @@ use App\Models\User;
 use App\Models\Comment;
 use App\Models\PostView;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Auth;
 use Livewire\Livewire;
 use Tests\TestCase;
 use PHPUnit\Framework\Attributes\Test;

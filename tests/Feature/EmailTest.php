@@ -5,12 +5,13 @@ namespace Tests\Feature;
 use App\Mail\ContactFormMail;
 use App\Mail\SubscriptionConfirmation;
 use App\Mail\TrainerApproved;
-use App\Models\Subscriber;
 use App\Models\Trainer;
 use App\Models\User;
+use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
 use Livewire\Livewire;
 
@@ -82,9 +83,10 @@ class EmailTest extends TestCase
 
     public function test_user_registration_sends_verification_email()
     {
-        Mail::fake();
-
-        // Test Livewire component directly
+        // Use Notification::fake() instead of Mail::fake()
+        Notification::fake();
+        
+        // Test user registration
         Livewire::test(\App\Livewire\Auth\Register::class)
             ->set('name', 'New User')
             ->set('email', 'newuser@example.com')
@@ -92,11 +94,17 @@ class EmailTest extends TestCase
             ->set('password_confirmation', 'password123')
             ->call('register');
 
+        // Check if user was created
         $this->assertDatabaseHas('users', [
             'email' => 'newuser@example.com',
         ]);
-
-        // Laravel's default notification for email verification
-        Mail::assertSent(\Illuminate\Auth\Notifications\VerifyEmail::class);
+        
+        // Get user from database
+        $user = User::where('email', 'newuser@example.com')->first();
+        
+        // Check if VerifyEmail notification was sent to the user
+        Notification::assertSentTo(
+            [$user], VerifyEmail::class
+        );
     }
 } 

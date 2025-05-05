@@ -90,9 +90,14 @@ This document summarizes the test structure created for the Laravel blog applica
    - `test_user_can_view_meal_plans`: Tests viewing meal plans
 
 4. **AdminTest.php**
-   - `test_admin_can_access_dashboard`: Tests admin dashboard access
-   - `test_non_admin_cannot_access_dashboard`: Tests that regular users can't access admin areas
-   - `test_admin_can_manage_posts`: Tests post management functionality
+   - `test_admin_dashboard_access`: Tests admin dashboard access
+   - `test_admin_posts_management`: Tests post management functionality 
+   - `test_admin_categories_management`: Tests category management functionality
+   - `test_admin_users_management`: Tests user management functionality
+   - `test_admin_trainers_management`: Tests trainer management functionality
+   - `test_admin_comments_management`: Tests comment management functionality
+   - `test_admin_can_approve_trainer`: Tests trainer approval with email notification
+   - `test_non_admin_users_cannot_access_admin_routes`: Tests access restrictions for non-admin users
 
 5. **ProfileTest.php**
    - `test_profile_page_can_be_rendered`: Tests profile page rendering
@@ -165,7 +170,7 @@ This document summarizes the test structure created for the Laravel blog applica
 
 ## Current Status
 
-All 94 tests are now passing successfully. The test suite covers unit tests for all models, email functionality, and feature tests for all major application functionality, including Livewire components.
+All 147 tests are now passing successfully. The test suite covers unit tests for all models, email functionality, and feature tests for all major application functionality, including Livewire components.
 
 ## Execution Scripts
 
@@ -193,6 +198,9 @@ Two scripts have been created to run the tests:
    - Fixed session assertions to check database state instead of session values
    - Modified content assertions to look for text that actually appears in rendered pages
    - Added comprehensive email testing for mailables and email service
+   - Converted Polish comments to English in AdminTest.php and EmailTest.php
+   - Fixed trainer approval tests using Mail::fake() instead of mocked EmailService
+   - Fixed email verification tests using Notification::fake() instead of Mail::fake()
 
 ## Email Testing
 

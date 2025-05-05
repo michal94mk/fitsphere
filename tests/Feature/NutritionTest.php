@@ -2,9 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Models\User;
-use App\Models\NutritionalProfile;
-use App\Models\MealPlan;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use PHPUnit\Framework\Attributes\Test;

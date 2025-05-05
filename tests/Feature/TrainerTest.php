@@ -3,8 +3,6 @@
 namespace Tests\Feature;
 
 use App\Models\Trainer;
-use App\Models\User;
-use App\Models\Reservation;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 

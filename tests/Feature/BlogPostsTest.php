@@ -3,8 +3,6 @@
 namespace Tests\Feature;
 
 use App\Models\Post;
-use App\Models\User;
-use App\Models\Category;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 

@@ -2,7 +2,7 @@
 
 ## Current Status
 
-All 94 tests are passing successfully.
+All 147 tests are passing successfully.
 
 ## Working Tests
 
@@ -15,6 +15,8 @@ All 94 tests are passing successfully.
    - `BlogPostsTest` - All tests passing
    - `TrainerTest` - All tests passing
    - `NutritionTest` - All tests passing
+   - `AdminTest` - All tests passing (comments converted to English)
+   - `EmailTest` - All tests passing (comments converted to English)
    - `ExampleTest` - Default test passing
    - All Livewire component tests now passing
 
@@ -45,12 +47,17 @@ All 94 tests are passing successfully.
    - Modified content assertions to look for text that actually appears in rendered pages
    - Resolved all failures in authentication and administrative tests
    - Added comprehensive email testing for mailables and services
+   - Converted Polish comments to English in AdminTest.php and EmailTest.php
+   - Fixed trainer approval tests using Mail::fake() instead of mocked EmailService
+   - Fixed email verification tests using Notification::fake() instead of Mail::fake()
 
 ## Next Steps
 
 1. Continue monitoring test stability as features are developed
 2. Expand test coverage for new functionality
 3. Consider implementing continuous integration to automatically run tests 
+4. Consider removing example tests that don't contribute to the application's testing
+5. Consider adding performance tests and browser tests with Laravel Dusk
 
 ## Complete List of Tests
 
@@ -142,9 +149,14 @@ All 94 tests are passing successfully.
    - `test_user_can_view_meal_plans`
 
 4. **AdminTest.php**
-   - `test_admin_can_access_dashboard`
-   - `test_non_admin_cannot_access_dashboard`
-   - `test_admin_can_manage_posts`
+   - `test_admin_dashboard_access`
+   - `test_admin_posts_management`
+   - `test_admin_categories_management`
+   - `test_admin_users_management`
+   - `test_admin_trainers_management`
+   - `test_admin_comments_management`
+   - `test_admin_can_approve_trainer`
+   - `test_non_admin_users_cannot_access_admin_routes`
 
 5. **ProfileTest.php**
    - `test_profile_page_can_be_rendered`
