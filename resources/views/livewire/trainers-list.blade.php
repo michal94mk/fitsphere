@@ -20,16 +20,7 @@
         </div>
 
         <!-- Trainers section -->
-        <div class="mt-20">
-            <!-- Section title with decorative elements -->
-            <div class="flex items-center justify-center mb-12">
-                <div class="h-0.5 bg-gray-200 w-16 mr-4"></div>
-                <h2 class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-blue-500">
-                    {{ __('trainers.title') }}
-                </h2>
-                <div class="h-0.5 bg-gray-200 w-16 ml-4"></div>
-            </div>
-            
+        <div class="mt-20">            
             <!-- Trainers grid layout -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
                 @foreach($trainers as $trainer)
