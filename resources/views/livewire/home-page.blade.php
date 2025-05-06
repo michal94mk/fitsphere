@@ -6,7 +6,7 @@
     @endif
 
     <!-- Hero Section -->
-    <section class="relative bg-gradient-to-br from-gray-900 to-gray-800 text-white h-screen text-center flex flex-col justify-center overflow-hidden">
+    <section class="relative bg-gradient-to-br from-gray-900 to-gray-800 text-white h-[85vh] text-center flex flex-col justify-center overflow-hidden">
         <!-- Background video -->
         <div class="absolute inset-0 w-full h-full z-0">
             <video id="video1" class="absolute inset-0 w-full h-full object-cover opacity-20" autoplay loop muted>
@@ -16,22 +16,37 @@
         </div>
 
         <!-- Hero content -->
-        <div class="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <h1 class="text-5xl font-extrabold mb-4 transition duration-500 ease-in-out hover:scale-105">
-                <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-blue-600">
-                    {{ __('home.hero_title') }}
-                </span>
-            </h1>
-            <p class="mt-2 text-xl text-gray-300 opacity-90 transition-all duration-500 hover:opacity-100 max-w-2xl mx-auto">
-                {{ __('home.hero_subtitle') }}
-            </p>
+        <div class="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 -mt-16">
+            <!-- Integrated FitSphere Logo and Heading -->
+            <div class="mb-4 transform transition-all duration-500 hover:scale-105 max-w-3xl mx-auto">
+                <!-- Logo text with minimal design -->
+                <h1 class="text-6xl font-black tracking-tight text-center flex items-center justify-center">
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-500">Fit</span>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-white">Sphere</span>
+                </h1>
+                
+                <!-- Simple elegant divider -->
+                <div class="h-0.5 w-40 mx-auto mt-1 mb-3 bg-blue-400/50 rounded-full"></div>
+                
+                <!-- Heading integrated with logo design -->
+                <h2 class="text-4xl font-extrabold mb-2 text-center">
+                    <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-300 to-blue-100">
+                        {{ __('home.hero_title') }}
+                    </span>
+                </h2>
+                
+                <!-- Subtitle with integrated design -->
+                <p class="text-lg text-blue-100/90 text-center leading-relaxed max-w-2xl mx-auto">
+                    {{ __('home.hero_subtitle') }}
+                </p>
+            </div>
             
             <!-- Section Navigation -->
-            <div class="flex flex-wrap justify-center gap-4 mt-8">
+            <div class="flex flex-wrap justify-center gap-3 mt-4">
                 <button 
                     x-data="{ scrollTo() { document.getElementById('quick-access').scrollIntoView({ behavior: 'smooth' }); } }"
                     @click="scrollTo()" 
-                    class="px-6 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-full hover:from-blue-600 hover:to-blue-700 transition duration-300 hover:scale-105 shadow-md text-sm font-medium">
+                    class="px-5 py-1.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-full hover:from-blue-600 hover:to-blue-700 transition duration-300 hover:scale-105 shadow-md text-sm font-medium">
                     {{ __('home.quick_access') }}
                 </button>
 

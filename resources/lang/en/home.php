@@ -7,6 +7,7 @@ return [
     'quick_access' => 'Quick Access',
     'popular_posts' => 'Popular Posts',
     'latest_posts' => 'Latest Posts',
+    'fitness_for_everyone' => 'FITNESS FOR EVERYONE',
     
     // Quick Access Section
     'quick_access_title' => 'Quick Access',

@@ -7,6 +7,7 @@ return [
     'quick_access' => 'Szybki dostęp',
     'popular_posts' => 'Popularne posty',
     'latest_posts' => 'Najnowsze posty',
+    'fitness_for_everyone' => 'FITNESS DLA KAŻDEGO',
     
     // Quick Access Section
     'quick_access_title' => 'Szybki dostęp',
