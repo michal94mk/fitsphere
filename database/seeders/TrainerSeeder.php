@@ -3,13 +3,13 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\User;
-use Illuminate\Support\Facades\Hash;
+use App\Models\Trainer;
+use App\Models\TrainerTranslation;
 
 class TrainerSeeder extends Seeder
 {
     /**
-     * Dodaje przykładowych trenerów do bazy danych.
+     * Run the database seeds.
      */
     public function run(): void
     {
@@ -17,38 +17,79 @@ class TrainerSeeder extends Seeder
             [
                 'name' => 'Jan Kowalski',
                 'email' => 'jan.kowalski@example.com',
-                'password' => Hash::make('password'),
-                'role' => 'trainer',
-                'specialization' => 'Trener personalny',
-                'description' => 'Jan to doświadczony trener personalny z ponad 10-letnim doświadczeniem. Specjalizuje się w treningu siłowym i redukcji wagi.',
-                'image' => null, // Brak zdjęcia
-                'bio' => "Jan Kowalski to ekspert w dziedzinie treningu siłowego i odchudzania. Pomógł już ponad 100 klientom osiągnąć ich cele fitness.\n\nPosiada licencję trenera personalnego oraz dyplom z fizjoterapii. W swojej pracy skupia się na indywidualnym podejściu do każdego klienta.",
-                'specialties' => 'Trening siłowy, Redukcja wagi, Dieta',
-                'rating' => 5
+                'password' => bcrypt('password'),
+                'specialization' => 'Trening siłowy',
+                'description' => 'Certyfikowany trener personalny z 8-letnim doświadczeniem.',
+                'bio' => 'Specjalista treningu siłowego i budowy masy mięśniowej. Posiadam certyfikaty NASM i NSCA.',
+                'experience' => 8,
+                'is_approved' => true,
             ],
             [
                 'name' => 'Anna Nowak',
                 'email' => 'anna.nowak@example.com',
-                'password' => Hash::make('password'),
-                'role' => 'trainer',
-                'specialization' => 'Trener jogi',
-                'description' => 'Anna to certyfikowana instruktorka jogi z pasją do nauczania. Prowadzi zajęcia jogi dla wszystkich poziomów zaawansowania.',
-                'image' => null, // Brak zdjęcia
-                'bio' => "Anna Nowak praktykuje jogę od ponad 15 lat. Ukończyła liczne szkolenia i warsztaty w Indiach i Europie.\n\nJej zajęcia to połączenie tradycyjnej hatha jogi z elementami jogi dynamicznej. Skupia się na poprawnej technice i świadomym oddychaniu.",
-                'specialties' => 'Hatha joga, Vinyasa, Joga dla początkujących, Joga terapeutyczna',
-                'rating' => 4
-            ]
+                'password' => bcrypt('password'),
+                'specialization' => 'Joga i pilates',
+                'description' => 'Instruktorka jogi i pilatesu z certyfikatem międzynarodowym.',
+                'bio' => 'Instruktorka jogi z 10-letnim doświadczeniem. Ukończyłam kursy w Indiach i Londynie.',
+                'experience' => 10,
+                'is_approved' => true,
+            ],
+            [
+                'name' => 'Marek Wiśniewski',
+                'email' => 'marek.wisniewski@example.com',
+                'password' => bcrypt('password'),
+                'specialization' => 'Trening funkcjonalny',
+                'description' => 'Specjalista od treningu funkcjonalnego i rehabilitacji sportowej.',
+                'bio' => 'Fizjoterapeuta i trener funkcjonalny. Specjalizuję się w FMS i programach korekcyjnych.',
+                'experience' => 12,
+                'is_approved' => true,
+            ],
+            [
+                'name' => 'Karolina Zielińska',
+                'email' => 'karolina.zielinska@example.com',
+                'password' => bcrypt('password'),
+                'specialization' => 'Trening cardio i HIIT',
+                'description' => 'Trenerka specjalizująca się w treningach wysokiej intensywności.',
+                'bio' => 'Specjalistka HIIT i treningów interwałowych. Pomagam w transformacjach sylwetki.',
+                'experience' => 6,
+                'is_approved' => true,
+            ],
+            [
+                'name' => 'Piotr Dąbrowski',
+                'email' => 'piotr.dabrowski@example.com',
+                'password' => bcrypt('password'),
+                'specialization' => 'Dietetyka sportowa',
+                'description' => 'Dietetyk sportowy i trener personalny.',
+                'bio' => 'Dyplomowany dietetyk i trener. Tworzę spersonalizowane plany żywieniowe i treningowe.',
+                'experience' => 9,
+                'is_approved' => true,
+            ],
+            [
+                'name' => 'Magda Lewandowska',
+                'email' => 'magda.lewandowska@example.com',
+                'password' => bcrypt('password'),
+                'specialization' => 'Trening kobiet w ciąży',
+                'description' => 'Certyfikowana trenerka pre i postnatal.',
+                'bio' => 'Specjalistka treningów dla kobiet w ciąży i po porodzie. Certyfikowana trenerka pre i postnatal.',
+                'experience' => 7,
+                'is_approved' => true,
+            ],
+            [
+                'name' => 'Tomasz Kaczmarek',
+                'email' => 'tomasz.kaczmarek@example.com',
+                'password' => bcrypt('password'),
+                'specialization' => 'Trening seniorów',
+                'description' => 'Trener specjalizujący się w aktywności fizycznej dla osób starszych.',
+                'bio' => 'Specjalista od treningu dla seniorów. Tworzę programy poprawiające mobilność i siłę u osób starszych.',
+                'experience' => 15,
+                'is_approved' => true,
+            ],
         ];
 
         foreach ($trainers as $trainerData) {
-            // Sprawdzamy, czy trener o tym emailu już istnieje
-            $existingTrainer = User::where('email', $trainerData['email'])->first();
-            
-            if (!$existingTrainer) {
-                User::create($trainerData);
-            } else {
-                // Aktualizujemy istniejącego użytkownika, aby miał rolę 'trainer'
-                $existingTrainer->update($trainerData);
+            // Check if trainer exists to avoid duplicates
+            if (!Trainer::where('email', $trainerData['email'])->exists()) {
+                Trainer::create($trainerData);
             }
         }
     }

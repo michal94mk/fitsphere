@@ -168,5 +168,11 @@ class DatabaseSeeder extends Seeder
                 Comment::create($comment);
             }
         }
+
+        // Call all fitness-related seeders
+        $this->call([
+            TrainerSeeder::class,
+            FitnessContentSeeder::class,
+        ]);
     }
 }
