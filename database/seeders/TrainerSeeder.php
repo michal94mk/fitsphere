@@ -23,12 +23,19 @@ class TrainerSeeder extends Seeder
                 'bio' => 'Specjalista treningu siłowego i budowy masy mięśniowej. Posiadam certyfikaty NASM i NSCA.',
                 'experience' => 8,
                 'is_approved' => true,
+                'specialties' => 'Siła, Przyrost mięśni, Odżywianie',
                 'translations' => [
                     'en' => [
                         'specialization' => 'Strength Training',
                         'description' => 'Certified personal trainer with 8 years of experience.',
                         'bio' => 'Strength training and muscle building specialist. I hold NASM and NSCA certifications.',
                         'specialties' => 'Strength, Muscle gain, Nutrition'
+                    ],
+                    'pl' => [
+                        'specialization' => 'Trening siłowy',
+                        'description' => 'Certyfikowany trener personalny z 8-letnim doświadczeniem.',
+                        'bio' => 'Specjalista treningu siłowego i budowy masy mięśniowej. Posiadam certyfikaty NASM i NSCA.',
+                        'specialties' => 'Siła, Przyrost mięśni, Odżywianie'
                     ]
                 ]
             ],
@@ -41,12 +48,19 @@ class TrainerSeeder extends Seeder
                 'bio' => 'Instruktorka jogi z 10-letnim doświadczeniem. Ukończyłam kursy w Indiach i Londynie.',
                 'experience' => 10,
                 'is_approved' => true,
+                'specialties' => 'Joga, Pilates, Elastyczność, Medytacja',
                 'translations' => [
                     'en' => [
                         'specialization' => 'Yoga and Pilates',
                         'description' => 'Yoga and Pilates instructor with international certification.',
                         'bio' => 'Yoga instructor with 10 years of experience. I completed courses in India and London.',
                         'specialties' => 'Yoga, Pilates, Flexibility, Meditation'
+                    ],
+                    'pl' => [
+                        'specialization' => 'Joga i pilates',
+                        'description' => 'Instruktorka jogi i pilatesu z certyfikatem międzynarodowym.',
+                        'bio' => 'Instruktorka jogi z 10-letnim doświadczeniem. Ukończyłam kursy w Indiach i Londynie.',
+                        'specialties' => 'Joga, Pilates, Elastyczność, Medytacja'
                     ]
                 ]
             ],
@@ -59,12 +73,19 @@ class TrainerSeeder extends Seeder
                 'bio' => 'Fizjoterapeuta i trener funkcjonalny. Specjalizuję się w FMS i programach korekcyjnych.',
                 'experience' => 12,
                 'is_approved' => true,
+                'specialties' => 'Trening funkcjonalny, Rehabilitacja, Ćwiczenia korekcyjne',
                 'translations' => [
                     'en' => [
                         'specialization' => 'Functional Training',
                         'description' => 'Functional training and sports rehabilitation specialist.',
                         'bio' => 'Physiotherapist and functional trainer. I specialize in FMS and corrective exercise programs.',
                         'specialties' => 'Functional training, Rehabilitation, Corrective exercise'
+                    ],
+                    'pl' => [
+                        'specialization' => 'Trening funkcjonalny',
+                        'description' => 'Specjalista od treningu funkcjonalnego i rehabilitacji sportowej.',
+                        'bio' => 'Fizjoterapeuta i trener funkcjonalny. Specjalizuję się w FMS i programach korekcyjnych.',
+                        'specialties' => 'Trening funkcjonalny, Rehabilitacja, Ćwiczenia korekcyjne'
                     ]
                 ]
             ],

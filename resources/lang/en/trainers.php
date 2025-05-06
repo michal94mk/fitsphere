@@ -27,6 +27,10 @@ return [
     'contact_trainer' => 'Contact Trainer',
     'phone' => 'Phone',
     'email' => 'Email',
+    'back' => 'Back',
+    'back_to_trainers' => 'Back to trainers list',
+    'no_profile' => 'Trainer profile not found.',
+    'no_bio' => 'No biographical information available.',
     
     // Booking
     'booking_title' => 'Book a Session with',

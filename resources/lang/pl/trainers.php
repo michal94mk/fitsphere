@@ -27,6 +27,10 @@ return [
     'contact_trainer' => 'Kontakt z Trenerem',
     'phone' => 'Telefon',
     'email' => 'Email',
+    'back' => 'Powrót',
+    'back_to_trainers' => 'Powrót do listy trenerów',
+    'no_profile' => 'Nie znaleziono profilu wybranego trenera.',
+    'no_bio' => 'Brak informacji biograficznych.',
     
     // Booking
     'booking_title' => 'Zarezerwuj Sesję z',

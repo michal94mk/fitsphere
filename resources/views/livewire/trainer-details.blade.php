@@ -7,14 +7,8 @@
         @if($trainer)
             <div class="bg-white rounded-xl shadow-xl overflow-hidden">
                 <!-- Nagłówek profilu -->
-                <div class="bg-gradient-to-r from-blue-500 to-blue-600 px-6 py-4 flex justify-between items-center">
-                    <h1 class="text-2xl font-bold text-white">Profil trenera</h1>
-                    <a href="{{ route('trainers.list') }}" wire:navigate class="inline-flex items-center px-4 py-2 bg-white bg-opacity-20 backdrop-blur-sm border border-transparent rounded-md font-medium text-white hover:bg-opacity-30 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-blue-600 focus:ring-white transition-colors">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                        </svg>
-                        Powrót
-                    </a>
+                <div class="bg-gradient-to-r from-blue-500 to-blue-600 px-6 py-4">
+                    <h1 class="text-2xl font-bold text-white">{{ __('trainers.profile_title') }}</h1>
                 </div>
                 
                 <!-- Dane trenera -->
@@ -64,7 +58,7 @@
                         <div class="w-full md:w-2/3">
                             <h2 class="text-3xl font-bold text-gray-800 mb-2">{{ $trainer->name }}</h2>
                             <p class="text-lg text-blue-600 font-medium mb-4">
-                                {{ $trainer->getTranslatedSpecialization() ?: 'Profil trenera' }}
+                                {{ $trainer->getTranslatedSpecialization() ?: __('trainers.profile_title') }}
                             </p>
                             
                             <div class="prose prose-blue max-w-none">
@@ -72,12 +66,12 @@
                                     @if($trainer->getTranslatedBio())
                                         {!! nl2br(e($trainer->getTranslatedBio())) !!}
                                     @else
-                                        <p class="italic text-gray-500">Brak informacji biograficznych.</p>
+                                        <p class="italic text-gray-500">{{ __('trainers.no_bio') }}</p>
                                     @endif
                                 </div>
                                 
                                 @if($trainer->getTranslatedSpecialties())
-                                <h3 class="text-xl font-semibold text-gray-800 mt-6 mb-2">Specjalizacje</h3>
+                                <h3 class="text-xl font-semibold text-gray-800 mt-6 mb-2">{{ __('trainers.specializations') }}</h3>
                                 <div class="flex flex-wrap gap-2 mb-6">
                                     @foreach(explode(',', $trainer->getTranslatedSpecialties()) as $specialty)
                                         <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
@@ -89,7 +83,7 @@
                                 
                                 <!-- Dane kontaktowe -->
                                 @if(isset($trainer->email) && $trainer->email)
-                                    <h3 class="text-xl font-semibold text-gray-800 mt-6 mb-2">Kontakt</h3>
+                                    <h3 class="text-xl font-semibold text-gray-800 mt-6 mb-2">{{ __('trainers.contact_trainer') }}</h3>
                                     <ul class="space-y-2">
                                         <li class="flex items-center text-gray-700">
                                             <svg class="w-5 h-5 mr-2 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -118,19 +112,19 @@
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                         </svg>
-                        Powrót do listy trenerów
+                        {{ __('trainers.back_to_trainers') }}
                     </a>
                 </div>
             </div>
         @else
             <div class="bg-white p-6 rounded-lg shadow-md">
-                <p class="text-gray-600">Nie znaleziono profilu wybranego trenera.</p>
+                <p class="text-gray-600">{{ __('trainers.no_profile') }}</p>
                 <div class="mt-4">
                     <a href="{{ route('trainers.list') }}" wire:navigate class="inline-flex items-center px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                         </svg>
-                        Powrót do listy trenerów
+                        {{ __('trainers.back_to_trainers') }}
                     </a>
                 </div>
             </div>
