@@ -57,6 +57,27 @@ We would like to extend our thanks to the following sponsors for funding Laravel
 - Contact form with email notifications
 - Social media integration
 
+## Database Seeders
+
+The application comes with several database seeders to populate the database with sample data:
+
+- **UserSeeder** - Creates 8 sample users (1 admin and 7 regular users)
+- **TrainerSeeder** - Adds 3 fitness trainers with different specializations
+- **FitnessContentSeeder** - Populates the database with fitness-related content:
+  - 10 fitness categories
+  - 30+ blog posts about training, nutrition, and supplements
+  - Multilingual content (English and Polish translations)
+  - Sample comments from users
+
+To seed the database, run:
+```bash
+# Run all seeders
+php artisan db:seed
+
+# Run a specific seeder
+php artisan db:seed --class=UserSeeder
+```
+
 ## Configuration
 
 ### Translation Setup

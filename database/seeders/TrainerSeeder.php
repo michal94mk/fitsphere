@@ -23,6 +23,14 @@ class TrainerSeeder extends Seeder
                 'bio' => 'Specjalista treningu siłowego i budowy masy mięśniowej. Posiadam certyfikaty NASM i NSCA.',
                 'experience' => 8,
                 'is_approved' => true,
+                'translations' => [
+                    'en' => [
+                        'specialization' => 'Strength Training',
+                        'description' => 'Certified personal trainer with 8 years of experience.',
+                        'bio' => 'Strength training and muscle building specialist. I hold NASM and NSCA certifications.',
+                        'specialties' => 'Strength, Muscle gain, Nutrition'
+                    ]
+                ]
             ],
             [
                 'name' => 'Anna Nowak',
@@ -33,6 +41,14 @@ class TrainerSeeder extends Seeder
                 'bio' => 'Instruktorka jogi z 10-letnim doświadczeniem. Ukończyłam kursy w Indiach i Londynie.',
                 'experience' => 10,
                 'is_approved' => true,
+                'translations' => [
+                    'en' => [
+                        'specialization' => 'Yoga and Pilates',
+                        'description' => 'Yoga and Pilates instructor with international certification.',
+                        'bio' => 'Yoga instructor with 10 years of experience. I completed courses in India and London.',
+                        'specialties' => 'Yoga, Pilates, Flexibility, Meditation'
+                    ]
+                ]
             ],
             [
                 'name' => 'Marek Wiśniewski',
@@ -43,53 +59,36 @@ class TrainerSeeder extends Seeder
                 'bio' => 'Fizjoterapeuta i trener funkcjonalny. Specjalizuję się w FMS i programach korekcyjnych.',
                 'experience' => 12,
                 'is_approved' => true,
-            ],
-            [
-                'name' => 'Karolina Zielińska',
-                'email' => 'karolina.zielinska@example.com',
-                'password' => bcrypt('password'),
-                'specialization' => 'Trening cardio i HIIT',
-                'description' => 'Trenerka specjalizująca się w treningach wysokiej intensywności.',
-                'bio' => 'Specjalistka HIIT i treningów interwałowych. Pomagam w transformacjach sylwetki.',
-                'experience' => 6,
-                'is_approved' => true,
-            ],
-            [
-                'name' => 'Piotr Dąbrowski',
-                'email' => 'piotr.dabrowski@example.com',
-                'password' => bcrypt('password'),
-                'specialization' => 'Dietetyka sportowa',
-                'description' => 'Dietetyk sportowy i trener personalny.',
-                'bio' => 'Dyplomowany dietetyk i trener. Tworzę spersonalizowane plany żywieniowe i treningowe.',
-                'experience' => 9,
-                'is_approved' => true,
-            ],
-            [
-                'name' => 'Magda Lewandowska',
-                'email' => 'magda.lewandowska@example.com',
-                'password' => bcrypt('password'),
-                'specialization' => 'Trening kobiet w ciąży',
-                'description' => 'Certyfikowana trenerka pre i postnatal.',
-                'bio' => 'Specjalistka treningów dla kobiet w ciąży i po porodzie. Certyfikowana trenerka pre i postnatal.',
-                'experience' => 7,
-                'is_approved' => true,
-            ],
-            [
-                'name' => 'Tomasz Kaczmarek',
-                'email' => 'tomasz.kaczmarek@example.com',
-                'password' => bcrypt('password'),
-                'specialization' => 'Trening seniorów',
-                'description' => 'Trener specjalizujący się w aktywności fizycznej dla osób starszych.',
-                'bio' => 'Specjalista od treningu dla seniorów. Tworzę programy poprawiające mobilność i siłę u osób starszych.',
-                'experience' => 15,
-                'is_approved' => true,
+                'translations' => [
+                    'en' => [
+                        'specialization' => 'Functional Training',
+                        'description' => 'Functional training and sports rehabilitation specialist.',
+                        'bio' => 'Physiotherapist and functional trainer. I specialize in FMS and corrective exercise programs.',
+                        'specialties' => 'Functional training, Rehabilitation, Corrective exercise'
+                    ]
+                ]
             ],
         ];
 
         foreach ($trainers as $trainerData) {
+            $translations = $trainerData['translations'] ?? [];
+            unset($trainerData['translations']);
+            
             // Check if trainer exists to avoid duplicates
             if (!Trainer::where('email', $trainerData['email'])->exists()) {
-                Trainer::create($trainerData);
+                $trainer = Trainer::create($trainerData);
+                
+                // Add translations
+                foreach ($translations as $locale => $translationData) {
+                    TrainerTranslation::create([
+                        'trainer_id' => $trainer->id,
+                        'locale' => $locale,
+                        'specialization' => $translationData['specialization'],
+                        'description' => $translationData['description'],
+                        'bio' => $translationData['bio'],
+                        'specialties' => $translationData['specialties'] ?? null
+                    ]);
+                }
             }
         }
     }
