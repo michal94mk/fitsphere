@@ -141,7 +141,7 @@ class NutritionCalculator extends Component
     public function saveProfile()
     {
         if (!Auth::check()) {
-            session()->flash('error', 'Musisz być zalogowany, aby zapisać profil.');
+            $this->dispatch('login-required', ['message' => __('nutrition_calculator.login_required')]);
             return;
         }
         
