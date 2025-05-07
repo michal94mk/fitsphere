@@ -81,7 +81,7 @@ class DeleteTrainerAccount extends Component
             session()->invalidate();
             session()->regenerateToken();
             
-            return redirect()->route('home')->with('status', 'Your account has been deleted.');
+            return redirect()->route('home')->with('success', 'Your account has been deleted.');
         } catch (\Exception $e) {
             Log::error("Error while deleting trainer: " . $e->getMessage());
             $this->errorMessage = 'An error occurred while deleting your account: ' . $e->getMessage();

@@ -1,12 +1,14 @@
 <div>
-    @if (session('success'))
-        <div class="py-3 px-4 bg-green-100 text-green-700 rounded-md shadow-sm mx-auto max-w-7xl mt-4">
-            {{ session('success') }}
-        </div>
-    @endif
-
     <!-- Hero Section -->
     <section class="relative bg-gradient-to-br from-gray-900 to-gray-800 text-white h-[85vh] text-center flex flex-col justify-center overflow-hidden">
+        @if (session('success'))
+            <div class="absolute top-0 left-0 right-0 z-50">
+                <div class="py-3 px-4 bg-green-100 text-green-700 shadow-md transition-all duration-300 ease-in-out">
+                    {{ session('success') }}
+                </div>
+            </div>
+        @endif
+
         <!-- Background video -->
         <div class="absolute inset-0 w-full h-full z-0">
             <video id="video1" class="absolute inset-0 w-full h-full object-cover opacity-20" autoplay loop muted>

@@ -78,7 +78,7 @@ class DeleteUserAccount extends Component
         session()->invalidate();
         session()->regenerateToken();
 
-        return redirect()->route('home')->with('status', __('profile.account_deleted'));
+        return redirect()->route('home')->with('success', __('profile.account_deleted'));
     }
 
     public function render()
