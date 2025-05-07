@@ -35,6 +35,8 @@ return [
     'profile_error' => 'Aby obliczyć wartości odżywcze, wypełnij wszystkie wymagane pola profilu.',
     'profile_saved' => 'Profil żywieniowy został zapisany pomyślnie!',
     'search_error' => 'Wprowadź wyszukiwaną frazę.',
+    'search_api_error' => 'Błąd połączenia z bazą przepisów. Spróbuj ponownie później.',
+    'search_error_general' => 'Wystąpił nieoczekiwany błąd podczas wyszukiwania. Spróbuj ponownie.',
     'select' => 'Wybierz',
     'macros' => 'Makroskładniki',
     'allergies' => 'Ograniczenia dietetyczne',

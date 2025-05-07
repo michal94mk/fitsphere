@@ -35,6 +35,8 @@ return [
     'profile_error' => 'To calculate nutritional values, please fill in all required profile fields.',
     'profile_saved' => 'Your nutritional profile has been saved successfully!',
     'search_error' => 'Please enter a search term.',
+    'search_api_error' => 'Error connecting to recipe database. Please try again later.',
+    'search_error_general' => 'An unexpected error occurred during search. Please try again.',
     'select' => 'Select',
     'macros' => 'Macronutrients',
     'allergies' => 'Dietary Restrictions',
