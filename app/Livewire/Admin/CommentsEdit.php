@@ -5,22 +5,29 @@ namespace App\Livewire\Admin;
 use App\Models\Comment;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
-use Livewire\Attributes\Rule;
 
-/**
- * Admin comment editing component
- */
 class CommentsEdit extends Component
 {
     public $commentId;
-    
-    #[Rule('required|string', message: 'Comment content is required.')]
     public $content = '';
-
     public $userName = '';
     public $userEmail = '';
     public $postTitle = '';
     public $createdAt = '';
+
+    protected function rules()
+    {
+        return [
+            'content' => 'required|string',
+        ];
+    }
+    
+    protected function messages()
+    {
+        return [
+            'content.required' => __('validation.required', ['attribute' => 'content']),
+        ];
+    }
 
     public function mount($id)
     {
@@ -34,15 +41,6 @@ class CommentsEdit extends Component
         $this->createdAt = $comment->created_at->format('d.m.Y H:i');
     }
 
-    #[Layout('layouts.admin', ['header' => 'Edit Comment'])]
-    public function render()
-    {
-        return view('livewire.admin.comments-edit');
-    }
-
-    /**
-     * Save the edited comment
-     */
     public function save()
     {
         $this->validate();
@@ -54,10 +52,16 @@ class CommentsEdit extends Component
             
             $comment->save();
             
-            session()->flash('success', 'Comment has been updated!');
+            session()->flash('success', __('comments.comment_updated'));
             return redirect()->route('admin.comments.index');
         } catch (\Exception $e) {
-            session()->flash('error', 'An error occurred while updating the comment: ' . $e->getMessage());
+            session()->flash('error', __('comments.comment_update_error', ['error' => $e->getMessage()]));
         }
+    }
+
+    #[Layout('layouts.admin', ['header' => 'Edit Comment'])]
+    public function render()
+    {
+        return view('livewire.admin.comments-edit');
     }
 } 

@@ -9,29 +9,18 @@ use Illuminate\Validation\Rule;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\Attributes\Layout;
-use Livewire\Attributes\Rule as FormRule;
 
 class UsersEdit extends Component
 {
     use WithFileUploads;
     
     public $userId;
-    
-    #[FormRule('required|string|max:255', message: 'Name is required.')]
     public $name = '';
-    
     public $email = '';
-    
     public $password = '';
-    
     public $password_confirmation = '';
-    
-    #[FormRule('required|string|in:admin,user', message: 'Role is required.')]
     public $role = '';
-    
-    #[FormRule('nullable|image|max:1024', message: 'Photo must be an image with maximum size of 1MB.')]
     public $photo = null;
-    
     public $currentImage = '';
     public $existing_photo = null;
     public $changePassword = false;
@@ -52,56 +41,46 @@ class UsersEdit extends Component
         }
     }
     
-    public function rules()
+    protected function rules()
     {
         return [
-            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($this->userId)],
-            'password' => $this->changePassword ? 'required|string|min:8|confirmed' : 'nullable',
+            'name' => 'required|string|min:3|max:50|regex:/^[\pL\s\-\']+$/u',
+            'email' => ['required', 'string', 'email:rfc,dns', 'max:255', Rule::unique('users')->ignore($this->userId)],
+            'role' => 'required|in:admin,user',
+            'password' => $this->changePassword ? 'required|string|min:8|confirmed|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/' : 'nullable',
+            'photo' => 'nullable|image|max:1024',
         ];
     }
     
-    public function messages()
+    protected function messages()
     {
         return [
-            'email.required' => 'Email address is required.',
-            'email.email' => 'Please enter a valid email address.',
-            'email.unique' => 'This email address is already taken.',
-            'password.required' => 'Password is required when changing password.',
-            'password.min' => 'Password must be at least 8 characters.',
-            'password.confirmed' => 'Password confirmation does not match.',
+            'name.required' => __('validation.user.name.required'),
+            'name.regex' => __('validation.user.name.regex'),
+            'email.required' => __('validation.user.email.required'),
+            'email.email' => __('validation.user.email.email'),
+            'email.unique' => __('validation.user.email.unique'),
+            'password.required' => __('validation.user.password.required'),
+            'password.min' => __('validation.user.password.min', ['min' => 8]),
+            'password.confirmed' => __('validation.user.password.confirmed'),
+            'password.regex' => __('validation.user.password.regex'),
+            'role.required' => __('validation.user.role.required'),
+            'role.in' => __('validation.user.role.in'),
+            'photo.image' => __('validation.user.image.image'),
+            'photo.max' => __('validation.user.image.max', ['max' => 1024]),
         ];
-    }
-
-    #[Layout('layouts.admin', ['header' => 'Edit User'])]
-    public function render()
-    {
-        return view('livewire.admin.users-edit');
     }
 
     public function save()
     {
-        // Basic validation
-        $this->validate([
-            'name' => 'required|string|max:255',
-            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($this->userId)],
-            'role' => 'required|in:admin,user',
-        ]);
-        
-        // Password validation only when password change is enabled
-        if ($this->changePassword) {
-            $this->validate([
-                'password' => 'required|string|min:8|confirmed',
-            ]);
-        }
+        $this->validate();
         
         try {
             $user = User::findOrFail($this->userId);
             
             $imagePath = $user->image;
             if ($this->photo) {
-                // Remove old image if exists
                 if ($user->image && Storage::disk('public')->exists($user->image)) {
-                    // Delete the old image file
                     Storage::disk('public')->delete($user->image);
                 }
                 $imagePath = $this->photo->store('users', 'public');
@@ -121,10 +100,10 @@ class UsersEdit extends Component
             
             $user->save();
             
-            session()->flash('success', 'User information has been updated!');
+            session()->flash('success', __('users.user_updated'));
             return redirect()->route('admin.users.index');
         } catch (\Exception $e) {
-            session()->flash('error', 'An error occurred while updating the user: ' . $e->getMessage());
+            session()->flash('error', __('users.user_update_error', ['error' => $e->getMessage()]));
         }
     }
 
@@ -139,27 +118,29 @@ class UsersEdit extends Component
     {
         if ($this->currentImage) {
             try {
-                // Delete the old image file from storage if it exists
                 if (Storage::disk('public')->exists($this->currentImage)) {
                     Storage::disk('public')->delete($this->currentImage);
                 }
                 
-                // Update the database to remove the image reference
                 $user = User::findOrFail($this->userId);
                 $user->image = null;
                 $user->save();
                 
-                // Update local properties
                 $this->currentImage = null;
                 $this->existing_photo = null;
                 
-                // Reset the new photo too if it exists
                 $this->photo = null;
                 
-                session()->flash('success', 'Photo has been removed.');
+                session()->flash('success', __('users.photo_removed'));
             } catch (\Exception $e) {
-                session()->flash('error', 'Failed to remove photo: ' . $e->getMessage());
+                session()->flash('error', __('users.photo_remove_error', ['error' => $e->getMessage()]));
             }
         }
+    }
+
+    #[Layout('layouts.admin', ['header' => 'Edit User'])]
+    public function render()
+    {
+        return view('livewire.admin.users-edit');
     }
 } 

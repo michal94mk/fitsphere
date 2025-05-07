@@ -11,21 +11,15 @@ class TrainerTranslations extends Component
 {
     public $trainerId;
     public $trainer;
-    
-    // Translation fields
-    public $locale = 'pl'; // Default to Polish for new translations
+    public $locale = 'pl';
     public $specialization;
     public $description;
     public $bio;
     public $specialties;
-    
-    // Existing translations list
     public $translations = [];
     public $editingTranslationId = null;
     
-    /**
-     * Mount the component
-     */
+
     public function mount($id)
     {
         $this->trainerId = $id;
@@ -33,17 +27,11 @@ class TrainerTranslations extends Component
         $this->loadTranslations();
     }
     
-    /**
-     * Load translations for this trainer
-     */
     public function loadTranslations()
     {
         $this->translations = $this->trainer->translations()->get()->toArray();
     }
     
-    /**
-     * Reset form fields
-     */
     public function resetFormFields()
     {
         $this->editingTranslationId = null;
@@ -53,10 +41,7 @@ class TrainerTranslations extends Component
         $this->bio = '';
         $this->specialties = '';
     }
-    
-    /**
-     * Start editing an existing translation
-     */
+
     public function editTranslation($translationId)
     {
         $translation = TrainerTranslation::findOrFail($translationId);
@@ -68,10 +53,7 @@ class TrainerTranslations extends Component
         $this->bio = $translation->bio;
         $this->specialties = $translation->specialties;
     }
-    
-    /**
-     * Delete a translation
-     */
+
     public function deleteTranslation($translationId)
     {
         $translation = TrainerTranslation::findOrFail($translationId);
@@ -80,10 +62,7 @@ class TrainerTranslations extends Component
         $this->loadTranslations();
         session()->flash('success', 'Translation has been deleted.');
     }
-    
-    /**
-     * Save translation
-     */
+
     public function saveTranslation()
     {
         $this->validate([
@@ -124,17 +103,11 @@ class TrainerTranslations extends Component
         session()->flash('success', 'Translation has been saved.');
     }
     
-    /**
-     * Cancel editing
-     */
     public function cancelEdit()
     {
         $this->resetFormFields();
     }
     
-    /**
-     * Render the component
-     */
     #[Layout('layouts.admin', ['header' => 'Manage Trainer Translations'])]
     public function render()
     {

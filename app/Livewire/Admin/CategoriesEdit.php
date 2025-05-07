@@ -6,13 +6,11 @@ use App\Models\Category;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
-use Livewire\Attributes\Rule as FormRule;
 
 class CategoriesEdit extends Component
 {
     public $categoryId;
     
-    #[FormRule('required|string|max:255', message: 'Category name is required.')]
     public $name = '';
 
     public function mount($id)
@@ -23,26 +21,20 @@ class CategoriesEdit extends Component
         $this->name = $category->name;
     }
     
-    public function rules()
+    protected function rules()
     {
         return [
             'name' => ['required', 'string', 'max:255', Rule::unique('categories')->ignore($this->categoryId)],
         ];
     }
     
-    public function messages()
+    protected function messages()
     {
         return [
-            'name.required' => 'Category name is required.',
-            'name.max' => 'Category name cannot be longer than 255 characters.',
-            'name.unique' => 'A category with this name already exists.',
+            'name.required' => __('validation.required', ['attribute' => 'name']),
+            'name.max' => __('validation.max.string', ['attribute' => 'name', 'max' => 255]),
+            'name.unique' => __('validation.unique', ['attribute' => 'name']),
         ];
-    }
-
-    #[Layout('layouts.admin', ['header' => 'Edit Category'])]
-    public function render()
-    {
-        return view('livewire.admin.categories-edit');
     }
 
     public function save()
@@ -56,10 +48,16 @@ class CategoriesEdit extends Component
             
             $category->save();
             
-            session()->flash('success', 'Category has been updated!');
+            session()->flash('success', __('categories.category_updated'));
             return redirect()->route('admin.categories.index');
         } catch (\Exception $e) {
-            session()->flash('error', 'An error occurred while updating the category: ' . $e->getMessage());
+            session()->flash('error', __('categories.category_update_error', ['error' => $e->getMessage()]));
         }
+    }
+
+    #[Layout('layouts.admin', ['header' => 'Edit Category'])]
+    public function render()
+    {
+        return view('livewire.admin.categories-edit');
     }
 } 

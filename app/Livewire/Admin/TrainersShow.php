@@ -17,6 +17,18 @@ class TrainersShow extends Component
         $this->trainer = Trainer::findOrFail($id);
     }
     
+    public function disapproveTrainer()
+    {
+        try {
+            $this->trainer->is_approved = false;
+            $this->trainer->save();
+            
+            session()->flash('success', "Status trenera {$this->trainer->name} został zmieniony na oczekujący.");
+        } catch (\Exception $e) {
+            session()->flash('error', "Wystąpił błąd podczas zmiany statusu trenera: {$e->getMessage()}");
+        }
+    }
+
     #[Layout('layouts.admin', ['header' => 'Szczegóły trenera'])]
     public function render()
     {
@@ -40,18 +52,6 @@ class TrainersShow extends Component
             }
         } catch (\Exception $e) {
             session()->flash('error', "Wystąpił błąd podczas zatwierdzania trenera: {$e->getMessage()}");
-        }
-    }
-    
-    public function disapproveTrainer()
-    {
-        try {
-            $this->trainer->is_approved = false;
-            $this->trainer->save();
-            
-            session()->flash('success', "Status trenera {$this->trainer->name} został zmieniony na oczekujący.");
-        } catch (\Exception $e) {
-            session()->flash('error', "Wystąpił błąd podczas zmiany statusu trenera: {$e->getMessage()}");
         }
     }
 } 

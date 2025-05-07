@@ -138,7 +138,11 @@ return [
     'start_time_selected' => 'Selected start time',
     'end_time_now' => 'Now select the end time by clicking on a later hour.',
     'additional_notes' => 'Additional notes',
-    'notes_placeholder' => 'Training goals, health issues or questions for the trainer...',
-    'create_reservation' => 'Make reservation',
-    'reserve_time' => 'Make reservation',
+    
+    // Admin trainer management
+    'trainer_added_approved' => 'Trainer has been successfully added and approved!',
+    'trainer_added_pending' => 'Trainer has been successfully added! They need to verify their email address to activate the account.',
+    'trainer_add_error' => 'An error occurred while adding the trainer: :error',
+    'trainer_updated' => 'Trainer information has been updated!',
+    'trainer_update_error' => 'An error occurred while updating the trainer: :error',
 ]; 

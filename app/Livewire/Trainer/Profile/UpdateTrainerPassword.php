@@ -5,11 +5,9 @@ namespace App\Livewire\Trainer\Profile;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\App;
+use Livewire\Attributes\Layout;
 
-/**
- * Handles trainer password update functionality
- */
+
 class UpdateTrainerPassword extends Component
 {
     public $current_password, $new_password, $new_password_confirmation;
@@ -29,9 +27,6 @@ class UpdateTrainerPassword extends Component
         $this->user = Auth::guard('trainer')->user();
     }
 
-    /**
-     * Custom validation messages
-     */
     protected function messages()
     {
         return [
@@ -42,9 +37,6 @@ class UpdateTrainerPassword extends Component
         ];
     }
 
-    /**
-     * Updates the trainer password after validation
-     */
     public function updatePassword()
     {
         $this->validate();
@@ -66,6 +58,7 @@ class UpdateTrainerPassword extends Component
         session()->flash('status', __('profile.password_updated'));
     }
 
+    #[Layout('layouts.trainer')]
     public function render()
     {
         return view('livewire.trainer.profile.update-trainer-password');

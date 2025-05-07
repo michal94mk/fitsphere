@@ -5,6 +5,7 @@ namespace App\Livewire\Trainer\Profile;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
+use Livewire\Attributes\Layout;
 use Livewire\WithFileUploads;
 
 /**
@@ -115,6 +116,7 @@ class UpdateTrainerProfile extends Component
         session()->flash('status', __('profile.verification_sent', ['email' => $this->user->email]));
     }
 
+    #[Layout('layouts.trainer')]
     public function render()
     {
         return view('livewire.trainer.profile.update-trainer-profile');

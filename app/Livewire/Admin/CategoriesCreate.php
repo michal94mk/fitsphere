@@ -5,21 +5,23 @@ namespace App\Livewire\Admin;
 use App\Models\Category;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
-use Livewire\Attributes\Rule;
 
 class CategoriesCreate extends Component
 {
-    #[Rule('required|string|max:255', message: 'Category name is required.')]
     public $name = '';
     
-    protected $messages = [
-        'name.required' => 'Category name is required.',
-    ];
-
-    #[Layout('layouts.admin', ['header' => 'Add New Category'])]
-    public function render()
+    protected function rules()
     {
-        return view('livewire.admin.categories-create');
+        return [
+            'name' => 'required|string|max:255',
+        ];
+    }
+    
+    protected function messages()
+    {
+        return [
+            'name.required' => __('validation.required', ['attribute' => 'name']),
+        ];
     }
 
     public function save()
@@ -31,10 +33,16 @@ class CategoriesCreate extends Component
                 'name' => $this->name
             ]);
             
-            session()->flash('success', 'Category has been successfully added!');
+            session()->flash('success', __('categories.category_created'));
             return redirect()->route('admin.categories.index');
         } catch (\Exception $e) {
-            session()->flash('error', 'An error occurred while adding the category: ' . $e->getMessage());
+            session()->flash('error', __('categories.category_create_error', ['error' => $e->getMessage()]));
         }
+    }
+
+    #[Layout('layouts.admin', ['header' => 'Add New Category'])]
+    public function render()
+    {
+        return view('livewire.admin.categories-create');
     }
 } 

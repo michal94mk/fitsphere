@@ -59,8 +59,9 @@ return [
     'deletion_error' => 'Wystąpił błąd podczas usuwania konta: ',
     
     // Registration messages
-    'user_registration_success' => 'Udało się zarejestrować! Proszę potwierdzić swój adres e-mail.',
-    'trainer_registration_success' => 'Udało się zarejestrować jako trener! Proszę potwierdzić swój adres e-mail. Konto będzie wymagało zatwierdzenia przez administratora.',
+    'user_registration_success' => 'Rejestracja udana! Proszę potwierdzić swój adres email.',
+    'trainer_registration_success' => 'Pomyślnie zarejestrowano jako trener! Proszę potwierdzić swój adres email. Twoje konto będzie wymagało zatwierdzenia przez administratora.',
+    'user_created_success' => 'Użytkownik został pomyślnie utworzony.',
     
     // Password update
     'change_password' => 'Zmiana hasła',

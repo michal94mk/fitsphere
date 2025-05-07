@@ -7,72 +7,21 @@ use Illuminate\Support\Facades\Hash;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\Attributes\Layout;
-use Livewire\Attributes\Rule;
 
 class TrainersCreate extends Component
 {
     use WithFileUploads;
     
-    #[Rule('required|string|max:255', message: 'Name is required.')]
     public $name = '';
-    
-    #[Rule('required|string|email|max:255|unique:trainers', message: 'This email is already taken or invalid.')]
     public $email = '';
-    
-    #[Rule('required|string|min:8|confirmed', message: 'Password must be at least 8 characters.')]
     public $password = '';
-    
     public $password_confirmation = '';
-    
-    #[Rule('required|string|max:255', message: 'Specialization is required.')]
     public $specialization = '';
-    
-    #[Rule('nullable|string')]
     public $description = '';
-    
-    #[Rule('nullable|string')]
     public $biography = '';
-    
-    #[Rule('nullable|image|max:1024', message: 'Photo must be an image with maximum size of 1MB.')]
     public $photo = null;
-    
-    #[Rule('boolean')]
     public $is_approved = false;
-    
-    #[Rule('nullable|integer|min:0|max:100')]
     public $experience = 0;
-
-    // Define validation rules matching Trainer model's fillable attributes
-    protected $rules = [
-        'name' => 'required|string|max:255',
-        'email' => 'required|string|email|max:255|unique:trainers',
-        'password' => 'required|string|min:8|confirmed',
-        'specialization' => 'required|string|max:255',
-        'description' => 'nullable|string',
-        'biography' => 'nullable|string',
-        'photo' => 'nullable|image|max:1024', // 1MB Max
-        'is_approved' => 'boolean',
-        'experience' => 'nullable|integer|min:0|max:100',
-    ];
-
-    protected $messages = [
-        'name.required' => 'Name is required.',
-        'email.required' => 'Email address is required.',
-        'email.email' => 'Please enter a valid email address.',
-        'email.unique' => 'This email address is already taken.',
-        'password.required' => 'Password is required.',
-        'password.min' => 'Password must be at least 8 characters.',
-        'password.confirmed' => 'Password confirmation does not match.',
-        'specialization.required' => 'Specialization is required.',
-        'photo.image' => 'Selected file must be an image.',
-        'photo.max' => 'Photo cannot be larger than 1MB.',
-    ];
-
-    #[Layout('layouts.admin', ['header' => 'Add New Trainer'])]
-    public function render()
-    {
-        return view('livewire.admin.trainers-create');
-    }
 
     public function save()
     {
@@ -97,13 +46,13 @@ class TrainersCreate extends Component
             ]);
             
             $successMessage = $this->is_approved 
-                ? 'Trainer has been successfully added and approved!' 
-                : 'Trainer has been successfully added! They need to verify their email address to activate the account.';
+                ? __('trainers.trainer_added_approved') 
+                : __('trainers.trainer_added_pending');
             
             session()->flash('success', $successMessage);
             return redirect()->route('admin.trainers.index');
         } catch (\Exception $e) {
-            session()->flash('error', 'An error occurred while adding the trainer: ' . $e->getMessage());
+            session()->flash('error', __('trainers.trainer_add_error', ['error' => $e->getMessage()]));
         }
     }
 
@@ -112,5 +61,44 @@ class TrainersCreate extends Component
         $this->validate([
             'photo' => 'image|max:1024',
         ]);
+    }
+
+    protected function rules()
+    {
+        return [
+            'name' => 'required|string|min:3|max:50|regex:/^[\pL\s\-\']+$/u',
+            'email' => 'required|string|email:rfc,dns|max:255|unique:trainers',
+            'password' => 'required|string|min:8|confirmed|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/',
+            'specialization' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'biography' => 'nullable|string',
+            'photo' => 'nullable|image|max:1024', // 1MB Max
+            'is_approved' => 'boolean',
+            'experience' => 'nullable|integer|min:0|max:100',
+        ];
+    }
+
+    protected function messages()
+    {
+        return [
+            'name.required' => __('validation.user.name.required'),
+            'name.regex' => __('validation.user.name.regex'),
+            'email.required' => __('validation.user.email.required'),
+            'email.email' => __('validation.user.email.email'),
+            'email.unique' => __('validation.user.email.unique'),
+            'password.required' => __('validation.user.password.required'),
+            'password.min' => __('validation.user.password.min', ['min' => 8]),
+            'password.confirmed' => __('validation.user.password.confirmed'),
+            'password.regex' => __('validation.user.password.regex'),
+            'specialization.required' => __('validation.user.specialization.required'),
+            'photo.image' => __('validation.user.image.image'),
+            'photo.max' => __('validation.user.image.max', ['max' => 1024]),
+        ];
+    }
+
+    #[Layout('layouts.admin', ['header' => 'Add New Trainer'])]
+    public function render()
+    {
+        return view('livewire.admin.trainers-create');
     }
 } 

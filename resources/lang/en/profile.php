@@ -61,6 +61,7 @@ return [
     // Registration messages
     'user_registration_success' => 'Registration successful! Please confirm your email address.',
     'trainer_registration_success' => 'Successfully registered as a trainer! Please confirm your email address. Your account will require approval by an administrator.',
+    'user_created_success' => 'User has been successfully created.',
     
     // Password update
     'change_password' => 'Change password',

@@ -8,12 +8,6 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\Attributes\Layout;
 
-/**
- * Admin Posts Edit Component
- * 
- * This component manages the editing of existing blog posts,
- * including content updates and image uploads.
- */
 class PostsEdit extends Component
 {
     use WithFileUploads;
@@ -29,11 +23,6 @@ class PostsEdit extends Component
     public $image;
     public $dataLoaded = false;
     
-    /**
-     * Define validation rules for post editing
-     * 
-     * @return array
-     */
     protected function rules()
     {
         return [
@@ -47,20 +36,11 @@ class PostsEdit extends Component
         ];
     }
     
-    /**
-     * Auto-generate slug from title
-     */
     public function updatedTitle($value)
     {
         $this->slug = \Illuminate\Support\Str::slug($value);
     }
-    
-    /**
-     * Initialize the component with the post data
-     * 
-     * @param int $id The ID of the post to edit
-     * @return void
-     */
+
     public function mount($id)
     {
         $this->postId = $id;
@@ -76,13 +56,6 @@ class PostsEdit extends Component
         $this->dataLoaded = true;
     }
     
-    /**
-     * Update the post with validated data
-     * 
-     * Handles image uploads and replacement if a new image is provided.
-     * 
-     * @return \Illuminate\Http\RedirectResponse
-     */
     public function update()
     {
         $this->validate();
@@ -115,11 +88,6 @@ class PostsEdit extends Component
         }
     }
     
-    /**
-     * Render the post edit form with categories
-     * 
-     * @return \Illuminate\View\View
-     */
     #[Layout('layouts.admin', ['header' => 'Edit Post'])]
     public function render()
     {

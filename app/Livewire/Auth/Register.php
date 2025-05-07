@@ -38,9 +38,9 @@ class Register extends Component
     protected function rules()
     {
         $rules = [
-            'name'                  => 'required|string|min:3|max:255',
-            'email'                 => 'required|email',
-            'password'              => 'required|min:6|confirmed',
+            'name'                  => 'required|string|min:3|max:50|regex:/^[\pL\s\-\']+$/u',
+            'email'                 => 'required|email:rfc,dns',
+            'password'              => 'required|min:8|confirmed|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/',
             'account_type'          => 'required|in:regular,trainer',
         ];
 
@@ -52,6 +52,26 @@ class Register extends Component
         }
 
         return $rules;
+    }
+
+    /**
+     * Custom error messages for validation
+     */
+    protected function messages()
+    {
+        return [
+            'name.required' => __('validation.user.name.required'),
+            'name.regex' => __('validation.user.name.regex'),
+            'email.required' => __('validation.user.email.required'),
+            'email.email' => __('validation.user.email.email'),
+            'email.unique' => __('validation.user.email.unique'),
+            'email.dns' => __('validation.user.email.dns'),
+            'password.required' => __('validation.user.password.required'),
+            'password.min' => __('validation.user.password.min', ['min' => 8]),
+            'password.confirmed' => __('validation.user.password.confirmed'),
+            'password.regex' => __('validation.user.password.regex'),
+            'specialization.required' => __('validation.user.specialization.required'),
+        ];
     }
 
     public function register()

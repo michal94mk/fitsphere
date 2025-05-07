@@ -141,4 +141,11 @@ return [
     'notes_placeholder' => 'Cele treningowe, problemy zdrowotne lub pytania do trenera...',
     'create_reservation' => 'Zarezerwuj termin',
     'reserve_time' => 'Zarezerwuj termin',
+    
+    // Admin trainer management
+    'trainer_added_approved' => 'Trener został pomyślnie dodany i zatwierdzony!',
+    'trainer_added_pending' => 'Trener został pomyślnie dodany! Musi zweryfikować swój adres email, aby aktywować konto.',
+    'trainer_add_error' => 'Wystąpił błąd podczas dodawania trenera: :error',
+    'trainer_updated' => 'Informacje o trenerze zostały zaktualizowane!',
+    'trainer_update_error' => 'Wystąpił błąd podczas aktualizacji trenera: :error',
 ]; 

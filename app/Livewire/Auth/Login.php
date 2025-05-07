@@ -12,9 +12,18 @@ class Login extends Component
     public $password;
 
     protected $rules = [
-        'email'    => 'required|email',
+        'email'    => 'required|email:rfc,dns',
         'password' => 'required',
     ];
+
+    protected function messages()
+    {
+        return [
+            'email.required' => __('validation.user.email.required'),
+            'email.email' => __('validation.user.email.email'),
+            'password.required' => __('validation.user.password.required'),
+        ];
+    }
 
     public function login()
     {

@@ -13,18 +13,14 @@ class CategoryTranslations extends Component
     public $categoryId;
     public $category;
     
-    // Translation fields
-    public $locale = 'pl'; // Default to Polish for new translations
+    public $locale = 'pl';
     public $name;
     public $description;
     
-    // Existing translations list
     public $translations = [];
     public $editingTranslationId = null;
     
-    /**
-     * Mount the component
-     */
+
     public function mount($id)
     {
         $this->categoryId = $id;
@@ -32,17 +28,11 @@ class CategoryTranslations extends Component
         $this->loadTranslations();
     }
     
-    /**
-     * Load translations for this category
-     */
     public function loadTranslations()
     {
         $this->translations = $this->category->translations()->get()->toArray();
     }
     
-    /**
-     * Reset form fields
-     */
     public function resetFormFields()
     {
         $this->editingTranslationId = null;
@@ -51,9 +41,6 @@ class CategoryTranslations extends Component
         $this->description = '';
     }
     
-    /**
-     * Start editing an existing translation
-     */
     public function editTranslation($translationId)
     {
         $translation = CategoryTranslation::findOrFail($translationId);
@@ -64,9 +51,6 @@ class CategoryTranslations extends Component
         $this->description = $translation->description;
     }
     
-    /**
-     * Delete a translation
-     */
     public function deleteTranslation($translationId)
     {
         $translation = CategoryTranslation::findOrFail($translationId);
@@ -76,9 +60,6 @@ class CategoryTranslations extends Component
         session()->flash('success', 'Translation has been deleted.');
     }
     
-    /**
-     * Save translation
-     */
     public function saveTranslation()
     {
         $this->validate([
@@ -106,7 +87,6 @@ class CategoryTranslations extends Component
             $translation->locale = $this->locale;
         }
         
-        // Update translation data
         $translation->name = $this->name;
         $translation->slug = $slug;
         $translation->description = $this->description;
@@ -118,17 +98,11 @@ class CategoryTranslations extends Component
         session()->flash('success', 'Translation has been saved.');
     }
     
-    /**
-     * Cancel editing
-     */
     public function cancelEdit()
     {
         $this->resetFormFields();
     }
     
-    /**
-     * Render the component
-     */
     #[Layout('layouts.admin', ['header' => 'Manage Category Translations'])]
     public function render()
     {

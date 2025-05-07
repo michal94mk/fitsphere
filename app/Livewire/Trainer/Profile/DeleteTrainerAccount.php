@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 use App\Models\Trainer;
+use Livewire\Attributes\Layout;
+
 
 class DeleteTrainerAccount extends Component
 {
@@ -89,6 +91,7 @@ class DeleteTrainerAccount extends Component
         }
     }
 
+    #[Layout('layouts.trainer')]
     public function render()
     {
         return view('livewire.trainer.profile.delete-trainer-account');
