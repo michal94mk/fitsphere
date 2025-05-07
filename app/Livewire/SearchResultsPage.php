@@ -77,10 +77,21 @@ class SearchResultsPage extends Component
     public function render()
     {
         if ($this->searchQuery && strlen(trim($this->searchQuery)) >= 3) {
+            $locale = app()->getLocale();
+            
             $posts = Post::query()
                 ->where(function($query) {
+                    // Wyszukiwanie w oryginalnych polach (zazwyczaj język polski)
                     $query->where('title', 'like', '%'.$this->searchQuery.'%')
                           ->orWhere('content', 'like', '%'.$this->searchQuery.'%');
+                })
+                ->orWhereHas('translations', function($query) use ($locale) {
+                    // Wyszukiwanie w tłumaczeniach (angielski i inne języki)
+                    $query->where('locale', $locale)
+                          ->where(function($q) {
+                              $q->where('title', 'like', '%'.$this->searchQuery.'%')
+                                ->orWhere('content', 'like', '%'.$this->searchQuery.'%');
+                          });
                 })
                 ->latest()
                 ->paginate(9);

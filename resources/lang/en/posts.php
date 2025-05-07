@@ -8,6 +8,9 @@ return [
     'no_posts' => 'No posts found.',
     'search' => 'Search Articles',
     'search_placeholder' => 'Search for articles...',
+    'search_results' => 'Search results',
+    'enter_search_phrase' => 'Enter a search phrase to begin.',
+    'enter_min_characters' => 'Enter at least 3 characters to search.',
     'categories' => 'Categories',
     'all_categories' => 'All Categories',
     'popular_posts' => 'Popular Posts',
@@ -19,6 +22,8 @@ return [
     'view_count' => 'views',
     'posted_on' => 'Posted on',
     'in_category' => 'in',
+    'no_results_for_query' => 'No results found for query',
+    'back_to_results' => 'Back to results',
     
     // Post detail page
     'share' => 'Share',

@@ -8,6 +8,9 @@ return [
     'no_posts' => 'Nie znaleziono artykułów.',
     'search' => 'Szukaj Artykułów',
     'search_placeholder' => 'Szukaj artykułów...',
+    'search_results' => 'Wyniki wyszukiwania',
+    'enter_search_phrase' => 'Wprowadź frazę wyszukiwania, aby rozpocząć.',
+    'enter_min_characters' => 'Wprowadź minimum 3 znaki, aby wyszukać.',
     'categories' => 'Kategorie',
     'all_categories' => 'Wszystkie Kategorie',
     'popular_posts' => 'Popularne Artykuły',
@@ -19,6 +22,8 @@ return [
     'view_count' => 'wyświetleń',
     'posted_on' => 'Opublikowano',
     'in_category' => 'w kategorii',
+    'no_results_for_query' => 'Nie znaleziono wyników dla zapytania',
+    'back_to_results' => 'Powrót do wyników',
     
     // Post detail page
     'share' => 'Udostępnij',
