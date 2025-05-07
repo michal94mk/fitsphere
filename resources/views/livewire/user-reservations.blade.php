@@ -65,7 +65,7 @@
                 <h3 class="mt-2 text-sm font-medium text-gray-900">{{ __('trainers.no_reservations') }}</h3>
                 <p class="mt-1 text-sm text-gray-500">{{ __('trainers.no_reservations_desc') }}</p>
                 <div class="mt-6">
-                    <a href="{{ route('trainers.list') }}" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    <a href="{{ route('trainers.list') }}" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                         <svg xmlns="http://www.w3.org/2000/svg" class="-ml-1 mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
@@ -199,7 +199,7 @@
                                                         {{ __('trainers.cancel_reservation') }}
                                                     </button>
                                                 @else
-                                                    <a href="{{ route('trainer.show', $reservation->trainer_id) }}" class="inline-flex items-center px-3 py-1.5 border border-indigo-300 text-sm leading-5 font-medium rounded-md text-indigo-700 bg-white hover:bg-indigo-50 hover:border-indigo-400 transition focus:outline-none focus:border-indigo-400 focus:shadow-outline-indigo">
+                                                    <a href="{{ route('trainer.show', $reservation->trainer_id) }}" class="inline-flex items-center px-3 py-1.5 border border-blue-300 text-sm leading-5 font-medium rounded-md text-blue-700 bg-white hover:bg-blue-50 hover:border-blue-400 transition focus:outline-none focus:border-blue-400 focus:shadow-outline-blue">
                                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />

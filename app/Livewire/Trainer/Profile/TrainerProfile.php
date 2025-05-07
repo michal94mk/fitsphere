@@ -15,7 +15,7 @@ class TrainerProfile extends Component
         }
     }
 
-    #[Layout('layouts.blog')]
+    #[Layout('layouts.trainer')]
     public function render()
     {
         return view('livewire.trainer.profile.trainer-profile');
