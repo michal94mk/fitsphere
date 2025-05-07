@@ -1,4 +1,4 @@
-<footer class="bg-gray-800 py-12">
+<footer class="bg-gray-800 py-8 sm:py-12">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
             <div>
@@ -24,8 +24,8 @@
             </div>
             
             <div>
-                <form wire:submit.prevent="subscribe" class="flex flex-col space-y-4 md:space-y-0 md:flex-row md:space-x-0">
-                    <div class="flex-grow">
+                <form wire:submit.prevent="subscribe" class="flex flex-col sm:flex-row">
+                    <div class="flex-grow mb-3 sm:mb-0">
                         <div class="relative rounded-md shadow-sm">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -33,13 +33,13 @@
                                 </svg>
                             </div>
                             <input type="email" wire:model="email" placeholder="{{ __('footer.email_placeholder') }}" 
-                                class="pl-10 w-full px-4 py-3 bg-gray-700 border border-gray-600 text-white rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                                class="pl-10 w-full px-4 py-3 bg-gray-700 border border-gray-600 text-white rounded-lg sm:rounded-r-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                                 required>
                         </div>
                     </div>
                     <button type="submit" 
-                        class="px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-medium rounded-r-lg hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-150">
-                        <div class="flex items-center">
+                        class="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-medium rounded-lg sm:rounded-l-none hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-150">
+                        <div class="flex items-center justify-center">
                             <span>{{ __('footer.subscribe_button') }}</span>
                             <svg class="ml-2 w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
@@ -53,8 +53,8 @@
             </div>
         </div>
         
-        <div class="mt-12 pt-8 border-t border-gray-700 text-center">
-            <p class="text-gray-400">&copy; 2024 {{ __('footer.copyright') }}</p>
+        <div class="mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-gray-700 text-center">
+            <p class="text-sm sm:text-base text-gray-400">&copy; 2024 {{ __('footer.copyright') }}</p>
         </div>
     </div>
 </footer>

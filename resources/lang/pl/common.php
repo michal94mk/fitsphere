@@ -6,6 +6,7 @@ return [
     'trainers' => 'Trenerzy',
     'nutrition_calculator' => 'Kalkulator Diety',
     'meal_planner' => 'Planer Posiłków',
+    'nutrition' => 'Żywienie',
     'contact' => 'Kontakt',
     'terms' => 'Regulamin',
     'admin_panel' => 'Panel Administratora',
@@ -17,6 +18,8 @@ return [
     'logout' => 'Wyloguj się',
     'switch_language' => 'Zmień język',
     'follow_us' => 'Obserwuj nas',
+    'more' => 'Więcej',
+    'trainer' => 'Trener',
     
     // Wyszukiwarka
     'search' => 'Szukaj',

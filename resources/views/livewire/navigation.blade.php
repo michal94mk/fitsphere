@@ -1,11 +1,11 @@
 <div x-data="{ mobileOpen: false, profileDropdownOpen: false }">
     <div>
         <nav class="bg-gray-800">
-            <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
-                <div class="relative flex items-center justify-between h-16">
+            <div class="mx-auto max-w-7xl px-2 sm:px-3 lg:px-4">
+                <div class="relative flex flex-wrap items-center justify-between py-2">
                     
                     <!-- Mobile Menu button -->
-                    <div class="sm:hidden flex items-center justify-start">
+                    <div class="flex-shrink-0 flex items-center sm:hidden">
                         <button @click="mobileOpen = !mobileOpen"
                                 class="text-gray-300 hover:text-white focus:outline-none">
                             <svg class="h-6 w-6" stroke="currentColor" fill="none"
@@ -20,145 +20,187 @@
                         </button>
                     </div>
                     
-                    <!-- Lewa strona - przyciski nawigacyjne desktop -->
-                    <div class="hidden sm:flex sm:items-center sm:space-x-2 md:space-x-4">
-                        <a href="{{ route('home') }}" 
-                           wire:navigate
-                           class="rounded-md px-2 md:px-3 py-2 text-sm font-medium {{ $currentPage == 'home' ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
-                            {{ __('common.home') }}
-                        </a>
-                        <a href="{{ route('posts.list') }}"
-                           wire:navigate
-                           class="rounded-md px-2 md:px-3 py-2 text-sm font-medium {{ $currentPage == 'posts' ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
-                            <span data-i18n="common.posts">{{ __('common.posts') }}</span>
-                        </a>
-                        <a href="{{ route('trainers.list') }}"
-                           wire:navigate
-                           class="rounded-md px-2 md:px-3 py-2 text-sm font-medium {{ $currentPage == 'trainers' ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
-                            <span data-i18n="common.trainers">{{ __('common.trainers') }}</span>
-                        </a>
-                        
-                        <!-- Linki do funkcjonalności żywieniowych -->
-                        <a href="{{ route('nutrition.calculator') }}"
-                           wire:navigate
-                           class="rounded-md px-2 md:px-3 py-2 text-sm font-medium {{ $currentPage == 'nutrition.calculator' ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
-                            <span data-i18n="common.nutrition_calculator">{{ __('common.nutrition_calculator') }}</span>
-                        </a>
-                        
-                        <a href="{{ route('meal-planner') }}"
-                           wire:navigate
-                           class="rounded-md px-2 md:px-3 py-2 text-sm font-medium {{ $currentPage == 'meal-planner' ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
-                            <span data-i18n="common.meal_planner">{{ __('common.meal_planner') }}</span>
-                        </a>
-                        
-                        <a href="{{ route('contact') }}"
-                           wire:navigate
-                           class="rounded-md px-2 md:px-3 py-2 text-sm font-medium {{ $currentPage == 'contact' ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
-                            <span data-i18n="common.contact">{{ __('common.contact') }}</span>
-                        </a>
-                        <a href="{{ route('terms') }}"
-                           wire:navigate
-                           class="rounded-md px-2 md:px-3 py-2 text-sm font-medium {{ $currentPage == 'terms' ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
-                            <span data-i18n="common.terms">{{ __('common.terms') }}</span>
-                        </a>
-                        
-                        @if(auth()->check() && auth()->user()->role === 'admin')
-                            <a href="{{ route('admin.dashboard') }}"
-                               wire:navigate
-                               class="rounded-md px-2 md:px-3 py-2 text-sm font-medium bg-red-600 text-white hover:bg-red-700">
-                                <span data-i18n="common.admin_panel">{{ __('common.admin_panel') }}</span>
-                            </a>
-                        @endif
-                        
-                        @if(Auth::guard('trainer')->check())
-                            <a href="{{ route('trainer.reservations') }}"
-                               wire:navigate
-                               class="rounded-md px-2 md:px-3 py-2 text-sm font-medium bg-blue-600 text-white hover:bg-blue-700">
-                                <span data-i18n="common.trainer_panel">{{ __('common.trainer_panel') }}</span>
-                            </a>
-                        @endif
+                    <!-- Logo or site name - visible on all devices -->
+                    <div class="flex-shrink-0 flex items-center sm:hidden">
+                        <a href="{{ route('home') }}" wire:navigate class="text-white font-bold text-xl">FitSphere</a>
                     </div>
+                    
+                    <!-- Desktop navigation -->
+                    <div class="hidden sm:flex sm:flex-wrap items-center justify-between w-full">
+                        <!-- Left side navigation links -->
+                        <div class="flex flex-wrap items-center py-1 gap-1 md:gap-1.5 lg:gap-2">
+                            <a href="{{ route('home') }}" 
+                               wire:navigate
+                               class="rounded-md px-1 md:px-1.5 lg:px-2 py-1.5 text-xs sm:text-sm font-medium {{ $currentPage == 'home' ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
+                                {{ __('common.home') }}
+                            </a>
+                            <a href="{{ route('posts.list') }}"
+                               wire:navigate
+                               class="rounded-md px-1 md:px-1.5 lg:px-2 py-1.5 text-xs sm:text-sm font-medium {{ $currentPage == 'posts' ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
+                                <span data-i18n="common.posts">{{ __('common.posts') }}</span>
+                            </a>
+                            <a href="{{ route('trainers.list') }}"
+                               wire:navigate
+                               class="rounded-md px-1 md:px-1.5 lg:px-2 py-1.5 text-xs sm:text-sm font-medium {{ $currentPage == 'trainers' ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
+                                <span data-i18n="common.trainers">{{ __('common.trainers') }}</span>
+                            </a>
+                            
+                            <!-- Nutrition links -->
+                            <div class="hidden md:block">
+                                <a href="{{ route('nutrition.calculator') }}"
+                                   wire:navigate
+                                   class="rounded-md px-1 md:px-1.5 lg:px-2 py-1.5 text-xs sm:text-sm font-medium {{ $currentPage == 'nutrition.calculator' ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
+                                    <span data-i18n="common.nutrition_calculator">{{ __('common.nutrition_calculator') }}</span>
+                                </a>
+                            </div>
+                            
+                            <div class="hidden md:block">
+                                <a href="{{ route('meal-planner') }}"
+                                   wire:navigate
+                                   class="rounded-md px-1 md:px-1.5 lg:px-2 py-1.5 text-xs sm:text-sm font-medium {{ $currentPage == 'meal-planner' ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
+                                    <span data-i18n="common.meal_planner">{{ __('common.meal_planner') }}</span>
+                                </a>
+                            </div>
+                            
+                            <!-- Nutrition dropdown for smaller screens -->
+                            <div class="md:hidden" x-data="{ nutritionOpen: false }">
+                                <button @click="nutritionOpen = !nutritionOpen" 
+                                        class="rounded-md px-1 sm:px-1.5 py-1.5 text-xs sm:text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white flex items-center">
+                                    <span>{{ __('common.nutrition') }}</span>
+                                    <svg class="ml-1 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </button>
+                                
+                                <div x-show="nutritionOpen" x-cloak
+                                     class="absolute z-50 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg">
+                                    <a href="{{ route('nutrition.calculator') }}"
+                                       wire:navigate
+                                       @click="nutritionOpen = false"
+                                       class="block w-full px-4 py-2 text-gray-800 text-left hover:bg-gray-100">
+                                        <span>{{ __('common.nutrition_calculator') }}</span>
+                                    </a>
+                                    <a href="{{ route('meal-planner') }}"
+                                       wire:navigate
+                                       @click="nutritionOpen = false"
+                                       class="block w-full px-4 py-2 text-gray-800 text-left hover:bg-gray-100">
+                                        <span>{{ __('common.meal_planner') }}</span>
+                                    </a>
+                                </div>
+                            </div>
+                            
+                            <!-- Contact and Terms links -->
+                            <a href="{{ route('contact') }}"
+                               wire:navigate
+                               class="rounded-md px-1 md:px-1.5 lg:px-2 py-1.5 text-xs sm:text-sm font-medium {{ $currentPage == 'contact' ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
+                                <span data-i18n="common.contact">{{ __('common.contact') }}</span>
+                            </a>
+                            <a href="{{ route('terms') }}"
+                               wire:navigate
+                               class="rounded-md px-1 md:px-1.5 lg:px-2 py-1.5 text-xs sm:text-sm font-medium {{ $currentPage == 'terms' ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
+                                <span data-i18n="common.terms">{{ __('common.terms') }}</span>
+                            </a>
+                            
+                            @if(auth()->check() && auth()->user()->role === 'admin')
+                                <a href="{{ route('admin.dashboard') }}"
+                                   wire:navigate
+                                   class="rounded-md px-1 md:px-1.5 lg:px-2 py-1.5 text-xs sm:text-sm font-medium bg-red-600 text-white hover:bg-red-700">
+                                    <span data-i18n="common.admin_panel">{{ __('common.admin_panel') }}</span>
+                                </a>
+                            @endif
+                            
+                            @if(Auth::guard('trainer')->check())
+                                <a href="{{ route('trainer.reservations') }}"
+                                   wire:navigate
+                                   class="rounded-md px-1 md:px-1.5 lg:px-2 py-1.5 text-xs sm:text-sm font-medium bg-blue-600 text-white hover:bg-blue-700">
+                                    <span data-i18n="common.trainer_panel">{{ __('common.trainer_panel') }}</span>
+                                </a>
+                            @endif
+                        </div>
 
-                    <!-- Prawa strona - przyciski logowania / profil -->
-                    <div class="hidden sm:flex sm:items-center sm:space-x-2 md:space-x-4">
-                        <!-- Language Switcher Component -->
-                        <livewire:language-switcher />
-                        
-                        @if(Auth::check())
-                            <div x-data="{ dropdownOpen: false }"
-                                 x-init="$watch('currentPage', () => { dropdownOpen = false; })"
-                                 class="relative">
-                                <button @click="dropdownOpen = !dropdownOpen"
-                                        class="text-gray-300 px-2 md:px-3 py-2 rounded-md hover:bg-gray-700 flex items-center whitespace-nowrap">
-                                    <span class="truncate max-w-[100px] md:max-w-none">{{ Auth::user()->name }}</span>
-                                    <svg class="ml-1 inline-block h-4 w-4" xmlns="http://www.w3.org/2000/svg"
-                                         fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                              d="M19 9l-7 7-7-7" />
-                                    </svg>
-                                </button>
-                                
-                                <!-- Dropdown menu -->
-                                <div x-show="dropdownOpen" x-cloak
-                                     class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-50">
-                                    <a href="{{ route('profile') }}"
-                                       wire:navigate
-                                       class="block w-full px-4 py-2 text-gray-800 text-left hover:bg-gray-100">
-                                        <span data-i18n="common.profile">{{ __('common.profile') }}</span>
-                                    </a>
-                                    <a href="{{ route('user.reservations') }}"
-                                       wire:navigate
-                                       class="block w-full px-4 py-2 text-gray-800 text-left hover:bg-gray-100">
-                                        <span data-i18n="common.my_reservations">{{ __('common.my_reservations') }}</span>
-                                    </a>
-                                    <form method="POST" action="{{ route('logout') }}">
-                                        @csrf
-                                        <button type="submit"
-                                                class="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100">
-                                            <span data-i18n="common.logout">{{ __('common.logout') }}</span>
-                                        </button>
-                                    </form>
+                        <!-- Right side - authentication and language -->
+                        <div class="flex flex-wrap items-center py-1 gap-1 md:gap-1.5 lg:gap-2">
+                            <!-- Language Switcher Component -->
+                            <livewire:language-switcher />
+                            
+                            @if(Auth::check())
+                                <div x-data="{ dropdownOpen: false }"
+                                     x-init="$watch('currentPage', () => { dropdownOpen = false; })"
+                                     class="relative">
+                                    <button @click="dropdownOpen = !dropdownOpen"
+                                            class="text-gray-300 px-1 md:px-1.5 lg:px-2 py-1.5 rounded-md hover:bg-gray-700 flex items-center text-xs sm:text-sm whitespace-nowrap">
+                                        <span class="truncate max-w-[60px] sm:max-w-[100px] md:max-w-[130px]">{{ Auth::user()->name }}</span>
+                                        <svg class="ml-1 inline-block h-4 w-4" xmlns="http://www.w3.org/2000/svg"
+                                             fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                  d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    </button>
+                                    
+                                    <!-- Dropdown menu -->
+                                    <div x-show="dropdownOpen" x-cloak
+                                         class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-50">
+                                        <a href="{{ route('profile') }}"
+                                           wire:navigate
+                                           class="block w-full px-4 py-2 text-gray-800 text-left hover:bg-gray-100">
+                                            <span data-i18n="common.profile">{{ __('common.profile') }}</span>
+                                        </a>
+                                        <a href="{{ route('user.reservations') }}"
+                                           wire:navigate
+                                           class="block w-full px-4 py-2 text-gray-800 text-left hover:bg-gray-100">
+                                            <span data-i18n="common.my_reservations">{{ __('common.my_reservations') }}</span>
+                                        </a>
+                                        <form method="POST" action="{{ route('logout') }}">
+                                            @csrf
+                                            <button type="submit"
+                                                    class="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100">
+                                                <span data-i18n="common.logout">{{ __('common.logout') }}</span>
+                                            </button>
+                                        </form>
+                                    </div>
                                 </div>
-                            </div>
-                        @elseif(Auth::guard('trainer')->check())
-                            <div x-data="{ dropdownOpen: false }"
-                                 x-init="$watch('currentPage', () => { dropdownOpen = false; })"
-                                 class="relative">
-                                <button @click="dropdownOpen = !dropdownOpen"
-                                        class="text-gray-300 px-2 md:px-3 py-2 rounded-md hover:bg-gray-700 flex items-center whitespace-nowrap">
-                                    <span class="truncate max-w-[100px] md:max-w-none">{{ Auth::guard('trainer')->user()->name }}</span>
-                                    <span class="ml-1 text-blue-300 text-xs">(Trener)</span>
-                                    <svg class="ml-1 inline-block h-4 w-4" xmlns="http://www.w3.org/2000/svg"
-                                         fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                              d="M19 9l-7 7-7-7" />
-                                    </svg>
-                                </button>
-                                
-                                <!-- Dropdown menu -->
-                                <div x-show="dropdownOpen" x-cloak
-                                     class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-50">
-                                    <form method="POST" action="{{ route('logout') }}">
-                                        @csrf
-                                        <button type="submit"
-                                                class="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100">
-                                            <span data-i18n="common.logout">{{ __('common.logout') }}</span>
-                                        </button>
-                                    </form>
+                            @elseif(Auth::guard('trainer')->check())
+                                <div x-data="{ dropdownOpen: false }"
+                                     x-init="$watch('currentPage', () => { dropdownOpen = false; })"
+                                     class="relative">
+                                    <button @click="dropdownOpen = !dropdownOpen"
+                                            class="text-gray-300 px-1 md:px-1.5 lg:px-2 py-1.5 rounded-md hover:bg-gray-700 flex items-center text-xs sm:text-sm whitespace-nowrap">
+                                        <span class="truncate max-w-[60px] sm:max-w-[100px] md:max-w-[130px]">{{ Auth::guard('trainer')->user()->name }}</span>
+                                        <span class="ml-1 text-blue-300 text-xs hidden sm:inline">({{ __('common.trainer') }})</span>
+                                        <svg class="ml-1 inline-block h-4 w-4" xmlns="http://www.w3.org/2000/svg"
+                                             fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                  d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    </button>
+                                    
+                                    <!-- Dropdown menu -->
+                                    <div x-show="dropdownOpen" x-cloak
+                                         class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-50">
+                                        <form method="POST" action="{{ route('logout') }}">
+                                            @csrf
+                                            <button type="submit"
+                                                    class="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100">
+                                                <span data-i18n="common.logout">{{ __('common.logout') }}</span>
+                                            </button>
+                                        </form>
+                                    </div>
                                 </div>
-                            </div>
-                        @else
-                            <a href="{{ route('login') }}"
-                               wire:navigate
-                               class="rounded-md px-2 md:px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">
-                                <span data-i18n="common.login">{{ __('common.login') }}</span>
-                            </a>
-                            <a href="{{ route('register') }}"
-                               wire:navigate
-                               class="rounded-md px-2 md:px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">
-                                <span data-i18n="common.register">{{ __('common.register') }}</span>
-                            </a>
-                        @endif
+                            @else
+                                <div class="flex space-x-1">
+                                    <a href="{{ route('login') }}"
+                                       wire:navigate
+                                       class="rounded-md px-1 md:px-1.5 lg:px-2 py-1.5 text-xs sm:text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">
+                                        <span data-i18n="common.login">{{ __('common.login') }}</span>
+                                    </a>
+                                    <a href="{{ route('register') }}"
+                                       wire:navigate
+                                       class="rounded-md px-1 md:px-1.5 lg:px-2 py-1.5 text-xs sm:text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">
+                                        <span data-i18n="common.register">{{ __('common.register') }}</span>
+                                    </a>
+                                </div>
+                            @endif
+                        </div>
                     </div>
                 </div>
             </div>
@@ -270,7 +312,7 @@
                         <div x-data="{ dropdownOpen: false }" class="w-full">
                             <button @click="dropdownOpen = !dropdownOpen"
                                     class="block w-full text-center px-4 py-2 text-gray-900 font-medium bg-gray-200 rounded-md hover:bg-gray-300">
-                                {{ Auth::guard('trainer')->user()->name }} <span class="text-blue-600 text-xs">(Trener)</span>
+                                {{ Auth::guard('trainer')->user()->name }} <span class="text-blue-600 text-xs">({{ __('common.trainer') }})</span>
                             </button>
                             <div x-show="dropdownOpen" x-cloak
                                  class="mt-2 w-full bg-white border border-gray-300 rounded-md shadow-md">
@@ -311,11 +353,11 @@
                            placeholder="{{ __('common.search_placeholder') }}"
                            class="w-full p-3 pl-5 pr-24 rounded-lg border-0 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent shadow-md text-gray-700 text-base" />
                     <button wire:click="goToSearch"
-                            class="absolute right-0 top-0 bottom-0 h-full text-white bg-blue-600 hover:bg-blue-700 rounded-r-lg px-5 transition-all duration-200 ease-in-out shadow-md flex items-center justify-center">
+                            class="absolute right-0 top-0 bottom-0 h-full text-white bg-blue-600 hover:bg-blue-700 rounded-r-lg px-3 sm:px-5 transition-all duration-200 ease-in-out shadow-md flex items-center justify-center">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                         </svg>
-                        <span class="font-medium" data-i18n="common.search">{{ __('common.search') }}</span>
+                        <span class="font-medium text-sm sm:text-base" data-i18n="common.search">{{ __('common.search') }}</span>
                     </button>
                 </div>
                 

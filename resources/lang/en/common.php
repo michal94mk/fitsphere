@@ -6,6 +6,7 @@ return [
     'trainers' => 'Trainers',
     'nutrition_calculator' => 'Nutrition Calculator',
     'meal_planner' => 'Meal Planner',
+    'nutrition' => 'Nutrition',
     'contact' => 'Contact',
     'terms' => 'Terms',
     'admin_panel' => 'Admin Panel',
@@ -17,6 +18,8 @@ return [
     'logout' => 'Logout',
     'switch_language' => 'Switch Language',
     'follow_us' => 'Follow Us',
+    'more' => 'More',
+    'trainer' => 'Trainer',
     
     // Wyszukiwarka
     'search' => 'Search',
