@@ -66,4 +66,5 @@ return [
     'cancel' => 'Cancel',
     'profile_required' => 'Please complete your nutritional profile in the Nutrition Calculator first.',
     'calories_required' => 'Please set your target calories in the Nutrition Calculator first.',
+    'api_key_missing_message' => 'Meal planning and recipe generation features require a Spoonacular API key. To activate them:',
 ]; 

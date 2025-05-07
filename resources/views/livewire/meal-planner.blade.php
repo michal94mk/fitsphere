@@ -26,13 +26,13 @@
                             </svg>
                         </div>
                         <div class="ml-3">
-                            <h3 class="text-sm font-medium text-yellow-800">Uwaga: Brak skonfigurowanego klucza API</h3>
+                            <h3 class="text-sm font-medium text-yellow-800">{{ __('nutrition_calculator.api_key_missing_title') }}</h3>
                             <div class="mt-2 text-sm text-yellow-700">
-                                <p>Funkcje generowania planów posiłków i przepisów wymagają klucza API Spoonacular. Aby je aktywować:</p>
+                                <p>{{ __('meal_planner.api_key_missing_message') }}</p>
                                 <ol class="mt-1 ml-4 list-decimal">
-                                    <li>Utwórz darmowe konto na <a href="https://spoonacular.com/food-api" target="_blank" class="underline">spoonacular.com/food-api</a></li>
-                                    <li>Wygeneruj klucz API w panelu deweloperskim</li>
-                                    <li>Dodaj klucz API do zmiennej SPOONACULAR_API_KEY w pliku .env</li>
+                                    <li>{{ __('nutrition_calculator.api_key_step1') }} <a href="https://spoonacular.com/food-api" target="_blank" class="underline">spoonacular.com/food-api</a></li>
+                                    <li>{{ __('nutrition_calculator.api_key_step2') }}</li>
+                                    <li>{{ __('nutrition_calculator.api_key_step3') }}</li>
                                 </ol>
                             </div>
                         </div>

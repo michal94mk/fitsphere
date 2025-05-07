@@ -26,13 +26,13 @@
                             </svg>
                         </div>
                         <div class="ml-3">
-                            <h3 class="text-sm font-medium text-yellow-800">Uwaga: Brak skonfigurowanego klucza API</h3>
+                            <h3 class="text-sm font-medium text-yellow-800">{{ __('nutrition_calculator.api_key_missing_title') }}</h3>
                             <div class="mt-2 text-sm text-yellow-700">
-                                <p>Funkcje wyszukiwania przepisów i planowania posiłków wymagają klucza API Spoonacular. Aby je aktywować:</p>
+                                <p>{{ __('nutrition_calculator.api_key_missing_message') }}</p>
                                 <ol class="mt-1 ml-4 list-decimal">
-                                    <li>Utwórz darmowe konto na <a href="https://spoonacular.com/food-api" target="_blank" class="underline">spoonacular.com/food-api</a></li>
-                                    <li>Wygeneruj klucz API w panelu deweloperskim</li>
-                                    <li>Dodaj klucz API do zmiennej SPOONACULAR_API_KEY w pliku .env</li>
+                                    <li>{{ __('nutrition_calculator.api_key_step1') }} <a href="https://spoonacular.com/food-api" target="_blank" class="underline">spoonacular.com/food-api</a></li>
+                                    <li>{{ __('nutrition_calculator.api_key_step2') }}</li>
+                                    <li>{{ __('nutrition_calculator.api_key_step3') }}</li>
                                 </ol>
                             </div>
                         </div>
@@ -50,14 +50,14 @@
                             </svg>
                         </div>
                         <div class="ml-3">
-                            <h3 class="text-sm font-medium text-blue-800">Informacja: Tłumaczenie przepisów</h3>
+                            <h3 class="text-sm font-medium text-blue-800">{{ __('nutrition_calculator.translation_info_title') }}</h3>
                             <div class="mt-2 text-sm text-blue-700">
-                                <p>Funkcja tłumaczenia przepisów wykorzystuje darmowe API LibreTranslate:</p>
+                                <p>{{ __('nutrition_calculator.translation_info_message') }}</p>
                                 <ul class="mt-1 ml-4 list-disc">
-                                    <li>Tłumaczenia mogą nie być doskonałe lub mogą zawierać błędy</li>
-                                    <li>Czas tłumaczenia może być dłuższy przy rozbudowanych przepisach</li>
-                                    <li>Przy dłuższych tekstach mogą wystąpić problemy z tłumaczeniem ze względu na ograniczenia darmowego API</li>
-                                    <li>W razie problemów z tłumaczeniem, możesz zawsze przełączyć się na oryginalną wersję</li>
+                                    <li>{{ __('nutrition_calculator.translation_info_point1') }}</li>
+                                    <li>{{ __('nutrition_calculator.translation_info_point2') }}</li>
+                                    <li>{{ __('nutrition_calculator.translation_info_point3') }}</li>
+                                    <li>{{ __('nutrition_calculator.translation_info_point4') }}</li>
                                 </ul>
                             </div>
                         </div>

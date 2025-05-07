@@ -69,4 +69,5 @@ return [
     'create_account' => 'Utwórz konto',
     'profile_required' => 'Najpierw uzupełnij swój profil żywieniowy w Kalkulatorze Odżywiania.',
     'calories_required' => 'Najpierw ustaw swój docelowy poziom kalorii w Kalkulatorze Odżywiania.',
+    'api_key_missing_message' => 'Funkcje generowania planów posiłków i przepisów wymagają klucza API Spoonacular. Aby je aktywować:',
 ]; 

@@ -48,6 +48,13 @@ return [
     'sugar_free' => 'Sugar-Free',
     'save_profile' => 'Save Profile',
     
+    // API configuration message
+    'api_key_missing_title' => 'Note: API key not configured',
+    'api_key_missing_message' => 'Recipe search and meal planning features require a Spoonacular API key. To activate them:',
+    'api_key_step1' => 'Create a free account at',
+    'api_key_step2' => 'Generate API key in developer panel',
+    'api_key_step3' => 'Add the API key to SPOONACULAR_API_KEY variable in the .env file',
+    
     // Recipe search related translations
     'recipe_search' => 'Recipe Search',
     'search_recipes' => 'Search Recipes',
@@ -85,4 +92,12 @@ return [
     'translating_ingredients' => 'Translating ingredients...',
     'translating_instructions' => 'Translating instructions...',
     'auto_translation_enabled' => 'Automatic translation is enabled. Translations are provided by free API and may contain errors. You can switch back to the original text.',
+    
+    // Translation service information
+    'translation_info_title' => 'Information: Recipe translation',
+    'translation_info_message' => 'The recipe translation feature uses the free LibreTranslate API:',
+    'translation_info_point1' => 'Translations may not be perfect or may contain errors',
+    'translation_info_point2' => 'Translation time may be longer for extensive recipes',
+    'translation_info_point3' => 'Problems may occur with longer texts due to limitations of the free API',
+    'translation_info_point4' => 'In case of translation issues, you can always switch to the original version',
 ]; 

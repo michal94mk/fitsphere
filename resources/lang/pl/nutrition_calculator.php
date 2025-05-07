@@ -48,6 +48,13 @@ return [
     'sugar_free' => 'Bez cukru',
     'save_profile' => 'Zapisz profil',
     
+    // Wiadomość konfiguracji API
+    'api_key_missing_title' => 'Uwaga: Brak skonfigurowanego klucza API',
+    'api_key_missing_message' => 'Funkcje wyszukiwania przepisów i planowania posiłków wymagają klucza API Spoonacular. Aby je aktywować:',
+    'api_key_step1' => 'Utwórz darmowe konto na',
+    'api_key_step2' => 'Wygeneruj klucz API w panelu deweloperskim',
+    'api_key_step3' => 'Dodaj klucz API do zmiennej SPOONACULAR_API_KEY w pliku .env',
+    
     // Tłumaczenia związane z wyszukiwaniem przepisów
     'recipe_search' => 'Wyszukiwarka przepisów',
     'search_recipes' => 'Wyszukaj przepisy',
@@ -85,4 +92,12 @@ return [
     'translating_ingredients' => 'Tłumaczenie składników...',
     'translating_instructions' => 'Tłumaczenie instrukcji...',
     'auto_translation_enabled' => 'Automatyczne tłumaczenie jest włączone. Tłumaczenia wykonywane są przez darmowe API i mogą zawierać błędy. Możesz przełączyć widok na oryginalny tekst.',
+    
+    // Informacje o usłudze tłumaczenia
+    'translation_info_title' => 'Informacja: Tłumaczenie przepisów',
+    'translation_info_message' => 'Funkcja tłumaczenia przepisów wykorzystuje darmowe API LibreTranslate:',
+    'translation_info_point1' => 'Tłumaczenia mogą nie być doskonałe lub mogą zawierać błędy',
+    'translation_info_point2' => 'Czas tłumaczenia może być dłuższy przy rozbudowanych przepisach',
+    'translation_info_point3' => 'Przy dłuższych tekstach mogą wystąpić problemy z tłumaczeniem ze względu na ograniczenia darmowego API',
+    'translation_info_point4' => 'W razie problemów z tłumaczeniem, możesz zawsze przełączyć się na oryginalną wersję',
 ]; 
