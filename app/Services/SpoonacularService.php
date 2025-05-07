@@ -166,12 +166,6 @@ class SpoonacularService
 
     /**
      * Translate text between languages using local dictionary first, then Spoonacular's translation endpoint
-     * 
-     * @param string $text Text to translate
-     * @param string $from Source language code (e.g., 'pl')
-     * @param string $to Target language code (e.g., 'en')
-     * @return string|null Translated text or null if translation fails
-     * @throws ApiException If API request fails
      */
     public function translate(string $text, string $from = 'pl', string $to = 'en')
     {
@@ -331,7 +325,14 @@ class SpoonacularService
                     'fillIngredients' => true,
                 ], $params);
                 
-                $response = Http::timeout(10)->get($this->baseUrl . $endpoint, $requestParams);
+                $httpClient = Http::timeout(10);
+                
+                // Wyłącz weryfikację SSL w środowisku lokalnym
+                if (app()->environment('local')) {
+                    $httpClient = $httpClient->withOptions(['verify' => false]);
+                }
+                
+                $response = $httpClient->get($this->baseUrl . $endpoint, $requestParams);
                 
                 if ($response->successful()) {
                     $data = $response->json();
@@ -370,10 +371,6 @@ class SpoonacularService
 
     /**
      * Get detailed recipe information from Spoonacular API
-     *
-     * @param int $recipeId Recipe ID
-     * @return array|null Recipe information or null if retrieval fails
-     * @throws ApiException If API request fails
      */
     public function getRecipeInformation(int $recipeId)
     {
@@ -391,7 +388,14 @@ class SpoonacularService
         
         try {
             return Cache::remember($cacheKey, 86400, function () use ($recipeId, $endpoint) {
-                $response = Http::timeout(10)->get($this->baseUrl . $endpoint, [
+                $httpClient = Http::timeout(10);
+                
+                // Wyłącz weryfikację SSL w środowisku lokalnym
+                if (app()->environment('local')) {
+                    $httpClient = $httpClient->withOptions(['verify' => false]);
+                }
+                
+                $response = $httpClient->get($this->baseUrl . $endpoint, [
                     'apiKey' => $this->apiKey,
                     'includeNutrition' => true,
                 ]);
@@ -451,7 +455,14 @@ class SpoonacularService
                         Log::info('Attempting to fetch nutrition data from nutritionWidget endpoint');
                         
                         try {
-                            $nutritionResponse = Http::timeout(10)->get($this->baseUrl . "/recipes/{$recipeId}/nutritionWidget.json", [
+                            $httpClient = Http::timeout(10);
+                            
+                            // Turn 
+                            if (app()->environment('local')) {
+                                $httpClient = $httpClient->withOptions(['verify' => false]);
+                            }
+                            
+                            $nutritionResponse = $httpClient->get($this->baseUrl . "/recipes/{$recipeId}/nutritionWidget.json", [
                                 'apiKey' => $this->apiKey,
                             ]);
                             
@@ -528,11 +539,6 @@ class SpoonacularService
 
     /**
      * Generate a meal plan from Spoonacular API
-     *
-     * @param int $targetCalories Target calories for the meal plan
-     * @param array $params Additional parameters
-     * @return array|null Meal plan or null if generation fails
-     * @throws ApiException If API request fails
      */
     public function generateMealPlan(int $targetCalories, array $params = [])
     {
@@ -556,7 +562,14 @@ class SpoonacularService
                     'targetCalories' => $targetCalories,
                 ], $params);
                 
-                $response = Http::timeout(15)->get($this->baseUrl . $endpoint, $requestParams);
+                $httpClient = Http::timeout(15);
+                
+                // Tu
+                if (app()->environment('local')) {
+                    $httpClient = $httpClient->withOptions(['verify' => false]);
+                }
+                
+                $response = $httpClient->get($this->baseUrl . $endpoint, $requestParams);
                 
                 if ($response->successful()) {
                     $data = $response->json();
@@ -604,10 +617,6 @@ class SpoonacularService
 
     /**
      * Get food information from Spoonacular API
-     *
-     * @param string $query Food to get information about
-     * @return array|null Food information or null if retrieval fails
-     * @throws ApiException If API request fails
      */
     public function getFoodInformation(string $query)
     {
