@@ -1,5 +1,5 @@
 <div class="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-    <h1 class="text-3xl font-bold text-gray-900 mb-6">Rezerwacja u trenera: {{ $trainer->name }}</h1>
+    <h1 class="text-3xl font-bold text-gray-900 mb-6">{{ __('trainers.reservation_with') }}: {{ $trainer->name }}</h1>
     
     @if (session()->has('error'))
         <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded-md shadow-sm flex items-start" role="alert">
@@ -14,8 +14,8 @@
         <div class="px-4 py-5 sm:px-6 bg-gradient-to-r from-indigo-50 to-blue-50 border-b border-gray-200">
             <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between">
                 <div>
-                    <h3 class="text-lg leading-6 font-medium text-gray-900">Informacje o trenerze</h3>
-                    <p class="mt-1 max-w-2xl text-sm text-gray-500">Szczegóły trenera i jego specjalizacja.</p>
+                    <h3 class="text-lg leading-6 font-medium text-gray-900">{{ __('trainers.trainer_info') }}</h3>
+                    <p class="mt-1 max-w-2xl text-sm text-gray-500">{{ __('trainers.trainer_details') }}</p>
                 </div>
                 @if($trainer->image)
                     <div class="mt-3 sm:mt-0">
@@ -27,15 +27,15 @@
         <div class="border-t border-gray-200">
             <dl>
                 <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt class="text-sm font-medium text-gray-500">Specjalizacja</dt>
+                    <dt class="text-sm font-medium text-gray-500">{{ __('trainers.specialization') }}</dt>
                     <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ $trainer->specialization }}</dd>
                 </div>
                 <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt class="text-sm font-medium text-gray-500">Doświadczenie</dt>
-                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ $trainer->experience }} lat</dd>
+                    <dt class="text-sm font-medium text-gray-500">{{ __('trainers.experience') }}</dt>
+                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ $trainer->experience }} {{ __('trainers.years') }}</dd>
                 </div>
                 <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt class="text-sm font-medium text-gray-500">O trenerze</dt>
+                    <dt class="text-sm font-medium text-gray-500">{{ __('trainers.about_trainer') }}</dt>
                     <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ $trainer->description }}</dd>
                 </div>
             </dl>
@@ -44,8 +44,8 @@
     
     <form wire:submit.prevent="createReservation" class="bg-white shadow overflow-hidden sm:rounded-lg">
         <div class="px-4 py-5 sm:px-6 bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-gray-200">
-            <h3 class="text-lg leading-6 font-medium text-gray-900">Formularz rezerwacji</h3>
-            <p class="mt-1 max-w-2xl text-sm text-gray-500">Wybierz datę i godzinę treningu.</p>
+            <h3 class="text-lg leading-6 font-medium text-gray-900">{{ __('trainers.reservation_form') }}</h3>
+            <p class="mt-1 max-w-2xl text-sm text-gray-500">{{ __('trainers.select_date_time') }}</p>
         </div>
         
         <div class="border-t border-gray-200 px-4 py-5 sm:p-6">
@@ -53,7 +53,7 @@
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
                 <!-- Calendar section -->
                 <div class="col-span-1 bg-white rounded-lg border border-gray-200 shadow-sm p-4">
-                    <label for="date" class="block text-sm font-medium text-gray-700 mb-2">Wybierz datę</label>
+                    <label for="date" class="block text-sm font-medium text-gray-700 mb-2">{{ __('trainers.choose_date') }}</label>
                     <div class="relative">
                         <div class="flex items-center mb-3">
                             <button type="button" wire:click="previousMonth" class="p-1 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
@@ -129,13 +129,13 @@
                 <!-- Time slots section -->
                 <div class="col-span-2 bg-white rounded-lg border border-gray-200 shadow-sm p-4">
                     <div class="flex justify-between items-center mb-4">
-                        <label class="block text-sm font-medium text-gray-700">Wybierz godziny</label>
+                        <label class="block text-sm font-medium text-gray-700">{{ __('trainers.choose_hours') }}</label>
                         @if($startTime)
                             <button type="button" wire:click="resetTimeSelection" class="inline-flex items-center py-1 px-2.5 border border-gray-300 rounded-md text-xs font-medium text-gray-700 bg-white hover:bg-gray-50 transition">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                                 </svg>
-                                Wyczyść wybór
+                                {{ __('trainers.clear_selection') }}
                             </button>
                         @endif
                     </div>
@@ -152,7 +152,7 @@
                                     </div>
                                     <div class="ml-3">
                                         <p class="text-sm">
-                                            Nie można dokonać rezerwacji wstecz. Proszę wybrać bieżącą lub przyszłą datę.
+                                            {{ __('trainers.past_date_warning') }}
                                         </p>
                                     </div>
                                 </div>
@@ -169,7 +169,7 @@
                                     </div>
                                     <div class="ml-3">
                                         <p class="text-sm">
-                                            Brak dostępnych terminów na wybrany dzień. Prosimy wybrać inną datę.
+                                            {{ __('trainers.no_available_slots') }}
                                         </p>
                                     </div>
                                 </div>
@@ -188,7 +188,7 @@
                                     <div class="ml-3">
                                         <p class="text-sm font-medium">
                                             @if($startTime && $endTime)
-                                                Wybrano termin: <span class="font-bold">{{ $startTime }} - {{ $endTime }}</span>
+                                                {{ __('trainers.time_selected') }}: <span class="font-bold">{{ $startTime }} - {{ $endTime }}</span>
                                                 @php
                                                     $start = \Carbon\Carbon::parse($startTime);
                                                     $end = \Carbon\Carbon::parse($endTime);
@@ -197,18 +197,18 @@
                                                     $minutes = $duration % 60;
                                                 @endphp
                                                 <span class="block text-xs mt-1">
-                                                    Czas trwania: 
+                                                    {{ __('trainers.time_duration') }}: 
                                                     @if($hours > 0)
-                                                        {{ $hours }} {{ $hours == 1 ? 'godzina' : ($hours < 5 ? 'godziny' : 'godzin') }}
+                                                        {{ $hours }} {{ $hours == 1 ? __('trainers.hour') : __('trainers.hours') }}
                                                     @endif
                                                     @if($minutes > 0)
                                                         @if($hours > 0) i @endif
-                                                        {{ $minutes }} {{ $minutes == 1 ? 'minuta' : ($minutes < 5 ? 'minuty' : 'minut') }}
+                                                        {{ $minutes }} {{ $minutes == 1 ? __('trainers.minute') : __('trainers.minutes') }}
                                                     @endif
                                                 </span>
                                             @elseif($startTime)
-                                                Wybrano godzinę rozpoczęcia: <span class="font-bold">{{ $startTime }}</span>
-                                                <span class="block text-xs mt-1">Teraz wybierz godzinę zakończenia treningu klikając na późniejszą godzinę.</span>
+                                                {{ __('trainers.start_time_selected') }}: <span class="font-bold">{{ $startTime }}</span>
+                                                <span class="block text-xs mt-1">{{ __('trainers.end_time_now') }}</span>
                                             @endif
                                         </p>
                                     </div>
@@ -270,10 +270,10 @@
 
             <!-- Notes -->
             <div class="bg-white rounded-lg border border-gray-200 shadow-sm p-4">
-                <label for="notes" class="block text-sm font-medium text-gray-700 mb-2">Uwagi do rezerwacji (opcjonalnie)</label>
+                <label for="notes" class="block text-sm font-medium text-gray-700 mb-2">{{ __('trainers.notes') }}</label>
                 <textarea id="notes" name="notes" rows="3" wire:model="notes" 
                     class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 resize-none"
-                    placeholder="Podaj wszelkie dodatkowe informacje, które mogą być przydatne dla trenera..."></textarea>
+                    placeholder="{{ __('trainers.notes_placeholder') }}"></textarea>
                 @error('notes') <p class="mt-2 text-sm text-red-600">{{ $message }}</p> @enderror
             </div>
         </div>
@@ -286,7 +286,7 @@
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
-                Zarezerwuj termin
+                {{ __('trainers.reserve_time') }}
             </button>
         </div>
     </form>

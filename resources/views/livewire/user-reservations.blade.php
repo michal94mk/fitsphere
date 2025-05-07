@@ -1,5 +1,5 @@
 <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-    <h1 class="text-3xl font-bold text-gray-900 mb-6">Moje rezerwacje</h1>
+    <h1 class="text-3xl font-bold text-gray-900 mb-6">{{ __('trainers.my_reservations') }}</h1>
     
     @if (session()->has('success'))
         <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6 rounded-md shadow-sm flex items-start" role="alert">
@@ -24,29 +24,29 @@
         <div class="bg-gray-50 p-4 border-b border-gray-200">
             <div class="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-4">
                 <div class="w-full md:w-1/3">
-                    <label for="status-filter" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                    <label for="status-filter" class="block text-sm font-medium text-gray-700 mb-1">{{ __('trainers.filter_status') }}</label>
                     <select wire:model="statusFilter" id="status-filter" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                        <option value="">Wszystkie statusy</option>
-                        <option value="pending">Oczekujące</option>
-                        <option value="confirmed">Potwierdzone</option>
-                        <option value="completed">Zakończone</option>
-                        <option value="cancelled">Anulowane</option>
+                        <option value="">{{ __('trainers.all_statuses') }}</option>
+                        <option value="pending">{{ __('trainers.pending') }}</option>
+                        <option value="confirmed">{{ __('trainers.confirmed') }}</option>
+                        <option value="completed">{{ __('trainers.completed') }}</option>
+                        <option value="cancelled">{{ __('trainers.cancelled') }}</option>
                     </select>
                 </div>
                 <div class="w-full md:w-1/3">
-                    <label for="date-filter" class="block text-sm font-medium text-gray-700 mb-1">Data</label>
+                    <label for="date-filter" class="block text-sm font-medium text-gray-700 mb-1">{{ __('trainers.filter_date') }}</label>
                     <select wire:model="dateFilter" id="date-filter" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                        <option value="">Wszystkie daty</option>
-                        <option value="today">Dzisiaj</option>
-                        <option value="tomorrow">Jutro</option>
-                        <option value="this_week">Ten tydzień</option>
-                        <option value="next_week">Przyszły tydzień</option>
+                        <option value="">{{ __('trainers.all_dates') }}</option>
+                        <option value="today">{{ __('trainers.today') }}</option>
+                        <option value="tomorrow">{{ __('trainers.tomorrow') }}</option>
+                        <option value="this_week">{{ __('trainers.this_week') }}</option>
+                        <option value="next_week">{{ __('trainers.next_week') }}</option>
                     </select>
                 </div>
                 <div class="w-full md:w-1/3">
-                    <label for="trainer-search" class="block text-sm font-medium text-gray-700 mb-1">Wyszukaj trenera</label>
+                    <label for="trainer-search" class="block text-sm font-medium text-gray-700 mb-1">{{ __('trainers.filter_trainer') }}</label>
                     <div class="relative rounded-md shadow-sm">
-                        <input wire:model.debounce.300ms="search" type="text" id="trainer-search" class="block w-full rounded-md border-gray-300 pr-10 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="Imię trenera">
+                        <input wire:model.debounce.300ms="search" type="text" id="trainer-search" class="block w-full rounded-md border-gray-300 pr-10 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="{{ __('trainers.filter_trainer') }}">
                         <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -62,15 +62,15 @@
                 <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-12 w-12 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
-                <h3 class="mt-2 text-sm font-medium text-gray-900">Brak rezerwacji</h3>
-                <p class="mt-1 text-sm text-gray-500">Nie masz jeszcze żadnych rezerwacji treningowych.</p>
+                <h3 class="mt-2 text-sm font-medium text-gray-900">{{ __('trainers.no_reservations') }}</h3>
+                <p class="mt-1 text-sm text-gray-500">{{ __('trainers.no_reservations_desc') }}</p>
                 <div class="mt-6">
                     <a href="{{ route('trainers.list') }}" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                         <svg xmlns="http://www.w3.org/2000/svg" class="-ml-1 mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                         </svg>
-                        Przeglądaj trenerów
+                        {{ __('trainers.browse_trainers') }}
                     </a>
                 </div>
             </div>
@@ -83,19 +83,19 @@
                                 <thead class="bg-gray-50">
                                     <tr>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Trener
+                                            {{ __('trainers.trainer_column') }}
                                         </th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Data
+                                            {{ __('trainers.date_column') }}
                                         </th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Godzina
+                                            {{ __('trainers.time_column') }}
                                         </th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Status
+                                            {{ __('trainers.status_column') }}
                                         </th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Akcje
+                                            {{ __('trainers.actions_column') }}
                                         </th>
                                     </tr>
                                 </thead>
@@ -127,13 +127,13 @@
                                                     @endphp
                                                     
                                                     @if($diff === 0)
-                                                        <span class="text-green-600">Dzisiaj</span>
+                                                        <span class="text-green-600">{{ __('trainers.today') }}</span>
                                                     @elseif($diff === 1)
-                                                        <span class="text-blue-600">Jutro</span>
+                                                        <span class="text-blue-600">{{ __('trainers.tomorrow') }}</span>
                                                     @elseif($diff > 1 && $diff <= 7)
-                                                        <span class="text-indigo-600">Za {{ $diff }} dni</span>
+                                                        <span class="text-indigo-600">{{ __('trainers.days_from_now', ['days' => $diff]) }}</span>
                                                     @elseif($diff < 0)
-                                                        <span class="text-gray-600">{{ abs($diff) }} dni temu</span>
+                                                        <span class="text-gray-600">{{ abs($diff) }} {{ __('trainers.days_ago') }}</span>
                                                     @endif
                                                 </div>
                                             </td>
@@ -155,13 +155,13 @@
                                                         $hours = floor($duration / 60);
                                                         $minutes = $duration % 60;
                                                     @endphp
-                                                    Czas trwania: 
+                                                    {{ __('trainers.time_duration') }}: 
                                                     @if($hours > 0)
-                                                        {{ $hours }} {{ $hours == 1 ? 'godzina' : ($hours < 5 ? 'godziny' : 'godzin') }}
+                                                        {{ $hours }} {{ $hours == 1 ? __('trainers.hour') : __('trainers.hours') }}
                                                     @endif
                                                     @if($minutes > 0)
                                                         @if($hours > 0) i @endif
-                                                        {{ $minutes }} {{ $minutes == 1 ? 'minuta' : ($minutes < 5 ? 'minuty' : 'minut') }}
+                                                        {{ $minutes }} {{ $minutes == 1 ? __('trainers.minute') : __('trainers.minutes') }}
                                                     @endif
                                                 </div>
                                             </td>
@@ -183,10 +183,10 @@
                                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                                         @endif
                                                     </svg>
-                                                    @if($reservation->status == 'confirmed') Potwierdzona
-                                                    @elseif($reservation->status == 'pending') Oczekująca
-                                                    @elseif($reservation->status == 'cancelled') Anulowana
-                                                    @elseif($reservation->status == 'completed') Zakończona
+                                                    @if($reservation->status == 'confirmed') {{ __('trainers.confirmed') }}
+                                                    @elseif($reservation->status == 'pending') {{ __('trainers.pending') }}
+                                                    @elseif($reservation->status == 'cancelled') {{ __('trainers.cancelled') }}
+                                                    @elseif($reservation->status == 'completed') {{ __('trainers.completed') }}
                                                     @endif
                                                 </span>
                                             </td>
@@ -196,7 +196,7 @@
                                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                                                         </svg>
-                                                        Anuluj
+                                                        {{ __('trainers.cancel_reservation') }}
                                                     </button>
                                                 @else
                                                     <a href="{{ route('trainer.show', $reservation->trainer_id) }}" class="inline-flex items-center px-3 py-1.5 border border-indigo-300 text-sm leading-5 font-medium rounded-md text-indigo-700 bg-white hover:bg-indigo-50 hover:border-indigo-400 transition focus:outline-none focus:border-indigo-400 focus:shadow-outline-indigo">
@@ -204,7 +204,7 @@
                                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                                         </svg>
-                                                        Profil trenera
+                                                        {{ __('trainers.trainer_profile') }}
                                                     </a>
                                                 @endif
                                             </td>
@@ -267,11 +267,11 @@
                             </div>
                             <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
                                 <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
-                                    Anulowanie rezerwacji
+                                    {{ __('trainers.cancel_reservation_title') }}
                                 </h3>
                                 <div class="mt-2">
                                     <p class="text-sm text-gray-500">
-                                        Czy na pewno chcesz anulować tę rezerwację? Tej operacji nie można cofnąć.
+                                        {{ __('trainers.cancel_reservation_description') }}
                                     </p>
                                     
                                     @if($reservationToCancel)
@@ -280,7 +280,7 @@
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                                             </svg>
-                                            <span class="font-medium">Trener:</span>
+                                            <span class="font-medium">{{ __('trainers.trainer') }}:</span>
                                             <span class="ml-2">{{ $reservationToCancel->trainer->name }}</span>
                                         </div>
                                         
@@ -288,7 +288,7 @@
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                             </svg>
-                                            <span class="font-medium">Data:</span>
+                                            <span class="font-medium">{{ __('trainers.date') }}:</span>
                                             <span class="ml-2">{{ $reservationToCancel->date->format('d.m.Y') }}</span>
                                         </div>
                                         
@@ -296,7 +296,7 @@
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                             </svg>
-                                            <span class="font-medium">Godzina:</span>
+                                            <span class="font-medium">{{ __('trainers.time') }}:</span>
                                             <span class="ml-2">{{ \Carbon\Carbon::parse($reservationToCancel->start_time)->format('H:i') }} - {{ \Carbon\Carbon::parse($reservationToCancel->end_time)->format('H:i') }}</span>
                                         </div>
                                     </div>
@@ -307,10 +307,10 @@
                     </div>
                     <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
                         <button wire:click="cancelReservation" type="button" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm">
-                            Anuluj rezerwację
+                            {{ __('trainers.cancel_reservation') }}
                         </button>
                         <button wire:click="closeCancelModal" type="button" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
-                            Powrót
+                            {{ __('trainers.close') }}
                         </button>
                     </div>
                 </div>
