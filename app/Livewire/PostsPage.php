@@ -6,7 +6,6 @@ use Livewire\Component;
 use App\Models\Post;
 use App\Models\Category;
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Route;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
 use Livewire\WithPagination;
@@ -31,9 +30,6 @@ class PostsPage extends Component
         return $this->redirect(route('post.show', ['postId' => $postId]), navigate: true);
     }
     
-    /**
-     * Reset pagination when filters change
-     */
     public function updatedSearchQuery()
     {
         $this->resetPage();
@@ -49,16 +45,6 @@ class PostsPage extends Component
         $this->resetPage();
     }
     
-    /**
-     * Handles the language change event.
-     * 
-     * Reacts to asynchronous language change in the application.
-     * Resets pagination to ensure proper display of
-     * posts list with translations in the newly selected language.
-     * 
-     * @param string $locale The selected language code
-     * @return void
-     */
     #[On('switch-locale')]
     public function handleLanguageChange($locale)
     {

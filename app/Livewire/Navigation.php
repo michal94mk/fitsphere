@@ -73,9 +73,6 @@ class Navigation extends Component
      * Reacts to asynchronous language change in the application.
      * Resets search state and messages in navigation
      * to maintain consistency after language change.
-     * 
-     * @param string $locale The selected language code
-     * @return void
      */
     #[On('switch-locale')]
     public function handleLanguageChange($locale)

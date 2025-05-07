@@ -8,6 +8,7 @@ use App\Models\Category;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
 use Illuminate\Support\Facades\App;
+use App\Services\LogService;
 
 class HomePage extends Component
 {
@@ -15,6 +16,13 @@ class HomePage extends Component
     public $categories;
     public $popularPosts;
     public $posts;
+    
+    protected $logService;
+    
+    public function boot()
+    {
+        $this->logService = app(LogService::class);
+    }
 
     public function mount()
     {
@@ -29,32 +37,46 @@ class HomePage extends Component
      */
     protected function loadPosts()
     {
-        $locale = App::getLocale();
-        
-        // Fetch latest posts with translations, user data, and comment counts
-        $this->latestPosts = Post::with(['user', 'category'])
-            ->with(['translations' => function($query) use ($locale) {
-                $query->where('locale', $locale);
-            }])
-            ->withCount('comments')
-            ->latest()
-            ->take(3)
-            ->get();
+        try {
+            $locale = App::getLocale();
             
-        $this->categories = Category::withCount('posts')->get();
-        
-        // Fetch most popular posts with translations (by view count)
-        $this->popularPosts = Post::with(['user', 'category'])
-            ->with(['translations' => function($query) use ($locale) {
-                $query->where('locale', $locale);
-            }])
-            ->withCount('comments')
-            ->orderBy('view_count', 'desc')
-            ->take(3)
-            ->get();
+            // Fetch latest posts with translations, user data, and comment counts
+            $this->latestPosts = Post::with(['user', 'category'])
+                ->with(['translations' => function($query) use ($locale) {
+                    $query->where('locale', $locale);
+                }])
+                ->withCount('comments')
+                ->latest()
+                ->take(3)
+                ->get();
+                
+            $this->categories = Category::withCount('posts')->get();
             
-        // Retain compatibility with existing view structure
-        $this->posts = $this->latestPosts;
+            // Fetch most popular posts with translations (by view count)
+            $this->popularPosts = Post::with(['user', 'category'])
+                ->with(['translations' => function($query) use ($locale) {
+                    $query->where('locale', $locale);
+                }])
+                ->withCount('comments')
+                ->orderBy('view_count', 'desc')
+                ->take(3)
+                ->get();
+                
+            // Retain compatibility with existing view structure
+            $this->posts = $this->latestPosts;
+        } catch (\Exception $e) {
+            // Log error with LogService
+            $this->logService->error('Error loading homepage posts', [
+                'error' => $e->getMessage(),
+                'locale' => App::getLocale()
+            ]);
+            
+            // Initialize with empty collections to prevent errors in the view
+            $this->latestPosts = collect([]);
+            $this->categories = collect([]);
+            $this->popularPosts = collect([]);
+            $this->posts = collect([]);
+        }
     }
     
     /**
@@ -63,9 +85,6 @@ class HomePage extends Component
      * Reacts to asynchronous language change in the application.
      * Reloads posts with appropriate translations
      * for the newly selected language.
-     * 
-     * @param string $locale The selected language code
-     * @return void
      */
     #[On('switch-locale')]
     public function handleLanguageChange($locale)

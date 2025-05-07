@@ -8,6 +8,8 @@ use App\Models\Trainer;
 use App\Models\Reservation;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use App\Services\LogService;
+use Throwable;
 
 class CreateReservation extends Component
 {
@@ -20,20 +22,36 @@ class CreateReservation extends Component
     public $availableTimeSlots = [];
     public $timeSlotGrid = [];
     
+    protected $logService;
+    
+    public function boot()
+    {
+        $this->logService = app(LogService::class);
+    }
+    
     public function mount($trainerId)
     {
         if (!Auth::check()) {
             return redirect()->route('login');
         }
         
-        $this->trainerId = $trainerId;
-        $this->trainer = Trainer::findOrFail($trainerId);
-        
-        // Always set today's date by default
-        $this->date = Carbon::today()->format('Y-m-d');
-        
-        // Initialize time slots immediately
-        $this->updateAvailableTimeSlots();
+        try {
+            $this->trainerId = $trainerId;
+            $this->trainer = Trainer::findOrFail($trainerId);
+            
+            // Always set today's date by default
+            $this->date = Carbon::today()->format('Y-m-d');
+            
+            // Initialize time slots immediately
+            $this->updateAvailableTimeSlots();
+        } catch (Throwable $e) {
+            $this->logService->exception($e, 'Error initializing reservation form', [
+                'trainer_id' => $trainerId,
+            ]);
+            
+            session()->flash('error', __('trainers.initialization_error'));
+            return redirect()->route('trainers.index');
+        }
     }
 
     public function updatedDate()
@@ -114,20 +132,20 @@ class CreateReservation extends Component
                 $isAvailable = true;
                 $reason = '';
                 
-                // Sprawdzanie kolizji z wcześniejszymi rezerwacjami - używa tej samej logiki co w createReservation
+                // Check for conflicts with existing reservations - uses the same logic as in createReservation
                 foreach ($existingReservations as $reservation) {
                     // Create Carbon instances properly using the reservation time
                     $resStart = Carbon::parse($selectedDate->format('Y-m-d'))->setTimeFromTimeString($reservation->start_time);
                     $resEnd = Carbon::parse($selectedDate->format('Y-m-d'))->setTimeFromTimeString($reservation->end_time);
                     
-                    // Sprawdź, czy obecny slot lub slot+30 minut koliduje z rezerwacją
+                    // Check if current slot or slot+30 minutes conflicts with reservation
                     $slotTimeEnd = $slotTime->copy()->addMinutes(30);
                     
-                    // Przypadek 1: Slot zaczyna się w trakcie istniejącej rezerwacji
+                    // Case 1: Slot starts during an existing reservation
                     $case1 = $slotTime >= $resStart && $slotTime < $resEnd;
-                    // Przypadek 2: Koniec slotu wpada w istniejącą rezerwację
+                    // Case 2: Slot end falls into an existing reservation
                     $case2 = $slotTimeEnd > $resStart && $slotTimeEnd <= $resEnd;
-                    // Przypadek 3: Slot obejmuje całą istniejącą rezerwację
+                    // Case 3: Slot encompasses an entire existing reservation
                     $case3 = $slotTime <= $resStart && $slotTimeEnd >= $resEnd;
                     
                     if ($case1 || $case2 || $case3) {
@@ -163,62 +181,81 @@ class CreateReservation extends Component
     
     public function createReservation()
     {
-        // Ensure time slots are properly initialized before validation
-        $this->updateAvailableTimeSlots();
-        
-        $this->validate([
-            'date' => 'required|date|after_or_equal:today',
-            'startTime' => 'required',
-            'endTime' => 'required|after:startTime',
-            'notes' => 'nullable|string|max:500',
-        ], [
-            'startTime.required' => __('trainers.select_start_time'),
-            'endTime.required' => __('trainers.select_end_time'),
-            'endTime.after' => __('trainers.end_time_after_start'),
-        ]);
-        
-        // Poprawiona logika sprawdzania istniejących rezerwacji
-        $existingReservation = Reservation::where('trainer_id', $this->trainerId)
-            ->where('date', $this->date)
-            ->whereIn('status', ['pending', 'confirmed'])
-            ->where(function($query) {
-                // Przypadek 1: początek rezerwacji koliduje z wybranym przedziałem
-                $query->where(function($q) {
-                    $q->where('start_time', '>=', $this->startTime)
-                      ->where('start_time', '<', $this->endTime);
-                })
-                // Przypadek 2: koniec rezerwacji koliduje z wybranym przedziałem
-                ->orWhere(function($q) {
-                    $q->where('end_time', '>', $this->startTime)
-                      ->where('end_time', '<=', $this->endTime);
-                })
-                // Przypadek 3: rezerwacja obejmuje cały wybrany przedział
-                ->orWhere(function($q) {
-                    $q->where('start_time', '<=', $this->startTime)
-                      ->where('end_time', '>=', $this->endTime);
-                });
-            })
-            ->exists();
+        try {
+            // Ensure time slots are properly initialized before validation
+            $this->updateAvailableTimeSlots();
             
-        if ($existingReservation) {
-            session()->flash('error', __('trainers.time_slot_already_booked'));
+            $this->validate([
+                'date' => 'required|date|after_or_equal:today',
+                'startTime' => 'required',
+                'endTime' => 'required|after:startTime',
+                'notes' => 'nullable|string|max:500',
+            ], [
+                'startTime.required' => __('trainers.select_start_time'),
+                'endTime.required' => __('trainers.select_end_time'),
+                'endTime.after' => __('trainers.end_time_after_start'),
+            ]);
+            
+            // Improved logic for checking existing reservations
+            $existingReservation = Reservation::where('trainer_id', $this->trainerId)
+                ->where('date', $this->date)
+                ->whereIn('status', ['pending', 'confirmed'])
+                ->where(function($query) {
+                    // Case 1: Reservation start conflicts with selected time range
+                    $query->where(function($q) {
+                        $q->where('start_time', '>=', $this->startTime)
+                          ->where('start_time', '<', $this->endTime);
+                    })
+                    // Case 2: Reservation end conflicts with selected time range
+                    ->orWhere(function($q) {
+                        $q->where('end_time', '>', $this->startTime)
+                          ->where('end_time', '<=', $this->endTime);
+                    })
+                    // Case 3: Reservation encompasses the entire selected time range
+                    ->orWhere(function($q) {
+                        $q->where('start_time', '<=', $this->startTime)
+                          ->where('end_time', '>=', $this->endTime);
+                    });
+                })
+                ->exists();
+                
+            if ($existingReservation) {
+                session()->flash('error', __('trainers.time_slot_already_booked'));
+                return;
+            }
+            
+            // Create reservation
+            $reservation = Reservation::create([
+                'user_id' => Auth::id(),
+                'trainer_id' => $this->trainerId,
+                'date' => $this->date,
+                'start_time' => $this->startTime,
+                'end_time' => $this->endTime,
+                'status' => 'pending',
+                'notes' => $this->notes,
+            ]);
+            
+            $this->logService->info('New reservation created', [
+                'reservation_id' => $reservation->id,
+                'trainer_id' => $this->trainerId,
+                'user_id' => Auth::id(),
+                'date' => $this->date,
+                'time_slot' => $this->startTime . ' - ' . $this->endTime,
+            ]);
+            
+            session()->flash('success', __('trainers.reservation_created_pending'));
+            
+            return redirect()->route('user.reservations');
+        } catch (Throwable $e) {
+            $this->logService->exception($e, 'Error creating reservation', [
+                'trainer_id' => $this->trainerId,
+                'date' => $this->date,
+                'time_slot' => $this->startTime . ' - ' . $this->endTime,
+            ]);
+            
+            session()->flash('error', __('trainers.reservation_creation_error'));
             return;
         }
-        
-        // Utwórz rezerwację
-        Reservation::create([
-            'user_id' => Auth::id(),
-            'trainer_id' => $this->trainerId,
-            'date' => $this->date,
-            'start_time' => $this->startTime,
-            'end_time' => $this->endTime,
-            'status' => 'pending',
-            'notes' => $this->notes,
-        ]);
-        
-        session()->flash('success', __('trainers.reservation_created_pending'));
-        
-        return redirect()->route('user.reservations');
     }
 
     // Add a method to check if selected date is in the past

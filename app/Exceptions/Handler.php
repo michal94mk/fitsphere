@@ -7,6 +7,7 @@ use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use Throwable;
+use App\Services\LogService;
 
 class Handler extends ExceptionHandler
 {
@@ -26,22 +27,22 @@ class Handler extends ExceptionHandler
         
         // Handle EmailSendingException specifically
         $this->reportable(function (EmailSendingException $e) {
-            Log::warning('Email failed to send', [
+            // Use LogService instead of direct Log
+            app(LogService::class)->exception($e, 'Email failed to send', [
                 'recipient' => $e->getRecipient(),
                 'mailable' => $e->getMailableClass(),
-                'message' => $e->getMessage()
             ]);
             
-            return false; // Let the default reporting continue
+            return false; // Prevent default reporting
         });
         
         // Handle ApiException specifically
         $this->reportable(function (ApiException $e) {
-            Log::warning('API call failed', [
+            // Use LogService instead of direct Log
+            app(LogService::class)->exception($e, 'API call failed', [
                 'service' => $e->getServiceName(),
                 'endpoint' => $e->getEndpoint(),
                 'status_code' => $e->getStatusCode(),
-                'message' => $e->getMessage()
             ]);
             
             // For Spoonacular API, log additional information
@@ -51,7 +52,29 @@ class Handler extends ExceptionHandler
                 ]);
             }
             
-            return false; // Let the default reporting continue
+            return false; // Prevent default reporting
+        });
+
+        // Add specialized rendering for API exceptions when in API context
+        $this->renderable(function (ApiException $e, $request) {
+            if ($request->expectsJson() || $request->is('api/*')) {
+                return response()->json([
+                    'error' => true,
+                    'message' => $e->getMessage(),
+                    'service' => $e->getServiceName(),
+                    'status_code' => $e->getStatusCode() ?: 500
+                ], $e->getStatusCode() ?: 500);
+            }
+        });
+
+        // Render EmailSendingException as JSON if in API context
+        $this->renderable(function (EmailSendingException $e, $request) {
+            if ($request->expectsJson() || $request->is('api/*')) {
+                return response()->json([
+                    'error' => true,
+                    'message' => $e->getMessage(),
+                ], 500);
+            }
         });
     }
     
@@ -60,26 +83,8 @@ class Handler extends ExceptionHandler
         if (!$exception instanceof ValidationException && 
             !$exception instanceof AuthenticationException) {
             
-            $request = request();
-            $user = $request->user();
-            
-            $data = [
-                'user_id' => $user ? $user->id : null,
-                'user_email' => $user ? $user->email : null,
-                'url' => $request->fullUrl(),
-                'method' => $request->method(),
-                'client_ip' => $request->ip(),
-                'user_agent' => $request->userAgent(),
-            ];
-            
-            // For critical exceptions, add more details
-            if ($exception->getCode() >= 500 || $exception instanceof \Error) {
-                $data['trace'] = $exception->getTraceAsString();
-                $data['line'] = $exception->getLine();
-                $data['file'] = $exception->getFile();
-            }
-            
-            Log::error('Exception details', $data);
+            // Use LogService for enhanced logging
+            app(LogService::class)->exception($exception);
         }
     }
 } 

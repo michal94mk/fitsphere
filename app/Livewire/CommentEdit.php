@@ -6,48 +6,71 @@ use Livewire\Component;
 use App\Models\Comment;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
+use App\Services\LogService;
 
-/**
- * Handles comment editing functionality
- */
 class CommentEdit extends Component
 {
     public $comment;
     public $content;
+    protected $logService;
+    
+    public function boot()
+    {
+        $this->logService = app(LogService::class);
+    }
     
     public function mount($commentId)
     {
-        $this->comment = Comment::findOrFail($commentId);
-        
-        // Check if user has permission to edit this comment
-        if ($this->comment->user_id !== Auth::id()) {
-            session()->flash('error', 'You do not have permission to edit this comment.');
-            return redirect()->route('post.show', ['postId' => $this->comment->post_id]);
+        try {
+            $this->comment = Comment::findOrFail($commentId);
+            
+            // Check if user has permission to edit this comment
+            if ($this->comment->user_id !== Auth::id()) {
+                session()->flash('error', 'You do not have permission to edit this comment.');
+                return redirect()->route('post.show', ['postId' => $this->comment->post_id]);
+            }
+            
+            $this->content = $this->comment->content;
+        } catch (\Exception $e) {
+            $this->logService->error('Error loading comment for edit', [
+                'comment_id' => $commentId,
+                'user_id' => Auth::id(),
+                'error' => $e->getMessage()
+            ]);
+            
+            session()->flash('error', 'Comment not found.');
+            return redirect()->route('home');
         }
-        
-        $this->content = $this->comment->content;
     }
     
-    /**
-     * Update the comment content
-     */
     public function update()
     {
-        $this->validate([
-            'content' => 'required|min:3|max:500'
-        ]);
-        
-        if ($this->comment->user_id !== Auth::id()) {
-            session()->flash('error', 'You do not have permission to edit this comment.');
+        try {
+            $this->validate([
+                'content' => 'required|min:3|max:500'
+            ]);
+            
+            if ($this->comment->user_id !== Auth::id()) {
+                session()->flash('error', 'You do not have permission to edit this comment.');
+                return redirect()->route('post.show', ['postId' => $this->comment->post_id]);
+            }
+            
+            $this->comment->update([
+                'content' => $this->content
+            ]);
+            
+            session()->flash('success', 'Comment has been updated.');
             return redirect()->route('post.show', ['postId' => $this->comment->post_id]);
+        } catch (\Exception $e) {
+            $this->logService->error('Error updating comment', [
+                'comment_id' => $this->comment->id,
+                'user_id' => Auth::id(),
+                'error' => $e->getMessage()
+            ]);
+            
+            session()->flash('error', 'Could not update comment. Please try again.');
+            return null;
         }
-        
-        $this->comment->update([
-            'content' => $this->content
-        ]);
-        
-        session()->flash('success', 'Comment has been updated.');
-        return redirect()->route('post.show', ['postId' => $this->comment->post_id]);
     }
     
     public function cancel()

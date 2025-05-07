@@ -26,19 +26,11 @@ class PostDetails extends Component
     {
         $this->postId = $postId;
         $this->post = Post::with('user')->findOrFail($this->postId);
-        
-        // Get translation for current locale
         $this->loadTranslation();
-        
-        // Increment view count
         $this->post->increment('view_count');
-        
-        // Also track detailed view information
         $ip = Request::ip();
         $userAgent = Request::header('User-Agent');
         $userId = Auth::id() ?? null;
-        
-        // Optional: track unique views using IP + post combination
         $existingView = PostView::where('post_id', $this->postId)
             ->where('ip_address', $ip)
             ->whereDate('created_at', now()->toDateString())
@@ -54,28 +46,12 @@ class PostDetails extends Component
         }
     }
     
-    /**
-     * Loads translation for the current locale
-     * 
-     * Retrieves the appropriate translation for the post based on
-     * the current application locale.
-     */
     protected function loadTranslation()
     {
         $locale = App::getLocale();
         $this->translation = $this->post->translation($locale);
     }
     
-    /**
-     * Handles the language change event.
-     * 
-     * Reacts to asynchronous language change in the application.
-     * Reloads translations for the currently displayed post
-     * in the newly selected language without page reload.
-     * 
-     * @param string $locale The selected language code
-     * @return void
-     */
     #[On('switch-locale')]
     public function handleLanguageChange($locale)
     {

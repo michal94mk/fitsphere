@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Livewire\Attributes\Layout;
 use Illuminate\Support\Facades\App;
+use App\Exceptions\ApiException;
+use Throwable;
 
 /**
  * Meal planning component that integrates with Spoonacular API
@@ -68,23 +70,35 @@ class MealPlanner extends Component
             // Set loading to true to show user that loading is in progress
             $this->loading = true;
             
-            // Get recipe information
-            $recipe = $this->spoonacularService->getRecipeInformation((int)$recipeId);
-            
-            if ($recipe) {
-                $recipe['name'] = $recipe['title'] ?? 'Unnamed Recipe';
-                $this->selectedRecipe = $recipe;
-                \Illuminate\Support\Facades\Log::info('Successfully loaded recipe from URL parameter', [
-                    'recipe_name' => $recipe['name']
+            try {
+                // Get recipe information
+                $recipe = $this->spoonacularService->getRecipeInformation((int)$recipeId);
+                
+                if ($recipe) {
+                    $recipe['name'] = $recipe['title'] ?? 'Unnamed Recipe';
+                    $this->selectedRecipe = $recipe;
+                    \Illuminate\Support\Facades\Log::info('Successfully loaded recipe from URL parameter', [
+                        'recipe_name' => $recipe['name']
+                    ]);
+                }
+            } catch (ApiException $e) {
+                session()->flash('error', 'Error retrieving recipe: ' . $e->getMessage());
+                \Illuminate\Support\Facades\Log::error('API error loading recipe from URL parameter', [
+                    'recipeId' => $recipeId,
+                    'message' => $e->getMessage(),
+                    'service' => $e->getServiceName(),
+                    'endpoint' => $e->getEndpoint(),
+                    'status_code' => $e->getStatusCode() 
                 ]);
-            } else {
+            } catch (Throwable $e) {
                 session()->flash('error', 'Could not retrieve recipe information for ID: ' . $recipeId);
                 \Illuminate\Support\Facades\Log::error('Error loading recipe from URL parameter', [
-                    'recipeId' => $recipeId
+                    'recipeId' => $recipeId,
+                    'error' => $e->getMessage()
                 ]);
+            } finally {
+                $this->loading = false;
             }
-            
-            $this->loading = false;
         }
     }
     
@@ -171,27 +185,62 @@ class MealPlanner extends Component
             'params' => $params
         ]);
         
-        $this->generatedPlan = $this->spoonacularService->generateMealPlan(
-            $profile->target_calories,
-            $params
-        );
-        
-        $this->loading = false;
+        try {
+            $this->generatedPlan = $this->spoonacularService->generateMealPlan(
+                $profile->target_calories,
+                $params
+            );
+        } catch (ApiException $e) {
+            \Illuminate\Support\Facades\Log::error('API error generating meal plan', [
+                'message' => $e->getMessage(),
+                'service' => $e->getServiceName(),
+                'endpoint' => $e->getEndpoint(),
+                'status_code' => $e->getStatusCode()
+            ]);
+            
+            session()->flash('error', 'Could not generate meal plan: ' . $e->getMessage());
+        } catch (Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('Error generating meal plan', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            session()->flash('error', 'Could not generate meal plan: ' . $e->getMessage());
+        } finally {
+            $this->loading = false;
+        }
     }
     
     public function selectRecipe($recipeId, $recipeName)
     {
         $this->loading = true;
         
-        $this->selectedRecipe = $this->spoonacularService->getRecipeInformation($recipeId);
-        
-        if ($this->selectedRecipe) {
-            $this->selectedRecipe['name'] = $recipeName;
-        } else {
-            session()->flash('error', 'Failed to retrieve recipe information.');
+        try {
+            $this->selectedRecipe = $this->spoonacularService->getRecipeInformation($recipeId);
+            
+            if ($this->selectedRecipe) {
+                $this->selectedRecipe['name'] = $recipeName;
+            }
+        } catch (ApiException $e) {
+            \Illuminate\Support\Facades\Log::error('API error retrieving recipe information', [
+                'recipe_id' => $recipeId,
+                'message' => $e->getMessage(),
+                'service' => $e->getServiceName(),
+                'endpoint' => $e->getEndpoint(),
+                'status_code' => $e->getStatusCode() 
+            ]);
+            
+            session()->flash('error', 'Failed to retrieve recipe information: ' . $e->getMessage());
+        } catch (Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('Error retrieving recipe information', [
+                'recipe_id' => $recipeId,
+                'error' => $e->getMessage()
+            ]);
+            
+            session()->flash('error', 'Failed to retrieve recipe information: ' . $e->getMessage());
+        } finally {
+            $this->loading = false;
         }
-        
-        $this->loading = false;
     }
     
     public function saveMealToPlan()
@@ -369,7 +418,7 @@ class MealPlanner extends Component
             $this->notes = '';
             
             $this->loadMealPlansForDate($this->date);
-        } catch (\Exception $e) {
+        } catch (Throwable $e) {
             \Illuminate\Support\Facades\Log::error('Error saving meal to plan', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()

@@ -6,30 +6,38 @@ use Livewire\Component;
 use App\Models\Trainer;
 use Illuminate\Support\Facades\App;
 use Livewire\Attributes\Layout;
+use App\Services\LogService;
 
 class TrainerDetails extends Component
 {
     public $trainerId;
     public $trainer;
+    protected $logService;
+    
+    public function boot()
+    {
+        $this->logService = app(LogService::class);
+    }
 
     public function mount($trainerId)
     {
-        $this->trainerId = $trainerId;
-        
-        // Load trainer with appropriate translation for current locale
-        $locale = App::getLocale();
-        $this->trainer = Trainer::with(['translations' => function($query) use ($locale) {
-            $query->where('locale', $locale);
-        }])->findOrFail($trainerId);
-    }
-
-    public function loadTrainer()
-    {
-        $this->trainer = Trainer::where('id', $this->trainerId)->first();
-        
-        if (!$this->trainer) {
+        try {
+            $this->trainerId = $trainerId;
+            
+            // Load trainer with appropriate translation for current locale
+            $locale = App::getLocale();
+            $this->trainer = Trainer::with(['translations' => function($query) use ($locale) {
+                $query->where('locale', $locale);
+            }])->findOrFail($trainerId);
+        } catch (\Exception $e) {
+            // Log error with LogService
+            $this->logService->error('Error loading trainer details', [
+                'trainer_id' => $trainerId,
+                'error' => $e->getMessage()
+            ]);
+            
             session()->flash('error', 'Nie znaleziono trenera o podanym ID.');
-            return $this->redirect(route('trainers.list'), navigate: true);
+            $this->redirect(route('trainers.list'), navigate: true);
         }
     }
 

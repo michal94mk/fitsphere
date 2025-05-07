@@ -9,6 +9,9 @@ use App\Services\LibreTranslateService;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
 use Illuminate\Support\Facades\App;
+use App\Exceptions\ApiException;
+use Throwable;
+use App\Services\LogService;
 
 /**
  * Nutrition calculator component with recipe search functionality
@@ -223,42 +226,71 @@ class NutritionCalculator extends Component
         // since Spoonacular primarily has English content
         $wasTranslated = false;
         
-        if (App::getLocale() === 'pl') {
-            // Check if we have access to translation API
-            if (config('services.libretranslate.key') || config('services.libretranslate.url') !== 'https://libretranslate.com') {
-                $translatedQuery = $this->translateService->translate($originalQuery, 'pl', 'en');
-                
-                if ($translatedQuery && $translatedQuery !== $originalQuery) {
-                    $searchTerm = $translatedQuery;
-                    $wasTranslated = true;
-                }
-            } else {
-                // As a fallback, try using Spoonacular's translation
-                $spoonacularTranslated = $this->spoonacularService->translate($originalQuery, 'pl', 'en');
-                if ($spoonacularTranslated && $spoonacularTranslated !== $originalQuery) {
-                    $searchTerm = $spoonacularTranslated;
-                    $wasTranslated = true;
-                }
-            }
-        }
-        
-        // Perform the search with the potentially translated term
-        $results = $this->spoonacularService->searchRecipes($searchTerm, $params);
-        
-        // If search was translated, show the translated term to the user
-        if ($wasTranslated) {
-            // Only show translation information if the website is in Polish
+        try {
             if (App::getLocale() === 'pl') {
-                $message = __('nutrition_calculator.translation_detail', [
-                    'original' => $originalQuery,
-                    'translated' => $searchTerm
-                ]);
-                session()->flash('info', $message);
+                // Check if we have access to translation API
+                if (config('services.libretranslate.key') || config('services.libretranslate.url') !== 'https://libretranslate.com') {
+                    try {
+                        $translatedQuery = $this->translateService->translate($originalQuery, 'pl', 'en');
+                        
+                        if ($translatedQuery && $translatedQuery !== $originalQuery) {
+                            $searchTerm = $translatedQuery;
+                            $wasTranslated = true;
+                        }
+                    } catch (ApiException $e) {
+                        app(LogService::class)->exception($e, 'Translation API error during recipe search');
+                        // Falls back to Spoonacular translation
+                    } catch (Throwable $e) {
+                        app(LogService::class)->exception($e, 'Error translating search query');
+                    }
+                }
+                
+                // As a fallback, try using Spoonacular's translation
+                if (!$wasTranslated) {
+                    try {
+                        $spoonacularTranslated = $this->spoonacularService->translate($originalQuery, 'pl', 'en');
+                        if ($spoonacularTranslated && $spoonacularTranslated !== $originalQuery) {
+                            $searchTerm = $spoonacularTranslated;
+                            $wasTranslated = true;
+                        }
+                    } catch (ApiException $e) {
+                        app(LogService::class)->exception($e, 'Spoonacular translation error during recipe search');
+                        // Continue with original query
+                    } catch (Throwable $e) {
+                        app(LogService::class)->exception($e, 'Error translating search query with Spoonacular');
+                    }
+                }
             }
+            
+            // Perform the search with the potentially translated term
+            try {
+                $results = $this->spoonacularService->searchRecipes($searchTerm, $params);
+                
+                // If search was translated, show the translated term to the user
+                if ($wasTranslated) {
+                    // Only show translation information if the website is in Polish
+                    if (App::getLocale() === 'pl') {
+                        $message = __('nutrition_calculator.translation_detail', [
+                            'original' => $originalQuery,
+                            'translated' => $searchTerm
+                        ]);
+                        session()->flash('info', $message);
+                    }
+                }
+                
+                $this->searchResults = $results;
+            } catch (ApiException $e) {
+                app(LogService::class)->exception($e, 'API error during recipe search');
+                session()->flash('error', __('nutrition_calculator.search_api_error'));
+                $this->searchResults = ['results' => []];
+            }
+        } catch (Throwable $e) {
+            app(LogService::class)->exception($e, 'Unexpected error during recipe search');
+            session()->flash('error', __('nutrition_calculator.search_error_general'));
+            $this->searchResults = ['results' => []];
+        } finally {
+            $this->loading = false;
         }
-        
-        $this->searchResults = $results;
-        $this->loading = false;
     }
     
     public function viewRecipeDetails($recipeId)
@@ -276,71 +308,85 @@ class NutritionCalculator extends Component
         $this->translatedIngredients = [];
         $this->translatedTitle = null;
         
-        // Look for recipe in search results first to avoid additional API call
-        if (!empty($this->searchResults) && isset($this->searchResults['results'])) {
-            foreach ($this->searchResults['results'] as $recipe) {
-                if ($recipe['id'] == $recipeId) {
-                    // Debug the structure of the recipe data
-                    \Illuminate\Support\Facades\Log::info('Recipe data from search results:', [
-                        'recipe_id' => $recipe['id'],
-                        'title' => $recipe['title'],
-                        'has_instructions' => isset($recipe['instructions']),
-                        'has_analyzed_instructions' => isset($recipe['analyzedInstructions']),
-                        'has_extended_ingredients' => isset($recipe['extendedIngredients']),
-                        'data_keys' => array_keys($recipe)
-                    ]);
-                    
-                    // For search results, we might need to fetch complete data
-                    // Since search results might not include all details we need
-                    $fullRecipe = $this->spoonacularService->getRecipeInformation($recipeId);
-                    if ($fullRecipe) {
-                        $this->selectedRecipe = $fullRecipe;
-                    } else {
-                        $this->selectedRecipe = $recipe;
+        try {
+            // Look for recipe in search results first to avoid additional API call
+            $recipeFound = false;
+            if (!empty($this->searchResults) && isset($this->searchResults['results'])) {
+                foreach ($this->searchResults['results'] as $recipe) {
+                    if ($recipe['id'] == $recipeId) {
+                        // Debug the structure of the recipe data
+                        \Illuminate\Support\Facades\Log::info('Recipe data from search results:', [
+                            'recipe_id' => $recipe['id'],
+                            'title' => $recipe['title'],
+                            'has_instructions' => isset($recipe['instructions']),
+                            'has_analyzed_instructions' => isset($recipe['analyzedInstructions']),
+                            'has_extended_ingredients' => isset($recipe['extendedIngredients']),
+                            'data_keys' => array_keys($recipe)
+                        ]);
+                        
+                        // For search results, we might need to fetch complete data
+                        // Since search results might not include all details we need
+                        try {
+                            $fullRecipe = $this->spoonacularService->getRecipeInformation($recipeId);
+                            if ($fullRecipe) {
+                                $this->selectedRecipe = $fullRecipe;
+                                $recipeFound = true;
+                            } else {
+                                $this->selectedRecipe = $recipe;
+                                $recipeFound = true;
+                            }
+                        } catch (ApiException $e) {
+                            app(LogService::class)->exception($e, 'API error fetching full recipe details');
+                            $this->selectedRecipe = $recipe; // Use limited data from search results
+                            $recipeFound = true;
+                        }
+                        
+                        break;
                     }
-                    
-                    // First show the modal
-                    $this->showRecipeModal = true;
-                    $this->loading = false;
-                    
-                    // If language is Polish, set translation flag
-                    // Actual translation will start after modal is fully loaded (in JS)
-                    if ($this->autoTranslate) {
-                        $this->translateRecipe = true;
-                    }
-                    
-                    return;
                 }
             }
-        }
-        
-        // If not found in search results, fetch from API
-        $recipe = $this->spoonacularService->getRecipeInformation($recipeId);
-        
-        if ($recipe) {
-            // Debug the structure of the recipe data from direct API call
-            \Illuminate\Support\Facades\Log::info('Recipe data from direct API call:', [
-                'recipe_id' => $recipe['id'],
-                'title' => $recipe['title'],
-                'has_instructions' => isset($recipe['instructions']),
-                'has_analyzed_instructions' => isset($recipe['analyzedInstructions']),
-                'has_extended_ingredients' => isset($recipe['extendedIngredients']),
-                'data_keys' => array_keys($recipe)
-            ]);
             
-            $this->selectedRecipe = $recipe;
-            
-            // First show the modal
-            $this->showRecipeModal = true;
-            $this->loading = false;
-            
-            // If language is Polish, set translation flag
-            // Actual translation will start after modal is fully loaded (in JS)
-            if ($this->autoTranslate) {
-                $this->translateRecipe = true;
+            // If not found in search results, fetch from API
+            if (!$recipeFound) {
+                try {
+                    $recipe = $this->spoonacularService->getRecipeInformation($recipeId);
+                    
+                    if ($recipe) {
+                        // Debug the structure of the recipe data from direct API call
+                        \Illuminate\Support\Facades\Log::info('Recipe data from direct API call:', [
+                            'recipe_id' => $recipe['id'],
+                            'title' => $recipe['title'],
+                            'has_instructions' => isset($recipe['instructions']),
+                            'has_analyzed_instructions' => isset($recipe['analyzedInstructions']),
+                            'has_extended_ingredients' => isset($recipe['extendedIngredients']),
+                            'data_keys' => array_keys($recipe)
+                        ]);
+                        
+                        $this->selectedRecipe = $recipe;
+                        $recipeFound = true;
+                    }
+                } catch (ApiException $e) {
+                    app(LogService::class)->exception($e, 'API error fetching recipe details');
+                    session()->flash('error', __('nutrition_calculator.recipe_api_error'));
+                }
             }
-        } else {
+            
+            if ($recipeFound) {
+                // First show the modal
+                $this->showRecipeModal = true;
+                
+                // If language is Polish, set translation flag
+                // Actual translation will start after modal is fully loaded (in JS)
+                if ($this->autoTranslate) {
+                    $this->translateRecipe = true;
+                }
+            } else {
+                session()->flash('error', __('nutrition_calculator.recipe_fetch_error'));
+            }
+        } catch (Throwable $e) {
+            app(LogService::class)->exception($e, 'Error retrieving recipe details');
             session()->flash('error', __('nutrition_calculator.recipe_fetch_error'));
+        } finally {
             $this->loading = false;
         }
     }
@@ -381,8 +427,12 @@ class NutritionCalculator extends Component
             
             // Move on to translating instructions
             $this->translateInstructions();
-        } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::error('Error translating title: ' . $e->getMessage());
+        } catch (ApiException $e) {
+            app(LogService::class)->exception($e, 'API error translating recipe title');
+            $this->translatedTitle = $this->selectedRecipe['title']; // Use original title
+            $this->translateInstructions(); // Continue with instructions
+        } catch (Throwable $e) {
+            app(LogService::class)->exception($e, 'Error translating recipe title');
             $this->translatedTitle = $this->selectedRecipe['title']; // Use original title
             $this->translateInstructions(); // Continue with instructions
         }
@@ -400,15 +450,23 @@ class NutritionCalculator extends Component
         
         try {
             if (isset($this->selectedRecipe['instructions']) && !empty($this->selectedRecipe['instructions'])) {
-                $this->translatedInstructions = $this->translateService->translate($this->selectedRecipe['instructions'], 'en', 'pl', 'html');
+                try {
+                    $this->translatedInstructions = $this->translateService->translate($this->selectedRecipe['instructions'], 'en', 'pl', 'html');
+                    
+                    // Notify interface that instructions have been translated
+                    $this->dispatch('instructionsTranslated');
+                } catch (ApiException $e) {
+                    app(LogService::class)->exception($e, 'API error translating recipe instructions');
+                    $this->translatedInstructions = $this->selectedRecipe['instructions']; // Use original
+                } catch (Throwable $e) {
+                    app(LogService::class)->exception($e, 'Error translating recipe instructions');
+                    $this->translatedInstructions = $this->selectedRecipe['instructions']; // Use original
+                }
                 
-                // Notify interface that instructions have been translated
-                $this->dispatch('instructionsTranslated');
-                
-                // Move to ingredients
+                // Move to ingredients regardless of success
                 $this->translateIngredients();
             } elseif (isset($this->selectedRecipe['analyzedInstructions']) && is_array($this->selectedRecipe['analyzedInstructions']) && 
-                      count($this->selectedRecipe['analyzedInstructions']) > 0 && isset($this->selectedRecipe['analyzedInstructions'][0]['steps'])) {
+                    count($this->selectedRecipe['analyzedInstructions']) > 0 && isset($this->selectedRecipe['analyzedInstructions'][0]['steps'])) {
                 
                 $steps = [];
                 foreach ($this->selectedRecipe['analyzedInstructions'][0]['steps'] as $step) {
@@ -426,7 +484,10 @@ class NutritionCalculator extends Component
                         } else {
                             $translatedSteps[$index] = $step;
                         }
-                    } catch (\Exception $e) {
+                    } catch (ApiException $e) {
+                        app(LogService::class)->exception($e, 'API error translating recipe step ' . ($index + 1));
+                        $translatedSteps[$index] = $step; // Use original text
+                    } catch (Throwable $e) {
                         $translatedSteps[$index] = $step; // Use original text
                     }
                 }
@@ -449,8 +510,8 @@ class NutritionCalculator extends Component
                 // No instructions, move to ingredients
                 $this->translateIngredients();
             }
-        } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::error('Error translating instructions: ' . $e->getMessage());
+        } catch (Throwable $e) {
+            app(LogService::class)->exception($e, 'Unexpected error translating instructions');
             // In case of error, move to ingredients
             $this->translateIngredients();
         }
@@ -480,7 +541,10 @@ class NutritionCalculator extends Component
                     } else {
                         $this->translatedIngredients[$index] = $originalText;
                     }
-                } catch (\Exception $e) {
+                } catch (ApiException $e) {
+                    app(LogService::class)->exception($e, 'API error translating ingredient ' . ($index + 1));
+                    $this->translatedIngredients[$index] = $originalText;
+                } catch (Throwable $e) {
                     $this->translatedIngredients[$index] = $originalText;
                 }
             }
@@ -490,8 +554,8 @@ class NutritionCalculator extends Component
             
             // Finish translation process
             $this->finishTranslation();
-        } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::error('Error translating ingredients: ' . $e->getMessage());
+        } catch (Throwable $e) {
+            app(LogService::class)->exception($e, 'Error translating ingredients');
             $this->finishTranslation(); // Finish even with errors
         }
     }

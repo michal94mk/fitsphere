@@ -5,6 +5,8 @@ namespace App\Services;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
+use App\Exceptions\ApiException;
+use Throwable;
 
 class SpoonacularService
 {
@@ -169,12 +171,17 @@ class SpoonacularService
      * @param string $from Source language code (e.g., 'pl')
      * @param string $to Target language code (e.g., 'en')
      * @return string|null Translated text or null if translation fails
+     * @throws ApiException If API request fails
      */
     public function translate(string $text, string $from = 'pl', string $to = 'en')
     {
         if (empty($this->apiKey) || $this->apiKey === 'your_spoonacular_api_key_here') {
             Log::error('Attempt to translate without valid Spoonacular API key');
-            return null;
+            throw ApiException::spoonacular(
+                '/translate', 
+                'Missing or invalid Spoonacular API key', 
+                401
+            );
         }
 
         // Check if the text is in our dictionary (case insensitive)
@@ -247,14 +254,23 @@ class SpoonacularService
         });
     }
 
+    /**
+     * Search for recipes using Spoonacular API
+     *
+     * @param string $query Search query
+     * @param array $params Additional parameters
+     * @return array|null Search results or null if search fails
+     * @throws ApiException If API request fails
+     */
     public function searchRecipes(string $query, array $params = [])
     {
         if (empty($this->apiKey) || $this->apiKey === 'your_spoonacular_api_key_here') {
             Log::error('Attempt to search recipes without valid Spoonacular API key');
-            return [
-                'results' => [],
-                'error' => 'Valid Spoonacular API key is missing. Administrator should configure it in .env file.'
-            ];
+            throw ApiException::spoonacular(
+                '/recipes/complexSearch', 
+                'Missing or invalid Spoonacular API key', 
+                401
+            );
         }
         
         // Check if the query contains Polish characters
@@ -295,264 +311,313 @@ class SpoonacularService
             }
         }
         
-        $cacheKey = 'recipe_search_' . md5($query . serialize($params));
+        $endpoint = '/recipes/complexSearch';
+        $cacheKey = 'spoonacular_search_' . md5($query . json_encode($params));
         
-        return Cache::remember($cacheKey, 60 * 24, function () use ($query, $params, $originalQuery) {
-            try {
+        try {
+            return Cache::remember($cacheKey, 3600, function () use ($query, $params, $endpoint, $originalQuery) {
                 Log::info('Calling Spoonacular API for recipe search', [
                     'original_query' => $originalQuery,
                     'search_query' => $query,
                     'params' => array_diff_key($params, ['apiKey' => ''])
                 ]);
                 
-                $httpClient = Http::withOptions([
-                    'verify' => !app()->environment('local')
-                ]);
-                
-                $response = $httpClient->get($this->baseUrl . '/recipes/complexSearch', array_merge([
+                $requestParams = array_merge([
                     'apiKey' => $this->apiKey,
                     'query' => $query,
                     'number' => 10,
-                    'addRecipeNutrition' => true,
-                    'fillIngredients' => true,
-                    'instructionsRequired' => true,
                     'addRecipeInformation' => true,
                     'instructionsRequired' => true,
-                ], $params));
+                    'fillIngredients' => true,
+                ], $params);
+                
+                $response = Http::timeout(10)->get($this->baseUrl . $endpoint, $requestParams);
                 
                 if ($response->successful()) {
                     $data = $response->json();
                     Log::info('Received Spoonacular API response', ['count' => count($data['results'] ?? [])]);
                     return $data;
+                } else {
+                    Log::error('Spoonacular API error', [
+                        'endpoint' => $endpoint,
+                        'status' => $response->status(),
+                        'body' => $response->body()
+                    ]);
+                    
+                    throw ApiException::spoonacular(
+                        $endpoint,
+                        'Error searching recipes: ' . $response->body(),
+                        $response->status()
+                    );
                 }
-                
-                Log::error('Recipe search error: ' . $response->body(), [
-                    'status' => $response->status(), 
-                    'headers' => $response->headers()
-                ]);
-                return ['results' => [], 'error' => 'Failed to search recipes. Please try again later. Error code: ' . $response->status()];
-            } catch (\Exception $e) {
-                Log::error('Exception when searching recipes: ' . $e->getMessage(), [
-                    'exception' => get_class($e),
-                    'trace' => $e->getTraceAsString()
-                ]);
-                return ['results' => [], 'error' => 'An error occurred while searching recipes: ' . $e->getMessage()];
+            });
+        } catch (Throwable $e) {
+            if ($e instanceof ApiException) {
+                throw $e;
             }
-        });
+            
+            Log::error('Exception during recipe search', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            throw ApiException::spoonacular(
+                $endpoint,
+                'Failed to search recipes: ' . $e->getMessage()
+            );
+        }
     }
 
+    /**
+     * Get detailed recipe information from Spoonacular API
+     *
+     * @param int $recipeId Recipe ID
+     * @return array|null Recipe information or null if retrieval fails
+     * @throws ApiException If API request fails
+     */
     public function getRecipeInformation(int $recipeId)
     {
         if (empty($this->apiKey) || $this->apiKey === 'your_spoonacular_api_key_here') {
             Log::error('Attempt to get recipe information without valid Spoonacular API key');
-            return null;
+            throw ApiException::spoonacular(
+                "/recipes/{$recipeId}/information", 
+                'Missing or invalid Spoonacular API key', 
+                401
+            );
         }
         
-        $cacheKey = 'recipe_info_' . $recipeId;
-        // Clear the cache to ensure we get fresh data for troubleshooting
-        Cache::forget($cacheKey);
+        $endpoint = "/recipes/{$recipeId}/information";
+        $cacheKey = "spoonacular_recipe_{$recipeId}";
         
         try {
-            $httpClient = Http::withOptions([
-                'verify' => !app()->environment('local')
-            ]);
-            
-            Log::info('Querying recipe information', [
-                'recipe_id' => $recipeId,
-                'include_nutrition' => true,
-                'api_key_length' => strlen($this->apiKey),
-                'api_key_starts_with' => substr($this->apiKey, 0, 4)
-            ]);
-            
-            $response = $httpClient->get($this->baseUrl . '/recipes/' . $recipeId . '/information', [
-                'apiKey' => $this->apiKey,
-                'includeNutrition' => true,
-                'instructionsRequired' => true,
-                'fillIngredients' => true, 
-                'addRecipeInformation' => true,
-            ]);
-            
-            if ($response->successful()) {
-                $data = $response->json();
-                
-                Log::info('Full API response for recipe', [
-                    'recipe_id' => $recipeId,
-                    'status_code' => $response->status(),
-                    'response_headers' => $response->headers(),
-                    'response_keys' => array_keys($data),
-                    'has_nutrition' => isset($data['nutrition']),
-                    'has_instructions' => isset($data['instructions']),
-                    'has_analyzed_instructions' => isset($data['analyzedInstructions']),
-                    'has_extended_ingredients' => isset($data['extendedIngredients']),
+            return Cache::remember($cacheKey, 86400, function () use ($recipeId, $endpoint) {
+                $response = Http::timeout(10)->get($this->baseUrl . $endpoint, [
+                    'apiKey' => $this->apiKey,
+                    'includeNutrition' => true,
                 ]);
                 
-                if (isset($data['nutrition'])) {
-                    Log::info('Received nutrition data for recipe', [
+                if ($response->successful()) {
+                    $data = $response->json();
+                    
+                    Log::info('Full API response for recipe', [
                         'recipe_id' => $recipeId,
-                        'nutrition_keys' => array_keys($data['nutrition']),
-                        'has_nutrients' => isset($data['nutrition']['nutrients']),
-                        'nutrients_count' => isset($data['nutrition']['nutrients']) ? count($data['nutrition']['nutrients']) : 0,
-                        'nutrients_sample' => isset($data['nutrition']['nutrients']) && count($data['nutrition']['nutrients']) > 0 ? 
-                            array_slice($data['nutrition']['nutrients'], 0, min(5, count($data['nutrition']['nutrients']))) : []
+                        'status_code' => $response->status(),
+                        'response_headers' => $response->headers(),
+                        'response_keys' => array_keys($data),
+                        'has_nutrition' => isset($data['nutrition']),
+                        'has_instructions' => isset($data['instructions']),
+                        'has_analyzed_instructions' => isset($data['analyzedInstructions']),
+                        'has_extended_ingredients' => isset($data['extendedIngredients']),
                     ]);
                     
-                    $nutrients = $data['nutrition']['nutrients'] ?? [];
-                    $caloriesInfo = collect($nutrients)->firstWhere('name', 'Calories');
-                    $proteinInfo = collect($nutrients)->firstWhere('name', 'Protein');
-                    $carbsInfo = collect($nutrients)->firstWhere('name', 'Carbohydrates');
-                    $fatInfo = collect($nutrients)->firstWhere('name', 'Fat');
-                    
-                    $hasCalories = $caloriesInfo !== null;
-                    $hasProtein = $proteinInfo !== null;
-                    $hasCarbs = $carbsInfo !== null;
-                    $hasFat = $fatInfo !== null;
-                    
-                    Log::info('Main nutritional values status', [
-                        'recipe_id' => $recipeId,
-                        'has_calories' => $hasCalories,
-                        'calories_value' => $hasCalories ? $caloriesInfo['amount'] : null,
-                        'has_protein' => $hasProtein,
-                        'protein_value' => $hasProtein ? $proteinInfo['amount'] : null,
-                        'has_carbs' => $hasCarbs,
-                        'carbs_value' => $hasCarbs ? $carbsInfo['amount'] : null,
-                        'has_fat' => $hasFat,
-                        'fat_value' => $hasFat ? $fatInfo['amount'] : null
-                    ]);
-                } else {
-                    Log::warning('No nutrition data for recipe despite includeNutrition=true parameter', [
-                        'recipe_id' => $recipeId
-                    ]);
-                    
-                    // Try to get nutrition data from a separate endpoint as fallback
-                    Log::info('Attempting to fetch nutrition data from nutritionWidget endpoint');
-                    
-                    try {
-                        $nutritionResponse = $httpClient->get($this->baseUrl . '/recipes/' . $recipeId . '/nutritionWidget.json', [
-                            'apiKey' => $this->apiKey,
+                    if (isset($data['nutrition'])) {
+                        Log::info('Received nutrition data for recipe', [
+                            'recipe_id' => $recipeId,
+                            'nutrition_keys' => array_keys($data['nutrition']),
+                            'has_nutrients' => isset($data['nutrition']['nutrients']),
+                            'nutrients_count' => isset($data['nutrition']['nutrients']) ? count($data['nutrition']['nutrients']) : 0,
+                            'nutrients_sample' => isset($data['nutrition']['nutrients']) && count($data['nutrition']['nutrients']) > 0 ? 
+                                array_slice($data['nutrition']['nutrients'], 0, min(5, count($data['nutrition']['nutrients']))) : []
                         ]);
                         
-                        if ($nutritionResponse->successful()) {
-                            $nutritionData = $nutritionResponse->json();
-                            Log::info('Received data from nutritionWidget endpoint', [
-                                'data_keys' => array_keys($nutritionData),
-                                'calories' => $nutritionData['calories'] ?? 'missing',
-                                'protein' => $nutritionData['protein'] ?? 'missing',
-                                'carbs' => $nutritionData['carbs'] ?? 'missing',
-                                'fat' => $nutritionData['fat'] ?? 'missing'
+                        $nutrients = $data['nutrition']['nutrients'] ?? [];
+                        $caloriesInfo = collect($nutrients)->firstWhere('name', 'Calories');
+                        $proteinInfo = collect($nutrients)->firstWhere('name', 'Protein');
+                        $carbsInfo = collect($nutrients)->firstWhere('name', 'Carbohydrates');
+                        $fatInfo = collect($nutrients)->firstWhere('name', 'Fat');
+                        
+                        $hasCalories = $caloriesInfo !== null;
+                        $hasProtein = $proteinInfo !== null;
+                        $hasCarbs = $carbsInfo !== null;
+                        $hasFat = $fatInfo !== null;
+                        
+                        Log::info('Main nutritional values status', [
+                            'recipe_id' => $recipeId,
+                            'has_calories' => $hasCalories,
+                            'calories_value' => $hasCalories ? $caloriesInfo['amount'] : null,
+                            'has_protein' => $hasProtein,
+                            'protein_value' => $hasProtein ? $proteinInfo['amount'] : null,
+                            'has_carbs' => $hasCarbs,
+                            'carbs_value' => $hasCarbs ? $carbsInfo['amount'] : null,
+                            'has_fat' => $hasFat,
+                            'fat_value' => $hasFat ? $fatInfo['amount'] : null
+                        ]);
+                    } else {
+                        Log::warning('No nutrition data for recipe despite includeNutrition=true parameter', [
+                            'recipe_id' => $recipeId
+                        ]);
+                        
+                        // Try to get nutrition data from a separate endpoint as fallback
+                        Log::info('Attempting to fetch nutrition data from nutritionWidget endpoint');
+                        
+                        try {
+                            $nutritionResponse = Http::timeout(10)->get($this->baseUrl . "/recipes/{$recipeId}/nutritionWidget.json", [
+                                'apiKey' => $this->apiKey,
                             ]);
                             
-                            // Extract numeric values from strings like "110 kcal"
-                            $calories = floatval(preg_replace('/[^0-9.]/', '', $nutritionData['calories'] ?? '0'));
-                            $protein = floatval(preg_replace('/[^0-9.]/', '', $nutritionData['protein'] ?? '0'));
-                            $carbs = floatval(preg_replace('/[^0-9.]/', '', $nutritionData['carbs'] ?? '0'));
-                            $fat = floatval(preg_replace('/[^0-9.]/', '', $nutritionData['fat'] ?? '0'));
-                            
-                            Log::info('Converted nutrition values', [
-                                'calories' => $calories,
-                                'protein' => $protein,
-                                'carbs' => $carbs,
-                                'fat' => $fat
-                            ]);
-                            
-                            $data['nutrition'] = [
-                                'nutrients' => [
-                                    ['name' => 'Calories', 'amount' => $calories, 'unit' => 'kcal'],
-                                    ['name' => 'Protein', 'amount' => $protein, 'unit' => 'g'],
-                                    ['name' => 'Carbohydrates', 'amount' => $carbs, 'unit' => 'g'],
-                                    ['name' => 'Fat', 'amount' => $fat, 'unit' => 'g']
-                                ]
-                            ];
-                        } else {
-                            Log::error('Error fetching nutrition data from nutritionWidget: ' . $nutritionResponse->body());
+                            if ($nutritionResponse->successful()) {
+                                $nutritionData = $nutritionResponse->json();
+                                Log::info('Received data from nutritionWidget endpoint', [
+                                    'data_keys' => array_keys($nutritionData),
+                                    'calories' => $nutritionData['calories'] ?? 'missing',
+                                    'protein' => $nutritionData['protein'] ?? 'missing',
+                                    'carbs' => $nutritionData['carbs'] ?? 'missing',
+                                    'fat' => $nutritionData['fat'] ?? 'missing'
+                                ]);
+                                
+                                // Extract numeric values from strings like "110 kcal"
+                                $calories = floatval(preg_replace('/[^0-9.]/', '', $nutritionData['calories'] ?? '0'));
+                                $protein = floatval(preg_replace('/[^0-9.]/', '', $nutritionData['protein'] ?? '0'));
+                                $carbs = floatval(preg_replace('/[^0-9.]/', '', $nutritionData['carbs'] ?? '0'));
+                                $fat = floatval(preg_replace('/[^0-9.]/', '', $nutritionData['fat'] ?? '0'));
+                                
+                                Log::info('Converted nutrition values', [
+                                    'calories' => $calories,
+                                    'protein' => $protein,
+                                    'carbs' => $carbs,
+                                    'fat' => $fat
+                                ]);
+                                
+                                $data['nutrition'] = [
+                                    'nutrients' => [
+                                        ['name' => 'Calories', 'amount' => $calories, 'unit' => 'kcal'],
+                                        ['name' => 'Protein', 'amount' => $protein, 'unit' => 'g'],
+                                        ['name' => 'Carbohydrates', 'amount' => $carbs, 'unit' => 'g'],
+                                        ['name' => 'Fat', 'amount' => $fat, 'unit' => 'g']
+                                    ]
+                                ];
+                            } else {
+                                Log::error('Error fetching nutrition data from nutritionWidget: ' . $nutritionResponse->body());
+                            }
+                        } catch (\Exception $e) {
+                            Log::error('Exception when fetching nutrition data from nutritionWidget: ' . $e->getMessage());
                         }
-                    } catch (\Exception $e) {
-                        Log::error('Exception when fetching nutrition data from nutritionWidget: ' . $e->getMessage());
                     }
+                    
+                    return $data;
+                } else {
+                    Log::error('Spoonacular API error', [
+                        'endpoint' => $endpoint,
+                        'status' => $response->status(),
+                        'body' => $response->body()
+                    ]);
+                    
+                    throw ApiException::spoonacular(
+                        $endpoint,
+                        'Error retrieving recipe information: ' . $response->body(),
+                        $response->status()
+                    );
                 }
-                
-                return $data;
+            });
+        } catch (Throwable $e) {
+            if ($e instanceof ApiException) {
+                throw $e;
             }
             
-            Log::error('Error fetching recipe information: ' . $response->body());
-            return null;
-        } catch (\Exception $e) {
-            Log::error('Exception when fetching recipe information: ' . $e->getMessage());
-            return null;
+            Log::error('Exception during recipe information retrieval', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            throw ApiException::spoonacular(
+                $endpoint,
+                'Failed to retrieve recipe information: ' . $e->getMessage()
+            );
         }
     }
 
+    /**
+     * Generate a meal plan from Spoonacular API
+     *
+     * @param int $targetCalories Target calories for the meal plan
+     * @param array $params Additional parameters
+     * @return array|null Meal plan or null if generation fails
+     * @throws ApiException If API request fails
+     */
     public function generateMealPlan(int $targetCalories, array $params = [])
     {
         if (empty($this->apiKey) || $this->apiKey === 'your_spoonacular_api_key_here') {
             Log::error('Attempt to generate meal plan without valid Spoonacular API key');
-            return null;
+            throw ApiException::spoonacular(
+                '/mealplanner/generate', 
+                'Missing or invalid Spoonacular API key', 
+                401
+            );
         }
         
-        // Add unique timestamp identifier to cache key to avoid meal repetition
-        $cacheKey = 'meal_plan_' . $targetCalories . md5(serialize($params) . now()->format('YmdHi'));
-        Cache::forget($cacheKey);
+        $endpoint = '/mealplanner/generate';
+        $cacheKey = 'spoonacular_mealplan_' . md5($targetCalories . json_encode($params));
         
         try {
-            Log::info('Calling Spoonacular API to generate meal plan', [
-                'targetCalories' => $targetCalories,
-                'params' => array_diff_key($params, ['apiKey' => ''])
-            ]);
-            
-            $httpClient = Http::withOptions([
-                'verify' => !app()->environment('local')
-            ]);
-            
-            $apiParams = array_merge([
-                'apiKey' => $this->apiKey,
-                'targetCalories' => $targetCalories,
-                'timeFrame' => 'day',
-            ], $params);
-            
-            // Add diversity parameters if not already set
-            if (!isset($apiParams['sort'])) {
-                $apiParams['sort'] = 'random';
-            }
-            
-            if (!isset($apiParams['limitLicense'])) {
-                $apiParams['limitLicense'] = false;
-            }
-            
-            $response = $httpClient->get($this->baseUrl . '/mealplanner/generate', $apiParams);
-            
-            if ($response->successful()) {
-                $data = $response->json();
+            return Cache::remember($cacheKey, 3600, function () use ($targetCalories, $params, $endpoint) {
+                $requestParams = array_merge([
+                    'apiKey' => $this->apiKey,
+                    'timeFrame' => 'day',
+                    'targetCalories' => $targetCalories,
+                ], $params);
                 
-                if (isset($data['meals']) && is_array($data['meals'])) {
-                    Log::info('Received meal plan from Spoonacular API', [
-                        'meals_count' => count($data['meals']),
-                        'meal_titles' => collect($data['meals'])->pluck('title')->toArray()
-                    ]);
+                $response = Http::timeout(15)->get($this->baseUrl . $endpoint, $requestParams);
+                
+                if ($response->successful()) {
+                    $data = $response->json();
+                    
+                    if (isset($data['meals']) && is_array($data['meals'])) {
+                        Log::info('Received meal plan from Spoonacular API', [
+                            'meals_count' => count($data['meals']),
+                            'meal_titles' => collect($data['meals'])->pluck('title')->toArray()
+                        ]);
+                    } else {
+                        Log::warning('Received meal plan from API, but structure is different than expected');
+                    }
+                    
+                    return $data;
                 } else {
-                    Log::warning('Received meal plan from API, but structure is different than expected');
+                    Log::error('Spoonacular API error', [
+                        'endpoint' => $endpoint,
+                        'status' => $response->status(),
+                        'body' => $response->body()
+                    ]);
+                    
+                    throw ApiException::spoonacular(
+                        $endpoint,
+                        'Error generating meal plan: ' . $response->body(),
+                        $response->status()
+                    );
                 }
-                
-                return $data;
+            });
+        } catch (Throwable $e) {
+            if ($e instanceof ApiException) {
+                throw $e;
             }
             
-            Log::error('Error generating meal plan: ' . $response->body(), [
-                'status' => $response->status(),
-                'headers' => $response->headers()
-            ]);
-            return null;
-        } catch (\Exception $e) {
-            Log::error('Exception when generating meal plan: ' . $e->getMessage(), [
-                'exception' => get_class($e),
+            Log::error('Exception during meal plan generation', [
+                'message' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
-            return null;
+            
+            throw ApiException::spoonacular(
+                $endpoint,
+                'Failed to generate meal plan: ' . $e->getMessage()
+            );
         }
     }
 
+    /**
+     * Get food information from Spoonacular API
+     *
+     * @param string $query Food to get information about
+     * @return array|null Food information or null if retrieval fails
+     * @throws ApiException If API request fails
+     */
     public function getFoodInformation(string $query)
     {
         if (empty($this->apiKey) || $this->apiKey === 'your_spoonacular_api_key_here') {
             Log::error('Attempt to get food information without valid Spoonacular API key');
-            return null;
+            throw ApiException::spoonacular(
+                '/food/ingredients/search', 
+                'Missing or invalid Spoonacular API key', 
+                401
+            );
         }
         
         $cacheKey = 'food_info_' . md5($query);

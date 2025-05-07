@@ -6,8 +6,8 @@ use Livewire\Component;
 use App\Models\Subscriber;
 use App\Mail\SubscriptionConfirmation;
 use App\Services\EmailService;
+use App\Services\LogService;
 use App\Exceptions\EmailSendingException;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 
 class Footer extends Component
@@ -15,10 +15,12 @@ class Footer extends Component
     public string $email = '';
     
     protected $emailService;
+    protected $logService;
     
     public function boot()
     {
         $this->emailService = app(EmailService::class);
+        $this->logService = app(LogService::class);
     }
 
     protected array $rules = [
@@ -45,15 +47,22 @@ class Footer extends Component
         } catch (\Illuminate\Validation\ValidationException $e) {
             // Validation exceptions are already handled by Livewire
             throw $e;
-        } catch (\Exception $e) {
-            DB::rollBack();
+        } catch (\Throwable $e) {
+            if (DB::transactionLevel() > 0) {
+                DB::rollBack();
+            }
             $this->handleGeneralException($e);
         }
     }
 
     protected function createSubscriber()
     {
-        return Subscriber::create(['email' => $this->email]);
+        try {
+            return Subscriber::create(['email' => $this->email]);
+        } catch (\Throwable $e) {
+            $this->logService->exception($e, 'Failed to create subscriber');
+            throw $e; // Re-throw to be handled by parent try-catch
+        }
     }
 
     protected function sendConfirmationEmail()
@@ -74,11 +83,8 @@ class Footer extends Component
 
     protected function logEmailFailure(EmailSendingException $e)
     {
-        Log::warning('Subscription confirmation email failed', [
-            'subscriber_email' => $this->email,
-            'error' => $e->getMessage(),
-            'recipient' => $e->getRecipient(),
-            'mailable' => $e->getMailableClass()
+        $this->logService->exception($e, 'Subscription confirmation email failed', [
+            'subscriber_email' => $this->email
         ]);
     }
 
@@ -91,14 +97,11 @@ class Footer extends Component
         $this->reset('email');
     }
 
-    protected function handleGeneralException(\Exception $e)
+    protected function handleGeneralException(\Throwable $e)
     {
-        // Log the error with detailed information
-        Log::error('Error in subscription process', [
-            'email' => $this->email,
-            'error' => $e->getMessage(),
-            'class' => get_class($e),
-            'trace' => $e->getTraceAsString()
+        // Log the error with detailed information using LogService
+        $this->logService->exception($e, 'Error in subscription process', [
+            'email' => $this->email
         ]);
         
         // Add validation error to the form

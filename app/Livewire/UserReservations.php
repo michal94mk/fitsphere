@@ -7,18 +7,19 @@ use Livewire\WithPagination;
 use Livewire\Attributes\Layout;
 use App\Models\Reservation;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 
 class UserReservations extends Component
 {
     use WithPagination;
     
-    public $showCancelModal = false;
-    public $reservationToCancel = null;
+    public bool $showCancelModal = false;
+    public ?Reservation $reservationToCancel = null;
     
-    public $statusFilter = '';
-    public $dateFilter = '';
-    public $search = '';
+    public string $statusFilter = '';
+    public string $dateFilter = '';
+    public string $search = '';
     
     protected $queryString = [
         'statusFilter' => ['except' => ''],
@@ -50,16 +51,20 @@ class UserReservations extends Component
     
     public function openCancelModal($id)
     {
-        $this->reservationToCancel = Reservation::where('id', $id)
-            ->where('user_id', Auth::id())
-            ->first();
+        try {
+            $this->reservationToCancel = Reservation::where('id', $id)
+                ->where('user_id', Auth::id())
+                ->first();
+                
+            if (!$this->reservationToCancel) {
+                session()->flash('error', __('trainers.reservation_not_found'));
+                return;
+            }
             
-        if (!$this->reservationToCancel) {
-            session()->flash('error', __('trainers.reservation_not_found'));
-            return;
+            $this->showCancelModal = true;
+        } catch (\Exception $e) {
+            $this->handleError($e, 'Error opening cancel modal');
         }
-        
-        $this->showCancelModal = true;
     }
     
     public function closeCancelModal()
@@ -70,70 +75,93 @@ class UserReservations extends Component
     
     public function cancelReservation()
     {
-        if (!$this->reservationToCancel) {
-            session()->flash('error', __('trainers.reservation_not_found'));
+        try {
+            if (!$this->reservationToCancel) {
+                session()->flash('error', __('trainers.reservation_not_found'));
+                $this->closeCancelModal();
+                return;
+            }
+            
+            if ($this->reservationToCancel->status === 'completed') {
+                session()->flash('error', __('trainers.cannot_cancel_completed'));
+                $this->closeCancelModal();
+                return;
+            }
+            
+            $this->reservationToCancel->update(['status' => 'cancelled']);
+            session()->flash('success', __('trainers.reservation_cancelled'));
             $this->closeCancelModal();
-            return;
-        }
-        
-        if ($this->reservationToCancel->status === 'completed') {
-            session()->flash('error', __('trainers.cannot_cancel_completed'));
+        } catch (\Exception $e) {
+            $this->handleError($e, 'Error cancelling reservation');
             $this->closeCancelModal();
-            return;
         }
+    }
+    
+    protected function handleError(\Exception $e, string $message)
+    {
+        Log::error($message, [
+            'user_id' => Auth::id(),
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ]);
         
-        $this->reservationToCancel->update(['status' => 'cancelled']);
-        session()->flash('success', __('trainers.reservation_cancelled'));
-        $this->closeCancelModal();
+        session()->flash('error', __('common.unexpected_error'));
     }
 
     #[Layout('layouts.blog')]
     public function render()
     {
-        $query = Reservation::where('user_id', Auth::id())
-            ->with('trainer');
-            
-        // Apply status filter
-        if ($this->statusFilter) {
-            $query->where('status', $this->statusFilter);
-        } else {
-            // By default, only show non-cancelled reservations
-            $query->where('status', '!=', 'cancelled');
-        }
-        
-        // Apply date filter
-        if ($this->dateFilter) {
-            $today = Carbon::today();
-            $tomorrow = Carbon::tomorrow();
-            
-            switch ($this->dateFilter) {
-                case 'today':
-                    $query->whereDate('date', $today);
-                    break;
-                case 'tomorrow':
-                    $query->whereDate('date', $tomorrow);
-                    break;
-                case 'this_week':
-                    $query->whereBetween('date', [$today, $today->copy()->endOfWeek()]);
-                    break;
-                case 'next_week':
-                    $nextWeekStart = $today->copy()->addWeek()->startOfWeek();
-                    $nextWeekEnd = $nextWeekStart->copy()->endOfWeek();
-                    $query->whereBetween('date', [$nextWeekStart, $nextWeekEnd]);
-                    break;
+        try {
+            $query = Reservation::where('user_id', Auth::id())
+                ->with('trainer');
+                
+            // Apply status filter
+            if ($this->statusFilter) {
+                $query->where('status', $this->statusFilter);
+            } else {
+                // By default, only show non-cancelled reservations
+                $query->where('status', '!=', 'cancelled');
             }
+            
+            // Apply date filter
+            if ($this->dateFilter) {
+                $today = Carbon::today();
+                $tomorrow = Carbon::tomorrow();
+                
+                switch ($this->dateFilter) {
+                    case 'today':
+                        $query->whereDate('date', $today);
+                        break;
+                    case 'tomorrow':
+                        $query->whereDate('date', $tomorrow);
+                        break;
+                    case 'this_week':
+                        $query->whereBetween('date', [$today, $today->copy()->endOfWeek()]);
+                        break;
+                    case 'next_week':
+                        $nextWeekStart = $today->copy()->addWeek()->startOfWeek();
+                        $nextWeekEnd = $nextWeekStart->copy()->endOfWeek();
+                        $query->whereBetween('date', [$nextWeekStart, $nextWeekEnd]);
+                        break;
+                }
+            }
+            
+            // Apply search
+            if ($this->search) {
+                $query->whereHas('trainer', function($q) {
+                    $q->where('name', 'like', '%' . $this->search . '%')
+                      ->orWhere('specialization', 'like', '%' . $this->search . '%');
+                });
+            }
+            
+            return view('livewire.user-reservations', [
+                'reservations' => $query->latest()->paginate(10)
+            ]);
+        } catch (\Exception $e) {
+            $this->handleError($e, 'Error loading reservations');
+            return view('livewire.user-reservations', [
+                'reservations' => collect([])
+            ]);
         }
-        
-        // Apply search
-        if ($this->search) {
-            $query->whereHas('trainer', function($q) {
-                $q->where('name', 'like', '%' . $this->search . '%')
-                  ->orWhere('specialization', 'like', '%' . $this->search . '%');
-            });
-        }
-        
-        return view('livewire.user-reservations', [
-            'reservations' => $query->latest()->paginate(10)
-        ]);
     }
 }

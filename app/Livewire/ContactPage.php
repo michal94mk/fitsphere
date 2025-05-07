@@ -7,8 +7,8 @@ use Livewire\Attributes\Layout;
 use App\Mail\ContactFormMail;
 use App\Services\EmailService;
 use App\Exceptions\EmailSendingException;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\App;
+use App\Services\LogService;
+use Throwable;
 
 /**
  * Handles contact form submission and email sending
@@ -20,10 +20,12 @@ class ContactPage extends Component
     public string $message = '';
     
     protected $emailService;
+    protected $logService;
     
     public function boot()
     {
         $this->emailService = app(EmailService::class);
+        $this->logService = app(LogService::class);
     }
 
     protected array $rules = [
@@ -52,24 +54,28 @@ class ContactPage extends Component
             throw $e;
         } catch (EmailSendingException $e) {
             $this->handleEmailError($e);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $this->handleGeneralError($e);
         }
     }
 
     protected function sendContactEmail(array $data)
     {
-        $result = $this->emailService->send(
-            'admin@reply.com',
-            new ContactFormMail($data)
-        );
-        
-        if ($result['status'] !== 'success') {
-            throw new EmailSendingException(
-                $this->email,
-                ContactFormMail::class,
-                $result['message'] ?? 'Unknown error'
+        try {
+            $result = $this->emailService->send(
+                'admin@reply.com',
+                new ContactFormMail($data),
+                '',
+                true // Set to throw exception directly
             );
+        } catch (EmailSendingException $e) {
+            // Log using proper service
+            $this->logService->exception($e, 'Contact form email sending failed', [
+                'user_name' => $this->name,
+                'user_email' => $this->email,
+            ]);
+            
+            throw $e; // Re-throw for the main handler
         }
     }
 
@@ -85,27 +91,16 @@ class ContactPage extends Component
 
     protected function handleEmailError(EmailSendingException $e)
     {
-        // Log the specific email error
-        Log::warning('Contact form email failed', [
-            'from' => $this->email,
-            'name' => $this->name,
-            'error' => $e->getMessage(),
-            'recipient' => $e->getRecipient(),
-            'mailable' => $e->getMailableClass()
-        ]);
-        
+        // Email exceptions are already logged in sendContactEmail method
         session()->flash('error', __('contact.email_error'));
     }
 
-    protected function handleGeneralError(\Throwable $e)
+    protected function handleGeneralError(Throwable $e)
     {
         // Log detailed exception information for unexpected errors
-        Log::error('Error in contact form submission', [
-            'from' => $this->email,
-            'name' => $this->name,
-            'error' => $e->getMessage(),
-            'class' => get_class($e),
-            'trace' => $e->getTraceAsString()
+        $this->logService->exception($e, 'Unexpected error in contact form submission', [
+            'user_email' => $this->email,
+            'user_name' => $this->name,
         ]);
         
         session()->flash('error', __('contact.error'));

@@ -5,6 +5,8 @@ namespace App\Services;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
+use App\Exceptions\ApiException;
+use Throwable;
 
 class LibreTranslateService
 {
@@ -24,7 +26,8 @@ class LibreTranslateService
      * @param string $source Source language code (e.g. 'en')
      * @param string $target Target language code (e.g. 'pl')
      * @param string $format Text format ('text' or 'html')
-     * @return string|null Translated text or null in case of error
+     * @return string Translated text
+     * @throws ApiException If translation fails
      */
     public function translate($text, $source, $target, $format = 'text')
     {
@@ -43,8 +46,10 @@ class LibreTranslateService
             return Cache::get($cacheKey);
         }
         
+        $endpoint = '/translate';
+        
         try {
-            $response = Http::timeout(10)->post($this->apiUrl . '/translate', [
+            $response = Http::timeout(10)->post($this->apiUrl . $endpoint, [
                 'q' => $text,
                 'source' => $source,
                 'target' => $target,
@@ -67,14 +72,27 @@ class LibreTranslateService
                 'text_length' => strlen($text)
             ]);
             
-            return null;
-        } catch (\Exception $e) {
+            throw new ApiException(
+                $endpoint,
+                'Translation failed: ' . ($response->json()['error'] ?? 'Unknown error'),
+                'LibreTranslate',
+                $response->status()
+            );
+        } catch (Throwable $e) {
+            if ($e instanceof ApiException) {
+                throw $e;
+            }
+            
             Log::error('LibreTranslate error', [
                 'message' => $e->getMessage(),
                 'text_length' => strlen($text)
             ]);
             
-            return null;
+            throw new ApiException(
+                $endpoint,
+                'Translation service error: ' . $e->getMessage(),
+                'LibreTranslate'
+            );
         }
     }
     
@@ -82,7 +100,8 @@ class LibreTranslateService
      * Detects the language of a text
      * 
      * @param string $text Text to analyze
-     * @return string|null Language code or null in case of error
+     * @return string Language code
+     * @throws ApiException If language detection fails
      */
     public function detectLanguage($text)
     {
@@ -90,8 +109,10 @@ class LibreTranslateService
             return null;
         }
         
+        $endpoint = '/detect';
+        
         try {
-            $response = Http::timeout(5)->post($this->apiUrl . '/detect', [
+            $response = Http::timeout(5)->post($this->apiUrl . $endpoint, [
                 'q' => substr($text, 0, 500), // Limit to 500 characters for efficiency
                 'api_key' => $this->apiKey,
             ]);
@@ -103,13 +124,26 @@ class LibreTranslateService
                 }
             }
             
-            return null;
-        } catch (\Exception $e) {
+            throw new ApiException(
+                $endpoint,
+                'Language detection failed: ' . ($response->json()['error'] ?? 'Unknown error'),
+                'LibreTranslate',
+                $response->status()
+            );
+        } catch (Throwable $e) {
+            if ($e instanceof ApiException) {
+                throw $e;
+            }
+            
             Log::error('LibreTranslate language detection error', [
                 'message' => $e->getMessage()
             ]);
             
-            return null;
+            throw new ApiException(
+                $endpoint,
+                'Language detection error: ' . $e->getMessage(),
+                'LibreTranslate'
+            );
         }
     }
     
@@ -117,6 +151,7 @@ class LibreTranslateService
      * Get available languages from API
      * 
      * @return array List of available languages
+     * @throws ApiException If retrieving languages fails
      */
     public function getLanguages()
     {
@@ -126,8 +161,10 @@ class LibreTranslateService
             return Cache::get($cacheKey);
         }
         
+        $endpoint = '/languages';
+        
         try {
-            $response = Http::timeout(5)->get($this->apiUrl . '/languages', [
+            $response = Http::timeout(5)->get($this->apiUrl . $endpoint, [
                 'api_key' => $this->apiKey,
             ]);
             
@@ -137,13 +174,26 @@ class LibreTranslateService
                 return $languages;
             }
             
-            return [];
-        } catch (\Exception $e) {
+            throw new ApiException(
+                $endpoint,
+                'Failed to retrieve languages: ' . ($response->json()['error'] ?? 'Unknown error'),
+                'LibreTranslate',
+                $response->status()
+            );
+        } catch (Throwable $e) {
+            if ($e instanceof ApiException) {
+                throw $e;
+            }
+            
             Log::error('LibreTranslate error getting languages', [
                 'message' => $e->getMessage()
             ]);
             
-            return [];
+            throw new ApiException(
+                $endpoint,
+                'Error retrieving languages: ' . $e->getMessage(),
+                'LibreTranslate'
+            );
         }
     }
     
@@ -158,9 +208,28 @@ class LibreTranslateService
     public function batchTranslate(array $texts, $source, $target)
     {
         $results = [];
+        $errors = [];
         
         foreach ($texts as $index => $text) {
-            $results[$index] = $this->translate($text, $source, $target);
+            try {
+                $results[$index] = $this->translate($text, $source, $target);
+            } catch (ApiException $e) {
+                Log::warning('Batch translation error for item ' . $index, [
+                    'message' => $e->getMessage(),
+                    'service' => $e->getServiceName(),
+                    'text_length' => strlen($text)
+                ]);
+                
+                $results[$index] = $text; // Fallback to original text
+                $errors[$index] = $e->getMessage();
+            }
+        }
+        
+        if (!empty($errors)) {
+            Log::warning('Some translations in batch failed', [
+                'error_count' => count($errors),
+                'total_count' => count($texts)
+            ]);
         }
         
         return $results;
