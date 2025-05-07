@@ -76,6 +76,8 @@ class HomePage extends Component
             $this->categories = collect([]);
             $this->popularPosts = collect([]);
             $this->posts = collect([]);
+            
+            session()->flash('error', __('common.data_loading_error'));
         }
     }
     

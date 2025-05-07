@@ -97,7 +97,8 @@ class TrainersList extends Component
                 'error' => $e->getMessage()
             ]);
             
-            return view('livewire.trainers-list', ['trainers' => collect([])->paginate(12)]);
+            session()->flash('error', __('common.trainers_list_error'));
+            return view('livewire.trainers-list', ['trainers' => collect([])->paginate(9)]);
         }
     }
 } 

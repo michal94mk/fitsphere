@@ -45,4 +45,18 @@ return [
     'no_summary' => 'No summary',
     'unknown_author' => 'Unknown author',
     'views' => 'Views',
+    
+    // Error messages
+    'unexpected_error' => 'An unexpected error occurred. Please try again later.',
+    'comment_not_found' => 'Comment not found.',
+    'comment_no_permission' => 'You do not have permission to edit this comment.',
+    'comment_update_error' => 'Could not update comment. Please try again.',
+    'comment_update_success' => 'Comment has been updated.',
+    'comment_added' => 'Comment has been added.',
+    'comment_add_error' => 'Could not add comment. Please try again.',
+    'trainer_not_found' => 'Trainer not found.',
+    'trainers_list_error' => 'Could not load trainers list. Please try again.',
+    'search_error' => 'An error occurred while searching. Please try again.',
+    'data_loading_error' => 'Could not load data. Please try again.',
+    'post_not_found' => 'Post not found.',
 ]; 

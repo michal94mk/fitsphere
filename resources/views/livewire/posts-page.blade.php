@@ -6,6 +6,13 @@
                     {{ __('posts.title') }}
                 </span>
             </h1>
+            
+            <!-- Flash messages -->
+            @if (session()->has('error'))
+                <div class="mx-auto max-w-3xl mt-4 p-4 bg-red-50 border-l-4 border-red-500 text-red-800 rounded-lg">
+                    {{ session('error') }}
+                </div>
+            @endif
         </div>
 
         <!-- Filter and sort bar -->

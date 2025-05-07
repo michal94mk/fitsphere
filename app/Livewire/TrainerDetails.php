@@ -7,6 +7,7 @@ use App\Models\Trainer;
 use Illuminate\Support\Facades\App;
 use Livewire\Attributes\Layout;
 use App\Services\LogService;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class TrainerDetails extends Component
 {
@@ -29,6 +30,15 @@ class TrainerDetails extends Component
             $this->trainer = Trainer::with(['translations' => function($query) use ($locale) {
                 $query->where('locale', $locale);
             }])->findOrFail($trainerId);
+        } catch (ModelNotFoundException $e) {
+            // Log error with LogService
+            $this->logService->error('Trainer not found', [
+                'trainer_id' => $trainerId,
+                'error' => $e->getMessage()
+            ]);
+            
+            session()->flash('error', __('common.trainer_not_found'));
+            $this->redirect(route('trainers.list'), navigate: true);
         } catch (\Exception $e) {
             // Log error with LogService
             $this->logService->error('Error loading trainer details', [
@@ -36,7 +46,7 @@ class TrainerDetails extends Component
                 'error' => $e->getMessage()
             ]);
             
-            session()->flash('error', 'Nie znaleziono trenera o podanym ID.');
+            session()->flash('error', __('common.unexpected_error'));
             $this->redirect(route('trainers.list'), navigate: true);
         }
     }

@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use App\Services\LogService;
 use Throwable;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class CreateReservation extends Component
 {
@@ -44,13 +45,21 @@ class CreateReservation extends Component
             
             // Initialize time slots immediately
             $this->updateAvailableTimeSlots();
+        } catch (ModelNotFoundException $e) {
+            $this->logService->error('Trainer not found', [
+                'trainer_id' => $trainerId,
+                'error' => $e->getMessage()
+            ]);
+            
+            session()->flash('error', __('common.trainer_not_found'));
+            return redirect()->route('trainers.list');
         } catch (Throwable $e) {
             $this->logService->exception($e, 'Error initializing reservation form', [
                 'trainer_id' => $trainerId,
             ]);
             
             session()->flash('error', __('trainers.initialization_error'));
-            return redirect()->route('trainers.index');
+            return redirect()->route('trainers.list');
         }
     }
 

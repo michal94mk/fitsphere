@@ -26,7 +26,7 @@ class CommentEdit extends Component
             
             // Check if user has permission to edit this comment
             if ($this->comment->user_id !== Auth::id()) {
-                session()->flash('error', 'You do not have permission to edit this comment.');
+                session()->flash('error', __('common.comment_no_permission'));
                 return redirect()->route('post.show', ['postId' => $this->comment->post_id]);
             }
             
@@ -38,7 +38,7 @@ class CommentEdit extends Component
                 'error' => $e->getMessage()
             ]);
             
-            session()->flash('error', 'Comment not found.');
+            session()->flash('error', __('common.comment_not_found'));
             return redirect()->route('home');
         }
     }
@@ -51,7 +51,7 @@ class CommentEdit extends Component
             ]);
             
             if ($this->comment->user_id !== Auth::id()) {
-                session()->flash('error', 'You do not have permission to edit this comment.');
+                session()->flash('error', __('common.comment_no_permission'));
                 return redirect()->route('post.show', ['postId' => $this->comment->post_id]);
             }
             
@@ -59,7 +59,7 @@ class CommentEdit extends Component
                 'content' => $this->content
             ]);
             
-            session()->flash('success', 'Comment has been updated.');
+            session()->flash('success', __('common.comment_update_success'));
             return redirect()->route('post.show', ['postId' => $this->comment->post_id]);
         } catch (\Exception $e) {
             $this->logService->error('Error updating comment', [
@@ -68,7 +68,7 @@ class CommentEdit extends Component
                 'error' => $e->getMessage()
             ]);
             
-            session()->flash('error', 'Could not update comment. Please try again.');
+            session()->flash('error', __('common.comment_update_error'));
             return null;
         }
     }
