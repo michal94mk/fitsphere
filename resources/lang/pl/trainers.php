@@ -111,6 +111,16 @@ return [
     'date' => 'Data',
     'time' => 'Godzina',
     'close' => 'Powrót',
+    'reservation_not_found' => 'Nie znaleziono rezerwacji.',
+    'cannot_cancel_completed' => 'Nie można anulować zakończonej rezerwacji.',
+    'reservation_cancelled' => 'Rezerwacja została anulowana.',
+    'reservation_confirmed' => 'Rezerwacja została potwierdzona.',
+    'reservation_completed' => 'Rezerwacja została oznaczona jako zakończona.',
+    'reservation_created_pending' => 'Rezerwacja została utworzona i oczekuje na potwierdzenie przez trenera.',
+    'time_slot_already_booked' => 'Ten termin jest już zajęty. Wybierz inny czas.',
+    'select_start_time' => 'Wybierz godzinę rozpoczęcia.',
+    'select_end_time' => 'Wybierz godzinę zakończenia.',
+    'end_time_after_start' => 'Godzina zakończenia musi być późniejsza niż godzina rozpoczęcia.',
     
     // Create Reservation page
     'reservation_with' => 'Rezerwacja u trenera',

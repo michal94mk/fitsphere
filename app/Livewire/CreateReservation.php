@@ -172,9 +172,9 @@ class CreateReservation extends Component
             'endTime' => 'required|after:startTime',
             'notes' => 'nullable|string|max:500',
         ], [
-            'startTime.required' => 'Wybierz godzinę rozpoczęcia.',
-            'endTime.required' => 'Wybierz godzinę zakończenia.',
-            'endTime.after' => 'Godzina zakończenia musi być późniejsza niż godzina rozpoczęcia.',
+            'startTime.required' => __('trainers.select_start_time'),
+            'endTime.required' => __('trainers.select_end_time'),
+            'endTime.after' => __('trainers.end_time_after_start'),
         ]);
         
         // Poprawiona logika sprawdzania istniejących rezerwacji
@@ -201,7 +201,7 @@ class CreateReservation extends Component
             ->exists();
             
         if ($existingReservation) {
-            session()->flash('error', 'Ten termin jest już zajęty. Wybierz inny czas.');
+            session()->flash('error', __('trainers.time_slot_already_booked'));
             return;
         }
         
@@ -216,7 +216,7 @@ class CreateReservation extends Component
             'notes' => $this->notes,
         ]);
         
-        session()->flash('success', 'Rezerwacja została utworzona i oczekuje na potwierdzenie przez trenera.');
+        session()->flash('success', __('trainers.reservation_created_pending'));
         
         return redirect()->route('user.reservations');
     }

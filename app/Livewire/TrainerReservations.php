@@ -81,13 +81,13 @@ class TrainerReservations extends Component
             ->first();
             
         if (!$reservation) {
-            session()->flash('error', 'Nie znaleziono rezerwacji.');
+            session()->flash('error', __('trainers.reservation_not_found'));
             return;
         }
         
         $reservation->update(['status' => 'confirmed']);
         $this->loadReservationCounts();
-        session()->flash('success', 'Rezerwacja została potwierdzona.');
+        session()->flash('success', __('trainers.reservation_confirmed'));
     }
     
     public function cancelReservation($id)
@@ -97,13 +97,13 @@ class TrainerReservations extends Component
             ->first();
             
         if (!$reservation) {
-            session()->flash('error', 'Nie znaleziono rezerwacji.');
+            session()->flash('error', __('trainers.reservation_not_found'));
             return;
         }
         
         $reservation->update(['status' => 'cancelled']);
         $this->loadReservationCounts();
-        session()->flash('success', 'Rezerwacja została anulowana.');
+        session()->flash('success', __('trainers.reservation_cancelled'));
     }
     
     public function completeReservation($id)
@@ -113,13 +113,13 @@ class TrainerReservations extends Component
             ->first();
             
         if (!$reservation) {
-            session()->flash('error', 'Nie znaleziono rezerwacji.');
+            session()->flash('error', __('trainers.reservation_not_found'));
             return;
         }
         
         $reservation->update(['status' => 'completed']);
         $this->loadReservationCounts();
-        session()->flash('success', 'Rezerwacja została oznaczona jako zakończona.');
+        session()->flash('success', __('trainers.reservation_completed'));
     }
 
     #[Layout('layouts.trainer')]

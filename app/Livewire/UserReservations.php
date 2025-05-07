@@ -55,7 +55,7 @@ class UserReservations extends Component
             ->first();
             
         if (!$this->reservationToCancel) {
-            session()->flash('error', 'Nie znaleziono rezerwacji.');
+            session()->flash('error', __('trainers.reservation_not_found'));
             return;
         }
         
@@ -71,19 +71,19 @@ class UserReservations extends Component
     public function cancelReservation()
     {
         if (!$this->reservationToCancel) {
-            session()->flash('error', 'Nie znaleziono rezerwacji.');
+            session()->flash('error', __('trainers.reservation_not_found'));
             $this->closeCancelModal();
             return;
         }
         
         if ($this->reservationToCancel->status === 'completed') {
-            session()->flash('error', 'Nie można anulować zakończonej rezerwacji.');
+            session()->flash('error', __('trainers.cannot_cancel_completed'));
             $this->closeCancelModal();
             return;
         }
         
         $this->reservationToCancel->update(['status' => 'cancelled']);
-        session()->flash('success', 'Rezerwacja została anulowana.');
+        session()->flash('success', __('trainers.reservation_cancelled'));
         $this->closeCancelModal();
     }
 

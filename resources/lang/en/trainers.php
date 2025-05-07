@@ -111,6 +111,16 @@ return [
     'date' => 'Date',
     'time' => 'Time',
     'close' => 'Back',
+    'reservation_not_found' => 'Reservation not found.',
+    'cannot_cancel_completed' => 'Cannot cancel a completed reservation.',
+    'reservation_cancelled' => 'Reservation has been cancelled.',
+    'reservation_confirmed' => 'Reservation has been confirmed.',
+    'reservation_completed' => 'Reservation has been marked as completed.',
+    'reservation_created_pending' => 'Reservation has been created and is awaiting confirmation by the trainer.',
+    'time_slot_already_booked' => 'This time slot is already booked. Please choose another time.',
+    'select_start_time' => 'Please select a start time.',
+    'select_end_time' => 'Please select an end time.',
+    'end_time_after_start' => 'End time must be after start time.',
     
     // Create Reservation page
     'reservation_with' => 'Reservation with trainer',
