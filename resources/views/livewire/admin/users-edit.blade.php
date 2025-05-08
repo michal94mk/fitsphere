@@ -1,5 +1,5 @@
 <x-slot name="header">
-    Edytuj użytkownika
+    {{ __('admin.edit_user') }}
 </x-slot>
 
 <div>
@@ -23,24 +23,24 @@
             </div>
         @endif
 
-        <h1 class="text-2xl font-bold mb-6">Edytuj użytkownika</h1>
+        <h1 class="text-2xl font-bold mb-6">{{ __('admin.edit_user') }}</h1>
 
         <div class="bg-white rounded-lg shadow overflow-hidden">
             <form wire:submit="save">
                 <div class="p-6 space-y-6">
                     <!-- User information section -->
                     <div>
-                        <h2 class="text-lg font-medium text-gray-900 border-b pb-2">Dane podstawowe</h2>
+                        <h2 class="text-lg font-medium text-gray-900 border-b pb-2">{{ __('admin.user_info') }}</h2>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
                             <div>
-                                <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Imię</label>
+                                <label for="name" class="block text-sm font-medium text-gray-700 mb-1">{{ __('admin.first_name') }}</label>
                                 <input type="text" id="name" wire:model="name" 
                                        class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                                 @error('name') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                             </div>
                             
                             <div>
-                                <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                                <label for="email" class="block text-sm font-medium text-gray-700 mb-1">{{ __('admin.email') }}</label>
                                 <input type="email" id="email" wire:model="email" 
                                        class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                                 @error('email') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
@@ -50,23 +50,23 @@
                     
                     <!-- Password change section (optional) -->
                     <div>
-                        <h2 class="text-lg font-medium text-gray-900 border-b pb-2">Zmiana hasła (opcjonalnie)</h2>
+                        <h2 class="text-lg font-medium text-gray-900 border-b pb-2">{{ __('admin.change_password') }}</h2>
                         <div class="mt-4">
                             <label class="inline-flex items-center mb-4">
                                 <input type="checkbox" wire:model="changePassword" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                                <span class="ml-2 text-sm text-gray-700">Zmień hasło</span>
+                                <span class="ml-2 text-sm text-gray-700">{{ __('admin.change_password_checkbox') }}</span>
                             </label>
                             
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
-                                    <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Nowe hasło</label>
+                                    <label for="password" class="block text-sm font-medium text-gray-700 mb-1">{{ __('admin.new_password') }}</label>
                                     <input type="password" id="password" wire:model="password" 
                                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                                     @error('password') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                                 </div>
                                 
                                 <div>
-                                    <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-1">Potwierdź nowe hasło</label>
+                                    <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-1">{{ __('admin.confirm_new_password') }}</label>
                                     <input type="password" id="password_confirmation" wire:model="password_confirmation" 
                                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                                 </div>
@@ -76,14 +76,14 @@
                     
                     <!-- User-specific information -->
                     <div>
-                        <h2 class="text-lg font-medium text-gray-900 border-b pb-2">Profil użytkownika</h2>
+                        <h2 class="text-lg font-medium text-gray-900 border-b pb-2">{{ __('admin.user_profile') }}</h2>
                         <div class="grid grid-cols-1 md:grid-cols-1 gap-6 mt-4">
                             <div>
-                                <label for="role" class="block text-sm font-medium text-gray-700 mb-1">Rola</label>
+                                <label for="role" class="block text-sm font-medium text-gray-700 mb-1">{{ __('admin.role') }}</label>
                                 <select id="role" wire:model="role" 
                                        class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                                    <option value="admin">Admin</option>
-                                    <option value="user">Użytkownik</option>
+                                    <option value="admin">{{ __('admin.admin') }}</option>
+                                    <option value="user">{{ __('admin.user') }}</option>
                                 </select>
                                 @error('role') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                             </div>
@@ -92,7 +92,7 @@
                     
                     <!-- Profile photo upload -->
                     <div>
-                        <h2 class="text-lg font-medium text-gray-900 border-b pb-2">Zdjęcie profilowe</h2>
+                        <h2 class="text-lg font-medium text-gray-900 border-b pb-2">{{ __('admin.profile_image') }}</h2>
                         <div class="mt-4">
                             <div class="flex items-center">
                                 <div class="flex-shrink-0">
@@ -111,16 +111,16 @@
                                 <div class="ml-5">
                                     <div class="flex items-center">
                                         <label for="photo" class="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none">
-                                            <span>{{ $existing_photo ? 'Zmień zdjęcie' : 'Prześlij zdjęcie' }}</span>
+                                            <span>{{ $existing_photo ? __('admin.change_image') : __('admin.upload_image') }}</span>
                                             <input id="photo" wire:model.live="photo" type="file" class="sr-only" accept="image/*">
                                         </label>
                                     </div>
-                                    <p class="text-xs text-gray-500">PNG, JPG, do 1MB</p>
+                                    <p class="text-xs text-gray-500">{{ __('admin.image_requirements') }}</p>
                                     @error('photo') <span class="text-red-500 text-sm block mt-1">{{ $message }}</span> @enderror
                                     
                                     @if ($photo || $existing_photo)
                                         <button type="button" wire:click="removePhoto" class="mt-2 text-sm text-red-600 hover:text-red-900">
-                                            Usuń zdjęcie
+                                            {{ __('admin.remove_image') }}
                                         </button>
                                     @endif
                                 </div>
@@ -132,10 +132,10 @@
                 <div class="px-6 py-3 bg-gray-50 flex justify-between">
                     <a href="{{ route('admin.users.index') }}" wire:navigate 
                        class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 transition">
-                        Wróć do listy
+                        {{ __('admin.back_to_list') }}
                     </a>
                     <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition">
-                        Zapisz zmiany
+                        {{ __('admin.save_changes') }}
                     </button>
                 </div>
             </form>

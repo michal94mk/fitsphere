@@ -1,5 +1,5 @@
 <x-slot name="header">
-    Zarządzanie użytkownikami
+    {{ __('admin.manage_users') }}
 </x-slot>
 
 <div>
@@ -7,7 +7,7 @@
         <!-- Header with title and buttons -->
         <div class="flex justify-between items-center mb-4">
             <h1 class="text-2xl font-bold">
-                Lista użytkowników 
+                {{ __('admin.user_list') }} 
                 @if ($role !== 'all')
                     <span class="text-sm font-normal bg-gray-200 rounded-full px-3 py-1 ml-2">{{ ucfirst($role) }}</span>
                 @endif
@@ -17,7 +17,7 @@
                 <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                 </svg>
-                Dodaj
+                {{ __('admin.add') }}
             </a>
         </div>
 
@@ -37,37 +37,37 @@
         <div class="mb-4 bg-white p-3 rounded-lg shadow">
             <div class="flex flex-col md:flex-row gap-3">
                 <div class="flex-1">
-                    <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Wyszukaj</label>
+                    <label for="search" class="block text-sm font-medium text-gray-700 mb-1">{{ __('admin.search') }}</label>
                     <input wire:model.live.debounce.300ms="search" type="text" id="search"
                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                           placeholder="Nazwa lub email...">
+                           placeholder="{{ __('admin.search_placeholder') }}">
                 </div>
                 <div class="md:w-40">
-                    <label for="role" class="block text-sm font-medium text-gray-700 mb-1">Rola</label>
+                    <label for="role" class="block text-sm font-medium text-gray-700 mb-1">{{ __('admin.role') }}</label>
                     <select wire:model.live="role" id="role"
                             class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                        <option value="all">Wszystkie</option>
-                        <option value="user">Użytkownik</option>
-                        <option value="admin">Administrator</option>
+                        <option value="all">{{ __('admin.all') }}</option>
+                        <option value="user">{{ __('admin.user') }}</option>
+                        <option value="admin">{{ __('admin.admin') }}</option>
                     </select>
                 </div>
                 <div class="md:w-40">
-                    <label for="sortField" class="block text-sm font-medium text-gray-700 mb-1">Sortuj</label>
+                    <label for="sortField" class="block text-sm font-medium text-gray-700 mb-1">{{ __('admin.sort_field') }}</label>
                     <select wire:model.live="sortField" id="sortField"
                             class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                        <option value="created_at">Data utworzenia</option>
-                        <option value="name">Nazwa</option>
-                        <option value="email">Email</option>
-                        <option value="role">Rola</option>
-                        <option value="id">ID</option>
+                        <option value="created_at">{{ __('admin.created_at') }}</option>
+                        <option value="name">{{ __('admin.user_name') }}</option>
+                        <option value="email">{{ __('admin.email') }}</option>
+                        <option value="role">{{ __('admin.role') }}</option>
+                        <option value="id">{{ __('admin.user_id') }}</option>
                     </select>
                 </div>
                 <div class="md:w-40">
-                    <label for="sortDirection" class="block text-sm font-medium text-gray-700 mb-1">Kierunek</label>
+                    <label for="sortDirection" class="block text-sm font-medium text-gray-700 mb-1">{{ __('admin.sort_direction') }}</label>
                     <select wire:model.live="sortDirection" id="sortDirection"
                             class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                        <option value="desc">Malejąco</option>
-                        <option value="asc">Rosnąco</option>
+                        <option value="desc">{{ __('admin.descending') }}</option>
+                        <option value="asc">{{ __('admin.ascending') }}</option>
                     </select>
                 </div>
             </div>
@@ -79,16 +79,16 @@
                 <thead class="bg-gray-50">
                     <tr>
                         <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Użytkownik
+                            {{ __('admin.user_name') }}
                         </th>
                         <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Status / Rola
+                            {{ __('admin.user_status') }} / {{ __('admin.user_role') }}
                         </th>
                         <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Data
+                            {{ __('admin.comment_date') }}
                         </th>
                         <th scope="col" class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Akcje
+                            {{ __('admin.actions') }}
                         </th>
                     </tr>
                 </thead>
@@ -115,7 +115,7 @@
                                             {{ $user->name }}
                                         </div>
                                         <div class="text-xs text-gray-500">
-                                            <div>ID: {{ $user->id }}</div>
+                                            <div>{{ __('admin.user_id') }}: {{ $user->id }}</div>
                                             <div>{{ $user->email }}</div>
                                         </div>
                                     </div>
@@ -125,11 +125,11 @@
                                 <div>
                                     @if($user->email_verified_at)
                                         <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                            Zweryfikowany
+                                            {{ __('admin.verified') }}
                                         </span>
                                     @else
                                         <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                                            Niezweryfikowany
+                                            {{ __('admin.not_verified') }}
                                         </span>
                                     @endif
                                 </div>
@@ -141,10 +141,10 @@
                                 </div>
                             </td>
                             <td class="px-4 py-3 whitespace-nowrap text-xs text-gray-500">
-                                <div>Utw: {{ $user->created_at ? $user->created_at->format('d.m.Y') : 'N/A' }}</div>
-                                <div>Akt: {{ $user->updated_at ? $user->updated_at->format('d.m.Y') : 'N/A' }}</div>
+                                <div>{{ __('admin.created') }}: {{ $user->created_at ? $user->created_at->format('d.m.Y') : 'N/A' }}</div>
+                                <div>{{ __('admin.updated') }}: {{ $user->updated_at ? $user->updated_at->format('d.m.Y') : 'N/A' }}</div>
                                 @if($user->email_verified_at)
-                                    <div>Wer: {{ $user->email_verified_at->format('d.m.Y') }}</div>
+                                    <div>{{ __('admin.verified_short') }}: {{ $user->email_verified_at->format('d.m.Y') }}</div>
                                 @endif
                             </td>
                             <td class="px-4 py-3 whitespace-nowrap text-right text-sm font-medium">
@@ -152,13 +152,13 @@
                                     <!-- Przycisk edycji -->
                                     <a href="{{ route('admin.users.edit', $user->id) }}" wire:navigate
                                        class="bg-blue-100 text-blue-700 px-2 py-1 rounded-md hover:bg-blue-200 text-xs font-medium transition">
-                                        Edytuj
+                                        {{ __('admin.edit') }}
                                     </a>
                                     
                                     <!-- Przycisk usuwania -->
                                     <button wire:click="confirmUserDeletion({{ $user->id }})" 
                                             class="bg-red-100 text-red-700 px-2 py-1 rounded-md hover:bg-red-200 text-xs font-medium transition">
-                                        Usuń
+                                        {{ __('admin.delete') }}
                                     </button>
                                 </div>
                             </td>
@@ -166,7 +166,7 @@
                     @empty
                         <tr>
                             <td colspan="4" class="px-4 py-3 whitespace-nowrap text-sm text-gray-500 text-center">
-                                Nie znaleziono użytkowników.
+                                {{ __('admin.no_users_found') }}
                             </td>
                         </tr>
                     @endforelse
@@ -213,11 +213,11 @@
                         </div>
                         <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
                             <h3 class="text-lg font-medium leading-6 text-gray-900" id="modal-title">
-                                Usuń użytkownika
+                                {{ __('admin.delete_confirmation') }}
                             </h3>
                             <div class="mt-2">
                                 <p class="text-sm text-gray-500">
-                                    Czy na pewno chcesz usunąć tego użytkownika? Ta operacja jest nieodwracalna.
+                                    {{ __('admin.delete_confirmation_message') }}
                                 </p>
                             </div>
                         </div>
@@ -225,10 +225,10 @@
                 </div>
                 <div class="px-4 py-3 bg-gray-50 sm:px-6 sm:flex sm:flex-row-reverse">
                     <button type="button" wire:click="deleteUser" class="inline-flex justify-center w-full px-4 py-2 text-base font-medium text-white bg-red-600 border border-transparent rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm">
-                        Usuń
+                        {{ __('admin.delete') }}
                     </button>
                     <button type="button" wire:click="cancelDeletion" class="inline-flex justify-center w-full px-4 py-2 mt-3 text-base font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
-                        Anuluj
+                        {{ __('admin.cancel') }}
                     </button>
                 </div>
             </div>

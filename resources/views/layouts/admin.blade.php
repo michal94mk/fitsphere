@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', $title ?? 'Admin')
+@section('title', $title ?? __('admin.admin_panel'))
 
 @section('body-class', 'bg-gray-100')
 
@@ -26,7 +26,7 @@
                 <!-- Sidebar header -->
                 <div class="flex items-center h-16 px-4 bg-gray-900">
                     <span class="text-lg font-bold text-white">
-                        {{ config('app.name') . ' Admin' }}
+                        {{ config('app.name') . ' ' . __('admin.admin_panel') }}
                     </span>
                 </div>
                 
@@ -37,49 +37,49 @@
                             <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 22V12h6v10M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
                             </svg>
-                            Strona główna
+                            {{ __('admin.back_to_site') }}
                         </a>
                         
                         <a href="{{ route('admin.dashboard') }}" wire:navigate class="flex items-center px-3 py-2 text-sm font-medium {{ request()->routeIs('admin.dashboard') ? 'text-white bg-gray-700' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }} rounded-md">
                             <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                             </svg>
-                            Dashboard
+                            {{ __('admin.dashboard') }}
                         </a>
                         
                         <a href="{{ route('admin.users.index') }}" wire:navigate class="flex items-center px-3 py-2 text-sm font-medium {{ request()->routeIs('admin.users.*') ? 'text-white bg-gray-700' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }} rounded-md">
                             <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
                             </svg>
-                            Użytkownicy
+                            {{ __('admin.users') }}
                         </a>
                         
                         <a href="{{ route('admin.trainers.index') }}" wire:navigate class="flex items-center px-3 py-2 text-sm font-medium {{ request()->routeIs('admin.trainers.*') ? 'text-white bg-gray-700' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }} rounded-md">
                             <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                             </svg>
-                            Trenerzy
+                            {{ __('admin.trainers') }}
                         </a>
                         
                         <a href="{{ route('admin.posts.index') }}" wire:navigate class="flex items-center px-3 py-2 text-sm font-medium {{ request()->routeIs('admin.posts.*') ? 'text-white bg-gray-700' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }} rounded-md">
                             <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path>
                             </svg>
-                            Posty
+                            {{ __('admin.posts') }}
                         </a>
 
                         <a href="{{ route('admin.categories.index') }}" wire:navigate class="flex items-center px-3 py-2 text-sm font-medium {{ request()->routeIs('admin.categories.*') ? 'text-white bg-gray-700' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }} rounded-md">
                             <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
                             </svg>
-                            Kategorie
+                            {{ __('admin.manage_categories') }}
                         </a>
                         
                         <a href="{{ route('admin.comments.index') }}" wire:navigate class="flex items-center px-3 py-2 text-sm font-medium {{ request()->routeIs('admin.comments.*') ? 'text-white bg-gray-700' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }} rounded-md">
                             <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path>
                             </svg>
-                            Komentarze
+                            {{ __('admin.comments') }}
                         </a>
                     </nav>
                 </div>
@@ -94,7 +94,7 @@
                                 </div>
                                 <div>
                                     <p class="text-sm font-medium text-white">{{ Auth::user()->name }}</p>
-                                    <p class="text-xs text-gray-400">Administrator</p>
+                                    <p class="text-xs text-gray-400">{{ __('admin.admin') }}</p>
                                 </div>
                             </div>
                             <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="text-gray-400 hover:text-white">
@@ -106,8 +106,8 @@
                             <div class="flex items-center">
                                 <div class="w-8 h-8 rounded-full bg-gray-500 mr-3"></div>
                                 <div>
-                                    <p class="text-sm font-medium text-white">Niezalogowany</p>
-                                    <p class="text-xs text-gray-400">Zaloguj się</p>
+                                    <p class="text-sm font-medium text-white">{{ __('Not Logged In') }}</p>
+                                    <p class="text-xs text-gray-400">{{ __('Login') }}</p>
                                 </div>
                             </div>
                             <a href="{{ route('login') }}" class="text-gray-400 hover:text-white">
@@ -147,7 +147,7 @@
                 
                 <!-- Mobile sidebar header -->
                 <div class="flex-shrink-0 flex items-center h-16 px-4 bg-gray-900">
-                    <span class="text-lg font-bold text-white">{{ config('app.name') . ' Admin' }}</span>
+                    <span class="text-lg font-bold text-white">{{ config('app.name') . ' ' . __('admin.admin_panel') }}</span>
                 </div>
                 
                 <!-- Mobile sidebar navigation -->
@@ -157,49 +157,49 @@
                             <svg class="mr-3 h-6 w-6 text-gray-400 group-hover:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 22V12h6v10M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
                             </svg>
-                            Strona główna
+                            {{ __('admin.back_to_site') }}
                         </a>
                         
                         <a href="{{ route('admin.dashboard') }}" wire:navigate class="group flex items-center px-2 py-2 text-base font-medium rounded-md {{ request()->routeIs('admin.dashboard') ? 'text-white bg-gray-700' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
                             <svg class="mr-3 h-6 w-6 text-gray-400 group-hover:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                             </svg>
-                            Dashboard
+                            {{ __('admin.dashboard') }}
                         </a>
                         
                         <a href="{{ route('admin.users.index') }}" wire:navigate class="group flex items-center px-2 py-2 text-base font-medium rounded-md {{ request()->routeIs('admin.users.*') ? 'text-white bg-gray-700' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
                             <svg class="mr-3 h-6 w-6 text-gray-400 group-hover:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
                             </svg>
-                            Użytkownicy
+                            {{ __('admin.users') }}
                         </a>
                         
                         <a href="{{ route('admin.trainers.index') }}" wire:navigate class="group flex items-center px-2 py-2 text-base font-medium rounded-md {{ request()->routeIs('admin.trainers.*') ? 'text-white bg-gray-700' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
                             <svg class="mr-3 h-6 w-6 text-gray-400 group-hover:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                             </svg>
-                            Trenerzy
+                            {{ __('admin.trainers') }}
                         </a>
                         
                         <a href="{{ route('admin.posts.index') }}" wire:navigate class="group flex items-center px-2 py-2 text-base font-medium rounded-md {{ request()->routeIs('admin.posts.*') ? 'text-white bg-gray-700' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
                             <svg class="mr-3 h-6 w-6 text-gray-400 group-hover:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path>
                             </svg>
-                            Posty
+                            {{ __('admin.posts') }}
                         </a>
                         
                         <a href="{{ route('admin.categories.index') }}" wire:navigate class="group flex items-center px-2 py-2 text-base font-medium rounded-md {{ request()->routeIs('admin.categories.*') ? 'text-white bg-gray-700' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
                             <svg class="mr-3 h-6 w-6 text-gray-400 group-hover:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
                             </svg>
-                            Kategorie
+                            {{ __('admin.manage_categories') }}
                         </a>
                         
                         <a href="{{ route('admin.comments.index') }}" wire:navigate class="group flex items-center px-2 py-2 text-base font-medium rounded-md {{ request()->routeIs('admin.comments.*') ? 'text-white bg-gray-700' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
                             <svg class="mr-3 h-6 w-6 text-gray-400 group-hover:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path>
                             </svg>
-                            Komentarze
+                            {{ __('admin.comments') }}
                         </a>
                     </nav>
                 </div>
@@ -218,7 +218,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                     </svg>
                 </button>
-                <span class="text-lg font-medium text-gray-900">Panel administratora</span>
+                <span class="text-lg font-medium text-gray-900">{{ __('admin.admin_panel') }}</span>
                 <div class="w-8"></div> <!-- Spacer for balance -->
             </div>
             
@@ -226,7 +226,7 @@
             <header class="bg-white shadow hidden md:block">
                 <div class="px-4 py-6 mx-auto max-w-7xl sm:px-6 lg:px-8">
                     <h1 class="text-xl font-semibold text-gray-900">
-                        {{ $header ?? 'Dashboard' }}
+                        {{ $header ?? __('admin.dashboard') }}
                     </h1>
                 </div>
             </header>

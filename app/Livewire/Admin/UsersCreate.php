@@ -18,7 +18,7 @@ class UsersCreate extends Component
     public $password = '';
     public $password_confirmation = '';
     public $role = 'user';
-    public $image;
+    public $photo;
     
     protected function rules()
     {
@@ -27,7 +27,7 @@ class UsersCreate extends Component
             'email' => 'required|string|email:rfc,dns|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/',
             'role' => 'required|in:admin,user',
-            'image' => 'nullable|image|max:1024'
+            'photo' => 'nullable|image|max:1024'
         ];
     }
     
@@ -45,9 +45,21 @@ class UsersCreate extends Component
             'password.regex' => __('validation.user.password.regex'),
             'role.required' => __('validation.user.role.required'),
             'role.in' => __('validation.user.role.in'),
-            'image.image' => __('validation.user.image.image'),
-            'image.max' => __('validation.user.image.max', ['max' => 1024]),
+            'photo.image' => __('validation.user.image.image'),
+            'photo.max' => __('validation.user.image.max', ['max' => 1024]),
         ];
+    }
+    
+    public function updatedPhoto()
+    {
+        $this->validate([
+            'photo' => 'image|max:1024',
+        ]);
+    }
+    
+    public function removePhoto()
+    {
+        $this->photo = null;
     }
     
     public function store()
@@ -60,8 +72,8 @@ class UsersCreate extends Component
         $user->password = Hash::make($this->password);
         $user->role = $this->role;
         
-        if ($this->image) {
-            $imagePath = $this->image->store('users', 'public');
+        if ($this->photo) {
+            $imagePath = $this->photo->store('users', 'public');
             $user->image = $imagePath;
         }
         
