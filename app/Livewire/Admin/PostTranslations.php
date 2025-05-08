@@ -76,7 +76,7 @@ class PostTranslations extends Component
         $translation->delete();
         
         $this->loadTranslations();
-        session()->flash('success', 'Translation has been deleted.');
+        session()->flash('success', __('admin.translation_deleted'));
     }
     
     /**
@@ -100,7 +100,7 @@ class PostTranslations extends Component
             // Check if translation for this locale already exists
             $exists = $this->post->translations()->where('locale', $this->locale)->exists();
             if ($exists) {
-                session()->flash('error', 'Translation for the selected language already exists.');
+                session()->flash('error', __('admin.translation_exists'));
                 return;
             }
             
@@ -120,7 +120,7 @@ class PostTranslations extends Component
         $this->loadTranslations();
         $this->resetFormFields();
         
-        session()->flash('success', 'Translation has been saved.');
+        session()->flash('success', __('admin.translation_saved'));
     }
     
     /**
