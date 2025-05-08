@@ -42,9 +42,9 @@
     <div class="mb-6">
         <h2 class="text-lg font-medium text-gray-900 mb-3">Statystyki</h2>
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <div class="overflow-hidden bg-white rounded-lg shadow hover:shadow-md transition-shadow">
-                <div class="p-5">
-                    <div class="flex items-center">
+            <div class="overflow-hidden bg-white rounded-lg shadow hover:shadow-md transition-shadow flex flex-col h-full">
+                <div class="p-5 flex-grow">
+                    <div class="flex items-center h-full">
                         <div class="flex-shrink-0 p-3 mr-4 bg-blue-100 rounded-full">
                             <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
@@ -56,7 +56,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="bg-blue-50 px-5 py-2">
+                <div class="bg-blue-50 px-5 py-2 mt-auto">
                     <a href="{{ route('admin.users.index') }}" class="text-xs text-blue-600 hover:text-blue-800 font-medium flex items-center">
                         Zobacz wszystkich 
                         <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -66,9 +66,9 @@
                 </div>
             </div>
             
-            <div class="overflow-hidden bg-white rounded-lg shadow hover:shadow-md transition-shadow">
-                <div class="p-5">
-                    <div class="flex items-center">
+            <div class="overflow-hidden bg-white rounded-lg shadow hover:shadow-md transition-shadow flex flex-col h-full">
+                <div class="p-5 flex-grow">
+                    <div class="flex items-center h-full">
                         <div class="flex-shrink-0 p-3 mr-4 bg-green-100 rounded-full">
                             <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
@@ -80,7 +80,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="bg-green-50 px-5 py-2">
+                <div class="bg-green-50 px-5 py-2 mt-auto">
                     <a href="{{ route('admin.trainers.index') }}" class="text-xs text-green-600 hover:text-green-800 font-medium flex items-center">
                         Zobacz wszystkich
                         <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -90,8 +90,8 @@
                 </div>
             </div>
             
-            <div class="overflow-hidden bg-white rounded-lg shadow hover:shadow-md transition-shadow">
-                <div class="p-5">
+            <div class="overflow-hidden bg-white rounded-lg shadow hover:shadow-md transition-shadow flex flex-col h-full">
+                <div class="p-5 flex-grow">
                     <div class="flex items-center">
                         <div class="flex-shrink-0 p-3 mr-4 bg-purple-100 rounded-full">
                             <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -101,18 +101,18 @@
                         <div>
                             <div class="text-sm font-medium text-gray-500">Posty</div>
                             <div class="text-2xl font-semibold text-gray-900">{{ $stats['posts'] }}</div>
-                            <div class="text-xs text-gray-500 mt-1">
+                            <div class="flex flex-wrap text-xs text-gray-500 mt-1 gap-1">
                                 <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
                                     {{ $stats['publishedPosts'] }} opublikowanych
                                 </span>
-                                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800 ml-1">
+                                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800">
                                     {{ $stats['draftPosts'] }} szkiców
                                 </span>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="bg-purple-50 px-5 py-2">
+                <div class="bg-purple-50 px-5 py-2 mt-auto">
                     <a href="{{ route('admin.posts.index') }}" class="text-xs text-purple-600 hover:text-purple-800 font-medium flex items-center">
                         Zobacz wszystkie
                         <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -122,9 +122,9 @@
                 </div>
             </div>
             
-            <div class="overflow-hidden bg-white rounded-lg shadow hover:shadow-md transition-shadow">
-                <div class="p-5">
-                    <div class="flex items-center">
+            <div class="overflow-hidden bg-white rounded-lg shadow hover:shadow-md transition-shadow flex flex-col h-full">
+                <div class="p-5 flex-grow">
+                    <div class="flex items-center h-full">
                         <div class="flex-shrink-0 p-3 mr-4 bg-yellow-100 rounded-full">
                             <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
@@ -136,7 +136,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="bg-yellow-50 px-5 py-2">
+                <div class="bg-yellow-50 px-5 py-2 mt-auto">
                     <a href="{{ route('admin.comments.index') }}" class="text-xs text-yellow-600 hover:text-yellow-800 font-medium flex items-center">
                         Zobacz wszystkie
                         <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
