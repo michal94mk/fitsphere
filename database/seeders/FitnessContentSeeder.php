@@ -140,9 +140,9 @@ class FitnessContentSeeder extends Seeder
         if (!$adminUser) {
             $adminUser = User::create([
                 'name' => 'Admin',
-                'email' => 'admin@example.com',
+                'email' => 'admin@fitsphere.com',
                 'email_verified_at' => now(),
-                'password' => bcrypt('password'),
+                'password' => bcrypt('Password123'),
                 'role' => 'admin',
             ]);
         }

@@ -16,8 +16,8 @@ class TrainerSeeder extends Seeder
         $trainers = [
             [
                 'name' => 'Jan Kowalski',
-                'email' => 'jan.kowalski@example.com',
-                'password' => bcrypt('password'),
+                'email' => 'jan.kowalski@fitsphere.com',
+                'password' => 'Password123',
                 'specialization' => 'Trening siłowy',
                 'description' => 'Certyfikowany trener personalny z 8-letnim doświadczeniem.',
                 'bio' => 'Specjalista treningu siłowego i budowy masy mięśniowej. Posiadam certyfikaty NASM i NSCA.',
@@ -41,8 +41,8 @@ class TrainerSeeder extends Seeder
             ],
             [
                 'name' => 'Anna Nowak',
-                'email' => 'anna.nowak@example.com',
-                'password' => bcrypt('password'),
+                'email' => 'anna.nowak@fitsphere.com',
+                'password' => 'Password123',
                 'specialization' => 'Joga i pilates',
                 'description' => 'Instruktorka jogi i pilatesu z certyfikatem międzynarodowym.',
                 'bio' => 'Instruktorka jogi z 10-letnim doświadczeniem. Ukończyłam kursy w Indiach i Londynie.',
@@ -66,8 +66,8 @@ class TrainerSeeder extends Seeder
             ],
             [
                 'name' => 'Marek Wiśniewski',
-                'email' => 'marek.wisniewski@example.com',
-                'password' => bcrypt('password'),
+                'email' => 'marek.wisniewski@fitsphere.com',
+                'password' => 'Password123',
                 'specialization' => 'Trening funkcjonalny',
                 'description' => 'Specjalista od treningu funkcjonalnego i rehabilitacji sportowej.',
                 'bio' => 'Fizjoterapeuta i trener funkcjonalny. Specjalizuję się w FMS i programach korekcyjnych.',
@@ -97,6 +97,8 @@ class TrainerSeeder extends Seeder
             
             // Check if trainer exists to avoid duplicates
             if (!Trainer::where('email', $trainerData['email'])->exists()) {
+                // Encrypt password before saving
+                $trainerData['password'] = bcrypt($trainerData['password']);
                 $trainer = Trainer::create($trainerData);
                 
                 // Add translations
