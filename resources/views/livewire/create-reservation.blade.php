@@ -104,13 +104,13 @@
                                     if (!$isCurrentMonth) {
                                         $classes .= "text-gray-300 hover:bg-gray-50 ";
                                     } elseif ($isSelected) {
-                                        $classes .= "bg-indigo-600 text-white ";
+                                        $classes .= "bg-blue-600 text-white border border-blue-700 shadow ";
                                     } elseif ($isToday) {
                                         $classes .= "bg-blue-100 text-blue-700 border border-blue-400 ";
                                     } elseif ($isPast) {
                                         $classes .= "text-gray-400 line-through cursor-not-allowed ";
                                     } else {
-                                        $classes .= "text-gray-700 hover:bg-indigo-50 ";
+                                        $classes .= "text-gray-700 hover:bg-blue-50 ";
                                     }
                                 @endphp
                                 
