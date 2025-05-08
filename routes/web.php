@@ -53,13 +53,11 @@ use App\Livewire\Admin\PostTranslations;
 use App\Livewire\Admin\CategoriesIndex;
 use App\Livewire\Admin\CategoriesCreate;
 use App\Livewire\Admin\CategoriesEdit;
-use App\Livewire\Admin\CategoriesShow;
 use App\Livewire\Admin\CategoryTranslations;
 use App\Livewire\Admin\CommentsIndex;
 use App\Livewire\Admin\UsersIndex;
 use App\Livewire\Admin\UsersCreate;
 use App\Livewire\Admin\UsersEdit;
-use App\Livewire\Admin\UsersShow;
 use App\Livewire\Admin\TrainersIndex;
 use App\Livewire\Admin\TrainersCreate;
 use App\Livewire\Admin\TrainersEdit;
@@ -185,7 +183,6 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
         Route::get('/create', CategoriesCreate::class)->name('categories.create');
         Route::get('/{id}/edit', CategoriesEdit::class)->name('categories.edit');
         Route::get('/{id}/translations', CategoryTranslations::class)->name('categories.translations');
-        Route::get('/{id}', CategoriesShow::class)->name('categories.show');
     });
     
     // Comments management
@@ -196,7 +193,6 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
         Route::get('/', UsersIndex::class)->name('users.index');
         Route::get('/create', UsersCreate::class)->name('users.create');
         Route::get('/{id}/edit', UsersEdit::class)->name('users.edit');
-        Route::get('/{id}', UsersShow::class)->name('users.show');
     });
     
     // Trainers management
