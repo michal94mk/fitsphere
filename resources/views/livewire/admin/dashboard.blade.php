@@ -1,7 +1,3 @@
-@php
-    use App\Models\Post;
-@endphp
-
 <div>
     <!-- Quick Actions -->
     <div class="mb-6">
@@ -107,10 +103,10 @@
                             <div class="text-2xl font-semibold text-gray-900">{{ $stats['posts'] }}</div>
                             <div class="text-xs text-gray-500 mt-1">
                                 <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
-                                    {{ Post::where('status', 'published')->count() }} opublikowanych
+                                    {{ $stats['publishedPosts'] }} opublikowanych
                                 </span>
                                 <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800 ml-1">
-                                    {{ Post::where('status', 'draft')->count() }} szkiców
+                                    {{ $stats['draftPosts'] }} szkiców
                                 </span>
                             </div>
                         </div>
@@ -223,14 +219,10 @@
             <div class="px-4 py-4 border-b flex justify-between items-center">
                 <h3 class="text-lg font-medium leading-6 text-gray-900">Szkice postów</h3>
                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                    {{ Post::where('status', 'draft')->count() }} szkiców
+                    {{ $stats['draftPosts'] }} szkiców
                 </span>
             </div>
             <div class="px-4 py-3">
-                @php
-                    $draftPosts = Post::where('status', 'draft')->with('user')->latest()->take(5)->get();
-                @endphp
-                
                 @if (count($draftPosts) > 0)
                     <ul class="divide-y divide-gray-200">
                         @foreach ($draftPosts as $post)
@@ -254,10 +246,10 @@
                             </li>
                         @endforeach
                     </ul>
-                    @if (Post::where('status', 'draft')->count() > count($draftPosts))
+                    @if ($stats['draftPosts'] > count($draftPosts))
                         <div class="mt-4 text-center">
                             <a href="{{ route('admin.posts.index') }}?status=draft" class="text-sm font-medium text-indigo-600 hover:text-indigo-500">
-                                Zobacz wszystkie ({{ Post::where('status', 'draft')->count() }})
+                                Zobacz wszystkie ({{ $stats['draftPosts'] }})
                             </a>
                         </div>
                     @endif

@@ -20,6 +20,7 @@ class Dashboard extends Component
     public $trainerUsers = [];
     public $pendingTrainers = [];
     public $popularPosts = [];
+    public $draftPosts = [];
     
     protected $emailService;
     
@@ -56,6 +57,13 @@ class Dashboard extends Component
             ->withCount('comments')
             ->with('user')
             ->orderBy('views_count', 'desc')
+            ->take(5)
+            ->get();
+            
+        // Draft posts
+        $this->draftPosts = Post::where('status', 'draft')
+            ->with('user')
+            ->latest()
             ->take(5)
             ->get();
     }
