@@ -251,4 +251,11 @@ return [
     'no_translations_message' => 'Ten artykuł nie posiada jeszcze żadnych tłumaczeń. Dodaj tłumaczenie przy pomocy formularza poniżej.',
     'back_to_edit_post' => 'Wróć do edycji artykułu',
     'manage_post_translations' => 'Zarządzaj tłumaczeniami artykułu',
+    
+    // Category translations
+    'category_information' => 'Informacje o kategorii',
+    'original_name' => 'Nazwa oryginalna (język podstawowy)',
+    'back_to_edit_category' => 'Wróć do edycji kategorii',
+    'manage_category_translations' => 'Zarządzaj tłumaczeniami kategorii',
+    'no_category_translations_message' => 'Ta kategoria nie posiada jeszcze żadnych tłumaczeń. Dodaj tłumaczenie przy pomocy formularza poniżej.',
 ]; 

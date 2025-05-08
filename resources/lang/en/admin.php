@@ -251,4 +251,11 @@ return [
     'no_translations_message' => 'This post does not have any translations yet. Add a translation using the form below.',
     'back_to_edit_post' => 'Back to post edit',
     'manage_post_translations' => 'Manage Post Translations',
+    
+    // Category translations
+    'category_information' => 'Category Information',
+    'original_name' => 'Original Name (Default Language)',
+    'back_to_edit_category' => 'Back to category edit',
+    'manage_category_translations' => 'Manage Category Translations',
+    'no_category_translations_message' => 'This category does not have any translations yet. Add a translation using the form below.',
 ]; 
