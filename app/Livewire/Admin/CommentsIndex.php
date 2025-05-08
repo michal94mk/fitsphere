@@ -48,7 +48,7 @@ class CommentsIndex extends Component
     public function deleteComment()
     {
         if (!$this->commentIdBeingDeleted) {
-            session()->flash('error', "Cannot delete comment, missing identifier.");
+            session()->flash('error', __('admin.cannot_delete_comment_missing_id'));
             $this->confirmingCommentDeletion = false;
             return;
         }
@@ -57,9 +57,9 @@ class CommentsIndex extends Component
             $comment = Comment::findOrFail($this->commentIdBeingDeleted);
             $comment->delete();
             
-            session()->flash('success', "Comment successfully deleted.");
+            session()->flash('success', __('admin.comment_deleted'));
         } catch (\Exception $e) {
-            session()->flash('error', "An error occurred while deleting the comment: {$e->getMessage()}");
+            session()->flash('error', __('admin.comment_delete_error', ['error' => $e->getMessage()]));
         }
         
         $this->confirmingCommentDeletion = false;
