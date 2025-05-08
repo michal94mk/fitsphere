@@ -4,6 +4,15 @@
 
 <div>
     <div class="container mx-auto p-6">
+        <!-- Back button at the top -->
+        <div class="mb-4 flex justify-between items-center">
+            <h1 class="text-2xl font-bold">{{ __('admin.edit_trainer') }}</h1>
+            <a href="{{ route('admin.trainers.index') }}" wire:navigate 
+               class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 transition">
+                {{ __('admin.back_to_list') }}
+            </a>
+        </div>
+        
         <!-- Alerts -->
         @if (session()->has('success'))
             <div class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
@@ -22,8 +31,6 @@
                 </button>
             </div>
         @endif
-
-        <h1 class="text-2xl font-bold mb-6">{{ __('admin.edit_trainer') }}</h1>
 
         <div class="bg-white rounded-lg shadow overflow-hidden">
             <form wire:submit="save">
@@ -160,12 +167,8 @@
                     </div>
                 </div>
                 
-                <div class="px-6 py-3 bg-gray-50 flex justify-between">
-                    <a href="{{ route('admin.trainers.index') }}" wire:navigate 
-                       class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 transition">
-                        {{ __('admin.back_to_list') }}
-                    </a>
-                    <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition">
+                <div class="px-6 py-3 bg-gray-50 text-right">
+                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">
                         {{ __('admin.save_changes') }}
                     </button>
                 </div>

@@ -26,7 +26,7 @@
                 <!-- Sidebar header -->
                 <div class="flex items-center h-16 px-4 bg-gray-900">
                     <span class="text-lg font-bold text-white">
-                        {{ config('app.name') . ' ' . __('admin.admin_panel') }}
+                        {{ __('admin.admin_panel') }}
                     </span>
                 </div>
                 
@@ -147,7 +147,7 @@
                 
                 <!-- Mobile sidebar header -->
                 <div class="flex-shrink-0 flex items-center h-16 px-4 bg-gray-900">
-                    <span class="text-lg font-bold text-white">{{ config('app.name') . ' ' . __('admin.admin_panel') }}</span>
+                    <span class="text-lg font-bold text-white">{{ __('admin.admin_panel') }}</span>
                 </div>
                 
                 <!-- Mobile sidebar navigation -->

@@ -140,7 +140,7 @@ return [
     'excerpt_description' => 'Short summary of the post (maximum 500 characters)',
     
     // Categories management
-    'manage_categories' => 'Manage Categories',
+    'manage_categories' => 'Categories',
     'add_category' => 'Add Category',
     'edit_category' => 'Edit Category',
     'delete_category' => 'Delete Category',
@@ -159,6 +159,7 @@ return [
     'comment_author' => 'Comment Author',
     'comment_post' => 'Post',
     'comment_date' => 'Date',
+    'comment_info' => 'Comment Information',
     'confirm_delete_comment' => 'Are you sure you want to delete this comment? This action cannot be undone.',
     'comment_updated' => 'Comment has been updated successfully.',
     'comment_deleted' => 'Comment has been deleted successfully.',

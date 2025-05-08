@@ -140,7 +140,7 @@ return [
     'excerpt_description' => 'Krótkie streszczenie postu (maksymalnie 500 znaków)',
     
     // Categories management
-    'manage_categories' => 'Zarządzaj kategoriami',
+    'manage_categories' => 'Kategorie',
     'add_category' => 'Dodaj kategorię',
     'edit_category' => 'Edytuj kategorię',
     'delete_category' => 'Usuń kategorię',
@@ -159,6 +159,7 @@ return [
     'comment_author' => 'Autor komentarza',
     'comment_post' => 'Post',
     'comment_date' => 'Data',
+    'comment_info' => 'Informacje o komentarzu',
     'confirm_delete_comment' => 'Czy na pewno chcesz usunąć ten komentarz? Ta operacja jest nieodwracalna.',
     'comment_updated' => 'Komentarz został zaktualizowany pomyślnie.',
     'comment_deleted' => 'Komentarz został usunięty pomyślnie.',
