@@ -146,10 +146,15 @@ return [
     'delete_category' => 'Delete Category',
     'category_name' => 'Category Name',
     'category_description' => 'Category Description',
+    'category_information' => 'Category Information',
     'confirm_delete_category' => 'Are you sure you want to delete this category?',
     'category_created' => 'Category has been created successfully.',
     'category_updated' => 'Category has been updated successfully.',
     'category_deleted' => 'Category has been deleted successfully.',
+    'category_list' => 'Categories List',
+    'category_search_placeholder' => 'Category name...',
+    'category_delete_warning' => 'Deleting a category may affect posts that are assigned to it.',
+    'no_categories_found' => 'No categories found.',
     
     // Comments management
     'manage_comments' => 'Manage Comments',

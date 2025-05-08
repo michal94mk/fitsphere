@@ -1,18 +1,18 @@
 <x-slot name="header">
-    Zarządzanie kategoriami
+    {{ __('admin.manage_categories') }}
 </x-slot>
 
 <div>
     <div class="container mx-auto p-4">
         <!-- Header with title and buttons -->
         <div class="flex justify-between items-center mb-4">
-            <h1 class="text-2xl font-bold">Lista kategorii</h1>
+            <h1 class="text-2xl font-bold">{{ __('admin.category_list') }}</h1>
             <a href="{{ route('admin.categories.create') }}" wire:navigate
                class="bg-blue-600 text-white px-3 py-2 rounded-md hover:bg-blue-700 transition flex items-center">
                 <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                 </svg>
-                Dodaj
+                {{ __('admin.add') }}
             </a>
         </div>
 
@@ -32,25 +32,25 @@
         <div class="mb-4 bg-white p-3 rounded-lg shadow">
             <div class="flex flex-col md:flex-row gap-3">
                 <div class="flex-1">
-                    <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Wyszukaj</label>
+                    <label for="search" class="block text-sm font-medium text-gray-700 mb-1">{{ __('admin.search') }}</label>
                     <input wire:model.live.debounce.300ms="search" type="text" id="search"
                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                           placeholder="Nazwa kategorii...">
+                           placeholder="{{ __('admin.category_search_placeholder') }}">
                 </div>
                 <div class="md:w-40">
-                    <label for="sortField" class="block text-sm font-medium text-gray-700 mb-1">Sortuj</label>
+                    <label for="sortField" class="block text-sm font-medium text-gray-700 mb-1">{{ __('admin.sort_field') }}</label>
                     <select wire:model.live="sortField" id="sortField"
                             class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                        <option value="created_at">Data utworzenia</option>
-                        <option value="name">Nazwa</option>
+                        <option value="created_at">{{ __('admin.created_at') }}</option>
+                        <option value="name">{{ __('admin.category_name') }}</option>
                     </select>
                 </div>
                 <div class="md:w-40">
-                    <label for="sortDirection" class="block text-sm font-medium text-gray-700 mb-1">Kierunek</label>
+                    <label for="sortDirection" class="block text-sm font-medium text-gray-700 mb-1">{{ __('admin.sort_direction') }}</label>
                     <select wire:model.live="sortDirection" id="sortDirection"
                             class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                        <option value="desc">Malejąco</option>
-                        <option value="asc">Rosnąco</option>
+                        <option value="desc">{{ __('admin.descending') }}</option>
+                        <option value="asc">{{ __('admin.ascending') }}</option>
                     </select>
                 </div>
             </div>
@@ -61,10 +61,10 @@
             <table class="w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                     <tr>
-                        <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-                        <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nazwa</th>
-                        <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Data</th>
-                        <th scope="col" class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Akcje</th>
+                        <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('admin.user_id') }}</th>
+                        <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('admin.category_name') }}</th>
+                        <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('admin.date') }}</th>
+                        <th scope="col" class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('admin.actions') }}</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
@@ -73,24 +73,24 @@
                             <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">{{ $category->id }}</td>
                             <td class="px-4 py-3 whitespace-nowrap font-semibold text-sm text-gray-900">{{ $category->name }}</td>
                             <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
-                                <div>Utw: {{ $category->created_at ? $category->created_at->format('d.m.Y') : 'N/A' }}</div>
-                                <div>Akt: {{ $category->updated_at ? $category->updated_at->format('d.m.Y') : 'N/A' }}</div>
+                                <div>{{ __('admin.created') }}: {{ $category->created_at ? $category->created_at->format('d.m.Y') : 'N/A' }}</div>
+                                <div>{{ __('admin.updated') }}: {{ $category->updated_at ? $category->updated_at->format('d.m.Y') : 'N/A' }}</div>
                             </td>
                             <td class="px-4 py-3 whitespace-nowrap text-right text-sm font-medium">
                                 <div class="flex flex-wrap items-center justify-end gap-1">
                                     <!-- Przycisk edycji -->
                                     <a href="{{ route('admin.categories.edit', $category) }}" wire:navigate class="bg-blue-100 text-blue-700 px-2 py-1 rounded-md hover:bg-blue-200 text-xs font-medium transition">
-                                        Edytuj
+                                        {{ __('admin.edit') }}
                                     </a>
                                     
                                     <!-- Przycisk tłumaczeń -->
                                     <a href="{{ route('admin.categories.translations', $category->id) }}" wire:navigate class="bg-green-100 text-green-700 px-2 py-1 rounded-md hover:bg-green-200 text-xs font-medium transition">
-                                        Tłumaczenia
+                                        {{ __('admin.translations') }}
                                     </a>
                                     
                                     <!-- Przycisk usuwania -->
                                     <button wire:click="confirmCategoryDeletion({{ $category->id }})" class="bg-red-100 text-red-700 px-2 py-1 rounded-md hover:bg-red-200 text-xs font-medium transition">
-                                        Usuń
+                                        {{ __('admin.delete') }}
                                     </button>
                                 </div>
                             </td>
@@ -98,7 +98,7 @@
                     @empty
                         <tr>
                             <td colspan="4" class="px-4 py-3 whitespace-nowrap text-sm text-gray-500 text-center">
-                                Nie znaleziono kategorii.
+                                {{ __('admin.no_categories_found') }}
                             </td>
                         </tr>
                     @endforelse
@@ -145,14 +145,14 @@
                         </div>
                         <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
                             <h3 class="text-lg font-medium leading-6 text-gray-900" id="modal-title">
-                                Usuń kategorię
+                                {{ __('admin.delete_category') }}
                             </h3>
                             <div class="mt-2">
                                 <p class="text-sm text-gray-500">
-                                    Czy na pewno chcesz usunąć tę kategorię? Ta operacja jest nieodwracalna.
+                                    {{ __('admin.confirm_delete_category') }}
                                 </p>
                                 <p class="text-sm text-gray-500 mt-2">
-                                    Usunięcie kategorii może wpłynąć na posty, które są do niej przypisane.
+                                    {{ __('admin.category_delete_warning') }}
                                 </p>
                             </div>
                         </div>
@@ -160,10 +160,10 @@
                 </div>
                 <div class="px-4 py-3 bg-gray-50 sm:px-6 sm:flex sm:flex-row-reverse">
                     <button type="button" wire:click="deleteCategory" class="inline-flex justify-center w-full px-4 py-2 text-base font-medium text-white bg-red-600 border border-transparent rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm">
-                        Usuń
+                        {{ __('admin.delete') }}
                     </button>
                     <button type="button" wire:click="cancelDeletion" class="inline-flex justify-center w-full px-4 py-2 mt-3 text-base font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
-                        Anuluj
+                        {{ __('admin.cancel') }}
                     </button>
                 </div>
             </div>

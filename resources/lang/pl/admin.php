@@ -146,10 +146,15 @@ return [
     'delete_category' => 'Usuń kategorię',
     'category_name' => 'Nazwa kategorii',
     'category_description' => 'Opis kategorii',
+    'category_information' => 'Informacje o kategorii',
     'confirm_delete_category' => 'Czy na pewno chcesz usunąć tę kategorię?',
     'category_created' => 'Kategoria została utworzona pomyślnie.',
     'category_updated' => 'Kategoria została zaktualizowana pomyślnie.',
     'category_deleted' => 'Kategoria została usunięta pomyślnie.',
+    'category_list' => 'Lista kategorii',
+    'category_search_placeholder' => 'Nazwa kategorii...',
+    'category_delete_warning' => 'Usunięcie kategorii może wpłynąć na posty, które są do niej przypisane.',
+    'no_categories_found' => 'Nie znaleziono kategorii.',
     
     // Comments management
     'manage_comments' => 'Zarządzaj komentarzami',
