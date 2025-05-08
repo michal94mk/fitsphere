@@ -1,18 +1,18 @@
 <x-slot name="header">
-    Zarządzanie trenerami
+    {{ __('admin.manage_trainers') }}
 </x-slot>
 
 <div>
     <div class="container mx-auto p-4">
         <!-- Header with title and buttons -->
         <div class="flex justify-between items-center mb-4">
-            <h1 class="text-2xl font-bold">Lista trenerów</h1>
+            <h1 class="text-2xl font-bold">{{ __('admin.trainer_list') }}</h1>
             <a href="{{ route('admin.trainers.create') }}" wire:navigate
                class="bg-blue-600 text-white px-3 py-2 rounded-md hover:bg-blue-700 transition flex items-center">
                 <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                 </svg>
-                Dodaj
+                {{ __('admin.add') }}
             </a>
         </div>
 
@@ -20,36 +20,36 @@
         <div class="mb-4 bg-white p-3 rounded-lg shadow">
             <div class="flex flex-col md:flex-row gap-3">
                 <div class="flex-1">
-                    <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Wyszukaj</label>
+                    <label for="search" class="block text-sm font-medium text-gray-700 mb-1">{{ __('admin.search') }}</label>
                     <input wire:model.live.debounce.300ms="search" type="text" id="search" 
                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                           placeholder="Imię, email lub specjalizacja...">
+                           placeholder="{{ __('admin.trainer_search_placeholder') }}">
                 </div>
                 <div class="md:w-40">
-                    <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                    <label for="status" class="block text-sm font-medium text-gray-700 mb-1">{{ __('admin.trainer_status') }}</label>
                     <select wire:model.live="status" id="status" 
                             class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                        <option value="">Wszystkie</option>
-                        <option value="approved">Zatwierdzeni</option>
-                        <option value="pending">Oczekujący</option>
+                        <option value="">{{ __('admin.all') }}</option>
+                        <option value="approved">{{ __('admin.trainer_approved') }}</option>
+                        <option value="pending">{{ __('admin.trainer_pending') }}</option>
                     </select>
                 </div>
                 <div class="md:w-40">
-                    <label for="sortField" class="block text-sm font-medium text-gray-700 mb-1">Sortuj</label>
+                    <label for="sortField" class="block text-sm font-medium text-gray-700 mb-1">{{ __('admin.sort_field') }}</label>
                     <select wire:model.live="sortField" id="sortField" 
                             class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                        <option value="created_at">Data dołączenia</option>
-                        <option value="name">Imię</option>
-                        <option value="email">Email</option>
-                        <option value="specialization">Specjalizacja</option>
+                        <option value="created_at">{{ __('admin.trainer_join_date') }}</option>
+                        <option value="name">{{ __('admin.trainer_name') }}</option>
+                        <option value="email">{{ __('admin.email') }}</option>
+                        <option value="specialization">{{ __('admin.trainer_specialization') }}</option>
                     </select>
                 </div>
                 <div class="md:w-40">
-                    <label for="sortDirection" class="block text-sm font-medium text-gray-700 mb-1">Kierunek</label>
+                    <label for="sortDirection" class="block text-sm font-medium text-gray-700 mb-1">{{ __('admin.sort_direction') }}</label>
                     <select wire:model.live="sortDirection" id="sortDirection" 
                             class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                        <option value="desc">Malejąco</option>
-                        <option value="asc">Rosnąco</option>
+                        <option value="desc">{{ __('admin.descending') }}</option>
+                        <option value="asc">{{ __('admin.ascending') }}</option>
                     </select>
                 </div>
             </div>
@@ -61,16 +61,16 @@
                 <thead class="bg-gray-50">
                     <tr>
                         <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Trener
+                            {{ __('admin.trainers') }}
                         </th>
                         <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Info
+                            {{ __('admin.trainer_info_title') }}
                         </th>
                         <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Data
+                            {{ __('admin.trainer_date') }}
                         </th>
                         <th scope="col" class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Akcje
+                            {{ __('admin.actions') }}
                         </th>
                     </tr>
                 </thead>
@@ -95,55 +95,55 @@
                                 </div>
                             </td>
                             <td class="px-4 py-3 whitespace-nowrap">
-                                <div class="text-xs text-gray-900">Spec: {{ $trainer->specialization }}</div>
+                                <div class="text-xs text-gray-900">{{ __('admin.trainer_specialization') }}: {{ $trainer->specialization }}</div>
                                 <span class="mt-1 px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full 
                                     {{ $trainer->is_approved ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' }}">
-                                    {{ $trainer->is_approved ? 'Zatwierdzony' : 'Oczekujący' }}
+                                    {{ $trainer->is_approved ? __('admin.trainer_approved') : __('admin.trainer_pending') }}
                                 </span>
                             </td>
                             <td class="px-4 py-3 whitespace-nowrap text-xs text-gray-500">
-                                <div>Utw: {{ $trainer->created_at->format('d.m.Y') }}</div>
-                                <div>Akt: {{ $trainer->updated_at->format('d.m.Y') }}</div>
+                                <div>{{ __('admin.created') }}: {{ $trainer->created_at->format('d.m.Y') }}</div>
+                                <div>{{ __('admin.updated') }}: {{ $trainer->updated_at->format('d.m.Y') }}</div>
                             </td>
                             <td class="px-4 py-3 whitespace-nowrap text-right text-sm font-medium">
                                 <div class="flex flex-wrap justify-end gap-1">
                                     <a href="{{ route('admin.trainers.edit', $trainer->id) }}" 
                                        class="bg-blue-100 text-blue-700 px-2 py-1 rounded-md hover:bg-blue-200 text-xs font-medium transition" 
-                                       title="Edytuj">
-                                        Edytuj
+                                       title="{{ __('admin.edit') }}">
+                                        {{ __('admin.edit') }}
                                     </a>
                                     
                                     <a href="{{ route('admin.trainers.translations', $trainer->id) }}" 
                                        class="bg-green-100 text-green-700 px-2 py-1 rounded-md hover:bg-green-200 text-xs font-medium transition" 
-                                       title="Zarządzaj tłumaczeniami">
-                                        Tłumaczenia
+                                       title="{{ __('admin.trainer_translations') }}">
+                                        {{ __('admin.trainer_translations') }}
                                     </a>
                                     
                                     <a href="{{ route('admin.trainers.show', $trainer->id) }}" 
                                        class="bg-indigo-100 text-indigo-700 px-2 py-1 rounded-md hover:bg-indigo-200 text-xs font-medium transition" 
-                                       title="Zobacz szczegóły">
-                                        Info
+                                       title="{{ __('admin.trainer_details_button') }}">
+                                        {{ __('admin.trainer_details_button') }}
                                     </a>
                                     
                                     @if(!$trainer->is_approved)
                                         <button wire:click="approveTrainer({{ $trainer->id }})" 
                                                 class="bg-green-100 text-green-700 px-2 py-1 rounded-md hover:bg-green-200 text-xs font-medium transition" 
-                                                title="Zatwierdź">
-                                            OK
+                                                title="{{ __('admin.approve') }}">
+                                            {{ __('admin.trainer_approve_button') }}
                                         </button>
                                     @else
                                         <button wire:click="disapproveTrainer({{ $trainer->id }})" 
                                                 class="bg-orange-100 text-orange-700 px-2 py-1 rounded-md hover:bg-orange-200 text-xs font-medium transition" 
-                                                title="Cofnij zatwierdzenie">
-                                            Cofnij
+                                                title="{{ __('admin.trainer_disapprove_button') }}">
+                                            {{ __('admin.trainer_disapprove_button') }}
                                         </button>
                                     @endif
                                     
                                     <button wire:click="confirmTrainerDeletion({{ $trainer->id }})" 
                                             wire:loading.attr="disabled" 
                                             class="bg-red-100 text-red-700 px-2 py-1 rounded-md hover:bg-red-200 text-xs font-medium transition" 
-                                            title="Usuń">
-                                        Usuń
+                                            title="{{ __('admin.delete') }}">
+                                        {{ __('admin.delete') }}
                                     </button>
                                 </div>
                             </td>
@@ -151,7 +151,7 @@
                     @empty
                         <tr>
                             <td colspan="4" class="px-4 py-3 whitespace-nowrap text-sm text-gray-500 text-center">
-                                Nie znaleziono trenerów.
+                                {{ __('admin.no_trainers_found') }}
                             </td>
                         </tr>
                     @endforelse
@@ -198,11 +198,11 @@
                         </div>
                         <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
                             <h3 class="text-lg font-medium leading-6 text-gray-900" id="modal-title">
-                                Usuń trenera
+                                {{ __('admin.trainer_delete_confirmation') }}
                             </h3>
                             <div class="mt-2">
                                 <p class="text-sm text-gray-500">
-                                    Czy na pewno chcesz usunąć tego trenera? Ta operacja jest nieodwracalna.
+                                    {{ __('admin.trainer_delete_confirmation_message') }}
                                 </p>
                             </div>
                         </div>
@@ -210,10 +210,10 @@
                 </div>
                 <div class="px-4 py-3 bg-gray-50 sm:px-6 sm:flex sm:flex-row-reverse">
                     <button type="button" wire:click="deleteTrainer" class="inline-flex justify-center w-full px-4 py-2 text-base font-medium text-white bg-red-600 border border-transparent rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm">
-                        Usuń
+                        {{ __('admin.delete') }}
                     </button>
                     <button type="button" wire:click="cancelDeletion" class="inline-flex justify-center w-full px-4 py-2 mt-3 text-base font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
-                        Anuluj
+                        {{ __('admin.cancel') }}
                     </button>
                 </div>
             </div>

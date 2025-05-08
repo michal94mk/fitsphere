@@ -1,14 +1,14 @@
-<div class="py-12">
+<div class="py-12" x-data="{ showDeleteModal: false, translationToDelete: null }">   
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
-            <!-- Nagłówek -->
+            <!-- Header -->
             <div class="flex justify-between items-center mb-6">
                 <div>
                     <h2 class="text-2xl font-semibold text-gray-800">
-                        Tłumaczenia dla trenera: {{ $trainer->name }}
+                        {{ __('admin.trainer_translations') }}: {{ $trainer->name }}
                     </h2>
                     <p class="mt-1 text-sm text-gray-600">
-                        Dodaj lub edytuj tłumaczenia informacji o trenerze.
+                        {{ __('admin.trainer_manage_translations') }}
                     </p>
                 </div>
                 <div>
@@ -16,12 +16,12 @@
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                         </svg>
-                        Powrót
+                        {{ __('admin.back_to_list') }}
                     </a>
                 </div>
             </div>
             
-            <!-- Komunikaty -->
+            <!-- Messages -->
             @if (session()->has('success'))
                 <div class="mb-4 px-4 py-2 bg-green-100 text-green-700 border-l-4 border-green-500 rounded">
                     {{ session('success') }}
@@ -34,48 +34,51 @@
                 </div>
             @endif
             
-            <!-- Dane oryginalne -->
+            <!-- Original data -->
             <div class="mb-8 bg-gray-50 p-4 rounded-lg border border-gray-200">
-                <h3 class="text-lg font-medium text-gray-800 mb-4">Dane oryginalne:</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <h3 class="text-lg font-medium text-gray-800 mb-4">{{ __('admin.default_language') }}:</h3>
+                <div class="grid grid-cols-1 gap-4">
                     <div>
-                        <p class="text-sm font-semibold text-gray-600">Specjalizacja:</p>
-                        <p class="mt-1">{{ $trainer->specialization ?? 'Brak' }}</p>
+                        <p class="text-sm font-semibold text-gray-600">{{ __('admin.trainer_specialization') }}:</p>
+                        <p class="mt-1">{{ $trainer->specialization ?? __('admin.trainer_no_specialization') }}</p>
                     </div>
                     <div>
-                        <p class="text-sm font-semibold text-gray-600">Specjalności:</p>
-                        <p class="mt-1">{{ $trainer->specialties ?? 'Brak' }}</p>
+                        <p class="text-sm font-semibold text-gray-600">{{ __('admin.trainer_specializations') }}:</p>
+                        <p class="mt-1">{{ $trainer->specialties ?? __('admin.trainer_no_specialization') }}</p>
                     </div>
-                    <div class="md:col-span-2">
-                        <p class="text-sm font-semibold text-gray-600">Krótki opis:</p>
-                        <p class="mt-1">{{ $trainer->description ?? 'Brak' }}</p>
+                    <div>
+                        <p class="text-sm font-semibold text-gray-600">{{ __('admin.trainer_description') }}:</p>
+                        <p class="mt-1">{{ $trainer->description ?? __('admin.trainer_no_description') }}</p>
                     </div>
-                    <div class="md:col-span-2">
-                        <p class="text-sm font-semibold text-gray-600">Biografia:</p>
-                        <p class="mt-1">{{ $trainer->bio ?? 'Brak' }}</p>
+                    <div>
+                        <p class="text-sm font-semibold text-gray-600">{{ __('admin.trainer_biography') }}:</p>
+                        <p class="mt-1 whitespace-pre-line">{{ $trainer->bio ?? __('admin.trainer_no_bio') }}</p>
                     </div>
                 </div>
             </div>
             
-            <!-- Lista istniejących tłumaczeń -->
+            <!-- Existing translations list -->
             <div class="mb-8">
-                <h3 class="text-lg font-medium text-gray-800 mb-4">Istniejące tłumaczenia:</h3>
+                <h3 class="text-lg font-medium text-gray-800 mb-4">{{ __('admin.translations') }}:</h3>
                 
                 @if (empty($translations))
-                    <p class="text-gray-500 italic">Brak tłumaczeń.</p>
+                    <p class="text-gray-500 italic">{{ __('admin.no_translations') }}</p>
                 @else
                     <div class="bg-white shadow-md rounded-lg overflow-hidden border border-gray-200">
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-50">
                                 <tr>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Język
+                                        {{ __('admin.target_language') }}
                                     </th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Specjalizacja
+                                        {{ __('admin.trainer_specialization') }}
                                     </th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Akcje
+                                        {{ __('admin.trainer_description') }}
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        {{ __('admin.actions') }}
                                     </th>
                                 </tr>
                             </thead>
@@ -85,18 +88,23 @@
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full 
                                                 {{ $translation['locale'] === 'en' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800' }}">
-                                                {{ $translation['locale'] === 'en' ? 'Angielski' : 'Polski' }}
+                                                {{ $translation['locale'] === 'en' ? 'English' : 'Polski' }}
                                             </span>
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            {{ $translation['specialization'] ?: '-' }}
+                                        <td class="px-6 py-4">
+                                            <div class="max-w-xs truncate">{{ $translation['specialization'] ?: '-' }}</div>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <div class="max-w-xs truncate">{{ $translation['description'] ?: '-' }}</div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                             <button wire:click="editTranslation({{ $translation['id'] }})" class="text-indigo-600 hover:text-indigo-900 mr-3">
-                                                Edytuj
+                                                {{ __('admin.edit') }}
                                             </button>
-                                            <button wire:click="deleteTranslation({{ $translation['id'] }})" class="text-red-600 hover:text-red-900" onclick="return confirm('Czy na pewno chcesz usunąć to tłumaczenie?')">
-                                                Usuń
+                                            <button 
+                                                @click="showDeleteModal = true; translationToDelete = {{ $translation['id'] }}" 
+                                                class="text-red-600 hover:text-red-900">
+                                                {{ __('admin.delete') }}
                                             </button>
                                         </td>
                                     </tr>
@@ -107,64 +115,126 @@
                 @endif
             </div>
             
-            <!-- Formularz dodawania/edycji tłumaczenia -->
+            <!-- Translation form -->
             <div class="bg-white shadow-md rounded-lg overflow-hidden border border-gray-200 p-6">
                 <h3 class="text-lg font-medium text-gray-800 mb-4">
-                    {{ $editingTranslationId ? 'Edytuj tłumaczenie' : 'Dodaj nowe tłumaczenie' }}
+                    {{ $editingTranslationId ? __('admin.edit_translation') : __('admin.add_translation') }}
                 </h3>
                 
                 <form wire:submit.prevent="saveTranslation" class="space-y-4">
-                    <!-- Język -->
+                    <!-- Language -->
                     <div>
-                        <label for="locale" class="block text-sm font-medium text-gray-700">Język</label>
+                        <label for="locale" class="block text-sm font-medium text-gray-700">{{ __('admin.target_language') }}</label>
                         <select id="locale" wire:model="locale" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" {{ $editingTranslationId ? 'disabled' : '' }}>
-                            <option value="en">Angielski</option>
+                            <option value="en">English</option>
                             <option value="pl">Polski</option>
                         </select>
                         @error('locale') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                     </div>
                     
-                    <!-- Specjalizacja -->
+                    <!-- Specialization -->
                     <div>
-                        <label for="specialization" class="block text-sm font-medium text-gray-700">Specjalizacja</label>
+                        <label for="specialization" class="block text-sm font-medium text-gray-700">{{ __('admin.trainer_specialization') }}</label>
                         <input type="text" id="specialization" wire:model="specialization" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                         @error('specialization') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                     </div>
                     
-                    <!-- Krótki opis -->
+                    <!-- Short description -->
                     <div>
-                        <label for="description" class="block text-sm font-medium text-gray-700">Krótki opis</label>
+                        <label for="description" class="block text-sm font-medium text-gray-700">{{ __('admin.trainer_description') }}</label>
                         <textarea id="description" wire:model="description" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"></textarea>
                         @error('description') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                     </div>
                     
-                    <!-- Biografia -->
+                    <!-- Biography -->
                     <div>
-                        <label for="bio" class="block text-sm font-medium text-gray-700">Biografia</label>
+                        <label for="bio" class="block text-sm font-medium text-gray-700">{{ __('admin.trainer_biography') }}</label>
                         <textarea id="bio" wire:model="bio" rows="6" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"></textarea>
                         @error('bio') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                     </div>
                     
-                    <!-- Specjalności -->
+                    <!-- Specialties -->
                     <div>
-                        <label for="specialties" class="block text-sm font-medium text-gray-700">Specjalności (oddzielone przecinkami)</label>
+                        <label for="specialties" class="block text-sm font-medium text-gray-700">{{ __('admin.trainer_specializations') }}</label>
                         <input type="text" id="specialties" wire:model="specialties" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                        <p class="mt-1 text-xs text-gray-500">{{ __('admin.tags_placeholder') }}</p>
                         @error('specialties') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                     </div>
                     
-                    <!-- Przyciski -->
+                    <!-- Buttons -->
                     <div class="flex justify-end space-x-3 pt-4">
                         @if ($editingTranslationId)
                             <button type="button" wire:click="cancelEdit" class="inline-flex items-center px-4 py-2 bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest hover:bg-gray-300">
-                                Anuluj
+                                {{ __('admin.cancel') }}
                             </button>
                         @endif
                         
                         <button type="submit" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-700 focus:outline-none focus:border-indigo-700 focus:ring focus:ring-indigo-300 disabled:opacity-25 transition">
-                            {{ $editingTranslationId ? 'Zapisz zmiany' : 'Dodaj tłumaczenie' }}
+                            {{ $editingTranslationId ? __('admin.save_changes') : __('admin.add_translation') }}
                         </button>
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Delete Confirmation Modal -->
+    <div x-cloak x-show="showDeleteModal" class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="flex items-end justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0" 
+             x-transition:enter="ease-out duration-300"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100"
+             x-transition:leave="ease-in duration-200"
+             x-transition:leave-start="opacity-100"
+             x-transition:leave-end="opacity-0">
+            
+            <!-- Background overlay -->
+            <div class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75" aria-hidden="true" @click="showDeleteModal = false"></div>
+            
+            <!-- Centering trick -->
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+            
+            <!-- Modal panel -->
+            <div class="inline-block overflow-hidden text-left align-bottom transition-all transform bg-white rounded-lg shadow-xl sm:my-8 sm:align-middle sm:max-w-lg sm:w-full"
+                 x-transition:enter="ease-out duration-300"
+                 x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                 x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
+                 x-transition:leave="ease-in duration-200"
+                 x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
+                 x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
+                
+                <div class="px-4 pt-5 pb-4 bg-white sm:p-6 sm:pb-4">
+                    <div class="sm:flex sm:items-start">
+                        <div class="flex items-center justify-center flex-shrink-0 w-12 h-12 mx-auto bg-red-100 rounded-full sm:mx-0 sm:h-10 sm:w-10">
+                            <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                            </svg>
+                        </div>
+                        <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                            <h3 class="text-lg font-medium leading-6 text-gray-900" id="modal-title">
+                                {{ __('admin.confirm_delete') }}
+                            </h3>
+                            <div class="mt-2">
+                                <p class="text-sm text-gray-500">
+                                    {{ __('admin.confirm_delete_trainer') }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="px-4 py-3 bg-gray-50 sm:px-6 sm:flex sm:flex-row-reverse">
+                    <button type="button" 
+                            @click="$wire.deleteTranslation(translationToDelete); showDeleteModal = false" 
+                            class="inline-flex justify-center w-full px-4 py-2 text-base font-medium text-white bg-red-600 border border-transparent rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm">
+                        {{ __('admin.delete') }}
+                    </button>
+                    <button type="button" 
+                            @click="showDeleteModal = false" 
+                            class="inline-flex justify-center w-full px-4 py-2 mt-3 text-base font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                        {{ __('admin.cancel') }}
+                    </button>
+                </div>
             </div>
         </div>
     </div>

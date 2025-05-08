@@ -1,41 +1,41 @@
 <x-slot name="header">
-    Dodaj nowego trenera
+    {{ __('admin.add_trainer') }}
 </x-slot>
 
 <div>
     <div class="container mx-auto p-6">
-        <h1 class="text-2xl font-bold mb-6">Dodaj nowego trenera</h1>
+        <h1 class="text-2xl font-bold mb-6">{{ __('admin.add_trainer') }}</h1>
 
         <div class="bg-white rounded-lg shadow overflow-hidden">
             <form wire:submit="save">
                 <div class="p-6 space-y-6">
                     <!-- User information section -->
                     <div>
-                        <h2 class="text-lg font-medium text-gray-900 border-b pb-2">Dane podstawowe</h2>
+                        <h2 class="text-lg font-medium text-gray-900 border-b pb-2">{{ __('admin.user_info') }}</h2>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
                             <div>
-                                <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Imię i nazwisko</label>
+                                <label for="name" class="block text-sm font-medium text-gray-700 mb-1">{{ __('admin.user_name') }}</label>
                                 <input type="text" id="name" wire:model="name" 
                                        class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                                 @error('name') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                             </div>
                             
                             <div>
-                                <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                                <label for="email" class="block text-sm font-medium text-gray-700 mb-1">{{ __('admin.email') }}</label>
                                 <input type="email" id="email" wire:model="email" 
                                        class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                                 @error('email') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                             </div>
                             
                             <div>
-                                <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Hasło</label>
+                                <label for="password" class="block text-sm font-medium text-gray-700 mb-1">{{ __('admin.password') }}</label>
                                 <input type="password" id="password" wire:model="password" 
                                        class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                                 @error('password') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                             </div>
                             
                             <div>
-                                <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-1">Potwierdź hasło</label>
+                                <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-1">{{ __('admin.confirm_password') }}</label>
                                 <input type="password" id="password_confirmation" wire:model="password_confirmation" 
                                        class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                             </div>
@@ -44,31 +44,31 @@
                     
                     <!-- Trainer-specific information -->
                     <div>
-                        <h2 class="text-lg font-medium text-gray-900 border-b pb-2">Profil trenera</h2>
+                        <h2 class="text-lg font-medium text-gray-900 border-b pb-2">{{ __('admin.trainer_profile') }}</h2>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
                             <div>
-                                <label for="specialization" class="block text-sm font-medium text-gray-700 mb-1">Specjalizacja</label>
+                                <label for="specialization" class="block text-sm font-medium text-gray-700 mb-1">{{ __('admin.trainer_specialization') }}</label>
                                 <input type="text" id="specialization" wire:model="specialization" 
                                        class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                                 @error('specialization') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                             </div>
                             
                             <div>
-                                <label for="experience" class="block text-sm font-medium text-gray-700 mb-1">Lata doświadczenia</label>
+                                <label for="experience" class="block text-sm font-medium text-gray-700 mb-1">{{ __('admin.trainer_experience_years') }}</label>
                                 <input type="number" id="experience" wire:model="experience" min="0" max="100" 
                                        class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                                 @error('experience') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                             </div>
 
                             <div class="md:col-span-2">
-                                <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Krótki opis</label>
+                                <label for="description" class="block text-sm font-medium text-gray-700 mb-1">{{ __('admin.trainer_description') }}</label>
                                 <textarea id="description" rows="2" wire:model="description" 
                                           class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"></textarea>
                                 @error('description') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                             </div>
 
                             <div class="md:col-span-2">
-                                <label for="biography" class="block text-sm font-medium text-gray-700 mb-1">Biografia</label>
+                                <label for="biography" class="block text-sm font-medium text-gray-700 mb-1">{{ __('admin.trainer_biography') }}</label>
                                 <textarea id="biography" rows="4" wire:model="biography" 
                                           class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"></textarea>
                                 @error('biography') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
@@ -78,7 +78,7 @@
                     
                     <!-- Profile photo upload -->
                     <div>
-                        <h2 class="text-lg font-medium text-gray-900 border-b pb-2">Zdjęcie profilowe</h2>
+                        <h2 class="text-lg font-medium text-gray-900 border-b pb-2">{{ __('admin.profile_image') }}</h2>
                         <div class="mt-4">
                             <div class="flex items-center">
                                 <div class="flex-shrink-0">
@@ -95,16 +95,16 @@
                                 <div class="ml-5">
                                     <div class="flex items-center">
                                         <label for="photo" class="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none">
-                                            <span>Prześlij zdjęcie</span>
+                                            <span>{{ __('admin.upload_image') }}</span>
                                             <input id="photo" wire:model.live="photo" type="file" class="sr-only" accept="image/*">
                                         </label>
                                     </div>
-                                    <p class="text-xs text-gray-500">PNG, JPG, do 1MB</p>
+                                    <p class="text-xs text-gray-500">{{ __('admin.image_requirements') }}</p>
                                     @error('photo') <span class="text-red-500 text-sm block mt-1">{{ $message }}</span> @enderror
                                     
                                     @if ($photo)
                                         <button type="button" wire:click="$set('photo', null)" class="mt-2 text-sm text-red-600 hover:text-red-900">
-                                            Usuń zdjęcie
+                                            {{ __('admin.remove_image') }}
                                         </button>
                                     @endif
                                 </div>
@@ -114,11 +114,11 @@
                     
                     <!-- Approval status -->
                     <div>
-                        <h2 class="text-lg font-medium text-gray-900 border-b pb-2">Status</h2>
+                        <h2 class="text-lg font-medium text-gray-900 border-b pb-2">{{ __('admin.trainer_status') }}</h2>
                         <div class="mt-4">
                             <label class="inline-flex items-center">
                                 <input type="checkbox" wire:model="is_approved" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                                <span class="ml-2 text-sm text-gray-700">Zatwierdź trenera od razu</span>
+                                <span class="ml-2 text-sm text-gray-700">{{ __('admin.approve_trainer_immediately') }}</span>
                             </label>
                         </div>
                     </div>
@@ -127,10 +127,10 @@
                 <div class="px-6 py-3 bg-gray-50 flex justify-between">
                     <a href="{{ route('admin.trainers.index') }}" wire:navigate 
                        class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 transition">
-                        Wróć do listy
+                        {{ __('admin.back_to_list') }}
                     </a>
                     <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition">
-                        Utwórz trenera
+                        {{ __('admin.create_trainer') }}
                     </button>
                 </div>
             </form>
