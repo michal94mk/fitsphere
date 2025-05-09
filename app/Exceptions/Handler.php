@@ -54,6 +54,17 @@ class Handler extends ExceptionHandler
             
             return false; // Prevent default reporting
         });
+        
+        // Handle RateLimitException
+        $this->reportable(function (RateLimitException $e) {
+            app(LogService::class)->warning('Rate limit exceeded', [
+                'service' => $e->getServiceName(),
+                'retry_after' => $e->getRetryAfter(),
+                'limit_type' => $e->getLimitType(),
+            ]);
+            
+            return false; // Prevent default reporting
+        });
 
         // Add specialized rendering for API exceptions when in API context
         $this->renderable(function (ApiException $e, $request) {
@@ -74,6 +85,34 @@ class Handler extends ExceptionHandler
                     'error' => true,
                     'message' => $e->getMessage(),
                 ], 500);
+            }
+        });
+        
+        // Dodanie obsługi ValidationException - zwracanie ustrukturyzowanych błędów walidacji
+        $this->renderable(function (ValidationException $e, $request) {
+            if ($request->expectsJson() || $request->is('api/*')) {
+                return response()->json([
+                    'error' => true,
+                    'message' => 'Dane wejściowe są nieprawidłowe',
+                    'errors' => $e->errors(),
+                ], 422);
+            }
+        });
+        
+        // Render RateLimitException with proper headers
+        $this->renderable(function (RateLimitException $e, $request) {
+            if ($request->expectsJson() || $request->is('api/*')) {
+                $headers = [];
+                if ($e->getRetryAfter()) {
+                    $headers['Retry-After'] = $e->getRetryAfter();
+                }
+                
+                return response()->json([
+                    'error' => true,
+                    'message' => $e->getMessage(),
+                    'service' => $e->getServiceName(),
+                    'retry_after' => $e->getRetryAfter(),
+                ], 429, $headers);
             }
         });
     }

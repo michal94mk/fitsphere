@@ -5,6 +5,7 @@ namespace App\Exceptions;
 use Exception;
 use Throwable;
 
+// Exception for email delivery failures
 class EmailSendingException extends Exception
 {
     protected $recipient;

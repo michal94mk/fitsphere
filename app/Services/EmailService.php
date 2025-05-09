@@ -10,9 +10,6 @@ use Exception;
 
 class EmailService
 {
-    /**
-     * @throws EmailSendingException
-     */
     public function send(
         string $recipient, 
         Mailable $mailable, 

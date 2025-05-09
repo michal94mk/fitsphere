@@ -5,6 +5,7 @@ namespace App\Exceptions;
 use Exception;
 use Throwable;
 
+// Exception for failed API calls to external services
 class ApiException extends Exception
 {
     protected $endpoint;
@@ -48,6 +49,7 @@ class ApiException extends Exception
         return $this->serviceName;
     }
     
+    // Factory method for Spoonacular API exceptions
     public static function spoonacular(
         string $endpoint, 
         string $message = "Spoonacular API request failed", 

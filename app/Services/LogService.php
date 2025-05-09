@@ -3,10 +3,13 @@
 namespace App\Services;
 
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 use Throwable;
+use Closure;
 use App\Exceptions\ApiException;
 use App\Exceptions\EmailSendingException;
 
+// Enhanced logging service with context enrichment and exception handling
 class LogService
 {
     public function error(string $message, array $context = []): void
@@ -26,12 +29,8 @@ class LogService
     
     /**
      * Enhanced exception logging with specialized handling for custom exceptions
-     * 
-     * @param Throwable $exception The exception to log
-     * @param string|null $message Custom message to prefix the exception details
-     * @param array $context Additional context to include in the log
      */
-    public function exception(Throwable $exception, string $message = null, array $context = []): void
+    public function exception(Throwable $exception, ?string $message = null, array $context = []): void
     {
         $exceptionClass = get_class($exception);
         $exceptionContext = [
@@ -84,6 +83,54 @@ class LogService
     }
     
     /**
+     * Execute code within a database transaction with exception handling and logging
+     */
+    public function executeInTransaction(
+        Closure $callback,
+        string $operationName,
+        bool $throwException = false
+    ): mixed {
+        // Start time monitoring
+        $startTime = microtime(true);
+        
+        try {
+            // Begin transaction
+            $result = DB::transaction(function() use ($callback) {
+                return $callback();
+            });
+            
+            // Calculate execution time
+            $duration = round((microtime(true) - $startTime) * 1000, 2);
+            
+            // Log successful operation
+            $this->info("Operation '{$operationName}' completed successfully", [
+                'duration_ms' => $duration
+            ]);
+            
+            return $result;
+        } catch (Throwable $e) {
+            // Calculate time until error
+            $duration = round((microtime(true) - $startTime) * 1000, 2);
+            
+            // Log exception
+            $this->exception($e, "Operation '{$operationName}' failed", [
+                'duration_ms' => $duration,
+                'operation' => $operationName
+            ]);
+            
+            if ($throwException) {
+                throw $e;
+            }
+            
+            return [
+                'status' => 'error',
+                'message' => $e->getMessage(),
+                'exception' => $e
+            ];
+        }
+    }
+    
+    /**
      * Logs with additional contextual information about the request and user
      */
     protected function logWithContext(string $level, string $message, array $context = []): void
@@ -101,6 +148,11 @@ class LogService
             'user_email' => $user ? $user->email : null,
             'session_id' => session()->getId(),
         ];
+        
+        // Add request_id if available (from RequestTracking middleware)
+        if ($request->hasHeader('X-Request-ID')) {
+            $defaultContext['request_id'] = $request->header('X-Request-ID');
+        }
         
         Log::$level($message, array_merge($defaultContext, $context));
     }

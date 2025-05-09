@@ -6,33 +6,28 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
 use App\Exceptions\ApiException;
+use App\Services\ApiRetryService;
 use Throwable;
 
+// Service for handling translations via LibreTranslate API
 class LibreTranslateService
 {
     protected $apiUrl;
     protected $apiKey;
+    protected $apiRetryService;
     
-    public function __construct()
+    public function __construct(?ApiRetryService $apiRetryService = null)
     {
-        $this->apiUrl = config('services.libretranslate.url', 'https://libretranslate.com');
-        $this->apiKey = config('services.libretranslate.key');
+        $this->apiUrl = env('LIBRETRANSLATE_URL', 'https://translate.argosopentech.com');
+        $this->apiKey = env('LIBRETRANSLATE_API_KEY', '');
+        $this->apiRetryService = $apiRetryService ?? app(ApiRetryService::class);
     }
     
-    /**
-     * Translates text between two languages
-     * 
-     * @param string $text Text to translate
-     * @param string $source Source language code (e.g. 'en')
-     * @param string $target Target language code (e.g. 'pl')
-     * @param string $format Text format ('text' or 'html')
-     * @return string Translated text
-     * @throws ApiException If translation fails
-     */
-    public function translate($text, $source, $target, $format = 'text')
+    // Translate text between languages
+    public function translate(string $text, string $source, string $target, string $format = 'text'): string
     {
         if (empty($text)) {
-            return $text;
+            return '';
         }
         
         // Check if the text contains HTML tags
@@ -48,62 +43,45 @@ class LibreTranslateService
         
         $endpoint = '/translate';
         
-        try {
-            $response = Http::timeout(10)->post($this->apiUrl . $endpoint, [
-                'q' => $text,
-                'source' => $source,
-                'target' => $target,
-                'format' => $format,
-                'api_key' => $this->apiKey,
-            ]);
-            
-            if ($response->successful()) {
-                $data = $response->json();
-                if (isset($data['translatedText'])) {
-                    // Store translation in cache for 24 hours
-                    Cache::put($cacheKey, $data['translatedText'], 60 * 60 * 24);
-                    return $data['translatedText'];
+        return $this->apiRetryService->executeWithRetry(
+            function() use ($text, $source, $target, $format, $endpoint, $cacheKey) {
+                $response = Http::timeout(10)->post($this->apiUrl . $endpoint, [
+                    'q' => $text,
+                    'source' => $source,
+                    'target' => $target,
+                    'format' => $format,
+                    'api_key' => $this->apiKey,
+                ]);
+                
+                if ($response->successful()) {
+                    $data = $response->json();
+                    if (isset($data['translatedText'])) {
+                        // Store translation in cache for 24 hours
+                        Cache::put($cacheKey, $data['translatedText'], 60 * 60 * 24);
+                        return $data['translatedText'];
+                    }
                 }
-            }
-            
-            Log::warning('LibreTranslate translation failed', [
-                'status' => $response->status(),
-                'response' => $response->json(),
-                'text_length' => strlen($text)
-            ]);
-            
-            throw new ApiException(
-                $endpoint,
-                'Translation failed: ' . ($response->json()['error'] ?? 'Unknown error'),
-                'LibreTranslate',
-                $response->status()
-            );
-        } catch (Throwable $e) {
-            if ($e instanceof ApiException) {
-                throw $e;
-            }
-            
-            Log::error('LibreTranslate error', [
-                'message' => $e->getMessage(),
-                'text_length' => strlen($text)
-            ]);
-            
-            throw new ApiException(
-                $endpoint,
-                'Translation service error: ' . $e->getMessage(),
-                'LibreTranslate'
-            );
-        }
+                
+                Log::warning('LibreTranslate translation failed', [
+                    'status' => $response->status(),
+                    'response' => $response->json(),
+                    'text_length' => strlen($text)
+                ]);
+                
+                throw new ApiException(
+                    $endpoint,
+                    'Translation failed: ' . ($response->json()['error'] ?? 'Unknown error'),
+                    'LibreTranslate',
+                    $response->status()
+                );
+            },
+            'LibreTranslate',
+            $endpoint
+        );
     }
     
-    /**
-     * Detects the language of a text
-     * 
-     * @param string $text Text to analyze
-     * @return string Language code
-     * @throws ApiException If language detection fails
-     */
-    public function detectLanguage($text)
+    // Detect the language of a text
+    public function detectLanguage(string $text): ?string
     {
         if (empty($text)) {
             return null;
@@ -111,49 +89,34 @@ class LibreTranslateService
         
         $endpoint = '/detect';
         
-        try {
-            $response = Http::timeout(5)->post($this->apiUrl . $endpoint, [
-                'q' => substr($text, 0, 500), // Limit to 500 characters for efficiency
-                'api_key' => $this->apiKey,
-            ]);
-            
-            if ($response->successful()) {
-                $data = $response->json();
-                if (isset($data[0]['language'])) {
-                    return $data[0]['language'];
+        return $this->apiRetryService->executeWithRetry(
+            function() use ($text, $endpoint) {
+                $response = Http::timeout(5)->post($this->apiUrl . $endpoint, [
+                    'q' => substr($text, 0, 500), // Limit to 500 characters for efficiency
+                    'api_key' => $this->apiKey,
+                ]);
+                
+                if ($response->successful()) {
+                    $data = $response->json();
+                    if (isset($data[0]['language'])) {
+                        return $data[0]['language'];
+                    }
                 }
-            }
-            
-            throw new ApiException(
-                $endpoint,
-                'Language detection failed: ' . ($response->json()['error'] ?? 'Unknown error'),
-                'LibreTranslate',
-                $response->status()
-            );
-        } catch (Throwable $e) {
-            if ($e instanceof ApiException) {
-                throw $e;
-            }
-            
-            Log::error('LibreTranslate language detection error', [
-                'message' => $e->getMessage()
-            ]);
-            
-            throw new ApiException(
-                $endpoint,
-                'Language detection error: ' . $e->getMessage(),
-                'LibreTranslate'
-            );
-        }
+                
+                throw new ApiException(
+                    $endpoint,
+                    'Language detection failed: ' . ($response->json()['error'] ?? 'Unknown error'),
+                    'LibreTranslate',
+                    $response->status()
+                );
+            },
+            'LibreTranslate',
+            $endpoint
+        );
     }
     
-    /**
-     * Get available languages from API
-     * 
-     * @return array List of available languages
-     * @throws ApiException If retrieving languages fails
-     */
-    public function getLanguages()
+    // Get available languages from API
+    public function getLanguages(): array
     {
         $cacheKey = 'libretranslate_languages';
         
@@ -163,49 +126,32 @@ class LibreTranslateService
         
         $endpoint = '/languages';
         
-        try {
-            $response = Http::timeout(5)->get($this->apiUrl . $endpoint, [
-                'api_key' => $this->apiKey,
-            ]);
-            
-            if ($response->successful()) {
-                $languages = $response->json();
-                Cache::put($cacheKey, $languages, 60 * 60 * 24); // Cache for 24h
-                return $languages;
-            }
-            
-            throw new ApiException(
-                $endpoint,
-                'Failed to retrieve languages: ' . ($response->json()['error'] ?? 'Unknown error'),
-                'LibreTranslate',
-                $response->status()
-            );
-        } catch (Throwable $e) {
-            if ($e instanceof ApiException) {
-                throw $e;
-            }
-            
-            Log::error('LibreTranslate error getting languages', [
-                'message' => $e->getMessage()
-            ]);
-            
-            throw new ApiException(
-                $endpoint,
-                'Error retrieving languages: ' . $e->getMessage(),
-                'LibreTranslate'
-            );
-        }
+        return $this->apiRetryService->executeWithRetry(
+            function() use ($endpoint, $cacheKey) {
+                $response = Http::timeout(5)->get($this->apiUrl . $endpoint, [
+                    'api_key' => $this->apiKey,
+                ]);
+                
+                if ($response->successful()) {
+                    $languages = $response->json();
+                    Cache::put($cacheKey, $languages, 60 * 60 * 24); // Cache for 24h
+                    return $languages;
+                }
+                
+                throw new ApiException(
+                    $endpoint,
+                    'Failed to retrieve languages: ' . ($response->json()['error'] ?? 'Unknown error'),
+                    'LibreTranslate',
+                    $response->status()
+                );
+            },
+            'LibreTranslate',
+            $endpoint
+        );
     }
     
-    /**
-     * Translate multiple text fragments simultaneously
-     * 
-     * @param array $texts Array with texts to translate
-     * @param string $source Source language code
-     * @param string $target Target language code
-     * @return array Array with translated texts
-     */
-    public function batchTranslate(array $texts, $source, $target)
+    // Translate multiple text fragments simultaneously
+    public function batchTranslate(array $texts, string $source, string $target): array
     {
         $results = [];
         $errors = [];
