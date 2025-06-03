@@ -95,7 +95,7 @@ return [
     
     // Translation service information
     'translation_info_title' => 'Information: Recipe translation',
-    'translation_info_message' => 'The recipe translation feature uses the free LibreTranslate API:',
+    'translation_info_message' => 'The recipe translation feature uses the free DeepL API:',
     'translation_info_point1' => 'Translations may not be perfect or may contain errors',
     'translation_info_point2' => 'Translation time may be longer for extensive recipes',
     'translation_info_point3' => 'Problems may occur with longer texts due to limitations of the free API',

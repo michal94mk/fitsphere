@@ -95,7 +95,7 @@ return [
     
     // Informacje o usłudze tłumaczenia
     'translation_info_title' => 'Informacja: Tłumaczenie przepisów',
-    'translation_info_message' => 'Funkcja tłumaczenia przepisów wykorzystuje darmowe API LibreTranslate:',
+    'translation_info_message' => 'Funkcja tłumaczenia przepisów wykorzystuje darmowe API DeepL:',
     'translation_info_point1' => 'Tłumaczenia mogą nie być doskonałe lub mogą zawierać błędy',
     'translation_info_point2' => 'Czas tłumaczenia może być dłuższy przy rozbudowanych przepisach',
     'translation_info_point3' => 'Przy dłuższych tekstach mogą wystąpić problemy z tłumaczeniem ze względu na ograniczenia darmowego API',

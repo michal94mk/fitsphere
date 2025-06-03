@@ -5,7 +5,7 @@ namespace App\Livewire;
 use Livewire\Component;
 use App\Models\NutritionalProfile;
 use App\Services\SpoonacularService;
-use App\Services\LibreTranslateService;
+use App\Services\DeepLTranslateService;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
 use Illuminate\Support\Facades\App;
@@ -57,7 +57,7 @@ class NutritionCalculator extends Component
         'startTranslation' => 'performTranslation'
     ];
     
-    public function boot(SpoonacularService $spoonacularService, LibreTranslateService $translateService)
+    public function boot(SpoonacularService $spoonacularService, DeepLTranslateService $translateService)
     {
         $this->spoonacularService = $spoonacularService;
         $this->translateService = $translateService;
@@ -229,7 +229,7 @@ class NutritionCalculator extends Component
         try {
             if (App::getLocale() === 'pl') {
                 // Check if we have access to translation API
-                if (config('services.libretranslate.key') || config('services.libretranslate.url') !== 'https://libretranslate.com') {
+                if (config('services.deepl.key')) {
                     try {
                         $translatedQuery = $this->translateService->translate($originalQuery, 'pl', 'en');
                         
@@ -419,23 +419,244 @@ class NutritionCalculator extends Component
         
         $this->dispatch('translatingTitle');
         
-        try {
-            $this->translatedTitle = $this->translateService->translate($this->selectedRecipe['title'], 'en', 'pl', 'text');
-            
-            // Notify interface that title has been translated and show it
-            $this->dispatch('titleTranslated');
-            
-            // Move on to translating instructions
-            $this->translateInstructions();
-        } catch (ApiException $e) {
-            app(LogService::class)->exception($e, 'API error translating recipe title');
-            $this->translatedTitle = $this->selectedRecipe['title']; // Use original title
-            $this->translateInstructions(); // Continue with instructions
-        } catch (Throwable $e) {
-            app(LogService::class)->exception($e, 'Error translating recipe title');
-            $this->translatedTitle = $this->selectedRecipe['title']; // Use original title
-            $this->translateInstructions(); // Continue with instructions
+        // Check if DeepL API is available and working
+        $useDeepL = !empty(config('services.deepl.key')) && config('services.deepl.key') !== 'your_deepl_api_key_here';
+        
+        if ($useDeepL) {
+            try {
+                // Add timeout handling - if translation takes more than 15 seconds, use original
+                $startTime = microtime(true);
+                
+                $this->translatedTitle = $this->translateService->translate($this->selectedRecipe['title'], 'en', 'pl', 'text');
+                
+                $duration = microtime(true) - $startTime;
+                app(LogService::class)->info('Title translation completed', [
+                    'duration' => $duration,
+                    'title_length' => strlen($this->selectedRecipe['title'])
+                ]);
+                
+                // Notify interface that title has been translated and show it
+                $this->dispatch('titleTranslated');
+                
+                // Move on to translating instructions
+                $this->translateInstructions();
+                return;
+            } catch (ApiException $e) {
+                app(LogService::class)->exception($e, 'API error translating recipe title - falling back to dictionary');
+                // Fall through to fallback translation
+            } catch (Throwable $e) {
+                app(LogService::class)->exception($e, 'Error translating recipe title - falling back to dictionary');
+                // Fall through to fallback translation
+            }
         }
+        
+        // Use fallback translation
+        $this->translatedTitle = $this->fallbackTranslate($this->selectedRecipe['title']);
+        $this->dispatch('titleTranslated');
+        $this->translateInstructions();
+    }
+    
+    /**
+     * Simple fallback translation for common cooking terms
+     */
+    private function fallbackTranslate($text)
+    {
+        $dictionary = [
+            // Mięso i ryby
+            'chicken' => 'kurczak',
+            'chicken breast' => 'pierś z kurczaka',
+            'chicken thigh' => 'udko kurczaka',
+            'beef' => 'wołowina',
+            'pork' => 'wieprzowina',
+            'fish' => 'ryba',
+            'salmon' => 'łosoś',
+            'tuna' => 'tuńczyk',
+            'cod' => 'dorsz',
+            'turkey' => 'indyk',
+            'lamb' => 'jagnięcina',
+            'bacon' => 'bekon',
+            'ham' => 'szynka',
+            'sausage' => 'kiełbasa',
+            
+            // Węglowodany
+            'pasta' => 'makaron',
+            'spaghetti' => 'spaghetti',
+            'noodles' => 'makaron',
+            'rice' => 'ryż',
+            'bread' => 'chleb',
+            'flour' => 'mąka',
+            'oats' => 'owies',
+            'quinoa' => 'komosa ryżowa',
+            'barley' => 'jęczmień',
+            
+            // Nabiał
+            'milk' => 'mleko',
+            'butter' => 'masło',
+            'cheese' => 'ser',
+            'cream' => 'śmietana',
+            'yogurt' => 'jogurt',
+            'egg' => 'jajko',
+            'eggs' => 'jajka',
+            
+            // Warzywa
+            'onion' => 'cebula',
+            'garlic' => 'czosnek',
+            'tomato' => 'pomidor',
+            'tomatoes' => 'pomidory',
+            'potato' => 'ziemniak',
+            'potatoes' => 'ziemniaki',
+            'carrot' => 'marchewka',
+            'carrots' => 'marchewki',
+            'cabbage' => 'kapusta',
+            'broccoli' => 'brokuły',
+            'spinach' => 'szpinak',
+            'lettuce' => 'sałata',
+            'cucumber' => 'ogórek',
+            'pepper' => 'papryka',
+            'peppers' => 'papryka',
+            'mushroom' => 'grzyb',
+            'mushrooms' => 'grzyby',
+            'zucchini' => 'cukinia',
+            'eggplant' => 'bakłażan',
+            'celery' => 'seler',
+            'leek' => 'por',
+            'corn' => 'kukurydza',
+            'peas' => 'groszek',
+            'beans' => 'fasola',
+            
+            // Owoce
+            'apple' => 'jabłko',
+            'apples' => 'jabłka',
+            'banana' => 'banan',
+            'orange' => 'pomarańcza',
+            'lemon' => 'cytryna',
+            'lime' => 'limonka',
+            'strawberry' => 'truskawka',
+            'strawberries' => 'truskawki',
+            'blueberry' => 'jagoda',
+            'blueberries' => 'jagody',
+            'grape' => 'winogrono',
+            'grapes' => 'winogrona',
+            
+            // Przyprawy i zioła
+            'salt' => 'sól',
+            'pepper' => 'pieprz',
+            'sugar' => 'cukier',
+            'honey' => 'miód',
+            'oil' => 'olej',
+            'olive oil' => 'oliwa z oliwek',
+            'vinegar' => 'ocet',
+            'basil' => 'bazylia',
+            'oregano' => 'oregano',
+            'thyme' => 'tymianek',
+            'rosemary' => 'rozmaryn',
+            'parsley' => 'pietruszka',
+            'dill' => 'koper',
+            'ginger' => 'imbir',
+            'paprika' => 'papryka',
+            'cumin' => 'kminek',
+            'cinnamon' => 'cynamon',
+            
+            // Jednostki miary
+            'cup' => 'szklanka',
+            'cups' => 'szklanki',
+            'tablespoon' => 'łyżka stołowa',
+            'tablespoons' => 'łyżki stołowe',
+            'teaspoon' => 'łyżeczka',
+            'teaspoons' => 'łyżeczki',
+            'ounce' => 'uncja',
+            'ounces' => 'uncje',
+            'pound' => 'funt',
+            'pounds' => 'funty',
+            'gram' => 'gram',
+            'grams' => 'gramy',
+            'kilogram' => 'kilogram',
+            'liter' => 'litr',
+            'milliliter' => 'mililitr',
+            'piece' => 'sztuka',
+            'pieces' => 'sztuki',
+            'slice' => 'plaster',
+            'slices' => 'plastry',
+            'clove' => 'ząbek',
+            'cloves' => 'ząbki',
+            
+            // Metody gotowania
+            'baked' => 'pieczony',
+            'grilled' => 'grillowany',
+            'fried' => 'smażony',
+            'roasted' => 'pieczony',
+            'steamed' => 'gotowany na parze',
+            'boiled' => 'gotowany',
+            'sauteed' => 'duszony',
+            'braised' => 'duszony',
+            
+            // Potrawy
+            'soup' => 'zupa',
+            'salad' => 'sałatka',
+            'sandwich' => 'kanapka',
+            'pizza' => 'pizza',
+            'cake' => 'ciasto',
+            'bread' => 'chleb',
+            'recipe' => 'przepis',
+            'recipes' => 'przepisy',
+            'meal' => 'posiłek',
+            'breakfast' => 'śniadanie',
+            'lunch' => 'obiad',
+            'dinner' => 'kolacja',
+            'snack' => 'przekąska',
+            
+            // Przymiotniki
+            'fresh' => 'świeży',
+            'dried' => 'suszony',
+            'frozen' => 'mrożony',
+            'raw' => 'surowy',
+            'cooked' => 'gotowany',
+            'spicy' => 'pikantny',
+            'sweet' => 'słodki',
+            'sour' => 'kwaśny',
+            'salty' => 'słony',
+            'bitter' => 'gorzki',
+            'delicious' => 'pyszny',
+            'tasty' => 'smaczny',
+            'hot' => 'gorący',
+            'cold' => 'zimny',
+            'warm' => 'ciepły',
+            'large' => 'duży',
+            'small' => 'mały',
+            'medium' => 'średni',
+            
+            // Słowa łączące
+            'with' => 'z',
+            'and' => 'i',
+            'or' => 'lub',
+            'of' => 'z',
+            'in' => 'w',
+            'on' => 'na',
+            'for' => 'dla',
+            'to' => 'do',
+            'from' => 'z',
+            'into' => 'do',
+            'over' => 'nad',
+            'under' => 'pod',
+            'about' => 'około',
+            'without' => 'bez'
+        ];
+        
+        $words = explode(' ', strtolower($text));
+        $translatedWords = [];
+        
+        foreach ($words as $word) {
+            // Remove punctuation for lookup
+            $cleanWord = preg_replace('/[^\w]/', '', $word);
+            if (isset($dictionary[$cleanWord])) {
+                $translatedWords[] = $dictionary[$cleanWord];
+            } else {
+                $translatedWords[] = $word; // Keep original if not found
+            }
+        }
+        
+        $result = implode(' ', $translatedWords);
+        return ucfirst($result); // Capitalize first letter
     }
     
     public function translateInstructions()
@@ -448,20 +669,35 @@ class NutritionCalculator extends Component
         
         $this->dispatch('translatingInstructions');
         
+        // Check if DeepL API is available and working
+        $useDeepL = !empty(config('services.deepl.key')) && config('services.deepl.key') !== 'your_deepl_api_key_here';
+        
         try {
             if (isset($this->selectedRecipe['instructions']) && !empty($this->selectedRecipe['instructions'])) {
-                try {
-                    $this->translatedInstructions = $this->translateService->translate($this->selectedRecipe['instructions'], 'en', 'pl', 'html');
-                    
-                    // Notify interface that instructions have been translated
-                    $this->dispatch('instructionsTranslated');
-                } catch (ApiException $e) {
-                    app(LogService::class)->exception($e, 'API error translating recipe instructions');
-                    $this->translatedInstructions = $this->selectedRecipe['instructions']; // Use original
-                } catch (Throwable $e) {
-                    app(LogService::class)->exception($e, 'Error translating recipe instructions');
-                    $this->translatedInstructions = $this->selectedRecipe['instructions']; // Use original
+                if ($useDeepL) {
+                    try {
+                        $this->translatedInstructions = $this->translateService->translate($this->selectedRecipe['instructions'], 'en', 'pl', 'html');
+                        
+                        // Notify interface that instructions have been translated
+                        $this->dispatch('instructionsTranslated');
+                        
+                        // Move to ingredients
+                        $this->translateIngredients();
+                        return;
+                    } catch (ApiException $e) {
+                        app(LogService::class)->exception($e, 'API error translating recipe instructions - using original');
+                        $this->translatedInstructions = $this->selectedRecipe['instructions']; // Use original
+                    } catch (Throwable $e) {
+                        app(LogService::class)->exception($e, 'Error translating recipe instructions - using original');
+                        $this->translatedInstructions = $this->selectedRecipe['instructions']; // Use original
+                    }
+                } else {
+                    // No DeepL, use original
+                    $this->translatedInstructions = $this->selectedRecipe['instructions'];
                 }
+                
+                // Notify interface that instructions have been translated (or kept original)
+                $this->dispatch('instructionsTranslated');
                 
                 // Move to ingredients regardless of success
                 $this->translateIngredients();
@@ -475,21 +711,26 @@ class NutritionCalculator extends Component
                 
                 $translatedSteps = [];
                 
-                // Translate steps individually to avoid blocking interface
-                foreach ($steps as $index => $step) {
-                    try {
-                        $translatedStep = $this->translateService->translate($step, 'en', 'pl', 'text');
-                        if ($translatedStep) {
-                            $translatedSteps[$index] = $translatedStep;
-                        } else {
-                            $translatedSteps[$index] = $step;
+                if ($useDeepL) {
+                    // Translate steps individually to avoid blocking interface
+                    foreach ($steps as $index => $step) {
+                        try {
+                            $translatedStep = $this->translateService->translate($step, 'en', 'pl', 'text');
+                            if ($translatedStep) {
+                                $translatedSteps[$index] = $translatedStep;
+                            } else {
+                                $translatedSteps[$index] = $step;
+                            }
+                        } catch (ApiException $e) {
+                            app(LogService::class)->exception($e, 'API error translating recipe step ' . ($index + 1));
+                            $translatedSteps[$index] = $step; // Use original text
+                        } catch (Throwable $e) {
+                            $translatedSteps[$index] = $step; // Use original text
                         }
-                    } catch (ApiException $e) {
-                        app(LogService::class)->exception($e, 'API error translating recipe step ' . ($index + 1));
-                        $translatedSteps[$index] = $step; // Use original text
-                    } catch (Throwable $e) {
-                        $translatedSteps[$index] = $step; // Use original text
                     }
+                } else {
+                    // No DeepL, use original steps
+                    $translatedSteps = $steps;
                 }
                 
                 // Format steps as HTML list
@@ -527,6 +768,9 @@ class NutritionCalculator extends Component
         
         $this->dispatch('translatingIngredients');
         
+        // Check if DeepL API is available and working
+        $useDeepL = !empty(config('services.deepl.key')) && config('services.deepl.key') !== 'your_deepl_api_key_here';
+        
         try {
             $ingredients = $this->selectedRecipe['extendedIngredients'];
             
@@ -534,18 +778,24 @@ class NutritionCalculator extends Component
             foreach ($ingredients as $index => $ingredient) {
                 $originalText = $ingredient['original'] ?? ($ingredient['amount'] . ' ' . $ingredient['unit'] . ' ' . $ingredient['name']);
                 
-                try {
-                    $translated = $this->translateService->translate($originalText, 'en', 'pl', 'text');
-                    if ($translated) {
-                        $this->translatedIngredients[$index] = $translated;
-                    } else {
-                        $this->translatedIngredients[$index] = $originalText;
+                if ($useDeepL) {
+                    try {
+                        $translated = $this->translateService->translate($originalText, 'en', 'pl', 'text');
+                        if ($translated) {
+                            $this->translatedIngredients[$index] = $translated;
+                        } else {
+                            $this->translatedIngredients[$index] = $originalText;
+                        }
+                    } catch (ApiException $e) {
+                        app(LogService::class)->exception($e, 'API error translating ingredient ' . ($index + 1) . ' - using fallback');
+                        $this->translatedIngredients[$index] = $this->fallbackTranslate($originalText);
+                    } catch (Throwable $e) {
+                        app(LogService::class)->exception($e, 'Error translating ingredient ' . ($index + 1) . ' - using fallback');
+                        $this->translatedIngredients[$index] = $this->fallbackTranslate($originalText);
                     }
-                } catch (ApiException $e) {
-                    app(LogService::class)->exception($e, 'API error translating ingredient ' . ($index + 1));
-                    $this->translatedIngredients[$index] = $originalText;
-                } catch (Throwable $e) {
-                    $this->translatedIngredients[$index] = $originalText;
+                } else {
+                    // No DeepL, use fallback translation
+                    $this->translatedIngredients[$index] = $this->fallbackTranslate($originalText);
                 }
             }
             
@@ -563,7 +813,7 @@ class NutritionCalculator extends Component
     private function finishTranslation()
     {
         // Set the flag that translation is complete
-        $this->dispatch('translationCompleted');
+        $this->dispatch('translationComplete');
     }
     
     public function toggleRecipeTranslation()

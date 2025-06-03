@@ -50,4 +50,9 @@ return [
         'url' => env('LIBRETRANSLATE_URL', 'https://libretranslate.com'),
         'key' => env('LIBRETRANSLATE_API_KEY'),
     ],
+
+    'deepl' => [
+        'key' => env('DEEPL_API_KEY'),
+        'free_api' => env('DEEPL_FREE_API', false), // Set to true if using free DeepL API
+    ],
 ];

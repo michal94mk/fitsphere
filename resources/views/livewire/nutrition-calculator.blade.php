@@ -40,8 +40,8 @@
                 </div>
             @endif
             
-            <!-- Informacja o konfiguracji LibreTranslate -->
-            @if(empty(config('services.libretranslate.key')) && App::getLocale() === 'pl')
+            <!-- Informacja o konfiguracji DeepL -->
+            @if(empty(config('services.deepl.key')) && App::getLocale() === 'pl')
                 <div class="mb-6 bg-blue-50 border-l-4 border-blue-400 p-4">
                     <div class="flex">
                         <div class="flex-shrink-0">

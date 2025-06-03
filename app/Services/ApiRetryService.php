@@ -25,6 +25,11 @@ class ApiRetryService
         $lastException = null;
         $delay = $initialDelay;
         
+        Log::info("Starting API retry sequence for {$serviceName}", [
+            'endpoint' => $endpoint,
+            'max_attempts' => $maxAttempts
+        ]);
+        
         do {
             $attempts++;
             try {
@@ -44,6 +49,14 @@ class ApiRetryService
                 
                 $statusCode = $this->getStatusCodeFromException($exception);
                 $shouldRetry = in_array($statusCode, $retryStatusCodes);
+                
+                Log::warning("API {$serviceName} attempt {$attempts} failed", [
+                    'endpoint' => $endpoint,
+                    'error' => $exception->getMessage(),
+                    'status_code' => $statusCode,
+                    'should_retry' => $shouldRetry,
+                    'attempts_left' => $maxAttempts - $attempts
+                ]);
                 
                 // Handle rate limiting with Retry-After header
                 $retryAfter = null;
@@ -88,6 +101,12 @@ class ApiRetryService
                 }
             }
         } while ($attempts < $maxAttempts);
+        
+        Log::error("All API {$serviceName} retry attempts failed", [
+            'endpoint' => $endpoint,
+            'total_attempts' => $attempts,
+            'final_error' => $lastException->getMessage()
+        ]);
         
         // All attempts failed - throw ApiException
         if ($lastException instanceof ApiException) {

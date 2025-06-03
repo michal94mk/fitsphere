@@ -48,7 +48,7 @@ We would like to extend our thanks to the following sponsors for funding Laravel
 - Advanced fitness tracking system
 - User management and role-based permissions
 - Nutrition Calculator with automated recipe translations
-  - Uses LibreTranslate API for accurate recipe translations (English ↔ Polish)
+  - Uses DeepL API for accurate recipe translations (English ↔ Polish)
   - Automatically translates recipes to Polish when using Polish language
   - Bidirectional translation support for recipe searches
   - Manual translation toggle for user control
@@ -82,20 +82,15 @@ php artisan db:seed --class=UserSeeder
 
 ### Translation Setup
 
-The nutrition calculator uses LibreTranslate API for recipe translations. To set it up:
+The nutrition calculator uses DeepL API for recipe translations. To set it up:
 
-1. Visit [LibreTranslate](https://libretranslate.com/) and create an account
-2. Get a free API key from the LibreTranslate dashboard
+1. Visit [DeepL](https://www.deepl.com/) and create an account
+2. Get a free API key from the DeepL dashboard
 3. Add these variables to your `.env` file:
    ```
-   LIBRETRANSLATE_URL=https://libretranslate.com
-   LIBRETRANSLATE_API_KEY=your_api_key_here
+   DEEPL_API_KEY=your_api_key_here
+   DEEPL_FREE_API=true  # Set to false if using DeepL Pro API
    ```
-
-Alternatively, you can [self-host LibreTranslate](https://github.com/LibreTranslate/LibreTranslate) on your own server for unlimited translation without API key requirements. In this case, update the URL:
-```
-LIBRETRANSLATE_URL=http://your-server-address:5000
-```
 
 ### Spoonacular API
 
