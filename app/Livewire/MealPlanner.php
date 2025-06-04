@@ -446,22 +446,6 @@ class MealPlanner extends Component
         $this->loadMealPlansForDate($this->date);
     }
     
-    public function toggleFavorite($id)
-    {
-        $mealPlan = MealPlan::where('id', $id)
-            ->where('user_id', Auth::id())
-            ->first();
-        
-        if (!$mealPlan) {
-            return;
-        }
-        
-        $mealPlan->is_favorite = !$mealPlan->is_favorite;
-        $mealPlan->save();
-        
-        $this->loadMealPlansForDate($this->date);
-    }
-    
     public function nextWeek()
     {
         $this->startDate = Carbon::parse($this->startDate)->addWeek()->format('Y-m-d');

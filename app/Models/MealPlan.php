@@ -22,7 +22,6 @@ class MealPlan extends Model
         'carbs',
         'fat',
         'notes',
-        'is_favorite',
     ];
 
     protected $casts = [
@@ -32,7 +31,6 @@ class MealPlan extends Model
         'protein' => 'float',
         'carbs' => 'float',
         'fat' => 'float',
-        'is_favorite' => 'boolean',
     ];
 
     public function user(): BelongsTo

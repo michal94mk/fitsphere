@@ -67,4 +67,10 @@ return [
     'profile_required' => 'Please complete your nutritional profile in the Nutrition Calculator first.',
     'calories_required' => 'Please set your target calories in the Nutrition Calculator first.',
     'api_key_missing_message' => 'Meal planning and recipe generation features require a Spoonacular API key. To activate them:',
+    
+    // Modal delete meal
+    'delete_meal_title' => 'Delete Recipe from Plan',
+    'delete_meal_description' => 'Are you sure you want to delete this recipe from your meal plan? This action cannot be undone.',
+    'delete_meal' => 'Delete Recipe',
+    'recipe' => 'Recipe',
 ]; 

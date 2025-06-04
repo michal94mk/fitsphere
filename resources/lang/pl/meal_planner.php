@@ -70,4 +70,22 @@ return [
     'profile_required' => 'Najpierw uzupełnij swój profil żywieniowy w Kalkulatorze Odżywiania.',
     'calories_required' => 'Najpierw ustaw swój docelowy poziom kalorii w Kalkulatorze Odżywiania.',
     'api_key_missing_message' => 'Funkcje generowania planów posiłków i przepisów wymagają klucza API Spoonacular. Aby je aktywować:',
+    
+    // Modal delete meal
+    'delete_meal_title' => 'Usuń przepis z planu',
+    'delete_meal_description' => 'Czy na pewno chcesz usunąć ten przepis z planu posiłków? Ta akcja nie może być cofnięta.',
+    'delete_meal' => 'Usuń przepis',
+    'recipe' => 'Przepis',
+    
+    // Additional meal planner keys
+    'meals_for' => 'Posiłki na',
+    'total_calories' => 'Łączne kalorie',
+    'kcal' => 'kcal',
+    'g' => 'g',
+    'na' => 'N/A',
+    'nutrition_per_serving' => 'Wartości odżywcze na porcję',
+    'servings' => 'Porcje',
+    'notes' => 'Notatki',
+    'no_meals_planned' => 'Brak zaplanowanych posiłków na ten dzień.',
+    'use_generator' => 'Użyj generatora planów posiłków powyżej, aby dodać przepisy.',
 ]; 
