@@ -4,16 +4,15 @@ namespace App\Mail;
 
 use App\Models\User;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
 /**
- * Email powiadomienia o zatwierdzeniu jako trener
+ * Email powiadomienia o zmianie hasła
  */
-class TrainerApproved extends Mailable implements ShouldQueue
+class PasswordChangeNotification extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -22,23 +21,26 @@ class TrainerApproved extends Mailable implements ShouldQueue
     public function __construct(User $user)
     {
         $this->user = $user;
-        $this->onQueue('emails');
     }
 
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Zostałeś zatwierdzony jako trener - FitSphere',
+            subject: 'Hasło zostało zmienione - FitSphere',
+            replyTo: [
+                config('mail.from.address'),
+            ]
         );
     }
 
     public function content(): Content
     {
         return new Content(
-            view: 'emails.trainer-approved',
+            view: 'emails.password-changed',
             with: [
                 'user' => $this->user,
-                'dashboardUrl' => config('app.url') . '/trainer/dashboard',
+                'appUrl' => config('app.url'),
+                'changeTime' => now()->format('d.m.Y H:i:s'),
             ]
         );
     }

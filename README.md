@@ -80,6 +80,194 @@ php artisan db:seed --class=UserSeeder
 
 ## Configuration
 
+### Email Configuration (Brevo)
+
+FitSphere uses Brevo (formerly Sendinblue) for sending emails in production. The application includes:
+
+- **Welcome emails** - sent after user registration
+- **Email verification** - for account security
+- **Password reset emails** - for forgotten passwords
+- **Password change notifications** - for security alerts
+
+#### Brevo Setup:
+
+1. Create account at [Brevo](https://www.brevo.com/)
+2. Get your SMTP credentials from Brevo dashboard
+3. **Verify sender email/domain** in Brevo panel under "Senders & IP"
+4. Add to your `.env` file:
+   ```env
+   MAIL_MAILER=smtp
+   MAIL_HOST=smtp-relay.brevo.com
+   MAIL_PORT=587
+   MAIL_USERNAME=your-brevo-email@domain.com
+   MAIL_PASSWORD=your-brevo-smtp-key
+   MAIL_ENCRYPTION=tls
+   
+   # Option 1: Own domain (requires DNS verification)
+   MAIL_FROM_ADDRESS="noreply@fitsphere.com"
+   MAIL_FROM_NAME="FitSphere"
+   
+   # Option 2: Same as USERNAME (easier setup)
+   # MAIL_FROM_ADDRESS="your-brevo-email@domain.com"
+   # MAIL_FROM_NAME="FitSphere"
+   ```
+
+**📝 Note:** `MAIL_FROM_ADDRESS` doesn't need to be a real mailbox, but must be verified in Brevo panel.
+
+#### Queue System:
+
+FitSphere uses Laravel queues to send emails asynchronously. This prevents blocking the web response while emails are being sent.
+
+**Start the queue worker:**
+```bash
+php artisan queue:work database --sleep=3 --tries=3 --timeout=60
+```
+
+**Queue commands:**
+```bash
+# Check failed jobs
+php artisan queue:failed
+
+# Retry failed jobs
+php artisan queue:retry all
+
+# Clear failed jobs
+php artisan queue:flush
+```
+
+#### Usage in Code:
+
+```php
+use App\Services\EmailService;
+
+// In controllers or Livewire components
+$emailService = app(EmailService::class);
+
+// Send emails (queued automatically)
+$emailService->sendWelcomeEmail($user);
+$emailService->sendEmailVerification($user);
+$emailService->sendPasswordResetEmail($user, $token);
+```
+
+## Queue System Explained
+
+### 🔄 **How Laravel Queues Work**
+
+FitSphere uses Laravel's queue system to handle email sending asynchronously. Here's how it works:
+
+#### **Without Queues (Synchronous):**
+```
+User clicks "Register" → App creates user → App sends email (3-5 seconds) → User sees success page
+```
+**Problem:** User waits for email to be sent before seeing response.
+
+#### **With Queues (Asynchronous):**
+```
+User clicks "Register" → App creates user → App queues email job → User sees success page immediately
+                                        ↓
+                           Queue worker picks up job → Sends email in background
+```
+**Benefit:** Instant response, better user experience.
+
+### 🏗️ **Queue Architecture in FitSphere**
+
+```
+EmailService.sendWelcomeEmail($user)
+           ↓
+    Mail::to($user)->queue(new WelcomeEmail($user))
+           ↓
+    Job stored in 'jobs' table
+           ↓
+    Queue worker processes job
+           ↓
+    Email sent via Brevo SMTP
+```
+
+### 📊 **Database Tables Used**
+
+- **`jobs`** - Pending jobs waiting to be processed
+- **`failed_jobs`** - Jobs that failed after max retries
+- **`job_batches`** - Grouped jobs (if using job batching)
+
+### ⚙️ **Queue Configuration**
+
+**Queue Connection** (`config/queue.php`):
+```php
+'default' => env('QUEUE_CONNECTION', 'database'), // Uses database driver
+```
+
+**Email Service** (`app/Services/EmailService.php`):
+```php
+// Queues email instead of sending immediately
+Mail::to($user->email)->queue(new WelcomeEmail($user));
+```
+
+**Mailable Classes** (`app/Mail/`):
+```php
+class WelcomeEmail extends Mailable implements ShouldQueue
+{
+    use Queueable; // Enables queueing
+    
+    public function __construct(User $user)
+    {
+        $this->onQueue('emails'); // Use 'emails' queue
+    }
+}
+```
+
+### 🚀 **Running Queue Workers**
+
+**Development:**
+```bash
+php artisan queue:work database --sleep=3 --tries=3 --timeout=60
+```
+
+**Production (with Supervisor):**
+```ini
+[program:fitsphere-worker]
+process_name=%(program_name)s_%(process_num)02d
+command=php /path/to/fitsphere/artisan queue:work database --sleep=3 --tries=3 --max-time=3600
+autostart=true
+autorestart=true
+numprocs=2
+user=www-data
+```
+
+### 🔍 **Monitoring Queues**
+
+```bash
+# See failed jobs
+php artisan queue:failed
+
+# Retry specific failed job
+php artisan queue:retry 5
+
+# Retry all failed jobs
+php artisan queue:retry all
+
+# Clear all failed jobs
+php artisan queue:flush
+
+# Check job status in database
+SELECT * FROM jobs;
+SELECT * FROM failed_jobs;
+```
+
+### 🛠️ **Queue Job Lifecycle**
+
+1. **Created** - Job added to `jobs` table
+2. **Processing** - Worker picks up job
+3. **Success** - Job completed, removed from table
+4. **Failed** - Job moved to `failed_jobs` after max retries
+
+### 🔧 **Error Handling**
+
+If email sending fails:
+- **Retry 3 times** (--tries=3)
+- **Wait 3 seconds** between jobs (--sleep=3)
+- **Log errors** to `storage/logs/laravel.log`
+- **Move to failed_jobs** after max retries
+
 ### Translation Setup
 
 The nutrition calculator uses DeepL API for recipe translations. To set it up:
@@ -118,83 +306,3 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-
-# FitSphere - Test Documentation
-
-## Test Structure
-
-The tests for the FitSphere application are divided into two main categories:
-
-1. **Unit Tests** (`tests/Unit/`) - testing individual components, models, and services
-2. **Feature Tests** (`tests/Feature/`) - testing broader flows and user interactions
-
-### Admin Panel Tests
-
-Tests for the admin panel are located in the following locations:
-
-- **AdminTest** - basic access tests for the admin panel
-- **AdminMiddlewareTest** - tests for middleware controlling access to the panel
-- **Livewire/Admin/** - tests for Livewire components used in the admin panel:
-  - `BasicAdminComponentsTest.php` - verification of basic component rendering
-  - `CategoriesTest.php` - category management
-  - `DashboardTest.php` - dashboard functionality
-  - `PostsTest.php` - post management
-  - `UsersTest.php` - user management
-
-## Test Status
-
-All 147 tests are now passing successfully. Previously, there were 18 failing tests and 1 skipped test, which have been fixed.
-
-## Completed Fixes
-
-1. **Comment Factory** - removed the `status` column that did not exist in the table
-2. **Category Tests** - adapted to changes in the database structure where the `description` column was removed
-3. **Dashboard Tests** - changed the approach to testing statistics to avoid hard-coded values
-4. **User Tests** - adapted to the actual implementation of Livewire components
-5. **Email Verification Test** - fixed the test to use `Notification::fake()` instead of `Mail::fake()` for testing Laravel notifications
-6. **Trainer Approval Test** - implemented a proper test using `Mail::fake()` and testing the TrainersShow component
-7. **Comments** - converted Polish comments to English in `AdminTest.php` and `EmailTest.php` for code consistency
-8. **Removed skipped tests** - removed two skipped tests that required special conditions
-
-## Test Coverage
-
-The application has extensive test coverage at both unit and functional levels:
-
-- **Models** - all models are covered by unit tests
-- **Livewire Components** - tested rendering, validation, and basic operations
-- **Middleware** - verified correct operation of access mechanisms
-- **CRUD Operations** - tested create, read, update, and delete operations for main entities
-- **Notifications** - implemented proper testing of Laravel notifications
-- **Emails** - tests for sending emails with appropriate facades and mocking
-
-## Test Documentation
-
-Detailed information about the tests can be found in the following files:
-
-- `tests/README.md` - general information about tests and how to run them
-- `tests/SUMMARY.md` - detailed structure of all tests
-- `tests/SUMMARY_STATUS.md` - current status of tests and list of completed fixes
-
-## Recommendations for Further Test Development
-
-1. **Expand admin tests** - add more detailed tests for various admin panel functionalities
-2. **Improve Livewire component tests** - add tests for more complex user interactions
-3. **Add performance tests** - implement tests to check application performance
-4. **Add browser tests** - consider using Laravel Dusk to test the user interface
-5. **Remove example tests** - remove ExampleTest.php files that do not add value to the project
-
-## Running Tests
-
-```bash
-# Run all tests
-php artisan test
-
-# Run a specific test
-php artisan test tests/Feature/Livewire/Admin/CategoriesTest.php
-
-# Run tests from a specific directory
-php artisan test tests/Feature/Livewire/Admin/
-
-# Run tests with a specific filter
-php artisan test --filter=AdminTest
-```

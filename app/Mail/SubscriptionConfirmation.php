@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -10,16 +11,26 @@ use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
 /**
- * Email sent to confirm newsletter subscription
+ * Email potwierdzenia subskrypcji
  */
-class SubscriptionConfirmation extends Mailable
+class SubscriptionConfirmation extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
+
+    public User $user;
+    public string $subscriptionType;
+
+    public function __construct(User $user, string $subscriptionType)
+    {
+        $this->user = $user;
+        $this->subscriptionType = $subscriptionType;
+        $this->onQueue('emails');
+    }
 
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Subscription Confirmation',
+            subject: 'Potwierdzenie subskrypcji - FitSphere',
         );
     }
 
@@ -27,11 +38,10 @@ class SubscriptionConfirmation extends Mailable
     {
         return new Content(
             view: 'emails.subscription-confirmation',
+            with: [
+                'user' => $this->user,
+                'subscriptionType' => $this->subscriptionType,
+            ]
         );
     }
-
-    public function attachments(): array
-    {
-        return [];
-    }
-}
+} 

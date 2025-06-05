@@ -11,9 +11,9 @@ use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
 /**
- * Email powiadomienia o zatwierdzeniu jako trener
+ * Email powitalny wysyłany po rejestracji użytkownika
  */
-class TrainerApproved extends Mailable implements ShouldQueue
+class WelcomeEmail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
@@ -28,17 +28,20 @@ class TrainerApproved extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Zostałeś zatwierdzony jako trener - FitSphere',
+            subject: 'Witaj w FitSphere! 🏋️‍♂️',
+            replyTo: [
+                config('mail.from.address'),
+            ]
         );
     }
 
     public function content(): Content
     {
         return new Content(
-            view: 'emails.trainer-approved',
+            view: 'emails.welcome',
             with: [
                 'user' => $this->user,
-                'dashboardUrl' => config('app.url') . '/trainer/dashboard',
+                'appUrl' => config('app.url'),
             ]
         );
     }

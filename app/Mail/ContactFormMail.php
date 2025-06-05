@@ -10,39 +10,43 @@ use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
 /**
- * Email sent when a user submits the contact form
+ * Email z formularza kontaktowego
  */
-class ContactFormMail extends Mailable
+class ContactFormMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
-    /**
-     * Contact form data
-     */
-    public $contactData;
+    public string $senderName;
+    public string $senderEmail;
+    public string $messageContent;
 
-    public function __construct($contactData)
+    public function __construct(string $name, string $email, string $message)
     {
-        $this->contactData = $contactData;
+        $this->senderName = $name;
+        $this->senderEmail = $email;
+        $this->messageContent = $message;
+        $this->onQueue('emails');
     }
 
     public function envelope(): Envelope
     {
-        $subject = 'New Contact Form Submission - ' . $this->contactData['name'];
         return new Envelope(
-            subject: $subject,
+            subject: 'Nowa wiadomość z formularza kontaktowego - FitSphere',
+            replyTo: [
+                $this->senderEmail,
+            ]
         );
     }
 
     public function content(): Content
     {
         return new Content(
-            view: 'emails.contact',
+            view: 'emails.contact-form',
+            with: [
+                'senderName' => $this->senderName,
+                'senderEmail' => $this->senderEmail,
+                'messageContent' => $this->messageContent,
+            ]
         );
     }
-
-    public function attachments(): array
-    {
-        return [];
-    }
-}
+} 
