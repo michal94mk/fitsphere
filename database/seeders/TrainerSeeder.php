@@ -24,6 +24,7 @@ class TrainerSeeder extends Seeder
                 'experience' => 8,
                 'is_approved' => true,
                 'specialties' => 'Siła, Przyrost mięśni, Odżywianie',
+                'image' => 'images/trainers/trainer1.jpg',
                 'translations' => [
                     'en' => [
                         'specialization' => 'Strength Training',
@@ -49,6 +50,7 @@ class TrainerSeeder extends Seeder
                 'experience' => 10,
                 'is_approved' => true,
                 'specialties' => 'Joga, Pilates, Elastyczność, Medytacja',
+                'image' => 'images/trainers/trainer2.jpg',
                 'translations' => [
                     'en' => [
                         'specialization' => 'Yoga and Pilates',
@@ -74,6 +76,7 @@ class TrainerSeeder extends Seeder
                 'experience' => 12,
                 'is_approved' => true,
                 'specialties' => 'Trening funkcjonalny, Rehabilitacja, Ćwiczenia korekcyjne',
+                'image' => 'images/trainers/trainer3.jpg',
                 'translations' => [
                     'en' => [
                         'specialization' => 'Functional Training',
