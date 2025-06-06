@@ -3,9 +3,8 @@
 namespace App\Livewire\Admin;
 
 use App\Models\Trainer;
+use App\Services\EmailService;
 use Livewire\Component;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\TrainerApproved;
 use Livewire\Attributes\Layout;
 
 class TrainersShow extends Component
@@ -45,7 +44,8 @@ class TrainersShow extends Component
             
             // Wysyłka emaila z powiadomieniem
             try {
-                Mail::to($this->trainer->email)->send(new TrainerApproved($this->trainer));
+                $emailService = new EmailService();
+                $emailService->sendTrainerApprovedEmail($this->trainer);
                 session()->flash('success', "Trener {$this->trainer->name} został zatwierdzony, a powiadomienie email zostało wysłane.");
             } catch (\Exception $e) {
                 session()->flash('success', "Trener {$this->trainer->name} został zatwierdzony, ale wystąpił błąd podczas wysyłania powiadomienia email: {$e->getMessage()}");

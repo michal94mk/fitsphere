@@ -2,7 +2,7 @@
 
 namespace App\Mail;
 
-use App\Models\User;
+use App\Models\Trainer;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -12,28 +12,24 @@ use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
 /**
- * Email do resetowania hasła użytkownika
+ * Email powitalny wysyłany po rejestracji trenera
  */
-class PasswordResetEmail extends Mailable implements ShouldQueue
+class TrainerWelcomeEmail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
-    public User $user;
-    public string $resetToken;
-    public string $resetUrl;
+    public Trainer $trainer;
 
-    public function __construct(User $user, string $resetToken)
+    public function __construct(Trainer $trainer)
     {
-        $this->user = $user;
-        $this->resetToken = $resetToken;
-        $this->resetUrl = config('app.url') . '/password/reset/' . $resetToken . '?email=' . urlencode($user->email);
+        $this->trainer = $trainer;
         $this->onQueue('emails');
     }
 
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Reset hasła - FitSphere',
+            subject: 'Witaj w FitSphere jako Trener! 🏋️‍♂️💪',
             from: new Address(config('mail.from.address', '8eecba001@smtp-brevo.com'), config('mail.from.name', 'FitSphere')),
             replyTo: [
                 config('mail.from.address'),
@@ -44,13 +40,10 @@ class PasswordResetEmail extends Mailable implements ShouldQueue
     public function content(): Content
     {
         return new Content(
-            view: 'emails.password-reset',
+            view: 'emails.trainer-welcome',
             with: [
-                'user' => $this->user,
-                'resetUrl' => $this->resetUrl,
-                'resetToken' => $this->resetToken,
+                'trainer' => $this->trainer,
                 'appUrl' => config('app.url'),
-                'validUntil' => now()->addMinutes(60)->format('d.m.Y H:i'),
             ]
         );
     }

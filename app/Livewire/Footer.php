@@ -4,7 +4,6 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use App\Models\Subscriber;
-use App\Mail\SubscriptionConfirmation;
 use App\Services\EmailService;
 use App\Services\LogService;
 use App\Exceptions\EmailSendingException;
@@ -67,16 +66,22 @@ class Footer extends Component
 
     protected function sendConfirmationEmail()
     {
-        $result = $this->emailService->send(
-            $this->email, 
-            new SubscriptionConfirmation()
-        );
+        // Sprawdź czy subscriber już istnieje, jeśli nie - utwórz
+        $subscriber = Subscriber::where('email', $this->email)->first();
         
-        if ($result['status'] !== 'success') {
+        if (!$subscriber) {
+            $subscriber = new Subscriber();
+            $subscriber->email = $this->email;
+            $subscriber->save();
+        }
+        
+        $result = $this->emailService->sendNewsletterSubscriptionConfirmation($this->email);
+        
+        if (!$result) {
             throw new EmailSendingException(
                 $this->email,
-                SubscriptionConfirmation::class,
-                $result['message'] ?? 'Unknown error'
+                'NewsletterSubscriptionConfirmation',
+                'Failed to send newsletter subscription confirmation email'
             );
         }
     }

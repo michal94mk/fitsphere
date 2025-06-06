@@ -7,7 +7,6 @@ use App\Models\Post;
 use App\Models\Trainer;
 use App\Models\Comment;
 use App\Models\Category;
-use App\Mail\TrainerApproved;
 use App\Services\EmailService;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
@@ -86,18 +85,14 @@ class Dashboard extends Component
             $this->stats['pendingTrainers'] = Trainer::where('is_approved', false)->count();
             
             // Send notification email using the email service
-            $result = $this->emailService->send(
-                $trainer->email,
-                new TrainerApproved($trainer),
-                "Trainer {$trainer->name} has been approved and notification email has been sent."
-            );
+            $result = $this->emailService->sendTrainerApprovedEmail($trainer);
             
             // Flash appropriate message based on the result
-            if ($result['status'] === 'success') {
-                session()->flash('success', $result['message']);
+            if ($result) {
+                session()->flash('success', "Trainer {$trainer->name} has been approved and notification email has been sent.");
             } else {
                 // Still show success for trainer approval, but note the email issue
-                session()->flash('success', "Trainer {$trainer->name} has been approved, but there was an error sending the notification email: {$result['message']}");
+                session()->flash('success', "Trainer {$trainer->name} has been approved, but there was an error sending the notification email.");
                 // Log additional details
                 Log::warning('Failed to send trainer approval email', [
                     'trainer_id' => $trainerId,

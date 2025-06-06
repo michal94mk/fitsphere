@@ -5,7 +5,9 @@ namespace App\Livewire\Auth;
 use Livewire\Component;
 use App\Models\User;
 use App\Models\Trainer;
+use App\Services\EmailService;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
 use Livewire\Attributes\Layout;
 
@@ -81,12 +83,14 @@ class Register extends Component
         if ($this->account_type === 'regular') {
             $user = $this->createRegularUser();
             $this->sendVerificationEmail($user);
+            $this->sendWelcomeEmail($user);
             $this->setUserRegistrationSuccess();
             
             return Redirect::to('/registration-success/user');
         } else {
             $trainer = $this->createTrainer();
             $this->sendVerificationEmail($trainer);
+            $this->sendWelcomeEmailToTrainer($trainer);
             $this->setTrainerRegistrationSuccess();
             
             return Redirect::to('/registration-success/trainer');
@@ -126,6 +130,42 @@ class Register extends Component
     {
         if (method_exists($user, 'sendEmailVerificationNotification')) {
             $user->sendEmailVerificationNotification();
+        }
+    }
+    
+    /**
+     * Wysyła email powitalny dla użytkownika przez Brevo
+     */
+    private function sendWelcomeEmail(User $user)
+    {
+        try {
+            $emailService = app(EmailService::class);
+            $emailService->sendWelcomeEmail($user);
+        } catch (\Exception $e) {
+            // Log błąd ale nie przerywaj procesu rejestracji
+            Log::error('Failed to send welcome email during registration', [
+                'user_id' => $user->id,
+                'email' => $user->email,
+                'error' => $e->getMessage()
+            ]);
+        }
+    }
+    
+    /**
+     * Wysyła email powitalny dla trenera przez Brevo
+     */
+    private function sendWelcomeEmailToTrainer(Trainer $trainer)
+    {
+        try {
+            $emailService = app(EmailService::class);
+            $emailService->sendTrainerWelcomeEmail($trainer);
+        } catch (\Exception $e) {
+            // Log błąd ale nie przerywaj procesu rejestracji
+            Log::error('Failed to send welcome email to trainer during registration', [
+                'trainer_id' => $trainer->id,
+                'email' => $trainer->email,
+                'error' => $e->getMessage()
+            ]);
         }
     }
     

@@ -6,6 +6,7 @@ use App\Mail\ContactFormMail;
 use App\Mail\SubscriptionConfirmation;
 use App\Mail\TrainerApproved;
 use App\Models\Trainer;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -15,25 +16,29 @@ class EmailTest extends TestCase
 
     public function test_contact_form_mail_can_be_created()
     {
-        $data = [
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-            'subject' => 'Test Subject',
-            'message' => 'This is a test message.'
-        ];
+        $name = 'Test User';
+        $email = 'test@example.com';
+        $message = 'This is a test message.';
 
-        $mail = new ContactFormMail($data);
+        $mail = new ContactFormMail($name, $email, $message);
 
-        $this->assertEquals($data, $mail->contactData);
-        $this->assertEquals('New Contact Form Submission - Test User', $mail->envelope()->subject);
+        $this->assertEquals($name, $mail->senderName);
+        $this->assertEquals($email, $mail->senderEmail);
+        $this->assertEquals($message, $mail->messageContent);
+        $this->assertEquals('Nowa wiadomość z formularza kontaktowego - FitSphere', $mail->envelope()->subject);
         $this->assertEquals('emails.contact', $mail->content()->view);
     }
 
     public function test_subscription_confirmation_mail_can_be_created()
     {
-        $mail = new SubscriptionConfirmation();
+        $user = User::factory()->create();
+        $subscriptionType = 'newsletter';
 
-        $this->assertEquals('Subscription Confirmation', $mail->envelope()->subject);
+        $mail = new SubscriptionConfirmation($user, $subscriptionType);
+
+        $this->assertEquals($user->id, $mail->user->id);
+        $this->assertEquals($subscriptionType, $mail->subscriptionType);
+        $this->assertEquals('Potwierdzenie subskrypcji - FitSphere', $mail->envelope()->subject);
         $this->assertEquals('emails.subscription-confirmation', $mail->content()->view);
     }
 
@@ -44,7 +49,7 @@ class EmailTest extends TestCase
         $mail = new TrainerApproved($trainer);
 
         $this->assertEquals($trainer->id, $mail->trainer->id);
-        $this->assertEquals('Your trainer account has been approved', $mail->envelope()->subject);
+        $this->assertEquals('Zostałeś zatwierdzony jako trener - FitSphere', $mail->envelope()->subject);
         $this->assertEquals('emails.trainer-approved', $mail->content()->view);
     }
 } 

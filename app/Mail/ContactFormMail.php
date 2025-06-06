@@ -5,6 +5,7 @@ namespace App\Mail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
@@ -32,6 +33,7 @@ class ContactFormMail extends Mailable implements ShouldQueue
     {
         return new Envelope(
             subject: 'Nowa wiadomość z formularza kontaktowego - FitSphere',
+            from: new Address(config('mail.from.address', '8eecba001@smtp-brevo.com'), config('mail.from.name', 'FitSphere')),
             replyTo: [
                 $this->senderEmail,
             ]
@@ -41,11 +43,13 @@ class ContactFormMail extends Mailable implements ShouldQueue
     public function content(): Content
     {
         return new Content(
-            view: 'emails.contact-form',
+            view: 'emails.contact',
             with: [
-                'senderName' => $this->senderName,
-                'senderEmail' => $this->senderEmail,
-                'messageContent' => $this->messageContent,
+                'contactData' => [
+                    'name' => $this->senderName,
+                    'email' => $this->senderEmail,
+                    'message' => $this->messageContent,
+                ]
             ]
         );
     }

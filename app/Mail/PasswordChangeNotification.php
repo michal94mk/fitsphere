@@ -4,7 +4,9 @@ namespace App\Mail;
 
 use App\Models\User;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
@@ -12,7 +14,7 @@ use Illuminate\Queue\SerializesModels;
 /**
  * Email powiadomienia o zmianie hasła
  */
-class PasswordChangeNotification extends Mailable
+class PasswordChangeNotification extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
@@ -21,12 +23,14 @@ class PasswordChangeNotification extends Mailable
     public function __construct(User $user)
     {
         $this->user = $user;
+        $this->onQueue('emails');
     }
 
     public function envelope(): Envelope
     {
         return new Envelope(
             subject: 'Hasło zostało zmienione - FitSphere',
+            from: new Address(config('mail.from.address', '8eecba001@smtp-brevo.com'), config('mail.from.name', 'FitSphere')),
             replyTo: [
                 config('mail.from.address'),
             ]

@@ -2,7 +2,6 @@
 
 namespace App\Mail;
 
-use App\Models\Trainer;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -12,24 +11,26 @@ use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
 /**
- * Email powiadomienia o zatwierdzeniu jako trener
+ * Email potwierdzenia subskrypcji newslettera
  */
-class TrainerApproved extends Mailable implements ShouldQueue
+class NewsletterSubscriptionConfirmation extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
-    public Trainer $trainer;
+    public string $subscriberEmail;
+    public string $subscriberName;
 
-    public function __construct(Trainer $trainer)
+    public function __construct(string $email, string $name = 'Subscriber')
     {
-        $this->trainer = $trainer;
+        $this->subscriberEmail = $email;
+        $this->subscriberName = $name;
         $this->onQueue('emails');
     }
 
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Zostałeś zatwierdzony jako trener - FitSphere',
+            subject: 'Potwierdzenie subskrypcji newslettera - FitSphere',
             from: new Address(config('mail.from.address', '8eecba001@smtp-brevo.com'), config('mail.from.name', 'FitSphere')),
         );
     }
@@ -37,11 +38,7 @@ class TrainerApproved extends Mailable implements ShouldQueue
     public function content(): Content
     {
         return new Content(
-            view: 'emails.trainer-approved',
-            with: [
-                'trainer' => $this->trainer,
-                'dashboardUrl' => config('app.url') . '/trainer/dashboard',
-            ]
+            view: 'emails.newsletter-subscription',
         );
     }
 

@@ -3,7 +3,7 @@
 namespace Tests\Feature;
 
 use App\Mail\ContactFormMail;
-use App\Mail\SubscriptionConfirmation;
+use App\Mail\NewsletterSubscriptionConfirmation;
 use App\Mail\TrainerApproved;
 use App\Models\Trainer;
 use App\Models\User;
@@ -34,8 +34,8 @@ class EmailTest extends TestCase
             ->set('message', 'This is a test message.')
             ->call('send');
 
-        Mail::assertSent(ContactFormMail::class, function ($mail) {
-            return $mail->contactData['name'] === 'Test User';
+        Mail::assertQueued(ContactFormMail::class, function ($mail) {
+            return $mail->senderName === 'Test User';
         });
     }
 
@@ -52,8 +52,8 @@ class EmailTest extends TestCase
             'email' => 'subscriber@example.com',
         ]);
 
-        Mail::assertSent(SubscriptionConfirmation::class, function ($mail) {
-            return $mail->hasTo('subscriber@example.com');
+        Mail::assertQueued(NewsletterSubscriptionConfirmation::class, function ($mail) {
+            return $mail->subscriberEmail === 'subscriber@example.com';
         });
     }
 
@@ -76,7 +76,7 @@ class EmailTest extends TestCase
             'is_approved' => true,
         ]);
 
-        Mail::assertSent(TrainerApproved::class, function ($mail) use ($trainer) {
+        Mail::assertQueued(TrainerApproved::class, function ($mail) use ($trainer) {
             return $mail->trainer->id === $trainer->id;
         });
     }

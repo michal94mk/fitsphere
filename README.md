@@ -291,6 +291,89 @@ The nutrition calculator and meal planner use Spoonacular API for recipe data:
    SPOONACULAR_API_KEY=your_spoonacular_api_key_here
    ```
 
+## Konfiguracja Emaili (Brevo SMTP)
+
+Aplikacja używa Brevo (dawniej Sendinblue) do wysyłania emaili. Wszystkie emaile są kolejkowane i wysyłane asynchronicznie.
+
+### Dostępne typy emaili:
+
+1. **Email powitalny** - wysyłany po rejestracji użytkownika
+2. **Email weryfikacyjny** - do potwierdzenia adresu email
+3. **Email resetowania hasła** - do resetowania hasła
+4. **Powiadomienie o zmianie hasła** - po zmianie hasła
+5. **Powiadomienie o zatwierdzeniu trenera** - gdy admin zatwierdzi trenera
+6. **Potwierdzenie subskrypcji** - po zapisaniu się do newslettera
+7. **Email z formularza kontaktowego** - wiadomości od użytkowników
+
+### Konfiguracja .env:
+
+```env
+MAIL_MAILER=smtp
+MAIL_HOST=smtp-relay.brevo.com
+MAIL_PORT=587
+MAIL_USERNAME=your-brevo-email@example.com
+MAIL_PASSWORD=your-brevo-smtp-key
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS=noreply@yourdomain.com
+MAIL_FROM_NAME="FitSphere"
+```
+
+### Użycie EmailService:
+
+```php
+use App\Services\EmailService;
+
+$emailService = new EmailService();
+
+// Email powitalny
+$emailService->sendWelcomeEmail($user);
+
+// Email zatwierdzenia trenera  
+$emailService->sendTrainerApprovedEmail($trainer);
+
+// Email subskrypcji
+$emailService->sendSubscriptionConfirmationEmail($user, 'premium');
+
+// Email kontaktowy
+$emailService->sendContactFormEmail($name, $email, $message);
+```
+
+### Template emaili:
+
+Wszystkie template emaili znajdują się w `resources/views/emails/`:
+- `welcome.blade.php` - email powitalny
+- `verify-email.blade.php` - weryfikacja email
+- `password-reset.blade.php` - reset hasła
+- `password-changed.blade.php` - zmiana hasła
+- `trainer-approved.blade.php` - zatwierdzenie trenera
+- `subscription-confirmation.blade.php` - potwierdzenie subskrypcji
+- `contact.blade.php` - formularz kontaktowy
+
+### Testowanie konfiguracji:
+
+```php
+$emailService = new EmailService();
+$result = $emailService->testEmailConfiguration();
+
+if ($result) {
+    echo "Konfiguracja Brevo działa poprawnie!";
+} else {
+    echo "Błąd konfiguracji Brevo - sprawdź logi.";
+}
+```
+
+### Kolejkowanie emaili:
+
+Wszystkie emaile są automatycznie kolejkowane w queue `emails`. Aby przetworzyć kolejkę:
+
+```bash
+php artisan queue:work --queue=emails
+```
+
+### Monitorowanie:
+
+Logi emaili są zapisywane w standardowych logach Laravel. Sprawdź `storage/logs/laravel.log` w przypadku problemów.
+
 ## Contributing
 
 Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).

@@ -3,8 +3,7 @@
 namespace App\Livewire\Admin;
 
 use App\Models\Trainer;
-use App\Mail\TrainerApproved;
-use Illuminate\Support\Facades\Mail;
+use App\Services\EmailService;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -46,7 +45,8 @@ class TrainersIndex extends Component
             
             // Send notification email
             try {
-                Mail::to($trainer->email)->send(new TrainerApproved($trainer));
+                $emailService = new EmailService();
+                $emailService->sendTrainerApprovedEmail($trainer);
                 session()->flash('success', "Trainer {$trainer->name} has been approved and notification email has been sent.");
             } catch (\Exception $e) {
                 session()->flash('success', "Trainer {$trainer->name} has been approved but there was an error sending the notification email: {$e->getMessage()}");

@@ -62,20 +62,32 @@ class ContactPage extends Component
     protected function sendContactEmail(array $data)
     {
         try {
-            $result = $this->emailService->send(
-                'admin@reply.com',
-                new ContactFormMail($data),
-                '',
-                true // Set to throw exception directly
+            $result = $this->emailService->sendContactFormEmail(
+                $data['name'],
+                $data['email'], 
+                $data['message']
             );
-        } catch (EmailSendingException $e) {
+            
+            if (!$result) {
+                throw new EmailSendingException(
+                    config('mail.from.address'),
+                    'ContactFormMail',
+                    'Failed to queue contact form email'
+                );
+            }
+        } catch (\Exception $e) {
             // Log using proper service
             $this->logService->exception($e, 'Contact form email sending failed', [
                 'user_name' => $this->name,
                 'user_email' => $this->email,
             ]);
             
-            throw $e; // Re-throw for the main handler
+            throw new EmailSendingException(
+                config('mail.from.address'),
+                'ContactFormMail',
+                'Contact form email failed',
+                $e
+            );
         }
     }
 
