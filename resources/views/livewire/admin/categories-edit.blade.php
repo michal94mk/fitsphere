@@ -4,15 +4,9 @@
 
 <div>
     <div class="container mx-auto p-6">
-        <!-- Back button at the top -->
-        <div class="mb-4 flex justify-between items-center">
+        <!-- Header -->
+        <div class="mb-4">
             <h1 class="text-2xl font-bold">{{ __('admin.edit_category') }}</h1>
-            <x-admin.form-button style="secondary" :href="route('admin.categories.index')" navigate>
-                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-                </svg>
-                {{ __('admin.back_to_list') }}
-            </x-admin.form-button>
         </div>
 
         <div class="bg-white rounded-lg shadow overflow-hidden">
@@ -32,7 +26,13 @@
                     </div>
                 </div>
                 
-                <div class="px-6 py-3 bg-gray-50 text-right">
+                <div class="px-6 py-3 bg-gray-50 flex justify-between">
+                    <x-admin.form-button style="secondary" :href="route('admin.categories.index')" navigate>
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                        </svg>
+                        {{ __('admin.back_to_list') }}
+                    </x-admin.form-button>
                     <x-admin.form-button type="submit" style="primary" loading>
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>

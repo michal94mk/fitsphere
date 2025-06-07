@@ -4,15 +4,9 @@
 
 <div>
     <div class="container mx-auto p-6">
-        <!-- Back button at the top -->
-        <div class="mb-4 flex justify-between items-center">
+        <!-- Header -->
+        <div class="mb-4">
             <h1 class="text-2xl font-bold">{{ __('admin.edit_user') }}</h1>
-            <x-admin.form-button style="secondary" :href="route('admin.users.index')" navigate>
-                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-                </svg>
-                {{ __('admin.back_to_list') }}
-            </x-admin.form-button>
         </div>
         
 
@@ -89,11 +83,11 @@
                             <div class="flex items-center">
                                 <div class="flex-shrink-0">
                                     @if ($photo)
-                                        <img src="{{ $photo->temporaryUrl() }}" alt="Profile preview" class="h-24 w-24 rounded-full object-cover">
+                                        <img src="{{ $photo->temporaryUrl() }}" alt="Profile preview" class="h-24 w-24 rounded-lg object-cover">
                                     @elseif ($existing_photo)
-                                        <img src="{{ $existing_photo }}" alt="{{ $name }}" class="h-24 w-24 rounded-full object-cover">
+                                        <img src="{{ $existing_photo }}" alt="{{ $name }}" class="h-24 w-24 rounded-lg object-cover">
                                     @else
-                                        <div class="h-24 w-24 rounded-full bg-gray-200 flex items-center justify-center">
+                                        <div class="h-24 w-24 rounded-lg bg-gray-200 flex items-center justify-center">
                                             <svg class="h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                                             </svg>
@@ -121,7 +115,13 @@
                     </div>
                 </div>
                 
-                <div class="px-6 py-3 bg-gray-50 text-right">
+                <div class="px-6 py-3 bg-gray-50 flex justify-between">
+                    <x-admin.form-button style="secondary" :href="route('admin.users.index')" navigate>
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                        </svg>
+                        {{ __('admin.back_to_list') }}
+                    </x-admin.form-button>
                     <x-admin.form-button type="submit" style="primary" loading>
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>

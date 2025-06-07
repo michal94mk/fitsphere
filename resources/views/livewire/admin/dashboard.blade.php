@@ -3,7 +3,7 @@
     <div class="mb-6">
         <h2 class="text-lg font-medium text-gray-900 mb-3">{{ __('admin.quick_actions') }}</h2>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <a href="{{ route('admin.posts.create') }}" class="flex flex-col items-center justify-center p-4 bg-white rounded-lg shadow hover:bg-indigo-50 transition">
+            <a href="{{ route('admin.posts.create') }}" wire:navigate class="flex flex-col items-center justify-center p-4 bg-white rounded-lg shadow hover:bg-indigo-50 transition">
                 <div class="p-3 bg-indigo-100 rounded-full mb-2">
                     <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
@@ -11,7 +11,7 @@
                 </div>
                 <span class="text-sm font-medium text-gray-900">{{ __('admin.new_post') }}</span>
             </a>
-            <a href="{{ route('admin.categories.create') }}" class="flex flex-col items-center justify-center p-4 bg-white rounded-lg shadow hover:bg-green-50 transition">
+            <a href="{{ route('admin.categories.create') }}" wire:navigate class="flex flex-col items-center justify-center p-4 bg-white rounded-lg shadow hover:bg-green-50 transition">
                 <div class="p-3 bg-green-100 rounded-full mb-2">
                     <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
@@ -19,7 +19,7 @@
                 </div>
                 <span class="text-sm font-medium text-gray-900">{{ __('admin.new_category') }}</span>
             </a>
-            <a href="{{ route('admin.trainers.create') }}" class="flex flex-col items-center justify-center p-4 bg-white rounded-lg shadow hover:bg-blue-50 transition">
+            <a href="{{ route('admin.trainers.create') }}" wire:navigate class="flex flex-col items-center justify-center p-4 bg-white rounded-lg shadow hover:bg-blue-50 transition">
                 <div class="p-3 bg-blue-100 rounded-full mb-2">
                     <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
@@ -27,7 +27,7 @@
                 </div>
                 <span class="text-sm font-medium text-gray-900">{{ __('admin.new_trainer') }}</span>
             </a>
-            <a href="{{ route('admin.users.create') }}" class="flex flex-col items-center justify-center p-4 bg-white rounded-lg shadow hover:bg-purple-50 transition">
+            <a href="{{ route('admin.users.create') }}" wire:navigate class="flex flex-col items-center justify-center p-4 bg-white rounded-lg shadow hover:bg-purple-50 transition">
                 <div class="p-3 bg-purple-100 rounded-full mb-2">
                     <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
@@ -57,7 +57,7 @@
                     </div>
                 </div>
                 <div class="bg-blue-50 px-5 py-2 mt-auto">
-                    <a href="{{ route('admin.users.index') }}" class="text-xs text-blue-600 hover:text-blue-800 font-medium flex items-center">
+                    <a href="{{ route('admin.users.index') }}" wire:navigate class="text-xs text-blue-600 hover:text-blue-800 font-medium flex items-center">
                         {{ __('admin.view_all_users') }}
                         <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -81,7 +81,7 @@
                     </div>
                 </div>
                 <div class="bg-green-50 px-5 py-2 mt-auto">
-                    <a href="{{ route('admin.trainers.index') }}" class="text-xs text-green-600 hover:text-green-800 font-medium flex items-center">
+                    <a href="{{ route('admin.trainers.index') }}" wire:navigate class="text-xs text-green-600 hover:text-green-800 font-medium flex items-center">
                         {{ __('admin.view_all_trainers') }}
                         <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -113,7 +113,7 @@
                     </div>
                 </div>
                 <div class="bg-purple-50 px-5 py-2 mt-auto">
-                    <a href="{{ route('admin.posts.index') }}" class="text-xs text-purple-600 hover:text-purple-800 font-medium flex items-center">
+                    <a href="{{ route('admin.posts.index') }}" wire:navigate class="text-xs text-purple-600 hover:text-purple-800 font-medium flex items-center">
                         {{ __('admin.view_all_posts') }}
                         <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -137,7 +137,7 @@
                     </div>
                 </div>
                 <div class="bg-yellow-50 px-5 py-2 mt-auto">
-                    <a href="{{ route('admin.comments.index') }}" class="text-xs text-yellow-600 hover:text-yellow-800 font-medium flex items-center">
+                    <a href="{{ route('admin.comments.index') }}" wire:navigate class="text-xs text-yellow-600 hover:text-yellow-800 font-medium flex items-center">
                         {{ __('admin.view_all_comments') }}
                         <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -185,7 +185,7 @@
                                         <button wire:click="approveTrainer({{ $trainer->id }})" class="inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                                             {{ __('admin.approve') }}
                                         </button>
-                                        <a href="{{ route('admin.trainers.edit', $trainer->id) }}" class="inline-flex items-center px-2.5 py-1.5 border border-gray-300 text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                        <a href="{{ route('admin.trainers.edit', $trainer->id) }}" wire:navigate class="inline-flex items-center px-2.5 py-1.5 border border-gray-300 text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                                             {{ __('admin.details') }}
                                         </a>
                                     </div>
@@ -195,7 +195,7 @@
                     </ul>
                     @if ($stats['pendingTrainers'] > count($pendingTrainers))
                         <div class="mt-4 text-center">
-                            <a href="{{ route('admin.trainers.index') }}?filter=pending" class="text-sm font-medium text-indigo-600 hover:text-indigo-500">
+                            <a href="{{ route('admin.trainers.index') }}?filter=pending" wire:navigate class="text-sm font-medium text-indigo-600 hover:text-indigo-500">
                                 {{ __('admin.view_all') }} ({{ $stats['pendingTrainers'] }})
                             </a>
                         </div>
@@ -238,7 +238,7 @@
                                         </div>
                                     </div>
                                     <div class="ml-2 flex-shrink-0 space-x-2">
-                                        <a href="{{ route('admin.posts.edit', $post->id) }}" class="inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                        <a href="{{ route('admin.posts.edit', $post->id) }}" wire:navigate class="inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                                             {{ __('admin.edit') }}
                                         </a>
                                     </div>
@@ -248,7 +248,7 @@
                     </ul>
                     @if ($stats['draftPosts'] > count($draftPosts))
                         <div class="mt-4 text-center">
-                            <a href="{{ route('admin.posts.index') }}?status=draft" class="text-sm font-medium text-indigo-600 hover:text-indigo-500">
+                            <a href="{{ route('admin.posts.index') }}?status=draft" wire:navigate class="text-sm font-medium text-indigo-600 hover:text-indigo-500">
                                 {{ __('admin.view_all') }} ({{ $stats['draftPosts'] }})
                             </a>
                         </div>
@@ -340,7 +340,7 @@
                                                 <p class="text-sm font-medium text-gray-900">{{ $user->name }}</p>
                                                 <p class="text-sm text-gray-500">{{ $user->email }}</p>
                                             </div>
-                                            <a href="{{ route('admin.users.edit', $user->id) }}" class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-md text-gray-700 bg-gray-100 hover:bg-gray-200">
+                                            <a href="{{ route('admin.users.edit', $user->id) }}" wire:navigate class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-md text-gray-700 bg-gray-100 hover:bg-gray-200">
                                                 Edytuj
                                             </a>
                                         </div>

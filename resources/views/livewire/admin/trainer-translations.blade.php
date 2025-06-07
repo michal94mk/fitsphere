@@ -79,14 +79,16 @@
                                             <div class="max-w-xs truncate">{{ $translation['description'] ?: '-' }}</div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                            <button wire:click="editTranslation({{ $translation['id'] }})" class="text-indigo-600 hover:text-indigo-900 mr-3">
-                                                {{ __('admin.edit') }}
-                                            </button>
-                                            <button 
-                                                @click="showDeleteModal = true; translationToDelete = {{ $translation['id'] }}" 
-                                                class="text-red-600 hover:text-red-900">
-                                                {{ __('admin.delete') }}
-                                            </button>
+                                            <div class="flex space-x-2">
+                                                <button wire:click="editTranslation({{ $translation['id'] }})" 
+                                                        class="px-2 py-1 rounded-md text-xs font-medium transition duration-200 bg-blue-100 text-blue-700 hover:bg-blue-200">
+                                                    {{ __('admin.edit') }}
+                                                </button>
+                                                <button @click="showDeleteModal = true; translationToDelete = {{ $translation['id'] }}"
+                                                        class="px-2 py-1 rounded-md text-xs font-medium transition duration-200 bg-red-100 text-red-700 hover:bg-red-200">
+                                                    {{ __('admin.delete') }}
+                                                </button>
+                                            </div>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -144,9 +146,9 @@
                     
                     <!-- Buttons -->
                     <div class="flex justify-end space-x-3 pt-4">
-                        <button type="button" wire:click="cancelEdit" class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-md font-semibold text-xs uppercase tracking-widest hover:bg-gray-50 focus:outline-none focus:ring transition ease-in-out duration-150">
+                        <x-admin.form-button type="button" wire:click="cancelEdit" style="secondary">
                             {{ __('admin.cancel') }}
-                        </button>
+                        </x-admin.form-button>
                         
                         <x-admin.form-button type="submit" style="primary" loading>
                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -205,17 +207,13 @@
                     </div>
                 </div>
                 
-                <div class="px-4 py-3 bg-gray-50 sm:px-6 sm:flex sm:flex-row-reverse">
-                    <button type="button" 
-                            @click="$wire.deleteTranslation(translationToDelete); showDeleteModal = false" 
-                            class="inline-flex justify-center w-full px-4 py-2 text-base font-medium text-white bg-red-600 border border-transparent rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm">
-                        {{ __('admin.delete') }}
-                    </button>
-                    <button type="button" 
-                            @click="showDeleteModal = false" 
-                            class="inline-flex justify-center w-full px-4 py-2 mt-3 text-base font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                <div class="px-4 py-3 bg-gray-50 sm:px-6 flex justify-end space-x-3">
+                    <x-admin.form-button type="button" @click="showDeleteModal = false" style="secondary">
                         {{ __('admin.cancel') }}
-                    </button>
+                    </x-admin.form-button>
+                    <x-admin.form-button type="button" @click="$wire.deleteTranslation(translationToDelete); showDeleteModal = false" style="danger">
+                        {{ __('admin.delete') }}
+                    </x-admin.form-button>
                 </div>
             </div>
         </div>

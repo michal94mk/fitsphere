@@ -63,15 +63,18 @@
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                     {{ date('d.m.Y H:i', strtotime($translation['updated_at'])) }}
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
-                                    <button wire:click="editTranslation({{ $translation['id'] }})" class="text-indigo-600 hover:text-indigo-900">
-                                        {{ __('admin.edit') }}
-                                    </button>
-                                    <button wire:click="deleteTranslation({{ $translation['id'] }})" 
-                                            wire:confirm="{{ __('admin.confirm_delete_translation') }}"
-                                            class="text-red-600 hover:text-red-900">
-                                        {{ __('admin.delete') }}
-                                    </button>
+                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                    <div class="flex justify-end space-x-2">
+                                        <button wire:click="editTranslation({{ $translation['id'] }})" 
+                                                class="px-2 py-1 rounded-md text-xs font-medium transition duration-200 bg-blue-100 text-blue-700 hover:bg-blue-200">
+                                            {{ __('admin.edit') }}
+                                        </button>
+                                        <button wire:click="deleteTranslation({{ $translation['id'] }})" 
+                                                wire:confirm="{{ __('admin.confirm_delete_translation') }}"
+                                                class="px-2 py-1 rounded-md text-xs font-medium transition duration-200 bg-red-100 text-red-700 hover:bg-red-200">
+                                            {{ __('admin.delete') }}
+                                        </button>
+                                    </div>
                                 </td>
                             </tr>
                         @endforeach
@@ -152,9 +155,9 @@
             
             <!-- Przyciski -->
             <div class="flex justify-end space-x-3 pt-5">
-                <button type="button" wire:click="cancelEdit" class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-md font-semibold text-xs uppercase tracking-widest hover:bg-gray-50 focus:outline-none focus:ring transition ease-in-out duration-150">
+                <x-admin.form-button type="button" wire:click="cancelEdit" style="secondary">
                     {{ __('admin.cancel') }}
-                </button>
+                </x-admin.form-button>
                 <x-admin.form-button type="submit" style="primary" loading>
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>

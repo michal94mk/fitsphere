@@ -37,6 +37,11 @@ class PostsCreate extends Component
         $this->slug = Str::slug($value);
     }
     
+    public function removeImage()
+    {
+        $this->image = null;
+    }
+    
     public function store()
     {
         $this->validate();

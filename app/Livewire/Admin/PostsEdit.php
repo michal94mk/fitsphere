@@ -40,6 +40,12 @@ class PostsEdit extends Component
     {
         $this->slug = \Illuminate\Support\Str::slug($value);
     }
+    
+    public function removeImage()
+    {
+        $this->image = null;
+        $this->currentImage = null;
+    }
 
     public function mount($id)
     {

@@ -4,15 +4,9 @@
 
 <div>
     <div class="container mx-auto p-6">
-        <!-- Back button at the top -->
-        <div class="mb-4 flex justify-between items-center">
+        <!-- Header -->
+        <div class="mb-4">
             <h1 class="text-2xl font-bold">{{ __('admin.edit_post') }}</h1>
-            <x-admin.form-button style="secondary" :href="route('admin.posts.index')" navigate>
-                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-                </svg>
-                {{ __('admin.back_to_list') }}
-            </x-admin.form-button>
         </div>
 
         @if (session()->has('error'))
@@ -102,26 +96,52 @@
                         @enderror
                     </div>
 
-                    <!-- Obraz -->
+                    <!-- Post image upload -->
                     <div>
-                        <label for="image" class="block text-sm font-medium text-gray-700">{{ __('admin.post_image') }}</label>
-                        <input type="file" id="image" wire:model="image" class="mt-1 block w-full text-sm text-gray-500 border border-gray-300 rounded-md cursor-pointer focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
-                        <div wire:loading wire:target="image" class="mt-1 text-sm text-blue-500">
-                            {{ __('admin.loading') }}
-                        </div>
-                        @error('image')
-                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                        @if ($currentImage)
-                            <div class="mt-2">
-                                <img src="{{ asset('storage/' . $currentImage) }}" alt="{{ $title }}" class="w-32 h-auto object-cover rounded">
-                                <p class="text-xs text-gray-500 mt-1">{{ __('admin.featured_image') }}</p>
+                        <h2 class="text-lg font-medium text-gray-900 border-b pb-2">{{ __('admin.post_image') }}</h2>
+                        <div class="mt-4">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0">
+                                    @if ($image)
+                                        <img src="{{ $image->temporaryUrl() }}" alt="Post preview" class="h-32 w-32 rounded-lg object-cover">
+                                    @elseif ($currentImage)
+                                        <img src="{{ asset('storage/' . $currentImage) }}" alt="{{ $title }}" class="h-32 w-32 rounded-lg object-cover">
+                                    @else
+                                        <div class="h-32 w-32 rounded-lg bg-gray-200 flex items-center justify-center">
+                                            <svg class="h-16 w-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                            </svg>
+                                        </div>
+                                    @endif
+                                </div>
+                                <div class="ml-5">
+                                    <div class="flex items-center">
+                                        <label for="image" class="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none">
+                                            <span>{{ $currentImage ? __('admin.change_image') : __('admin.upload_image') }}</span>
+                                            <input id="image" wire:model.live="image" type="file" class="sr-only" accept="image/*">
+                                        </label>
+                                    </div>
+                                    <p class="text-xs text-gray-500">{{ __('admin.image_requirements') }}</p>
+                                    @error('image') <span class="text-red-500 text-sm block mt-1">{{ $message }}</span> @enderror
+                                    
+                                    @if ($image || $currentImage)
+                                        <button type="button" wire:click="removeImage" class="mt-2 text-sm text-red-600 hover:text-red-900">
+                                            {{ __('admin.remove_image') }}
+                                        </button>
+                                    @endif
+                                </div>
                             </div>
-                        @endif
+                        </div>
                     </div>
 
                     <!-- Przyciski nawigacyjne -->
-                    <div class="px-6 py-3 bg-gray-50 text-right mt-6 -mx-6 -mb-6">
+                    <div class="px-6 py-3 bg-gray-50 flex justify-between">
+                        <x-admin.form-button style="secondary" :href="route('admin.posts.index')" navigate>
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                            </svg>
+                            {{ __('admin.back_to_list') }}
+                        </x-admin.form-button>
                         <x-admin.form-button type="submit" style="primary" loading>
                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
