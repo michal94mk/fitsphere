@@ -119,6 +119,14 @@
                             ],
                             [
                                 'type' => 'link',
+                                'url' => route('admin.posts.show', $post->id),
+                                'navigate' => true,
+                                'style' => 'info',
+                                'label' => __('admin.show'),
+                                'title' => __('admin.show')
+                            ],
+                            [
+                                'type' => 'link',
                                 'url' => route('admin.posts.translations', $post->id),
                                 'navigate' => true,
                                 'style' => 'success',

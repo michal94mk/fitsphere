@@ -5,9 +5,12 @@
             <p class="text-gray-600">Przeglądaj informacje o trenerze</p>
         </div>
         <div>
-            <a href="{{ route('admin.trainers.index') }}" wire:navigate class="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700">
-                Powrót
-            </a>
+            <x-admin.form-button style="secondary" :href="route('admin.trainers.index')" navigate>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                {{ __('admin.back_to_list') }}
+            </x-admin.form-button>
         </div>
     </div>
     
@@ -96,45 +99,6 @@
                 </div>
                 @endif
             </dl>
-        </div>
-    </div>
-    <div class="py-3 flex justify-between items-center">
-        <a href="{{ route('admin.trainers.index') }}" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded inline-flex items-center text-sm">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-            </svg>
-            Powrót
-        </a>
-        <div class="flex space-x-2">
-            <x-admin.form-button style="primary" :href="route('admin.trainers.translations', $trainer->id)" navigate>
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
-                </svg>
-                Zarządzaj tłumaczeniami
-            </x-admin.form-button>
-            
-            <x-admin.form-button style="warning" :href="route('admin.trainers.edit', $trainer->id)" navigate>
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                </svg>
-                Edytuj
-            </x-admin.form-button>
-            
-            @if (!$trainer->is_approved)
-                <x-admin.form-button type="button" action="approveTrainer" style="success">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    Zatwierdź
-                </x-admin.form-button>
-            @endif
-            
-            <button wire:click="confirmTrainerDeletion" wire:loading.attr="disabled" class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded inline-flex items-center text-sm">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                </svg>
-                Usuń
-            </button>
         </div>
     </div>
 </div> 

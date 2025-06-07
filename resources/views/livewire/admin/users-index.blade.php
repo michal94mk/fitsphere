@@ -140,6 +140,14 @@
                                 'title' => __('admin.edit')
                             ],
                             [
+                                'type' => 'link',
+                                'url' => route('admin.users.show', $user->id),
+                                'navigate' => true,
+                                'style' => 'info',
+                                'label' => __('admin.show'),
+                                'title' => __('admin.show')
+                            ],
+                            [
                                 'type' => 'button',
                                 'action' => 'confirmUserDeletion(' . $user->id . ')',
                                 'style' => 'danger',

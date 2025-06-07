@@ -49,6 +49,7 @@ use App\Livewire\Admin\Dashboard as AdminDashboard;
 use App\Livewire\Admin\PostsIndex;
 use App\Livewire\Admin\PostsCreate;
 use App\Livewire\Admin\PostsEdit;
+use App\Livewire\Admin\PostsShow;
 use App\Livewire\Admin\PostTranslations;
 use App\Livewire\Admin\CategoriesIndex;
 use App\Livewire\Admin\CategoriesCreate;
@@ -58,6 +59,7 @@ use App\Livewire\Admin\CommentsIndex;
 use App\Livewire\Admin\UsersIndex;
 use App\Livewire\Admin\UsersCreate;
 use App\Livewire\Admin\UsersEdit;
+use App\Livewire\Admin\UsersShow;
 use App\Livewire\Admin\TrainersIndex;
 use App\Livewire\Admin\TrainersCreate;
 use App\Livewire\Admin\TrainersEdit;
@@ -174,6 +176,7 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
         Route::get('/', PostsIndex::class)->name('posts.index');
         Route::get('/create', PostsCreate::class)->name('posts.create');
         Route::get('/{id}/edit', PostsEdit::class)->name('posts.edit');
+        Route::get('/{id}', PostsShow::class)->name('posts.show');
         Route::get('/{id}/translations', PostTranslations::class)->name('posts.translations');
     });
     
@@ -193,6 +196,7 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
         Route::get('/', UsersIndex::class)->name('users.index');
         Route::get('/create', UsersCreate::class)->name('users.create');
         Route::get('/{id}/edit', UsersEdit::class)->name('users.edit');
+        Route::get('/{id}', UsersShow::class)->name('users.show');
     });
     
     // Trainers management

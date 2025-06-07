@@ -120,8 +120,8 @@
                                 'url' => route('admin.trainers.show', $trainer->id),
                                 'navigate' => true,
                                 'style' => 'info',
-                                'label' => __('admin.trainer_details_button'),
-                                'title' => __('admin.trainer_details_button')
+                                'label' => __('admin.show'),
+                                'title' => __('admin.show')
                             ]
                         ], [
                             !$trainer->is_approved ? [
