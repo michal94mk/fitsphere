@@ -3,13 +3,14 @@
 namespace App\Livewire\Admin;
 
 use App\Models\Post;
+use App\Livewire\Admin\Traits\HasFlashMessages;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\Attributes\Layout;
 
 class PostsIndex extends Component
 {
-    use WithPagination;
+    use WithPagination, HasFlashMessages;
 
     public $search = '';
     public $status = '';
@@ -53,8 +54,10 @@ class PostsIndex extends Component
 
     public function deletePost()
     {
+        $this->clearMessages();
+        
         if (!$this->postIdBeingDeleted) {
-            session()->flash('error', "Cannot delete article, missing identifier.");
+            $this->setErrorMessage(__('admin.post_delete_missing_id'));
             $this->confirmingPostDeletion = false;
             return;
         }
@@ -70,9 +73,9 @@ class PostsIndex extends Component
             $postTitle = $post->title;
             $post->delete();
             
-            session()->flash('success', "Article '{$postTitle}' has been successfully deleted.");
+            $this->setSuccessMessage(__('admin.post_deleted', ['title' => $postTitle]));
         } catch (\Exception $e) {
-            session()->flash('error', "An error occurred while deleting the article: {$e->getMessage()}");
+            $this->setErrorMessage(__('admin.post_delete_error', ['error' => $e->getMessage()]));
         }
         
         $this->confirmingPostDeletion = false;

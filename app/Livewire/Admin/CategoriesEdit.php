@@ -48,10 +48,10 @@ class CategoriesEdit extends Component
             
             $category->save();
             
-            session()->flash('success', __('categories.category_updated'));
+            session()->flash('success', __('admin.category_updated'));
             return redirect()->route('admin.categories.index');
         } catch (\Exception $e) {
-            session()->flash('error', __('categories.category_update_error', ['error' => $e->getMessage()]));
+            session()->flash('error', __('admin.category_update_error', ['error' => $e->getMessage()]));
         }
     }
 

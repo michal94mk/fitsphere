@@ -3,13 +3,14 @@
 namespace App\Livewire\Admin;
 
 use App\Models\Comment;
+use App\Livewire\Admin\Traits\HasFlashMessages;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\Attributes\Layout;
 
 class CommentsIndex extends Component
 {
-    use WithPagination;
+    use WithPagination, HasFlashMessages;
 
     public $search = '';
     public $sortField = 'created_at';
@@ -47,8 +48,10 @@ class CommentsIndex extends Component
 
     public function deleteComment()
     {
+        $this->clearMessages();
+        
         if (!$this->commentIdBeingDeleted) {
-            session()->flash('error', __('admin.cannot_delete_comment_missing_id'));
+            $this->setErrorMessage(__('admin.cannot_delete_comment_missing_id'));
             $this->confirmingCommentDeletion = false;
             return;
         }
@@ -57,9 +60,9 @@ class CommentsIndex extends Component
             $comment = Comment::findOrFail($this->commentIdBeingDeleted);
             $comment->delete();
             
-            session()->flash('success', __('admin.comment_deleted'));
+            $this->setSuccessMessage(__('admin.comment_deleted'));
         } catch (\Exception $e) {
-            session()->flash('error', __('admin.comment_delete_error', ['error' => $e->getMessage()]));
+            $this->setErrorMessage(__('admin.comment_delete_error', ['error' => $e->getMessage()]));
         }
         
         $this->confirmingCommentDeletion = false;

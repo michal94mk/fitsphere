@@ -235,17 +235,8 @@
             <main class="flex-1 overflow-y-auto focus:outline-none">
                 <div class="py-6">
                     <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
-                        @if (session('success'))
-                            <div class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg" role="alert">
-                                {{ session('success') }}
-                            </div>
-                        @endif
-                        
-                        @if (session('error'))
-                            <div class="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg" role="alert">
-                                {{ session('error') }}
-                            </div>
-                        @endif
+                        <!-- Flash Messages Component -->
+                        @livewire('admin.flash-messages')
                         
                         {{ $slot }}
                     </div>

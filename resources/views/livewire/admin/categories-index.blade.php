@@ -16,17 +16,9 @@
             </a>
         </div>
 
-        @if (session('success'))
-            <div class="mb-4 p-3 bg-green-600 text-white rounded">
-                {{ session('success') }}
-            </div>
-        @endif
 
-        @if (session('error'))
-            <div class="mb-4 p-3 bg-red-600 text-white rounded">
-                {{ session('error') }}
-            </div>
-        @endif
+
+
 
         <!-- Search and filters -->
         <div class="mb-4 bg-white p-3 rounded-lg shadow">
@@ -63,6 +55,7 @@
                     <tr>
                         <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('admin.user_id') }}</th>
                         <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('admin.category_name') }}</th>
+                        <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('admin.posts') }}</th>
                         <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('admin.date') }}</th>
                         <th scope="col" class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('admin.actions') }}</th>
                     </tr>
@@ -72,6 +65,11 @@
                         <tr>
                             <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">{{ $category->id }}</td>
                             <td class="px-4 py-3 whitespace-nowrap font-semibold text-sm text-gray-900">{{ $category->name }}</td>
+                            <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
+                                <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full {{ $category->posts_count > 0 ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800' }}">
+                                    {{ $category->posts_count }} {{ __('admin.posts') }}
+                                </span>
+                            </td>
                             <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
                                 <div>{{ __('admin.created') }}: {{ $category->created_at ? $category->created_at->format('d.m.Y') : 'N/A' }}</div>
                                 <div>{{ __('admin.updated') }}: {{ $category->updated_at ? $category->updated_at->format('d.m.Y') : 'N/A' }}</div>
@@ -97,7 +95,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="4" class="px-4 py-3 whitespace-nowrap text-sm text-gray-500 text-center">
+                            <td colspan="5" class="px-4 py-3 whitespace-nowrap text-sm text-gray-500 text-center">
                                 {{ __('admin.no_categories_found') }}
                             </td>
                         </tr>

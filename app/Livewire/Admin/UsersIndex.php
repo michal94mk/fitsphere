@@ -3,6 +3,7 @@
 namespace App\Livewire\Admin;
 
 use App\Models\User;
+use App\Livewire\Admin\Traits\HasFlashMessages;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\Attributes\Layout;
@@ -10,7 +11,7 @@ use Illuminate\Support\Facades\Storage;
 
 class UsersIndex extends Component
 {
-    use WithPagination;
+    use WithPagination, HasFlashMessages;
     
     public $search = '';
     public $role = 'all';
@@ -59,8 +60,10 @@ class UsersIndex extends Component
     
     public function deleteUser()
     {
+        $this->clearMessages();
+        
         if (!$this->userIdBeingDeleted) {
-            session()->flash('error', "Cannot delete user, missing identifier.");
+            $this->setErrorMessage(__('admin.user_delete_missing_id'));
             $this->confirmingUserDeletion = false;
             return;
         }
@@ -76,9 +79,9 @@ class UsersIndex extends Component
             $userName = $user->name;
             $user->delete();
             
-            session()->flash('success', "User '{$userName}' has been successfully deleted.");
+            $this->setSuccessMessage(__('admin.user_deleted', ['name' => $userName]));
         } catch (\Exception $e) {
-            session()->flash('error', "An error occurred while deleting the user: {$e->getMessage()}");
+            $this->setErrorMessage(__('admin.user_delete_error', ['error' => $e->getMessage()]));
         }
         
         $this->confirmingUserDeletion = false;

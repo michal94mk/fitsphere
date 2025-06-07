@@ -13,7 +13,7 @@ class FlashMessages extends Component
     public function mount()
     {
         // Check for existing session messages
-        if (session('success') || session('error')) {
+        if (session('success') || session('error') || session('info')) {
             $this->show = true;
             
             if (session('success')) {
@@ -29,16 +29,30 @@ class FlashMessages extends Component
                     'message' => session('error')
                 ];
             }
+            
+            if (session('info')) {
+                $this->messages[] = [
+                    'type' => 'info',
+                    'message' => session('info')
+                ];
+            }
         }
     }
     
     #[On('flash')]
     public function addMessage($type, $message)
     {
-        $this->messages[] = [
-            'type' => $type,
-            'message' => $message
-        ];
+        // Check if message already exists to avoid duplicates
+        $exists = collect($this->messages)->contains(function ($msg) use ($type, $message) {
+            return $msg['type'] === $type && $msg['message'] === $message;
+        });
+        
+        if (!$exists) {
+            $this->messages[] = [
+                'type' => $type,
+                'message' => $message
+            ];
+        }
         
         $this->show = true;
     }

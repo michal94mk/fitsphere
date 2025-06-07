@@ -21,18 +21,7 @@
                 </div>
             </div>
             
-            <!-- Messages -->
-            @if (session()->has('success'))
-                <div class="mb-4 px-4 py-2 bg-green-100 text-green-700 border-l-4 border-green-500 rounded">
-                    {{ session('success') }}
-                </div>
-            @endif
-            
-            @if (session()->has('error'))
-                <div class="mb-4 px-4 py-2 bg-red-100 text-red-700 border-l-4 border-red-500 rounded">
-                    {{ session('error') }}
-                </div>
-            @endif
+
             
             <!-- Original data -->
             <div class="mb-8 bg-gray-50 p-4 rounded-lg border border-gray-200">

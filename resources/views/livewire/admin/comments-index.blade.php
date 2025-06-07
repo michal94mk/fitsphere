@@ -9,17 +9,7 @@
             <h1 class="text-2xl font-bold">{{ __('admin.comments_list') }}</h1>
         </div>
 
-        @if (session('success'))
-            <div class="mb-4 p-3 bg-green-600 text-white rounded">
-                {{ session('success') }}
-            </div>
-        @endif
 
-        @if (session('error'))
-            <div class="mb-4 p-3 bg-red-600 text-white rounded">
-                {{ session('error') }}
-            </div>
-        @endif
 
         <!-- Search and filters -->
         <div class="mb-4 bg-white p-3 rounded-lg shadow">

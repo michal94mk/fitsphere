@@ -100,10 +100,10 @@ class UsersEdit extends Component
             
             $user->save();
             
-            session()->flash('success', __('users.user_updated'));
+            session()->flash('success', __('admin.user_updated'));
             return redirect()->route('admin.users.index');
         } catch (\Exception $e) {
-            session()->flash('error', __('users.user_update_error', ['error' => $e->getMessage()]));
+            session()->flash('error', __('admin.user_update_error', ['error' => $e->getMessage()]));
         }
     }
 
@@ -131,9 +131,9 @@ class UsersEdit extends Component
                 
                 $this->photo = null;
                 
-                session()->flash('success', __('users.photo_removed'));
+                session()->flash('success', __('admin.photo_removed'));
             } catch (\Exception $e) {
-                session()->flash('error', __('users.photo_remove_error', ['error' => $e->getMessage()]));
+                session()->flash('error', __('admin.photo_remove_error', ['error' => $e->getMessage()]));
             }
         }
     }

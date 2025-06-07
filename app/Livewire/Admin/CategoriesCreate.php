@@ -33,10 +33,10 @@ class CategoriesCreate extends Component
                 'name' => $this->name
             ]);
             
-            session()->flash('success', __('categories.category_created'));
+            session()->flash('success', __('admin.category_created'));
             return redirect()->route('admin.categories.index');
         } catch (\Exception $e) {
-            session()->flash('error', __('categories.category_create_error', ['error' => $e->getMessage()]));
+            session()->flash('error', __('admin.category_create_error', ['error' => $e->getMessage()]));
         }
     }
 
