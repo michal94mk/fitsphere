@@ -125,15 +125,20 @@
                 </div>
                 
                 <div class="px-6 py-3 bg-gray-50 flex justify-between">
-                    <a href="{{ route('admin.trainers.index') }}" wire:navigate 
-                       class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 transition">
+                    <x-admin.form-button style="secondary" :href="route('admin.trainers.index')" navigate>
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                        </svg>
                         {{ __('admin.back_to_list') }}
-                    </a>
-                    <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition">
+                    </x-admin.form-button>
+                    <x-admin.form-button type="submit" style="success" loading>
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
                         {{ __('admin.create_trainer') }}
-                    </button>
+                    </x-admin.form-button>
                 </div>
             </form>
         </div>
     </div>
-</div> 
+</div>

@@ -30,7 +30,7 @@ return [
     'statistics' => 'Statistics',
     'users' => 'Users',
     'trainers' => 'Trainers',
-    'posts' => 'Posts',
+    'posts' => 'Posts List',
     'comments' => 'Comments',
     'published' => 'Published',
     'drafts' => 'Drafts',

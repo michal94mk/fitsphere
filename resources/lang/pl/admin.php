@@ -30,7 +30,7 @@ return [
     'statistics' => 'Statystyki',
     'users' => 'Użytkownicy',
     'trainers' => 'Trenerzy',
-    'posts' => 'Posty',
+    'posts' => 'Lista postów',
     'comments' => 'Komentarze',
     'published' => 'Opublikowane',
     'drafts' => 'Szkice',

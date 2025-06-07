@@ -5,14 +5,14 @@
 <div>
     <div class="container mx-auto p-4">
         <!-- Header with title and buttons -->
-        <div class="flex justify-between items-center mb-4">
-            <h1 class="text-2xl font-bold">{{ __('admin.comments_list') }}</h1>
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-3xl font-bold text-gray-900">{{ __('admin.comments_list') }}</h1>
         </div>
 
 
 
         <!-- Search and filters -->
-        <div class="mb-4 bg-white p-3 rounded-lg shadow">
+        <div class="mb-6 bg-white p-4 rounded-lg shadow-sm border border-gray-200">
             <div class="flex flex-col md:flex-row gap-3">
                 <div class="flex-1">
                     <label for="search" class="block text-sm font-medium text-gray-700 mb-1">{{ __('admin.search') }}</label>
@@ -40,74 +40,64 @@
         </div>
 
         <!-- Comments table -->
-        <div class="overflow-x-auto bg-white shadow-md rounded-lg">
-            <table class="w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
-                    <tr>
-                        <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            {{ __('admin.user') }}
-                        </th>
-                        <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            {{ __('admin.comment') }}
-                        </th>
-                        <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            {{ __('admin.date') }}
-                        </th>
-                        <th scope="col" class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            {{ __('admin.actions') }}
-                        </th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
-                    @forelse($comments as $comment)
-                        <tr>
-                            <td class="px-4 py-3 whitespace-nowrap">
-                                <div class="flex items-center">
-                                    <div class="flex-shrink-0 h-8 w-8">
-                                        <img class="h-8 w-8 rounded-full object-cover" 
-                                             src="{{ $comment->user->profile_photo_url ?? 'https://ui-avatars.com/api/?name='.urlencode($comment->user->name ?? 'User') }}" 
-                                             alt="{{ $comment->user->name ?? 'User' }}">
-                                    </div>
-                                    <div class="ml-3">
-                                        <div class="text-xs font-medium text-gray-900">
-                                            {{ $comment->user->name ?? __('admin.unknown_user') }}
-                                        </div>
-                                        <div class="text-xs text-gray-500">
-                                            {{ __('admin.post') }}: {{ Str::limit($comment->post->title ?? __('admin.deleted_post'), 20) }}
-                                        </div>
-                                    </div>
+        <x-admin.data-table 
+            :data="$comments" 
+            :headers="[
+                ['label' => __('admin.user')],
+                ['label' => __('admin.comment')],
+                ['label' => __('admin.date')],
+                ['label' => __('admin.actions'), 'align' => 'text-right']
+            ]"
+            :empty-message="__('admin.no_comments_found')"
+            colspan="4">
+            
+            @foreach($comments as $comment)
+                <tr class="hover:bg-gray-50 transition-colors duration-150">
+                    <td class="px-4 py-3 whitespace-nowrap">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0 h-10 w-10">
+                                <img class="h-10 w-10 rounded-full object-cover ring-2 ring-gray-200" 
+                                     src="{{ $comment->user->profile_photo_url ?? 'https://ui-avatars.com/api/?name='.urlencode($comment->user->name ?? 'User') }}" 
+                                     alt="{{ $comment->user->name ?? 'User' }}">
+                            </div>
+                            <div class="ml-4">
+                                <div class="text-sm font-semibold text-gray-900">
+                                    {{ $comment->user->name ?? __('admin.unknown_user') }}
                                 </div>
-                            </td>
-                            <td class="px-4 py-3">
-                                <div class="text-xs text-gray-900 max-w-sm">
-                                    {{ Str::limit($comment->content, 80) }}
+                                <div class="text-xs text-gray-500 truncate max-w-48">
+                                    <span class="font-medium">{{ __('admin.post') }}:</span> {{ Str::limit($comment->post->title ?? __('admin.deleted_post'), 25) }}
                                 </div>
-                            </td>
-                            <td class="px-4 py-3 whitespace-nowrap text-xs text-gray-500">
-                                <div>{{ __('admin.created') }}: {{ $comment->created_at->format('d.m.Y') }}</div>
-                                <div>{{ __('admin.updated') }}: {{ $comment->updated_at->format('d.m.Y') }}</div>
-                            </td>
-                            <td class="px-4 py-3 whitespace-nowrap text-right text-sm font-medium">
-                                <div class="flex flex-wrap items-center justify-end gap-1">
-                                    <button wire:click="confirmCommentDeletion({{ $comment->id }})" class="bg-red-100 text-red-700 px-2 py-1 rounded-md hover:bg-red-200 text-xs font-medium transition">
-                                        {{ __('admin.delete') }}
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="4" class="px-4 py-3 whitespace-nowrap text-sm text-gray-500 text-center">
-                                {{ __('admin.no_comments_found') }}
-                            </td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-4 py-3">
+                        <div class="text-xs text-gray-900 max-w-md leading-relaxed">
+                            {{ Str::limit($comment->content, 120) }}
+                        </div>
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap text-xs text-gray-500">
+                        <div class="space-y-1">
+                            <div><span class="font-medium">{{ __('admin.created') }}:</span> {{ $comment->created_at->format('d.m.Y') }}</div>
+                            <div><span class="font-medium">{{ __('admin.updated') }}:</span> {{ $comment->updated_at->format('d.m.Y') }}</div>
+                        </div>
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap text-right">
+                        <x-admin.action-buttons :actions="[
+                            [
+                                'type' => 'button',
+                                'action' => 'confirmCommentDeletion(' . $comment->id . ')',
+                                'style' => 'danger',
+                                'label' => __('admin.delete'),
+                                'title' => __('admin.delete')
+                            ]
+                        ]" />
+                    </td>
+                </tr>
+            @endforeach
+        </x-admin.data-table>
 
         <!-- Pagination -->
-        <div class="mt-4">
+        <div class="mt-6">
             {{ $comments->links() }}
         </div>
     </div>

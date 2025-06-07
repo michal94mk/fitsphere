@@ -5,26 +5,22 @@
 <div>
     <div class="container mx-auto p-4">
         <!-- Header with title and buttons -->
-        <div class="flex justify-between items-center mb-4">
-            <h1 class="text-2xl font-bold">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-3xl font-bold text-gray-900">
                 {{ __('admin.user_list') }} 
                 @if ($role !== 'all')
-                    <span class="text-sm font-normal bg-gray-200 rounded-full px-3 py-1 ml-2">{{ ucfirst($role) }}</span>
+                    <span class="text-sm font-normal bg-blue-100 text-blue-800 rounded-full px-3 py-1 ml-3">{{ ucfirst($role) }}</span>
                 @endif
             </h1>
-            <a href="{{ route('admin.users.create') }}" wire:navigate
-               class="bg-blue-600 text-white px-3 py-2 rounded-md hover:bg-blue-700 transition flex items-center">
-                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                </svg>
-                {{ __('admin.add') }}
-            </a>
+            <x-admin.add-button 
+                :route="route('admin.users.create')" 
+                :label="__('admin.add')" />
         </div>
 
 
 
         <!-- Search and filters -->
-        <div class="mb-4 bg-white p-3 rounded-lg shadow">
+        <div class="mb-6 bg-white p-4 rounded-lg shadow-sm border border-gray-200">
             <div class="flex flex-col md:flex-row gap-3">
                 <div class="flex-1">
                     <label for="search" class="block text-sm font-medium text-gray-700 mb-1">{{ __('admin.search') }}</label>
@@ -64,108 +60,100 @@
         </div>
 
         <!-- Users table -->
-        <div class="overflow-x-auto bg-white shadow-md rounded-lg">
-            <table class="w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
-                    <tr>
-                        <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            {{ __('admin.user_name') }}
-                        </th>
-                        <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            {{ __('admin.user_status') }} / {{ __('admin.user_role') }}
-                        </th>
-                        <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            {{ __('admin.comment_date') }}
-                        </th>
-                        <th scope="col" class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            {{ __('admin.actions') }}
-                        </th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
-                    @forelse($users as $user)
-                        <tr>
-                            <td class="px-4 py-3 whitespace-nowrap">
-                                <div class="flex items-center">
-                                    <div class="flex-shrink-0 h-8 w-8">
-                                        @if($user->profile_photo_url)
-                                            <img class="h-8 w-8 rounded-full object-cover" 
-                                                 src="{{ $user->profile_photo_url }}" 
-                                                 alt="{{ $user->name }}">
-                                        @else
-                                            <div class="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-500">
-                                                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                                                </svg>
-                                            </div>
-                                        @endif
+        <x-admin.data-table 
+            :data="$users" 
+            :headers="[
+                ['label' => __('admin.user_name')],
+                ['label' => __('admin.user_status') . ' / ' . __('admin.user_role')],
+                ['label' => __('admin.comment_date')],
+                ['label' => __('admin.actions'), 'align' => 'text-right']
+            ]"
+            :empty-message="__('admin.no_users_found')"
+            colspan="4">
+            
+            @foreach($users as $user)
+                <tr class="hover:bg-gray-50 transition-colors duration-150">
+                    <td class="px-4 py-3 whitespace-nowrap">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0 h-10 w-10">
+                                @if($user->profile_photo_url)
+                                    <img class="h-10 w-10 rounded-full object-cover ring-2 ring-gray-200" 
+                                         src="{{ $user->profile_photo_url }}" 
+                                         alt="{{ $user->name }}">
+                                @else
+                                    <div class="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 ring-2 ring-gray-300">
+                                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                        </svg>
                                     </div>
-                                    <div class="ml-3">
-                                        <div class="text-sm font-medium text-gray-900">
-                                            {{ $user->name }}
-                                        </div>
-                                        <div class="text-xs text-gray-500">
-                                            <div>{{ __('admin.user_id') }}: {{ $user->id }}</div>
-                                            <div>{{ $user->email }}</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="px-4 py-3 whitespace-nowrap">
-                                <div>
-                                    @if($user->email_verified_at)
-                                        <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                            {{ __('admin.verified') }}
-                                        </span>
-                                    @else
-                                        <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                                            {{ __('admin.not_verified') }}
-                                        </span>
-                                    @endif
-                                </div>
-                                <div class="mt-1">
-                                    <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                        {{ $user->role === 'admin' ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800' }}">
-                                        {{ ucfirst($user->role) }}
-                                    </span>
-                                </div>
-                            </td>
-                            <td class="px-4 py-3 whitespace-nowrap text-xs text-gray-500">
-                                <div>{{ __('admin.created') }}: {{ $user->created_at ? $user->created_at->format('d.m.Y') : 'N/A' }}</div>
-                                <div>{{ __('admin.updated') }}: {{ $user->updated_at ? $user->updated_at->format('d.m.Y') : 'N/A' }}</div>
-                                @if($user->email_verified_at)
-                                    <div>{{ __('admin.verified_short') }}: {{ $user->email_verified_at->format('d.m.Y') }}</div>
                                 @endif
-                            </td>
-                            <td class="px-4 py-3 whitespace-nowrap text-right text-sm font-medium">
-                                <div class="flex flex-wrap items-center justify-end gap-1">
-                                    <!-- Przycisk edycji -->
-                                    <a href="{{ route('admin.users.edit', $user->id) }}" wire:navigate
-                                       class="bg-blue-100 text-blue-700 px-2 py-1 rounded-md hover:bg-blue-200 text-xs font-medium transition">
-                                        {{ __('admin.edit') }}
-                                    </a>
-                                    
-                                    <!-- Przycisk usuwania -->
-                                    <button wire:click="confirmUserDeletion({{ $user->id }})" 
-                                            class="bg-red-100 text-red-700 px-2 py-1 rounded-md hover:bg-red-200 text-xs font-medium transition">
-                                        {{ __('admin.delete') }}
-                                    </button>
+                            </div>
+                            <div class="ml-4">
+                                <div class="text-sm font-semibold text-gray-900">
+                                    {{ $user->name }}
                                 </div>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="4" class="px-4 py-3 whitespace-nowrap text-sm text-gray-500 text-center">
-                                {{ __('admin.no_users_found') }}
-                            </td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
+                                <div class="text-xs text-gray-500">
+                                    <div class="flex items-center gap-1">
+                                        <span class="font-medium">ID:</span> {{ $user->id }}
+                                    </div>
+                                    <div class="truncate max-w-48">{{ $user->email }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap">
+                        <div class="space-y-1">
+                            @if($user->email_verified_at)
+                                <span class="px-2 py-1 inline-flex text-xs leading-4 font-semibold rounded-full bg-green-100 text-green-800">
+                                    {{ __('admin.verified') }}
+                                </span>
+                            @else
+                                <span class="px-2 py-1 inline-flex text-xs leading-4 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                                    {{ __('admin.not_verified') }}
+                                </span>
+                            @endif
+                            <div>
+                                <span class="px-2 py-1 inline-flex text-xs leading-4 font-semibold rounded-full 
+                                    {{ $user->role === 'admin' ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800' }}">
+                                    {{ ucfirst($user->role) }}
+                                </span>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap text-xs text-gray-500">
+                        <div class="space-y-1">
+                            <div><span class="font-medium">{{ __('admin.created') }}:</span> {{ $user->created_at ? $user->created_at->format('d.m.Y') : 'N/A' }}</div>
+                            <div><span class="font-medium">{{ __('admin.updated') }}:</span> {{ $user->updated_at ? $user->updated_at->format('d.m.Y') : 'N/A' }}</div>
+                            @if($user->email_verified_at)
+                                <div><span class="font-medium">{{ __('admin.verified_short') }}:</span> {{ $user->email_verified_at->format('d.m.Y') }}</div>
+                            @endif
+                        </div>
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap text-right">
+                        <x-admin.action-buttons :actions="[
+                            [
+                                'type' => 'link',
+                                'url' => route('admin.users.edit', $user->id),
+                                'navigate' => true,
+                                'style' => 'primary',
+                                'label' => __('admin.edit'),
+                                'title' => __('admin.edit')
+                            ],
+                            [
+                                'type' => 'button',
+                                'action' => 'confirmUserDeletion(' . $user->id . ')',
+                                'style' => 'danger',
+                                'label' => __('admin.delete'),
+                                'title' => __('admin.delete')
+                            ]
+                        ]" />
+                    </td>
+                </tr>
+            @endforeach
+        </x-admin.data-table>
 
         <!-- Pagination -->
-        <div class="mt-4">
+        <div class="mt-6">
             {{ $users->links() }}
         </div>
     </div>

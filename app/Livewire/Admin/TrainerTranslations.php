@@ -105,7 +105,7 @@ class TrainerTranslations extends Component
     
     public function cancelEdit()
     {
-        $this->resetFormFields();
+        $this->redirectRoute('admin.trainers.index', navigate: true);
     }
     
     #[Layout('layouts.admin', ['header' => 'Manage Trainer Translations'])]

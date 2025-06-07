@@ -5,21 +5,17 @@
 <div>
     <div class="container mx-auto p-4">
         <!-- Header with title and buttons -->
-        <div class="flex justify-between items-center mb-4">
-            <h1 class="text-2xl font-bold">{{ __('admin.posts') }}</h1>
-            <a href="{{ route('admin.posts.create') }}" wire:navigate
-               class="bg-blue-600 text-white px-3 py-2 rounded-md hover:bg-blue-700 transition flex items-center">
-                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                </svg>
-                {{ __('admin.add') }}
-            </a>
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-3xl font-bold text-gray-900">{{ __('admin.posts') }}</h1>
+            <x-admin.add-button 
+                :route="route('admin.posts.create')" 
+                :label="__('admin.add')" />
         </div>
 
 
 
         <!-- Search and filters -->
-        <div class="mb-4 bg-white p-3 rounded-lg shadow">
+        <div class="mb-6 bg-white p-4 rounded-lg shadow-sm border border-gray-200">
             <div class="flex flex-col md:flex-row gap-3">
                 <div class="flex-1">
                     <label for="search" class="block text-sm font-medium text-gray-700 mb-1">{{ __('admin.search') }}</label>
@@ -57,96 +53,93 @@
         </div>
 
         <!-- Posts table -->
-        <div class="overflow-x-auto bg-white shadow-md rounded-lg">
-            <table class="w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
-                    <tr>
-                        <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            {{ __('admin.post') }}
-                        </th>
-                        <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            {{ __('admin.info') }}
-                        </th>
-                        <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            {{ __('admin.date') }}
-                        </th>
-                        <th scope="col" class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            {{ __('admin.actions') }}
-                        </th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
-                    @forelse($posts as $post)
-                        <tr>
-                            <td class="px-4 py-3 whitespace-nowrap">
-                                <div class="flex items-center">
-                                    <div class="flex-shrink-0 h-8 w-8">
-                                        @if($post->image)
-                                            <img class="h-8 w-8 rounded-full object-cover" 
-                                                 src="{{ asset('storage/' . $post->image) }}" 
-                                                 alt="{{ $post->title }}">
-                                        @else
-                                            <div class="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-500">
-                                                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                                                </svg>
-                                            </div>
-                                        @endif
+        <x-admin.data-table 
+            :data="$posts" 
+            :headers="[
+                ['label' => __('admin.post')],
+                ['label' => __('admin.info')],
+                ['label' => __('admin.date')],
+                ['label' => __('admin.actions'), 'align' => 'text-right']
+            ]"
+            :empty-message="__('admin.no_posts_found')"
+            colspan="4">
+            
+            @foreach($posts as $post)
+                <tr class="hover:bg-gray-50 transition-colors duration-150">
+                    <td class="px-4 py-3 whitespace-nowrap">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0 h-10 w-10">
+                                @if($post->image)
+                                    <img class="h-10 w-10 rounded-full object-cover ring-2 ring-gray-200" 
+                                         src="{{ asset('storage/' . $post->image) }}" 
+                                         alt="{{ $post->title }}">
+                                @else
+                                    <div class="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 ring-2 ring-gray-300">
+                                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                        </svg>
                                     </div>
-                                    <div class="ml-3">
-                                        <div class="text-sm font-medium text-gray-900">
-                                            {{ $post->title }}
-                                        </div>
-                                        <div class="text-xs text-gray-500 truncate max-w-xs">
-                                            {{ Str::limit($post->slug, 30) }}
-                                        </div>
-                                    </div>
+                                @endif
+                            </div>
+                            <div class="ml-4">
+                                <div class="text-sm font-semibold text-gray-900">
+                                    {{ $post->title }}
                                 </div>
-                            </td>
-                            <td class="px-4 py-3 whitespace-nowrap">
-                                <div class="text-xs text-gray-900">{{ __('admin.author') }}: {{ optional($post->user)->name ?? __('admin.unknown') }}</div>
-                                <div class="text-xs text-gray-900">{{ __('admin.post_category') }}: {{ optional($post->category)->name ?? __('admin.none') }}</div>
-                                <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                    {{ $post->status === 'published' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' }}">
-                                    {{ $post->status === 'published' ? __('admin.status_published') : __('admin.status_draft') }}
-                                </span>
-                            </td>
-                            <td class="px-4 py-3 whitespace-nowrap text-xs text-gray-500">
-                                <div>{{ __('admin.created') }}: {{ $post->created_at->format('d.m.Y') }}</div>
-                                <div>{{ __('admin.updated') }}: {{ $post->updated_at->format('d.m.Y') }}</div>
-                            </td>
-                            <td class="px-4 py-3 whitespace-nowrap">
-                                <div class="flex flex-wrap items-center justify-end gap-1">
-                                    <!-- Edit button -->
-                                    <a href="{{ route('admin.posts.edit', $post->id) }}" class="bg-blue-100 text-blue-700 px-2 py-1 rounded-md hover:bg-blue-200 text-xs font-medium transition">
-                                        {{ __('admin.edit') }}
-                                    </a>
-                                    
-                                    <!-- Translations button -->
-                                    <a href="{{ route('admin.posts.translations', $post->id) }}" class="bg-green-100 text-green-700 px-2 py-1 rounded-md hover:bg-green-200 text-xs font-medium transition">
-                                        {{ __('admin.translations') }}
-                                    </a>
-                                    
-                                    <!-- Delete button -->
-                                    <button wire:click="confirmPostDeletion({{ $post->id }})" class="bg-red-100 text-red-700 px-2 py-1 rounded-md hover:bg-red-200 text-xs font-medium transition">
-                                        {{ __('admin.delete') }}
-                                    </button>
+                                <div class="text-xs text-gray-500 truncate max-w-48">
+                                    {{ Str::limit($post->slug, 40) }}
                                 </div>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="4" class="px-4 py-3 whitespace-nowrap text-sm text-gray-500 text-center">
-                                {{ __('admin.no_posts_found') }}
-                            </td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap">
+                        <div class="space-y-1">
+                            <div class="text-xs text-gray-900"><span class="font-medium">{{ __('admin.author') }}:</span> {{ optional($post->user)->name ?? __('admin.unknown') }}</div>
+                            <div class="text-xs text-gray-900"><span class="font-medium">{{ __('admin.post_category') }}:</span> {{ optional($post->category)->name ?? __('admin.none') }}</div>
+                            <span class="px-2 py-1 inline-flex text-xs leading-4 font-semibold rounded-full 
+                                {{ $post->status === 'published' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' }}">
+                                {{ $post->status === 'published' ? __('admin.status_published') : __('admin.status_draft') }}
+                            </span>
+                        </div>
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap text-xs text-gray-500">
+                        <div class="space-y-1">
+                            <div><span class="font-medium">{{ __('admin.created') }}:</span> {{ $post->created_at->format('d.m.Y') }}</div>
+                            <div><span class="font-medium">{{ __('admin.updated') }}:</span> {{ $post->updated_at->format('d.m.Y') }}</div>
+                        </div>
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap text-right">
+                        <x-admin.action-buttons :actions="[
+                            [
+                                'type' => 'link',
+                                'url' => route('admin.posts.edit', $post->id),
+                                'navigate' => true,
+                                'style' => 'primary',
+                                'label' => __('admin.edit'),
+                                'title' => __('admin.edit')
+                            ],
+                            [
+                                'type' => 'link',
+                                'url' => route('admin.posts.translations', $post->id),
+                                'navigate' => true,
+                                'style' => 'success',
+                                'label' => __('admin.translations'),
+                                'title' => __('admin.translations')
+                            ],
+                            [
+                                'type' => 'button',
+                                'action' => 'confirmPostDeletion(' . $post->id . ')',
+                                'style' => 'danger',
+                                'label' => __('admin.delete'),
+                                'title' => __('admin.delete')
+                            ]
+                        ]" />
+                    </td>
+                </tr>
+            @endforeach
+        </x-admin.data-table>
 
         <!-- Pagination -->
-        <div class="mt-4">
+        <div class="mt-6">
             {{ $posts->links() }}
         </div>
     </div>

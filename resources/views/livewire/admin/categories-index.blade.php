@@ -5,15 +5,11 @@
 <div>
     <div class="container mx-auto p-4">
         <!-- Header with title and buttons -->
-        <div class="flex justify-between items-center mb-4">
-            <h1 class="text-2xl font-bold">{{ __('admin.category_list') }}</h1>
-            <a href="{{ route('admin.categories.create') }}" wire:navigate
-               class="bg-blue-600 text-white px-3 py-2 rounded-md hover:bg-blue-700 transition flex items-center">
-                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                </svg>
-                {{ __('admin.add') }}
-            </a>
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-3xl font-bold text-gray-900">{{ __('admin.category_list') }}</h1>
+            <x-admin.add-button 
+                :route="route('admin.categories.create')" 
+                :label="__('admin.add')" />
         </div>
 
 
@@ -21,7 +17,7 @@
 
 
         <!-- Search and filters -->
-        <div class="mb-4 bg-white p-3 rounded-lg shadow">
+        <div class="mb-6 bg-white p-4 rounded-lg shadow-sm border border-gray-200">
             <div class="flex flex-col md:flex-row gap-3">
                 <div class="flex-1">
                     <label for="search" class="block text-sm font-medium text-gray-700 mb-1">{{ __('admin.search') }}</label>
@@ -49,63 +45,76 @@
         </div>
 
         <!-- Categories table -->
-        <div class="overflow-x-auto bg-white shadow-md rounded-lg">
-            <table class="w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
-                    <tr>
-                        <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('admin.user_id') }}</th>
-                        <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('admin.category_name') }}</th>
-                        <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('admin.posts') }}</th>
-                        <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('admin.date') }}</th>
-                        <th scope="col" class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('admin.actions') }}</th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
-                    @forelse($categories as $category)
-                        <tr>
-                            <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">{{ $category->id }}</td>
-                            <td class="px-4 py-3 whitespace-nowrap font-semibold text-sm text-gray-900">{{ $category->name }}</td>
-                            <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
-                                <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full {{ $category->posts_count > 0 ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800' }}">
-                                    {{ $category->posts_count }} {{ __('admin.posts') }}
-                                </span>
-                            </td>
-                            <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
-                                <div>{{ __('admin.created') }}: {{ $category->created_at ? $category->created_at->format('d.m.Y') : 'N/A' }}</div>
-                                <div>{{ __('admin.updated') }}: {{ $category->updated_at ? $category->updated_at->format('d.m.Y') : 'N/A' }}</div>
-                            </td>
-                            <td class="px-4 py-3 whitespace-nowrap text-right text-sm font-medium">
-                                <div class="flex flex-wrap items-center justify-end gap-1">
-                                    <!-- Przycisk edycji -->
-                                    <a href="{{ route('admin.categories.edit', $category) }}" wire:navigate class="bg-blue-100 text-blue-700 px-2 py-1 rounded-md hover:bg-blue-200 text-xs font-medium transition">
-                                        {{ __('admin.edit') }}
-                                    </a>
-                                    
-                                    <!-- Przycisk tłumaczeń -->
-                                    <a href="{{ route('admin.categories.translations', $category->id) }}" wire:navigate class="bg-green-100 text-green-700 px-2 py-1 rounded-md hover:bg-green-200 text-xs font-medium transition">
-                                        {{ __('admin.translations') }}
-                                    </a>
-                                    
-                                    <!-- Przycisk usuwania -->
-                                    <button wire:click="confirmCategoryDeletion({{ $category->id }})" class="bg-red-100 text-red-700 px-2 py-1 rounded-md hover:bg-red-200 text-xs font-medium transition">
-                                        {{ __('admin.delete') }}
-                                    </button>
+        <x-admin.data-table 
+            :data="$categories" 
+            :headers="[
+                ['label' => __('admin.user_id')],
+                ['label' => __('admin.category_name')],
+                ['label' => __('admin.posts')],
+                ['label' => __('admin.date')],
+                ['label' => __('admin.actions'), 'align' => 'text-right']
+            ]"
+            :empty-message="__('admin.no_categories_found')"
+            colspan="5">
+            
+            @foreach($categories as $category)
+                <tr class="hover:bg-gray-50 transition-colors duration-150">
+                    <td class="px-4 py-3 whitespace-nowrap">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0 h-10 w-10">
+                                <div class="h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center ring-2 ring-indigo-200">
+                                    <span class="text-sm font-semibold text-indigo-800">{{ $category->id }}</span>
                                 </div>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="5" class="px-4 py-3 whitespace-nowrap text-sm text-gray-500 text-center">
-                                {{ __('admin.no_categories_found') }}
-                            </td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap">
+                        <div class="text-sm font-semibold text-gray-900">{{ $category->name }}</div>
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap">
+                        <span class="px-2 py-1 inline-flex text-xs leading-4 font-semibold rounded-full {{ $category->posts_count > 0 ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800' }}">
+                            {{ $category->posts_count }} {{ __('admin.posts') }}
+                        </span>
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap text-xs text-gray-500">
+                        <div class="space-y-1">
+                            <div><span class="font-medium">{{ __('admin.created') }}:</span> {{ $category->created_at ? $category->created_at->format('d.m.Y') : 'N/A' }}</div>
+                            <div><span class="font-medium">{{ __('admin.updated') }}:</span> {{ $category->updated_at ? $category->updated_at->format('d.m.Y') : 'N/A' }}</div>
+                        </div>
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap text-right">
+                        <x-admin.action-buttons :actions="[
+                            [
+                                'type' => 'link',
+                                'url' => route('admin.categories.edit', $category),
+                                'navigate' => true,
+                                'style' => 'primary',
+                                'label' => __('admin.edit'),
+                                'title' => __('admin.edit')
+                            ],
+                            [
+                                'type' => 'link',
+                                'url' => route('admin.categories.translations', $category->id),
+                                'navigate' => true,
+                                'style' => 'success',
+                                'label' => __('admin.translations'),
+                                'title' => __('admin.translations')
+                            ],
+                            [
+                                'type' => 'button',
+                                'action' => 'confirmCategoryDeletion(' . $category->id . ')',
+                                'style' => 'danger',
+                                'label' => __('admin.delete'),
+                                'title' => __('admin.delete')
+                            ]
+                        ]" />
+                    </td>
+                </tr>
+            @endforeach
+        </x-admin.data-table>
 
         <!-- Pagination -->
-        <div class="mt-4">
+        <div class="mt-6">
             {{ $categories->links() }}
         </div>
     </div>

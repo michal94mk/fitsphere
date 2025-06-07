@@ -100,7 +100,7 @@ class CategoryTranslations extends Component
     
     public function cancelEdit()
     {
-        $this->resetFormFields();
+        $this->redirectRoute('admin.categories.index', navigate: true);
     }
     
     #[Layout('layouts.admin', ['header' => 'Manage Category Translations'])]

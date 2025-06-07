@@ -13,12 +13,6 @@
                 <p class="font-medium">{{ $category->name }}</p>
             </div>
         </div>
-        
-        <div class="mt-4">
-            <a href="{{ route('admin.categories.edit', $category->id) }}" wire:navigate class="text-blue-600 hover:text-blue-800">
-                &larr; {{ __('admin.back_to_edit_category') }}
-            </a>
-        </div>
     </div>
     
     <!-- Lista istniejących tłumaczeń -->
@@ -141,12 +135,15 @@
             
             <!-- Przyciski -->
             <div class="flex justify-end space-x-3 pt-5">
-                <button type="button" wire:click="cancelEdit" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                <button type="button" wire:click="cancelEdit" class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-md font-semibold text-xs uppercase tracking-widest hover:bg-gray-50 focus:outline-none focus:ring transition ease-in-out duration-150">
                     {{ __('admin.cancel') }}
                 </button>
-                <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                <x-admin.form-button type="submit" style="primary" loading>
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
                     {{ $editingTranslationId ? __('admin.update_translation') : __('admin.add_translation') }}
-                </button>
+                </x-admin.form-button>
             </div>
         </form>
     </div>

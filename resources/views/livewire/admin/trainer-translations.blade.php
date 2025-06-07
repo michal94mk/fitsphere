@@ -11,14 +11,6 @@
                         {{ __('admin.trainer_manage_translations') }}
                     </p>
                 </div>
-                <div>
-                    <a href="{{ route('admin.trainers.show', $trainer->id) }}" class="inline-flex items-center px-4 py-2 bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest hover:bg-gray-300 active:bg-gray-300 focus:outline-none focus:border-gray-300 focus:ring focus:ring-gray-200 disabled:opacity-25 transition">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                        </svg>
-                        {{ __('admin.back_to_list') }}
-                    </a>
-                </div>
             </div>
             
 
@@ -152,15 +144,16 @@
                     
                     <!-- Buttons -->
                     <div class="flex justify-end space-x-3 pt-4">
-                        @if ($editingTranslationId)
-                            <button type="button" wire:click="cancelEdit" class="inline-flex items-center px-4 py-2 bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest hover:bg-gray-300">
-                                {{ __('admin.cancel') }}
-                            </button>
-                        @endif
-                        
-                        <button type="submit" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-700 focus:outline-none focus:border-indigo-700 focus:ring focus:ring-indigo-300 disabled:opacity-25 transition">
-                            {{ $editingTranslationId ? __('admin.save_changes') : __('admin.add_translation') }}
+                        <button type="button" wire:click="cancelEdit" class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-md font-semibold text-xs uppercase tracking-widest hover:bg-gray-50 focus:outline-none focus:ring transition ease-in-out duration-150">
+                            {{ __('admin.cancel') }}
                         </button>
+                        
+                        <x-admin.form-button type="submit" style="primary" loading>
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            {{ $editingTranslationId ? __('admin.save_changes') : __('admin.add_translation') }}
+                        </x-admin.form-button>
                     </div>
                 </form>
             </div>

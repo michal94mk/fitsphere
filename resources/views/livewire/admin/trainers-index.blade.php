@@ -5,19 +5,15 @@
 <div>
     <div class="container mx-auto p-4">
         <!-- Header with title and buttons -->
-        <div class="flex justify-between items-center mb-4">
-            <h1 class="text-2xl font-bold">{{ __('admin.trainer_list') }}</h1>
-            <a href="{{ route('admin.trainers.create') }}" wire:navigate
-               class="bg-blue-600 text-white px-3 py-2 rounded-md hover:bg-blue-700 transition flex items-center">
-                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                </svg>
-                {{ __('admin.add') }}
-            </a>
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-3xl font-bold text-gray-900">{{ __('admin.trainer_list') }}</h1>
+            <x-admin.add-button 
+                :route="route('admin.trainers.create')" 
+                :label="__('admin.add')" />
         </div>
 
         <!-- Search and filters -->
-        <div class="mb-4 bg-white p-3 rounded-lg shadow">
+        <div class="mb-6 bg-white p-4 rounded-lg shadow-sm border border-gray-200">
             <div class="flex flex-col md:flex-row gap-3">
                 <div class="flex-1">
                     <label for="search" class="block text-sm font-medium text-gray-700 mb-1">{{ __('admin.search') }}</label>
@@ -56,111 +52,107 @@
         </div>
 
         <!-- Trainers table -->
-        <div class="overflow-x-auto bg-white shadow-md rounded-lg">
-            <table class="w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
-                    <tr>
-                        <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            {{ __('admin.trainers') }}
-                        </th>
-                        <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            {{ __('admin.trainer_info_title') }}
-                        </th>
-                        <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            {{ __('admin.trainer_date') }}
-                        </th>
-                        <th scope="col" class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            {{ __('admin.actions') }}
-                        </th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
-                    @forelse($trainers as $trainer)
-                        <tr>
-                            <td class="px-4 py-3 whitespace-nowrap">
-                                <div class="flex items-center">
-                                    <div class="flex-shrink-0 h-8 w-8">
-                                        <img class="h-8 w-8 rounded-full object-cover" 
-                                             src="{{ $trainer->image ? Storage::url($trainer->image) : 'https://ui-avatars.com/api/?name='.urlencode($trainer->name) }}" 
-                                             alt="{{ $trainer->name }}">
-                                    </div>
-                                    <div class="ml-3">
-                                        <div class="text-xs font-medium text-gray-900">
-                                            {{ $trainer->name }}
-                                        </div>
-                                        <div class="text-xs text-gray-500">
-                                            {{ $trainer->email }}
-                                        </div>
-                                    </div>
+        <x-admin.data-table 
+            :data="$trainers" 
+            :headers="[
+                ['label' => __('admin.trainers')],
+                ['label' => __('admin.trainer_info_title')],
+                ['label' => __('admin.trainer_date')],
+                ['label' => __('admin.actions'), 'align' => 'text-right']
+            ]"
+            :empty-message="__('admin.no_trainers_found')"
+            colspan="4">
+            
+            @foreach($trainers as $trainer)
+                <tr class="hover:bg-gray-50 transition-colors duration-150">
+                    <td class="px-4 py-3 whitespace-nowrap">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0 h-10 w-10">
+                                <img class="h-10 w-10 rounded-full object-cover ring-2 ring-gray-200" 
+                                     src="{{ $trainer->image ? Storage::url($trainer->image) : 'https://ui-avatars.com/api/?name='.urlencode($trainer->name) }}" 
+                                     alt="{{ $trainer->name }}">
+                            </div>
+                            <div class="ml-4">
+                                <div class="text-sm font-semibold text-gray-900">
+                                    {{ $trainer->name }}
                                 </div>
-                            </td>
-                            <td class="px-4 py-3 whitespace-nowrap">
-                                <div class="text-xs text-gray-900">{{ __('admin.trainer_specialization') }}: {{ $trainer->specialization }}</div>
-                                <span class="mt-1 px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                    {{ $trainer->is_approved ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' }}">
-                                    {{ $trainer->is_approved ? __('admin.trainer_approved') : __('admin.trainer_pending') }}
-                                </span>
-                            </td>
-                            <td class="px-4 py-3 whitespace-nowrap text-xs text-gray-500">
-                                <div>{{ __('admin.created') }}: {{ $trainer->created_at->format('d.m.Y') }}</div>
-                                <div>{{ __('admin.updated') }}: {{ $trainer->updated_at->format('d.m.Y') }}</div>
-                            </td>
-                            <td class="px-4 py-3 whitespace-nowrap text-right text-sm font-medium">
-                                <div class="flex flex-wrap justify-end gap-1">
-                                    <a href="{{ route('admin.trainers.edit', $trainer->id) }}" 
-                                       class="bg-blue-100 text-blue-700 px-2 py-1 rounded-md hover:bg-blue-200 text-xs font-medium transition" 
-                                       title="{{ __('admin.edit') }}">
-                                        {{ __('admin.edit') }}
-                                    </a>
-                                    
-                                    <a href="{{ route('admin.trainers.translations', $trainer->id) }}" 
-                                       class="bg-green-100 text-green-700 px-2 py-1 rounded-md hover:bg-green-200 text-xs font-medium transition" 
-                                       title="{{ __('admin.trainer_translations') }}">
-                                        {{ __('admin.trainer_translations') }}
-                                    </a>
-                                    
-                                    <a href="{{ route('admin.trainers.show', $trainer->id) }}" 
-                                       class="bg-indigo-100 text-indigo-700 px-2 py-1 rounded-md hover:bg-indigo-200 text-xs font-medium transition" 
-                                       title="{{ __('admin.trainer_details_button') }}">
-                                        {{ __('admin.trainer_details_button') }}
-                                    </a>
-                                    
-                                    @if(!$trainer->is_approved)
-                                        <button wire:click="approveTrainer({{ $trainer->id }})" 
-                                                class="bg-green-100 text-green-700 px-2 py-1 rounded-md hover:bg-green-200 text-xs font-medium transition" 
-                                                title="{{ __('admin.approve') }}">
-                                            {{ __('admin.trainer_approve_button') }}
-                                        </button>
-                                    @else
-                                        <button wire:click="disapproveTrainer({{ $trainer->id }})" 
-                                                class="bg-orange-100 text-orange-700 px-2 py-1 rounded-md hover:bg-orange-200 text-xs font-medium transition" 
-                                                title="{{ __('admin.trainer_disapprove_button') }}">
-                                            {{ __('admin.trainer_disapprove_button') }}
-                                        </button>
-                                    @endif
-                                    
-                                    <button wire:click="confirmTrainerDeletion({{ $trainer->id }})" 
-                                            wire:loading.attr="disabled" 
-                                            class="bg-red-100 text-red-700 px-2 py-1 rounded-md hover:bg-red-200 text-xs font-medium transition" 
-                                            title="{{ __('admin.delete') }}">
-                                        {{ __('admin.delete') }}
-                                    </button>
+                                <div class="text-xs text-gray-500 truncate max-w-48">
+                                    {{ $trainer->email }}
                                 </div>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="4" class="px-4 py-3 whitespace-nowrap text-sm text-gray-500 text-center">
-                                {{ __('admin.no_trainers_found') }}
-                            </td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap">
+                        <div class="space-y-1">
+                            <div class="text-xs text-gray-900"><span class="font-medium">{{ __('admin.trainer_specialization') }}:</span> {{ $trainer->specialization }}</div>
+                            <span class="px-2 py-1 inline-flex text-xs leading-4 font-semibold rounded-full 
+                                {{ $trainer->is_approved ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' }}">
+                                {{ $trainer->is_approved ? __('admin.trainer_approved') : __('admin.trainer_pending') }}
+                            </span>
+                        </div>
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap text-xs text-gray-500">
+                        <div class="space-y-1">
+                            <div><span class="font-medium">{{ __('admin.created') }}:</span> {{ $trainer->created_at->format('d.m.Y') }}</div>
+                            <div><span class="font-medium">{{ __('admin.updated') }}:</span> {{ $trainer->updated_at->format('d.m.Y') }}</div>
+                        </div>
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap text-right">
+                        <x-admin.action-buttons :actions="array_merge([
+                            [
+                                'type' => 'link',
+                                'url' => route('admin.trainers.edit', $trainer->id),
+                                'navigate' => true,
+                                'style' => 'primary',
+                                'label' => __('admin.edit'),
+                                'title' => __('admin.edit')
+                            ],
+                            [
+                                'type' => 'link',
+                                'url' => route('admin.trainers.translations', $trainer->id),
+                                'navigate' => true,
+                                'style' => 'success',
+                                'label' => __('admin.trainer_translations'),
+                                'title' => __('admin.trainer_translations')
+                            ],
+                            [
+                                'type' => 'link',
+                                'url' => route('admin.trainers.show', $trainer->id),
+                                'navigate' => true,
+                                'style' => 'info',
+                                'label' => __('admin.trainer_details_button'),
+                                'title' => __('admin.trainer_details_button')
+                            ]
+                        ], [
+                            !$trainer->is_approved ? [
+                                'type' => 'button',
+                                'action' => 'approveTrainer(' . $trainer->id . ')',
+                                'style' => 'success',
+                                'label' => __('admin.trainer_approve_button'),
+                                'title' => __('admin.approve')
+                            ] : [
+                                'type' => 'button',
+                                'action' => 'disapproveTrainer(' . $trainer->id . ')',
+                                'style' => 'warning',
+                                'label' => __('admin.trainer_disapprove_button'),
+                                'title' => __('admin.trainer_disapprove_button')
+                            ],
+                            [
+                                'type' => 'button',
+                                'action' => 'confirmTrainerDeletion(' . $trainer->id . ')',
+                                'loading' => true,
+                                'style' => 'danger',
+                                'label' => __('admin.delete'),
+                                'title' => __('admin.delete')
+                            ]
+                        ])" />
+                    </td>
+                </tr>
+            @endforeach
+        </x-admin.data-table>
 
         <!-- Pagination -->
-        <div class="mt-4">
+        <div class="mt-6">
             {{ $trainers->links() }}
         </div>
     </div>

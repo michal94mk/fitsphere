@@ -7,10 +7,12 @@
         <!-- Back button at the top -->
         <div class="mb-4 flex justify-between items-center">
             <h1 class="text-2xl font-bold">{{ __('admin.edit_post') }}</h1>
-            <a href="{{ route('admin.posts.index') }}" wire:navigate 
-               class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 transition">
+            <x-admin.form-button style="secondary" :href="route('admin.posts.index')" navigate>
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                </svg>
                 {{ __('admin.back_to_list') }}
-            </a>
+            </x-admin.form-button>
         </div>
 
         @if (session()->has('error'))
@@ -120,9 +122,12 @@
 
                     <!-- Przyciski nawigacyjne -->
                     <div class="px-6 py-3 bg-gray-50 text-right mt-6 -mx-6 -mb-6">
-                        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">
+                        <x-admin.form-button type="submit" style="primary" loading>
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
                             {{ __('admin.save_changes') }}
-                        </button>
+                        </x-admin.form-button>
                     </div>
                 </div>
             </form>

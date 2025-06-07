@@ -128,7 +128,7 @@ class PostTranslations extends Component
      */
     public function cancelEdit()
     {
-        $this->resetFormFields();
+        $this->redirectRoute('admin.posts.index', navigate: true);
     }
     
     /**
