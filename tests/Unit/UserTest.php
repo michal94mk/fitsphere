@@ -44,10 +44,10 @@ class UserTest extends TestCase
         
         // User with image
         $user = User::factory()->create([
-            'image' => 'users/profile-image.jpg',
+            'image' => 'images/users/profile-image.jpg',
         ]);
         
-        $this->assertEquals(asset('storage/users/profile-image.jpg'), $user->getProfilePhotoUrlAttribute());
+        $this->assertEquals(asset('storage/images/users/profile-image.jpg'), $user->getProfilePhotoUrlAttribute());
     }
 
     public function test_user_has_relationships()

@@ -12,6 +12,13 @@ class TrainerFactory extends Factory
 
     public function definition(): array
     {
+        // Available trainer images
+        $trainerImages = [
+            'images/trainers/trainer1.jpg',
+            'images/trainers/trainer2.jpg',
+            'images/trainers/trainer3.jpg',
+        ];
+        
         return [
             'name' => $this->faker->name,
             'email' => $this->faker->unique()->safeEmail,
@@ -19,7 +26,7 @@ class TrainerFactory extends Factory
             'specialization' => $this->faker->randomElement(['Fitness', 'Yoga', 'Cardio', 'Strength', 'Pilates']),
             'description' => $this->faker->sentence,
             'bio' => $this->faker->sentence,
-            'image' => null,
+            'image' => $this->faker->randomElement($trainerImages),
             'experience' => $this->faker->numberBetween(1, 15),
             'is_approved' => true,
             'remember_token' => Str::random(10),

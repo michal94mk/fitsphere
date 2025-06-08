@@ -30,7 +30,7 @@ class TrainersCreate extends Component
         try {
             $imagePath = null;
             if ($this->photo) {
-                $imagePath = $this->photo->store('trainers', 'public');
+                $imagePath = $this->photo->store('images/trainers', 'public');
             }
             
             Trainer::create([

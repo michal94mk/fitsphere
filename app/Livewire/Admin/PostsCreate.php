@@ -57,7 +57,7 @@ class PostsCreate extends Component
             $post->user_id = Auth::id();
             
             if ($this->image) {
-                $imagePath = $this->image->store('posts', 'public');
+                $imagePath = $this->image->store('images/posts', 'public');
                 $post->image = $imagePath;
             }
             

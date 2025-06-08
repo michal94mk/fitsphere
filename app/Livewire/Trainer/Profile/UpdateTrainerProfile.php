@@ -81,7 +81,7 @@ class UpdateTrainerProfile extends Component
                 unlink(storage_path('app/public/' . $trainer->image));
             }
 
-            $imagePath = $this->newImage->store('trainers', 'public');
+                            $imagePath = $this->newImage->store('images/trainers', 'public');
             $trainer->image = $imagePath;
             $this->image = $imagePath;
         }

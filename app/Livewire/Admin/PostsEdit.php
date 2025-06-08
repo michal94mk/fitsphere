@@ -81,7 +81,7 @@ class PostsEdit extends Component
                     unlink(storage_path('app/public/' . $post->image));
                 }
                 
-                $imagePath = $this->image->store('posts', 'public');
+                $imagePath = $this->image->store('images/posts', 'public');
                 $post->image = $imagePath;
             }
             

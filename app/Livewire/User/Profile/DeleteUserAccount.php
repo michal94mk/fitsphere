@@ -66,8 +66,8 @@ class DeleteUserAccount extends Component
         $user = Auth::user();
 
         // Clean up user files
-        if ($user->profile_image && $user->profile_image !== 'users/default-avatar.png') {
-            Storage::disk('public')->delete($user->profile_image);
+        if ($user->image && $user->image !== 'images/users/default-avatar.png') {
+            Storage::disk('public')->delete($user->image);
         }
 
         $userId = $user->id;

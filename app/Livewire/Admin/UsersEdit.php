@@ -83,7 +83,7 @@ class UsersEdit extends Component
                 if ($user->image && Storage::disk('public')->exists($user->image)) {
                     Storage::disk('public')->delete($user->image);
                 }
-                $imagePath = $this->photo->store('users', 'public');
+                $imagePath = $this->photo->store('images/users', 'public');
             }
             
             $user->name = $this->name;
@@ -112,6 +112,14 @@ class UsersEdit extends Component
         $this->validate([
             'photo' => 'image|max:1024',
         ]);
+    }
+
+    public function updatedChangePassword()
+    {
+        if (!$this->changePassword) {
+            $this->password = '';
+            $this->password_confirmation = '';
+        }
     }
 
     public function removePhoto()

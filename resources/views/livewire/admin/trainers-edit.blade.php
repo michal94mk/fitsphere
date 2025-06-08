@@ -70,7 +70,7 @@
                         <h2 class="text-lg font-medium text-gray-900 border-b pb-2">{{ __('admin.change_password') }}</h2>
                         <div class="mt-4">
                             <label class="inline-flex items-center mb-4">
-                                <input type="checkbox" wire:model.live="changePassword" wire:click="toggleChangePassword" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                                <input type="checkbox" wire:model.live="changePassword" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                                 <span class="ml-2 text-sm text-gray-700">{{ __('admin.change_password_checkbox') }}</span>
                             </label>
                             

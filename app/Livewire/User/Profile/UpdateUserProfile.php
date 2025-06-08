@@ -86,7 +86,7 @@ class UpdateUserProfile extends Component
                 Storage::disk('public')->delete($user->image);
             }
             
-            $imagePath = $this->newImage->store('users', 'public');
+            $imagePath = $this->newImage->store('images/users', 'public');
             $user->image = $imagePath;
             $this->image = $imagePath;
         }

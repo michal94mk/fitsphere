@@ -17,6 +17,20 @@ class PostFactory extends Factory
         $title = $this->faker->sentence;
         $content = $this->faker->paragraphs(5, true);
         
+        // Available post images
+        $postImages = [
+            'images/posts/post1.jpg',
+            'images/posts/post2.jpg',
+            'images/posts/post3.jpg',
+            'images/posts/post4.jpg',
+            'images/posts/post5.jpg',
+            'images/posts/post6.jpg',
+            'images/posts/post7.jpg',
+            'images/posts/post8.jpg',
+            'images/posts/post9.jpg',
+            'images/posts/post10.jpg',
+        ];
+        
         return [
             'user_id' => User::factory(),
             'category_id' => Category::factory(),
@@ -26,6 +40,7 @@ class PostFactory extends Factory
             'content' => $content,
             'status' => $this->faker->randomElement(['draft', 'published']),
             'view_count' => $this->faker->numberBetween(0, 1000),
+            'image' => $this->faker->randomElement($postImages),
         ];
     }
     

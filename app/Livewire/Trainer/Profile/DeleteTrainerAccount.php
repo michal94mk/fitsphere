@@ -72,8 +72,8 @@ class DeleteTrainerAccount extends Component
 
         $trainerId = $trainer->id;
 
-        if ($trainer->profile_image && $trainer->profile_image !== 'trainers/default-avatar.png') {
-            Storage::disk('public')->delete($trainer->profile_image);
+        if ($trainer->image && $trainer->image !== 'images/trainers/default-avatar.png') {
+            Storage::disk('public')->delete($trainer->image);
         }
 
         try {

@@ -96,7 +96,7 @@ class TrainersEdit extends Component
                     // Delete the old image file
                     Storage::disk('public')->delete($trainer->image);
                 }
-                $imagePath = $this->photo->store('trainers', 'public');
+                $imagePath = $this->photo->store('images/trainers', 'public');
             }
             
             $trainer->name = $this->name;
@@ -129,6 +129,14 @@ class TrainersEdit extends Component
         ]);
     }
 
+    public function updatedChangePassword()
+    {
+        if (!$this->changePassword) {
+            $this->password = '';
+            $this->password_confirmation = '';
+        }
+    }
+
     public function removePhoto()
     {
         if ($this->currentImage) {
@@ -157,14 +165,7 @@ class TrainersEdit extends Component
         }
     }
     
-    public function toggleChangePassword()
-    {
-        $this->changePassword = !$this->changePassword;
-        if (!$this->changePassword) {
-            $this->password = '';
-            $this->password_confirmation = '';
-        }
-    }
+
 
     #[Layout('layouts.admin', ['header' => 'Edit Trainer'])]
     public function render()

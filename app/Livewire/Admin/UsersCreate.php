@@ -73,7 +73,7 @@ class UsersCreate extends Component
         $user->role = $this->role;
         
         if ($this->photo) {
-            $imagePath = $this->photo->store('users', 'public');
+            $imagePath = $this->photo->store('images/users', 'public');
             $user->image = $imagePath;
         }
         

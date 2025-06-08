@@ -130,7 +130,7 @@
                         <div class="flex items-center">
                             <div class="flex-shrink-0 h-10 w-10">
                                 <img class="h-10 w-10 rounded-full object-cover ring-2 ring-gray-200" 
-                                     src="{{ $trainer->image ? Storage::url($trainer->image) : 'https://ui-avatars.com/api/?name='.urlencode($trainer->name) }}" 
+                                     src="{{ $trainer->image ? asset('storage/' . $trainer->image) : 'https://ui-avatars.com/api/?name='.urlencode($trainer->name) }}" 
                                      alt="{{ $trainer->name }}">
                             </div>
                             <div class="ml-4">

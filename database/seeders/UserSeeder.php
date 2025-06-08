@@ -40,7 +40,7 @@ class UserSeeder extends Seeder
                 'email' => 'piotr.wisniewski@fitsphere.com',
                 'password' => 'Password123',
                 'role' => 'user',
-                'image' => 'images/users/user3.jpg',
+                'image' => 'images/users/user9.png',
             ],
             [
                 'name' => 'Magda Lewandowska',

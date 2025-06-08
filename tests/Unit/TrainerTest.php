@@ -47,10 +47,10 @@ class TrainerTest extends TestCase
         
         // Trainer with image
         $trainer = Trainer::factory()->create([
-            'image' => 'trainers/profile-image.jpg',
+            'image' => 'images/trainers/profile-image.jpg',
         ]);
         
-        $this->assertEquals(asset('storage/trainers/profile-image.jpg'), $trainer->getProfilePhotoUrlAttribute());
+        $this->assertEquals(asset('storage/images/trainers/profile-image.jpg'), $trainer->getProfilePhotoUrlAttribute());
     }
 
     public function test_trainer_has_relationships()
