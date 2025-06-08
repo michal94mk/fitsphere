@@ -37,7 +37,6 @@ class CategoryTest extends TestCase
             'category_id' => $category->id,
             'locale' => 'pl',
             'name' => 'Testowa Kategoria',
-            'description' => 'Opis testowej kategorii',
         ]);
         
         $this->assertCount(3, $category->posts);
@@ -55,7 +54,6 @@ class CategoryTest extends TestCase
             'category_id' => $category->id,
             'locale' => 'pl',
             'name' => 'Polska Kategoria',
-            'description' => 'Polski opis',
         ]);
         
         // Test translation exists
@@ -66,7 +64,6 @@ class CategoryTest extends TestCase
         
         // Test translated content
         $this->assertEquals('Polska Kategoria', $category->getTranslatedName());
-        $this->assertEquals('Polski opis', $category->getTranslatedDescription());
         
         // Test default locale fallback
         app()->setLocale('en');

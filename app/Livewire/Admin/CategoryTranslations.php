@@ -4,7 +4,6 @@ namespace App\Livewire\Admin;
 
 use App\Models\Category;
 use App\Models\CategoryTranslation;
-use Illuminate\Support\Str;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
 
@@ -15,7 +14,6 @@ class CategoryTranslations extends Component
     
     public $locale = 'pl';
     public $name;
-    public $description;
     
     public $translations = [];
     public $editingTranslationId = null;
@@ -38,7 +36,6 @@ class CategoryTranslations extends Component
         $this->editingTranslationId = null;
         $this->locale = 'pl';
         $this->name = '';
-        $this->description = '';
     }
     
     public function editTranslation($translationId)
@@ -48,7 +45,6 @@ class CategoryTranslations extends Component
         $this->editingTranslationId = $translation->id;
         $this->locale = $translation->locale;
         $this->name = $translation->name;
-        $this->description = $translation->description;
     }
     
     public function deleteTranslation($translationId)
@@ -66,9 +62,6 @@ class CategoryTranslations extends Component
             'locale' => 'required|in:en,pl',
             'name' => 'required|min:3',
         ]);
-        
-        // Generate slug from name
-        $slug = Str::slug($this->name);
         
         if ($this->editingTranslationId) {
             // Update existing translation
@@ -88,8 +81,6 @@ class CategoryTranslations extends Component
         }
         
         $translation->name = $this->name;
-        $translation->slug = $slug;
-        $translation->description = $this->description;
         $translation->save();
         
         $this->loadTranslations();

@@ -127,9 +127,7 @@ class FitnessContentSeeder extends Seeder
                         'locale' => $locale
                     ],
                     [
-                        'name' => $translationData['name'],
-                        'slug' => Str::slug($translationData['name']),
-                        'description' => $translationData['description'] ?? null
+                        'name' => $translationData['name']
                     ]
                 );
             }

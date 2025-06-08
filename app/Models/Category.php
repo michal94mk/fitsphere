@@ -40,10 +40,4 @@ class Category extends Model
         $translation = $this->translation();
         return $translation ? $translation->name : $this->name;
     }
-
-    public function getTranslatedDescription(): ?string
-    {
-        $translation = $this->translation();
-        return $translation ? $translation->description : null;
-    }
 }
