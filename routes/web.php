@@ -113,6 +113,10 @@ Route::middleware('guest')->group(function () {
     Route::get('/register', Register::class)->name('register');
     Route::get('/forgot-password', ForgotPassword::class)->name('password.request');
     Route::get('/reset-password/{token}', ResetPassword::class)->name('password.reset');
+    
+    // Google OAuth
+    Route::get('/auth/google', [App\Http\Controllers\Auth\SocialController::class, 'redirect']);
+    Route::get('/auth/google/callback', [App\Http\Controllers\Auth\SocialController::class, 'callback']);
 });
 
 // Email verification

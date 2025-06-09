@@ -22,6 +22,21 @@
         </div>
 
         <div class="bg-white py-8 px-4 shadow-xl sm:rounded-2xl sm:px-10 border border-gray-100">
+            {{-- Social Login Component --}}
+            <div class="mb-6">
+                <livewire:auth.social-login />
+            </div>
+
+            {{-- Divider --}}
+            <div class="relative my-6">
+                <div class="absolute inset-0 flex items-center">
+                    <div class="w-full border-t border-gray-300"></div>
+                </div>
+                <div class="relative flex justify-center text-sm">
+                    <span class="px-2 bg-white text-gray-500">lub utwórz konto ręcznie</span>
+                </div>
+            </div>
+
             <form wire:submit.prevent="register" class="space-y-6">
                 <div>
                     <label for="name" class="block text-sm font-medium text-gray-700">Login</label>

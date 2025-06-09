@@ -31,6 +31,10 @@ return [
     'role' => 'Rola',
     'user' => 'użytkownik',
     'trainer' => 'Trener',
+    'login_method' => 'Metoda logowania',
+    'social_login_account' => 'Konto społecznościowe',
+    'password_managed_by_provider' => 'Hasło jest zarządzane przez zewnętrznego dostawcę uwierzytelniania.',
+    'social_account_deletion_notice' => 'Jako użytkownik logujący się przez Google nie musisz podawać hasła do usunięcia konta.',
     
     // Trainer profile specific
     'trainer_info' => 'Informacje o profilu trenera',

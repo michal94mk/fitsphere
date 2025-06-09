@@ -134,6 +134,10 @@ return [
     'last_updated' => 'Last Updated',
     'delete_confirmation' => 'Delete User',
     'delete_confirmation_message' => 'Are you sure you want to delete this user? This operation cannot be undone.',
+    'login_method' => 'Login method',
+    'social_login_user' => 'Social login user',
+    'logged_in_via' => 'Logged in via',
+    'password_managed_externally' => 'Password is managed by external provider.',
     
     // Posts management
     'manage_posts' => 'Manage Posts',

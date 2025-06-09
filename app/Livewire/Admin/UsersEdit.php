@@ -24,6 +24,8 @@ class UsersEdit extends Component
     public $currentImage = '';
     public $existing_photo = null;
     public $changePassword = false;
+    public $provider = null;
+    public $provider_id = null;
     
     public function mount($id)
     {
@@ -34,6 +36,8 @@ class UsersEdit extends Component
         $this->email = $user->email;
         $this->role = $user->role;
         $this->currentImage = $user->image;
+        $this->provider = $user->provider;
+        $this->provider_id = $user->provider_id;
         
         // Set existing_photo based on currentImage
         if ($this->currentImage) {
@@ -120,6 +124,11 @@ class UsersEdit extends Component
             $this->password = '';
             $this->password_confirmation = '';
         }
+    }
+    
+    public function canChangePassword()
+    {
+        return !$this->provider; // Only allow password change for non-social users
     }
 
     public function removePhoto()

@@ -134,6 +134,10 @@ return [
     'last_updated' => 'Ostatnia aktualizacja',
     'delete_confirmation' => 'Usuń użytkownika',
     'delete_confirmation_message' => 'Czy na pewno chcesz usunąć tego użytkownika? Ta operacja nie może być cofnięta.',
+    'login_method' => 'Metoda logowania',
+    'social_login_user' => 'Użytkownik logujący się przez dostawcę zewnętrznego',
+    'logged_in_via' => 'Zalogowany przez',
+    'password_managed_externally' => 'Hasło zarządzane jest przez zewnętrznego dostawcę.',
     
     // Posts management
     'manage_posts' => 'Zarządzaj postami',

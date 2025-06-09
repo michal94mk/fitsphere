@@ -11,6 +11,9 @@ use App\Models\Trainer;
 use App\Services\EmailService;
 use App\Services\LogService;
 use App\Services\TranslationService;
+use GuzzleHttp\Client;
+use Laravel\Socialite\SocialiteServiceProvider;
+
 
 
 class AppServiceProvider extends ServiceProvider
@@ -38,6 +41,20 @@ class AppServiceProvider extends ServiceProvider
     {
         Model::preventLazyLoading(!app()->isProduction());
         
+        // Disable SSL verification for Windows development
+        if ($this->app->environment('local') && strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+            // Set global defaults for Guzzle
+            $this->app->bind(Client::class, function () {
+                return new Client([
+                    'verify' => false,
+                    'curl' => [
+                        CURLOPT_SSL_VERIFYPEER => 0,
+                        CURLOPT_SSL_VERIFYHOST => 0,
+                    ]
+                ]);
+            });
+        }
+        
         // Clear existing listeners for the Registered event
         $events = $this->app['events'];
         $events->forget(Registered::class);
@@ -54,5 +71,7 @@ class AppServiceProvider extends ServiceProvider
                 (new SendEmailVerificationNotification)->handle($event);
             }
         });
+
+
     }
 }

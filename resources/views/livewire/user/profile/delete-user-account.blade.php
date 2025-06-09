@@ -8,6 +8,7 @@
             </p>
         </div>
 
+        @if(!Auth::user()->provider)
         <div class="mt-4">
             <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
                 {{ __('profile.password') }}
@@ -23,6 +24,18 @@
                 </div>
             @endif
         </div>
+        @else
+        <div class="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+            <div class="flex items-center space-x-3">
+                <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <p class="text-sm text-blue-700">
+                    {{ __('profile.social_account_deletion_notice') }}
+                </p>
+            </div>
+        </div>
+        @endif
 
         <div class="mt-5">
             <button wire:click="validatePasswordAndOpenModal" wire:loading.attr="disabled" 

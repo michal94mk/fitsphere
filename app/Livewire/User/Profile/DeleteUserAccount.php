@@ -21,6 +21,17 @@ class DeleteUserAccount extends Component
 
     public function validatePasswordAndOpenModal()
     {
+        $user = Auth::user();
+        
+        // For social login users (no password required)
+        if ($user->provider) {
+            $this->passwordValidated = true;
+            $this->errorMessage = '';
+            $this->showDeleteModal = true;
+            return;
+        }
+        
+        // For regular users (password required)
         if (empty($this->password)) {
             $this->errorMessage = __('profile.password_required');
             return;
@@ -29,8 +40,6 @@ class DeleteUserAccount extends Component
         $this->validate([
             'password' => 'required',
         ]);
-
-        $user = Auth::user();
 
         if (!Hash::check($this->password, $user->password)) {
             $this->errorMessage = __('profile.password_incorrect');
@@ -58,12 +67,14 @@ class DeleteUserAccount extends Component
      */
     public function deleteAccount()
     {
-        if (!$this->passwordValidated) {
+        $user = Auth::user();
+        
+        // For regular users, require password validation
+        // For social login users, skip password validation
+        if (!$user->provider && !$this->passwordValidated) {
             $this->errorMessage = __('profile.verify_first');
             return;
         }
-
-        $user = Auth::user();
 
         // Clean up user files
         if ($user->image && $user->image !== 'images/users/default-avatar.png') {

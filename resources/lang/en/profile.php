@@ -31,6 +31,10 @@ return [
     'role' => 'Role',
     'user' => 'user',
     'trainer' => 'Trainer',
+    'login_method' => 'Login method',
+    'social_login_account' => 'Social login account',
+    'password_managed_by_provider' => 'Password is managed by the external authentication provider.',
+    'social_account_deletion_notice' => 'As a Google user, you don\'t need to enter a password to delete your account.',
     
     // Trainer profile specific
     'trainer_info' => 'Trainer profile information',

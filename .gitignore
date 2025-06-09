@@ -23,3 +23,7 @@ yarn-error.log
 /.zed
 /public/videos
 /public/images
+
+# SSL certificates
+cacert.pem
+*.pem

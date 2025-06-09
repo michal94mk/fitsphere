@@ -32,6 +32,12 @@ class UpdatePassword extends Component
         }
         
         $this->user = Auth::user();
+        
+        // Redirect social login users - they don't have passwords
+        if ($this->user->provider) {
+            session()->flash('info', __('profile.social_login_no_password'));
+            return redirect()->route('profile');
+        }
     }
 
     /**
