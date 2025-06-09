@@ -23,10 +23,10 @@ class PostsCreate extends Component
     public $image;
     
     protected $rules = [
-        'title' => 'required|min:3',
+        'title' => 'required|min:3|max:200',
         'slug' => 'required|unique:posts',
         'excerpt' => 'nullable|max:500',
-        'content' => 'required',
+        'content' => 'required|min:10|max:15000',
         'status' => 'required|in:published,draft',
         'category_id' => 'nullable|exists:categories,id',
         'image' => 'nullable|image|max:1024'

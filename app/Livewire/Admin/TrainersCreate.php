@@ -23,6 +23,50 @@ class TrainersCreate extends Component
     public $is_approved = false;
     public $experience = 0;
 
+    /**
+     * Real-time validation on input change
+     */
+    public function updated($propertyName)
+    {
+        // Sanitize input
+        $this->sanitizeInput($propertyName);
+        
+        // Clear previous errors
+        $this->resetErrorBag($propertyName);
+        
+        // Validate only the updated field (except for photo)
+        if ($propertyName !== 'photo') {
+            $this->validateOnly($propertyName);
+        }
+    }
+
+    /**
+     * Sanitize user input for security
+     */
+    private function sanitizeInput(string $propertyName): void
+    {
+        switch($propertyName) {
+            case 'name':
+                $this->name = trim(strip_tags($this->name));
+                break;
+            case 'email':
+                $this->email = trim(strtolower(strip_tags($this->email)));
+                break;
+            case 'specialization':
+                $this->specialization = trim(strip_tags($this->specialization));
+                break;
+            case 'description':
+                $this->description = trim(strip_tags($this->description, '<br><p><strong><em><u>'));
+                break;
+            case 'biography':
+                $this->biography = trim(strip_tags($this->biography, '<br><p><strong><em><u>'));
+                break;
+            case 'experience':
+                $this->experience = (int) $this->experience;
+                break;
+        }
+    }
+
     public function save()
     {
         $this->validate();
@@ -63,36 +107,151 @@ class TrainersCreate extends Component
         ]);
     }
 
+    /**
+     * Enhanced validation rules with proper security limits
+     */
     protected function rules()
     {
         return [
-            'name' => 'required|string|min:3|max:50|regex:/^[\pL\s\-\']+$/u',
-            'email' => 'required|string|email:rfc,dns|max:255|unique:trainers',
-            'password' => 'required|string|min:8|confirmed|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/',
-            'specialization' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'biography' => 'nullable|string',
-            'photo' => 'nullable|image|max:1024', // 1MB Max
-            'is_approved' => 'boolean',
-            'experience' => 'nullable|integer|min:0|max:100',
+            'name' => [
+                'required',
+                'string',
+                'min:2',
+                'max:50',
+                'regex:/^[\pL\s\-\'\.\u{00C0}-\u{017F}]+$/u',
+            ],
+            'email' => [
+                'required',
+                'string',
+                'email:rfc,dns',
+                'max:100',
+                'unique:trainers,email',
+                'unique:users,email',
+                'regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/',
+            ],
+            'password' => [
+                'required',
+                'string',
+                'min:8',
+                'max:128',
+                'confirmed',
+                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/',
+            ],
+            'password_confirmation' => [
+                'required',
+                'string',
+                'min:8',
+                'max:128',
+            ],
+            'specialization' => [
+                'required',
+                'string',
+                'min:3',
+                'max:100',
+                'regex:/^[\pL\s\-\'\.\,\(\)\/\&\u{00C0}-\u{017F}]+$/u',
+            ],
+            'description' => [
+                'nullable',
+                'string',
+                'max:500',
+                'regex:/^[\pL\pN\s\-\'\.\,\!\?\:\;\(\)\"\/\&\@\#\$\%\+\=\*\[\]\{\}\|\\\\\u{00C0}-\u{017F}\r\n]*$/u',
+            ],
+            'biography' => [
+                'nullable',
+                'string',
+                'max:2000',
+                'regex:/^[\pL\pN\s\-\'\.\,\!\?\:\;\(\)\"\/\&\@\#\$\%\+\=\*\[\]\{\}\|\\\\\u{00C0}-\u{017F}\r\n]*$/u',
+            ],
+            'photo' => [
+                'nullable',
+                'image',
+                'max:1024',
+                'mimes:jpeg,jpg,png,webp',
+                'dimensions:min_width=100,min_height=100,max_width=1500,max_height=1500',
+            ],
+            'is_approved' => [
+                'boolean',
+            ],
+            'experience' => [
+                'nullable',
+                'integer',
+                'min:0',
+                'max:50',
+            ],
         ];
     }
 
+    /**
+     * Custom validation attributes
+     */
+    protected function validationAttributes(): array
+    {
+        return [
+            'name' => __('validation.attributes.full_name'),
+            'email' => __('validation.attributes.email_address'),
+            'password' => __('validation.attributes.password'),
+            'password_confirmation' => __('validation.attributes.password_confirmation'),
+            'specialization' => __('validation.attributes.specialization'),
+            'description' => __('validation.attributes.description'),
+            'biography' => __('validation.attributes.biography'),
+            'photo' => __('validation.attributes.profile_photo'),
+            'experience' => __('validation.attributes.experience'),
+        ];
+    }
+
+    /**
+     * Enhanced validation messages
+     */
     protected function messages()
     {
         return [
+            // Name validation
             'name.required' => __('validation.user.name.required'),
-            'name.regex' => __('validation.user.name.regex'),
+            'name.min' => __('validation.user.name.min'),
+            'name.max' => __('validation.user.name.max'),
+            'name.regex' => __('validation.user.name.format'),
+            
+            // Email validation
             'email.required' => __('validation.user.email.required'),
-            'email.email' => __('validation.user.email.email'),
+            'email.email' => __('validation.user.email.format'),
+            'email.max' => __('validation.user.email.max'),
             'email.unique' => __('validation.user.email.unique'),
+            'email.regex' => __('validation.user.email.format'),
+            
+            // Password validation
             'password.required' => __('validation.user.password.required'),
-            'password.min' => __('validation.user.password.min', ['min' => 8]),
+            'password.min' => __('validation.user.password.min'),
+            'password.max' => __('validation.user.password.max'),
             'password.confirmed' => __('validation.user.password.confirmed'),
-            'password.regex' => __('validation.user.password.regex'),
+            'password.regex' => __('validation.user.password.complex'),
+            
+            // Password confirmation
+            'password_confirmation.required' => __('validation.user.password_confirmation.required'),
+            'password_confirmation.min' => __('validation.user.password_confirmation.min'),
+            'password_confirmation.max' => __('validation.user.password_confirmation.max'),
+            
+            // Specialization
             'specialization.required' => __('validation.user.specialization.required'),
-            'photo.image' => __('validation.user.image.image'),
-            'photo.max' => __('validation.user.image.max', ['max' => 1024]),
+            'specialization.min' => __('validation.user.specialization.min'),
+            'specialization.max' => __('validation.user.specialization.max'),
+            'specialization.regex' => __('validation.user.specialization.format'),
+            
+            // Description and Biography
+            'description.max' => __('validation.trainer.description.max'),
+            'description.regex' => __('validation.trainer.description.format'),
+            'biography.max' => __('validation.trainer.biography.max'),
+            'biography.regex' => __('validation.trainer.biography.format'),
+            
+            // Photo validation
+            'photo.image' => __('validation.user.photo.image'),
+            'photo.max' => __('validation.user.photo.max'),
+            'photo.mimes' => __('validation.user.photo.mimes'),
+            'photo.dimensions' => __('validation.user.photo.dimensions'),
+            
+            // Experience
+            'experience.integer' => __('validation.trainer.experience.integer'),
+            'experience.min' => __('validation.trainer.experience.min'),
+            'experience.max' => __('validation.trainer.experience.max'),
         ];
     }
 

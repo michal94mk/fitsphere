@@ -13,7 +13,7 @@ class CategoriesCreate extends Component
     protected function rules()
     {
         return [
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|min:2|max:50',
         ];
     }
     

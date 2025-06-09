@@ -17,12 +17,20 @@ use Livewire\Attributes\Layout;
 class Register extends Component
 {
     // Registration form fields
-    public $name;
-    public $email;
-    public $password;
-    public $password_confirmation;
+    public $name = '';
+    public $email = '';
+    public $password = '';
+    public $password_confirmation = '';
     public $account_type = 'regular';
-    public $specialization;
+    public $specialization = '';
+    
+    // Real-time validation
+    protected $validateAttributes = [
+        'name' => 'name',
+        'email' => 'email', 
+        'password' => 'password',
+        'specialization' => 'specialization'
+    ];
     
     /**
      * Sets form to trainer mode if specified in URL parameters
@@ -35,44 +43,151 @@ class Register extends Component
     }
 
     /**
-     * Validation rules change based on account type selected
+     * Real-time validation on field update
+     */
+    public function updated($propertyName)
+    {
+        // Sanitize input
+        $this->sanitizeInput($propertyName);
+        
+        // Validate only the updated field
+        $this->validateOnly($propertyName);
+    }
+    
+    /**
+     * Sanitize user input to prevent XSS and clean data
+     */
+    private function sanitizeInput($propertyName)
+    {
+        switch($propertyName) {
+            case 'name':
+                $this->name = trim(strip_tags($this->name));
+                break;
+            case 'email':
+                $this->email = trim(strtolower(strip_tags($this->email)));
+                break;
+            case 'specialization':
+                $this->specialization = trim(strip_tags($this->specialization));
+                break;
+        }
+    }
+
+    /**
+     * Improved validation rules with proper limits and security
      */
     protected function rules()
     {
         $rules = [
-            'name'                  => 'required|string|min:3|max:50|regex:/^[\pL\s\-\']+$/u',
-            'email'                 => 'required|email:rfc,dns',
-            'password'              => 'required|min:8|confirmed|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/',
-            'account_type'          => 'required|in:regular,trainer',
+            'name' => [
+                'required',
+                'string',
+                'min:2',
+                'max:50',
+                'regex:/^[\pL\s\-\'\.\u{00C0}-\u{017F}]+$/u', // Supports international characters
+            ],
+            'email' => [
+                'required',
+                'string',
+                'email:rfc,dns',
+                'max:100',
+                'regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/',
+            ],
+            'password' => [
+                'required',
+                'string',
+                'min:8',
+                'max:128',
+                'confirmed',
+                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/', // Requires special character
+            ],
+            'password_confirmation' => [
+                'required',
+                'string',
+                'min:8',
+                'max:128',
+            ],
+            'account_type' => [
+                'required',
+                'string',
+                'in:regular,trainer',
+            ],
         ];
 
+        // Add email uniqueness validation based on account type
         if ($this->account_type === 'regular') {
-            $rules['email'] .= '|unique:users,email';
+            $rules['email'][] = 'unique:users,email';
+            $rules['email'][] = 'not_in:' . collect(\App\Models\Trainer::pluck('email'))->implode(',');
         } else {
-            $rules['email'] .= '|unique:trainers,email';
-            $rules['specialization'] = 'required|string|max:255';
+            $rules['email'][] = 'unique:trainers,email'; 
+            $rules['email'][] = 'not_in:' . collect(\App\Models\User::pluck('email'))->implode(',');
+            $rules['specialization'] = [
+                'required',
+                'string',
+                'min:3',
+                'max:100',
+                'regex:/^[\pL\s\-\'\.\,\(\)\/\&]+$/u', // Professional specialization format
+            ];
         }
 
         return $rules;
     }
 
     /**
-     * Custom error messages for validation
+     * Custom validation attributes for better error messages
+     */
+    protected function validationAttributes()
+    {
+        return [
+            'name' => __('validation.attributes.full_name'),
+            'email' => __('validation.attributes.email_address'),
+            'password' => __('validation.attributes.password'),
+            'password_confirmation' => __('validation.attributes.password_confirmation'),
+            'account_type' => __('validation.attributes.account_type'),
+            'specialization' => __('validation.attributes.specialization'),
+        ];
+    }
+
+    /**
+     * Enhanced error messages with detailed explanations
      */
     protected function messages()
     {
         return [
+            // Name validation messages
             'name.required' => __('validation.user.name.required'),
+            'name.min' => __('validation.user.name.min'),
+            'name.max' => __('validation.user.name.max'),
             'name.regex' => __('validation.user.name.regex'),
+            
+            // Email validation messages
             'email.required' => __('validation.user.email.required'),
-            'email.email' => __('validation.user.email.email'),
+            'email.email' => __('validation.user.email.format'),
             'email.unique' => __('validation.user.email.unique'),
-            'email.dns' => __('validation.user.email.dns'),
+            'email.max' => __('validation.user.email.max'),
+            'email.regex' => __('validation.user.email.format'),
+            'email.not_in' => __('validation.user.email.exists_other_type'),
+            
+            // Password validation messages
             'password.required' => __('validation.user.password.required'),
-            'password.min' => __('validation.user.password.min', ['min' => 8]),
+            'password.min' => __('validation.user.password.min'),
+            'password.max' => __('validation.user.password.max'),
             'password.confirmed' => __('validation.user.password.confirmed'),
-            'password.regex' => __('validation.user.password.regex'),
+            'password.regex' => __('validation.user.password.complex'),
+            
+            // Password confirmation
+            'password_confirmation.required' => __('validation.user.password_confirmation.required'),
+            'password_confirmation.min' => __('validation.user.password_confirmation.min'),
+            'password_confirmation.max' => __('validation.user.password_confirmation.max'),
+            
+            // Account type
+            'account_type.required' => __('validation.user.account_type.required'),
+            'account_type.in' => __('validation.user.account_type.invalid'),
+            
+            // Specialization (trainers only)
             'specialization.required' => __('validation.user.specialization.required'),
+            'specialization.min' => __('validation.user.specialization.min'),
+            'specialization.max' => __('validation.user.specialization.max'),
+            'specialization.regex' => __('validation.user.specialization.format'),
         ];
     }
 

@@ -28,15 +28,104 @@ class ContactPage extends Component
         $this->logService = app(LogService::class);
     }
 
+    /**
+     * Enhanced validation rules with proper security limits
+     */
     protected array $rules = [
-        'name'    => 'required|string|min:3|max:255',
-        'email'   => 'required|email|min:3|max:255',
-        'message' => 'required|string|min:3|max:1000',
+        'name' => [
+            'required',
+            'string',
+            'min:2',
+            'max:50',
+            'regex:/^[\pL\s\-\'\.\u{00C0}-\u{017F}]+$/u', // International characters support
+        ],
+        'email' => [
+            'required',
+            'email:rfc,dns',
+            'max:100',
+            'regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/',
+        ],
+        'message' => [
+            'required',
+            'string',
+            'min:10',
+            'max:1000',
+            'regex:/^[\pL\pN\s\-\'\.\,\!\?\:\;\(\)\"\/\&\@\#\$\%\+\=\*\[\]\{\}\|\\\\\u{00C0}-\u{017F}\r\n]+$/u',
+        ],
     ];
 
+    /**
+     * Custom validation attributes
+     */
+    protected function validationAttributes(): array
+    {
+        return [
+            'name' => __('validation.attributes.full_name'),
+            'email' => __('validation.attributes.email_address'),
+            'message' => __('validation.attributes.message'),
+        ];
+    }
+
+    /**
+     * Custom validation messages
+     */
+    protected function messages(): array
+    {
+        return [
+            // Name validation
+            'name.required' => __('validation.contact.name.required'),
+            'name.min' => __('validation.contact.name.min'),
+            'name.max' => __('validation.contact.name.max'),
+            'name.regex' => __('validation.contact.name.format'),
+            
+            // Email validation
+            'email.required' => __('validation.contact.email.required'),
+            'email.email' => __('validation.contact.email.format'),
+            'email.max' => __('validation.contact.email.max'),
+            'email.regex' => __('validation.contact.email.format'),
+            
+            // Message validation
+            'message.required' => __('validation.contact.message.required'),
+            'message.min' => __('validation.contact.message.min'),
+            'message.max' => __('validation.contact.message.max'),
+            'message.regex' => __('validation.contact.message.format'),
+        ];
+    }
+
+    /**
+     * Real-time validation with input sanitization
+     */
     public function updated($propertyName)
     {
+        // Sanitize input first
+        $this->sanitizeInput($propertyName);
+        
+        // Clear previous errors for this field
         $this->resetErrorBag($propertyName);
+        
+        // Validate only the updated field
+        $this->validateOnly($propertyName);
+    }
+
+    /**
+     * Sanitize user input for security
+     */
+    private function sanitizeInput(string $propertyName): void
+    {
+        switch($propertyName) {
+            case 'name':
+                $this->name = trim(strip_tags($this->name));
+                break;
+            case 'email':
+                $this->email = trim(strtolower(strip_tags($this->email)));
+                break;
+            case 'message':
+                // Allow basic HTML but strip dangerous tags
+                $this->message = trim(strip_tags($this->message, '<br><p><strong><em><u>'));
+                // Remove excessive whitespace
+                $this->message = preg_replace('/\s+/', ' ', $this->message);
+                break;
+        }
     }
 
     /**

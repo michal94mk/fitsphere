@@ -20,33 +20,145 @@ class UsersCreate extends Component
     public $role = 'user';
     public $photo;
     
+    /**
+     * Real-time validation on input change
+     */
+    public function updated($propertyName)
+    {
+        // Sanitize input
+        $this->sanitizeInput($propertyName);
+        
+        // Clear previous errors
+        $this->resetErrorBag($propertyName);
+        
+        // Validate only the updated field
+        $this->validateOnly($propertyName);
+    }
+    
+    /**
+     * Sanitize user input for security
+     */
+    private function sanitizeInput(string $propertyName): void
+    {
+        switch($propertyName) {
+            case 'name':
+                $this->name = trim(strip_tags($this->name));
+                break;
+            case 'email':
+                $this->email = trim(strtolower(strip_tags($this->email)));
+                break;
+            case 'role':
+                $this->role = trim(strip_tags($this->role));
+                break;
+        }
+    }
+    
+    /**
+     * Enhanced validation rules with proper security limits
+     */
     protected function rules()
     {
         return [
-            'name' => 'required|string|min:3|max:50|regex:/^[\pL\s\-\']+$/u',
-            'email' => 'required|string|email:rfc,dns|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/',
-            'role' => 'required|in:admin,user',
-            'photo' => 'nullable|image|max:1024'
+            'name' => [
+                'required',
+                'string',
+                'min:2',
+                'max:50',
+                'regex:/^[\pL\s\-\'\.\u{00C0}-\u{017F}]+$/u',
+            ],
+            'email' => [
+                'required',
+                'string',
+                'email:rfc,dns',
+                'max:100',
+                'unique:users,email',
+                'unique:trainers,email',
+                'regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/',
+            ],
+            'password' => [
+                'required',
+                'string',
+                'min:8',
+                'max:128',
+                'confirmed',
+                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/',
+            ],
+            'password_confirmation' => [
+                'required',
+                'string',
+                'min:8',
+                'max:128',
+            ],
+            'role' => [
+                'required',
+                'string',
+                'in:admin,user',
+            ],
+            'photo' => [
+                'nullable',
+                'image',
+                'max:1024',
+                'mimes:jpeg,jpg,png,webp',
+                'dimensions:min_width=100,min_height=100,max_width=1500,max_height=1500',
+            ],
         ];
     }
     
+    /**
+     * Custom validation attributes
+     */
+    protected function validationAttributes(): array
+    {
+        return [
+            'name' => __('validation.attributes.full_name'),
+            'email' => __('validation.attributes.email_address'),
+            'password' => __('validation.attributes.password'),
+            'password_confirmation' => __('validation.attributes.password_confirmation'),
+            'role' => __('validation.attributes.user_role'),
+            'photo' => __('validation.attributes.profile_photo'),
+        ];
+    }
+    
+    /**
+     * Enhanced validation messages
+     */
     protected function messages()
     {
         return [
+            // Name validation
             'name.required' => __('validation.user.name.required'),
-            'name.regex' => __('validation.user.name.regex'),
+            'name.min' => __('validation.user.name.min'),
+            'name.max' => __('validation.user.name.max'),
+            'name.regex' => __('validation.user.name.format'),
+            
+            // Email validation
             'email.required' => __('validation.user.email.required'),
-            'email.email' => __('validation.user.email.email'),
+            'email.email' => __('validation.user.email.format'),
+            'email.max' => __('validation.user.email.max'),
             'email.unique' => __('validation.user.email.unique'),
+            'email.regex' => __('validation.user.email.format'),
+            
+            // Password validation
             'password.required' => __('validation.user.password.required'),
-            'password.min' => __('validation.user.password.min', ['min' => 8]),
+            'password.min' => __('validation.user.password.min'),
+            'password.max' => __('validation.user.password.max'),
             'password.confirmed' => __('validation.user.password.confirmed'),
-            'password.regex' => __('validation.user.password.regex'),
+            'password.regex' => __('validation.user.password.complex'),
+            
+            // Password confirmation
+            'password_confirmation.required' => __('validation.user.password_confirmation.required'),
+            'password_confirmation.min' => __('validation.user.password_confirmation.min'),
+            'password_confirmation.max' => __('validation.user.password_confirmation.max'),
+            
+            // Role validation
             'role.required' => __('validation.user.role.required'),
-            'role.in' => __('validation.user.role.in'),
-            'photo.image' => __('validation.user.image.image'),
-            'photo.max' => __('validation.user.image.max', ['max' => 1024]),
+            'role.in' => __('validation.user.role.invalid'),
+            
+            // Photo validation
+            'photo.image' => __('validation.user.photo.image'),
+            'photo.max' => __('validation.user.photo.max'),
+            'photo.mimes' => __('validation.user.photo.mimes'),
+            'photo.dimensions' => __('validation.user.photo.dimensions'),
         ];
     }
     

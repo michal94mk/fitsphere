@@ -24,7 +24,7 @@ class CategoriesEdit extends Component
     protected function rules()
     {
         return [
-            'name' => ['required', 'string', 'max:255', Rule::unique('categories')->ignore($this->categoryId)],
+            'name' => ['required', 'string', 'min:2', 'max:50', Rule::unique('categories')->ignore($this->categoryId)],
         ];
     }
     
@@ -32,7 +32,8 @@ class CategoriesEdit extends Component
     {
         return [
             'name.required' => __('validation.required', ['attribute' => 'name']),
-            'name.max' => __('validation.max.string', ['attribute' => 'name', 'max' => 255]),
+            'name.min' => __('validation.min.string', ['attribute' => 'name', 'min' => 2]),
+            'name.max' => __('validation.max.string', ['attribute' => 'name', 'max' => 50]),
             'name.unique' => __('validation.unique', ['attribute' => 'name']),
         ];
     }
