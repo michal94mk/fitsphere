@@ -1,391 +1,258 @@
-<p align="center">
-<h1 align="center">FitSphere</h1>
-<p align="center">Fitness application built with Laravel, Livewire, Tailwind CSS and Alpine.js</p>
+# FitSphere
 
 <p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+  <img src="https://img.shields.io/badge/Laravel-11-red?style=flat&logo=laravel" alt="Laravel 12">
+  <img src="https://img.shields.io/badge/Livewire-3-blue?style=flat&logo=livewire" alt="Livewire 3">
+  <img src="https://img.shields.io/badge/TailwindCSS-3-blue?style=flat&logo=tailwindcss" alt="Tailwind CSS">
+  <img src="https://img.shields.io/badge/AlpineJS-3-green?style=flat&logo=alpine.js" alt="Alpine.js">
+  <img src="https://img.shields.io/badge/PHP-8.2+-purple?style=flat&logo=php" alt="PHP 8.4+">
 </p>
 
-## About FitSphere
+**FitSphere** is a comprehensive fitness and wellness application built with the TALL stack (Tailwind CSS, Alpine.js, Laravel, Livewire). It provides tools for fitness enthusiasts to connect with trainers, track nutrition, plan meals, and access fitness content.
 
-FitSphere is a comprehensive fitness application built with Laravel, Livewire, Tailwind CSS, and Alpine.js. It provides tools for fitness enthusiasts to track workouts, plan meals, calculate nutrition, and connect with trainers.
+## 🌟 Features
 
-## Learning Laravel
+### 👥 User Management
+- **Multi-role system**: Regular users, trainers, and administrators
+- **User authentication**: Registration, login, email verification
+- **Profile management**: Update personal information, photos, passwords
+- **Social login**: Google OAuth integration
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 🏋️ Trainer System
+- **Trainer profiles**: Detailed profiles with specializations, experience, photos
+- **Trainer approval**: Admin approval system for new trainers
+- **Reservation system**: Users can book training sessions with trainers
+- **Time slot management**: Visual calendar with availability tracking
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### 📚 Content Management
+- **Blog system**: Fitness articles and tips
+- **Categories**: Organized content categorization
+- **Comments**: User engagement on posts
+- **Multi-language**: English and Polish content support
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 🍎 Nutrition Tools
+- **BMI Calculator**: Calculate Body Mass Index
+- **Calorie Calculator**: Daily calorie needs based on goals and activity
+- **Macro Calculator**: Protein, carbs, and fat recommendations
+- **Recipe Search**: Integration with Spoonacular API
+- **Recipe Translation**: Automatic Polish translations using DeepL API
+- **Nutritional Profiles**: Save and track personal nutrition data
 
-## Laravel Sponsors
+### 🛠 Admin Panel
+- **User Management**: Create, edit, and manage users
+- **Trainer Management**: Approve trainers, manage profiles
+- **Content Management**: Create and edit blog posts and categories
+- **Comment Moderation**: Review and manage user comments
+- **Dashboard**: Overview of system statistics
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### 🌐 Additional Features
+- **Multilingual Support**: English and Polish with automatic locale detection
+- **Responsive Design**: Mobile-first approach with Tailwind CSS
+- **Email System**: Automated emails for registration, verification, notifications
+- **Search Functionality**: Find posts, trainers, and content
+- **Contact Form**: Direct communication with administrators
 
-### Premium Partners
+## 🚀 Technology Stack
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+- **Backend**: Laravel 11 with PHP 8.2+
+- **Frontend**: Livewire 3, Alpine.js 3, Tailwind CSS 3
+- **Database**: MySQL/PostgreSQL
+- **Email**: Brevo (Sendinblue) SMTP with queue system
+- **File Storage**: Local/S3 compatible storage
+- **APIs**: Spoonacular (recipes), DeepL (translations), Google OAuth
 
-## Features
+## 📋 Requirements
 
-- Modern responsive design using Tailwind CSS
-- Multi-language support (English and Polish)
-- Advanced fitness tracking system
-- User management and role-based permissions
-- Nutrition Calculator with automated recipe translations
-  - Uses DeepL API for accurate recipe translations (English ↔ Polish)
-  - Automatically translates recipes to Polish when using Polish language
-  - Bidirectional translation support for recipe searches
-  - Manual translation toggle for user control
-  - Caching mechanism to reduce API calls
-- Meal planning system
-- Contact form with email notifications
-- Social media integration
+- PHP 8.2 or higher
+- Composer
+- Node.js & NPM
+- MySQL 8.0+ or PostgreSQL 13+
+- Web server (Apache/Nginx)
 
-## Database Seeders
+## ⚡ Quick Start
 
-The application comes with several database seeders to populate the database with sample data:
-
-- **UserSeeder** - Creates 8 sample users (1 admin and 7 regular users)
-- **TrainerSeeder** - Adds 3 fitness trainers with different specializations
-- **FitnessContentSeeder** - Populates the database with fitness-related content:
-  - 10 fitness categories
-  - 30+ blog posts about training, nutrition, and supplements
-  - Multilingual content (English and Polish translations)
-  - Sample comments from users
-
-To seed the database, run:
+### 1. Clone the Repository
 ```bash
-# Run all seeders
-php artisan db:seed
-
-# Run a specific seeder
-php artisan db:seed --class=UserSeeder
+git clone https://github.com/your-username/fitsphere.git
+cd fitsphere
 ```
 
-## Configuration
+### 2. Install Dependencies
+```bash
+# PHP dependencies
+composer install
+
+# JavaScript dependencies
+npm install
+npm run build
+```
+
+### 3. Environment Configuration
+```bash
+# Copy environment file
+cp .env.example .env
+
+# Generate application key
+php artisan key:generate
+```
+
+### 4. Database Setup
+```bash
+# Run migrations
+php artisan migrate
+
+# Seed with sample data
+php artisan db:seed
+```
+
+### 5. Start Development Server
+```bash
+# Start Laravel server
+php artisan serve
+
+# Start queue worker (in separate terminal)
+php artisan queue:work
+```
+
+Visit `http://localhost:8000` in your browser.
+
+## 🔧 Configuration
 
 ### Email Configuration (Brevo)
-
-FitSphere uses Brevo (formerly Sendinblue) for sending emails in production. The application includes:
-
-- **Welcome emails** - sent after user registration
-- **Email verification** - for account security
-- **Password reset emails** - for forgotten passwords
-- **Password change notifications** - for security alerts
-
-#### Brevo Setup:
-
-1. Create account at [Brevo](https://www.brevo.com/)
-2. Get your SMTP credentials from Brevo dashboard
-3. **Verify sender email/domain** in Brevo panel under "Senders & IP"
-4. Add to your `.env` file:
-   ```env
-   MAIL_MAILER=smtp
-   MAIL_HOST=smtp-relay.brevo.com
-   MAIL_PORT=587
-   MAIL_USERNAME=your-brevo-email@domain.com
-   MAIL_PASSWORD=your-brevo-smtp-key
-   MAIL_ENCRYPTION=tls
-   
-   # Option 1: Own domain (requires DNS verification)
-   MAIL_FROM_ADDRESS="noreply@fitsphere.com"
-   MAIL_FROM_NAME="FitSphere"
-   
-   # Option 2: Same as USERNAME (easier setup)
-   # MAIL_FROM_ADDRESS="your-brevo-email@domain.com"
-   # MAIL_FROM_NAME="FitSphere"
-   ```
-
-**📝 Note:** `MAIL_FROM_ADDRESS` doesn't need to be a real mailbox, but must be verified in Brevo panel.
-
-#### Queue System:
-
-FitSphere uses Laravel queues to send emails asynchronously. This prevents blocking the web response while emails are being sent.
-
-**Start the queue worker:**
-```bash
-php artisan queue:work database --sleep=3 --tries=3 --timeout=60
-```
-
-**Queue commands:**
-```bash
-# Check failed jobs
-php artisan queue:failed
-
-# Retry failed jobs
-php artisan queue:retry all
-
-# Clear failed jobs
-php artisan queue:flush
-```
-
-#### Usage in Code:
-
-```php
-use App\Services\EmailService;
-
-// In controllers or Livewire components
-$emailService = app(EmailService::class);
-
-// Send emails (queued automatically)
-$emailService->sendWelcomeEmail($user);
-$emailService->sendEmailVerification($user);
-$emailService->sendPasswordResetEmail($user, $token);
-```
-
-## Queue System Explained
-
-### 🔄 **How Laravel Queues Work**
-
-FitSphere uses Laravel's queue system to handle email sending asynchronously. Here's how it works:
-
-#### **Without Queues (Synchronous):**
-```
-User clicks "Register" → App creates user → App sends email (3-5 seconds) → User sees success page
-```
-**Problem:** User waits for email to be sent before seeing response.
-
-#### **With Queues (Asynchronous):**
-```
-User clicks "Register" → App creates user → App queues email job → User sees success page immediately
-                                        ↓
-                           Queue worker picks up job → Sends email in background
-```
-**Benefit:** Instant response, better user experience.
-
-### 🏗️ **Queue Architecture in FitSphere**
-
-```
-EmailService.sendWelcomeEmail($user)
-           ↓
-    Mail::to($user)->queue(new WelcomeEmail($user))
-           ↓
-    Job stored in 'jobs' table
-           ↓
-    Queue worker processes job
-           ↓
-    Email sent via Brevo SMTP
-```
-
-### 📊 **Database Tables Used**
-
-- **`jobs`** - Pending jobs waiting to be processed
-- **`failed_jobs`** - Jobs that failed after max retries
-- **`job_batches`** - Grouped jobs (if using job batching)
-
-### ⚙️ **Queue Configuration**
-
-**Queue Connection** (`config/queue.php`):
-```php
-'default' => env('QUEUE_CONNECTION', 'database'), // Uses database driver
-```
-
-**Email Service** (`app/Services/EmailService.php`):
-```php
-// Queues email instead of sending immediately
-Mail::to($user->email)->queue(new WelcomeEmail($user));
-```
-
-**Mailable Classes** (`app/Mail/`):
-```php
-class WelcomeEmail extends Mailable implements ShouldQueue
-{
-    use Queueable; // Enables queueing
-    
-    public function __construct(User $user)
-    {
-        $this->onQueue('emails'); // Use 'emails' queue
-    }
-}
-```
-
-### 🚀 **Running Queue Workers**
-
-**Development:**
-```bash
-php artisan queue:work database --sleep=3 --tries=3 --timeout=60
-```
-
-**Production (with Supervisor):**
-```ini
-[program:fitsphere-worker]
-process_name=%(program_name)s_%(process_num)02d
-command=php /path/to/fitsphere/artisan queue:work database --sleep=3 --tries=3 --max-time=3600
-autostart=true
-autorestart=true
-numprocs=2
-user=www-data
-```
-
-### 🔍 **Monitoring Queues**
-
-```bash
-# See failed jobs
-php artisan queue:failed
-
-# Retry specific failed job
-php artisan queue:retry 5
-
-# Retry all failed jobs
-php artisan queue:retry all
-
-# Clear all failed jobs
-php artisan queue:flush
-
-# Check job status in database
-SELECT * FROM jobs;
-SELECT * FROM failed_jobs;
-```
-
-### 🛠️ **Queue Job Lifecycle**
-
-1. **Created** - Job added to `jobs` table
-2. **Processing** - Worker picks up job
-3. **Success** - Job completed, removed from table
-4. **Failed** - Job moved to `failed_jobs` after max retries
-
-### 🔧 **Error Handling**
-
-If email sending fails:
-- **Retry 3 times** (--tries=3)
-- **Wait 3 seconds** between jobs (--sleep=3)
-- **Log errors** to `storage/logs/laravel.log`
-- **Move to failed_jobs** after max retries
-
-### Translation Setup
-
-The nutrition calculator uses DeepL API for recipe translations. To set it up:
-
-1. Visit [DeepL](https://www.deepl.com/) and create an account
-2. Get a free API key from the DeepL dashboard
-3. Add these variables to your `.env` file:
-   ```
-   DEEPL_API_KEY=your_api_key_here
-   DEEPL_FREE_API=true  # Set to false if using DeepL Pro API
-   ```
-
-### Spoonacular API
-
-The nutrition calculator and meal planner use Spoonacular API for recipe data:
-
-1. Create an account at [Spoonacular Food API](https://spoonacular.com/food-api)
-2. Get your API key from the dashboard
-3. Add the API key to your `.env` file:
-   ```
-   SPOONACULAR_API_KEY=your_spoonacular_api_key_here
-   ```
-
-## Konfiguracja Emaili (Brevo SMTP)
-
-Aplikacja używa Brevo (dawniej Sendinblue) do wysyłania emaili. Wszystkie emaile są kolejkowane i wysyłane asynchronicznie.
-
-### Dostępne typy emaili:
-
-1. **Email powitalny** - wysyłany po rejestracji użytkownika
-2. **Email weryfikacyjny** - do potwierdzenia adresu email
-3. **Email resetowania hasła** - do resetowania hasła
-4. **Powiadomienie o zmianie hasła** - po zmianie hasła
-5. **Powiadomienie o zatwierdzeniu trenera** - gdy admin zatwierdzi trenera
-6. **Potwierdzenie subskrypcji** - po zapisaniu się do newslettera
-7. **Email z formularza kontaktowego** - wiadomości od użytkowników
-
-### Konfiguracja .env:
-
 ```env
 MAIL_MAILER=smtp
 MAIL_HOST=smtp-relay.brevo.com
 MAIL_PORT=587
-MAIL_USERNAME=your-brevo-email@example.com
-MAIL_PASSWORD=your-brevo-smtp-key
+MAIL_USERNAME=your-email@domain.com
+MAIL_PASSWORD=your-smtp-key
 MAIL_ENCRYPTION=tls
-MAIL_FROM_ADDRESS=noreply@yourdomain.com
+MAIL_FROM_ADDRESS=noreply@fitsphere.com
 MAIL_FROM_NAME="FitSphere"
 ```
 
-### Użycie EmailService:
+### API Configuration
+```env
+# Spoonacular API (for recipes)
+SPOONACULAR_API_KEY=your-spoonacular-key
 
-```php
-use App\Services\EmailService;
+# DeepL API (for translations)
+DEEPL_API_KEY=your-deepl-key
 
-$emailService = new EmailService();
-
-// Email powitalny
-$emailService->sendWelcomeEmail($user);
-
-// Email zatwierdzenia trenera  
-$emailService->sendTrainerApprovedEmail($trainer);
-
-// Email subskrypcji
-$emailService->sendSubscriptionConfirmationEmail($user, 'premium');
-
-// Email kontaktowy
-$emailService->sendContactFormEmail($name, $email, $message);
+# Google OAuth
+GOOGLE_CLIENT_ID=your-google-client-id
+GOOGLE_CLIENT_SECRET=your-google-client-secret
 ```
 
-### Template emaili:
+## 🎯 Field Validation Limits
 
-Wszystkie template emaili znajdują się w `resources/views/emails/`:
-- `welcome.blade.php` - email powitalny
-- `verify-email.blade.php` - weryfikacja email
-- `password-reset.blade.php` - reset hasła
-- `password-changed.blade.php` - zmiana hasła
-- `trainer-approved.blade.php` - zatwierdzenie trenera
-- `subscription-confirmation.blade.php` - potwierdzenie subskrypcji
-- `contact.blade.php` - formularz kontaktowy
+### User Data
+- **Names**: 2-50 characters
+- **Email**: max 100 characters
+- **Password**: 8-128 characters
+- **Specialization**: 3-100 characters
 
-### Testowanie konfiguracji:
+### Content
+- **Post Title**: 3-200 characters
+- **Post Content**: 10-15,000 characters
+- **Post Excerpt**: max 500 characters
+- **Category Name**: 2-50 characters
+- **Comments**: 3-500 characters
+- **Contact Message**: 10-1,000 characters
 
-```php
-$emailService = new EmailService();
-$result = $emailService->testEmailConfiguration();
+### Media
+- **Profile Photos**: max 1MB, 100x100-1500x1500px
+- **Post Images**: max 1MB, JPEG/PNG/WebP formats
 
-if ($result) {
-    echo "Konfiguracja Brevo działa poprawnie!";
-} else {
-    echo "Błąd konfiguracji Brevo - sprawdź logi.";
-}
-```
-
-### Kolejkowanie emaili:
-
-Wszystkie emaile są automatycznie kolejkowane w queue `emails`. Aby przetworzyć kolejkę:
+## 🧪 Testing
 
 ```bash
-php artisan queue:work --queue=emails
+# Run all tests
+php artisan test
+
+# Run specific test suite
+php artisan test --testsuite=Feature
+
+# Run with coverage
+php artisan test --coverage
 ```
 
-### Monitorowanie:
+## 📦 Database Seeders
 
-Logi emaili są zapisywane w standardowych logach Laravel. Sprawdź `storage/logs/laravel.log` w przypadku problemów.
+The application includes comprehensive seeders:
 
-## Contributing
+- **UserSeeder**: Creates admin and sample users
+- **TrainerSeeder**: Adds fitness trainers with specializations
+- **FitnessContentSeeder**: Populates blog posts, categories, and comments
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```bash
+# Run all seeders
+php artisan db:seed
 
-## Code of Conduct
+# Run specific seeder
+php artisan db:seed --class=UserSeeder
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## 🔒 Security Features
 
-## Security Vulnerabilities
+- **Input Validation**: Comprehensive validation with sanitization
+- **CSRF Protection**: Built-in Laravel CSRF protection
+- **XSS Prevention**: Input sanitization and output escaping
+- **SQL Injection Prevention**: Eloquent ORM with parameter binding
+- **Rate Limiting**: API and form submission rate limiting
+- **Email Verification**: Required for account activation
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## 🌍 Internationalization
 
-## License
+FitSphere supports multiple languages:
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+- **English** (default)
+- **Polish** (complete translation)
+
+Language files are located in `resources/lang/` directory.
+
+## 📁 Project Structure
+
+```
+app/
+├── Http/
+│   ├── Controllers/     # Traditional controllers
+│   └── Middleware/      # Custom middleware
+├── Livewire/           # Livewire components
+│   ├── Admin/          # Admin panel components
+│   ├── Auth/           # Authentication components
+│   ├── User/           # User profile components
+│   └── Traits/         # Reusable traits
+├── Models/             # Eloquent models
+├── Services/           # Business logic services
+└── Mail/               # Email templates
+
+resources/
+├── views/              # Blade templates
+├── lang/               # Translation files
+└── js/                 # Frontend assets
+
+database/
+├── migrations/         # Database migrations
+└── seeders/           # Database seeders
+```
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/amazing-feature`
+3. Commit your changes: `git commit -m 'feat: add amazing feature'`
+4. Push to the branch: `git push origin feature/amazing-feature`
+5. Open a pull request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- [Laravel](https://laravel.com) - The PHP framework for web artisans
+- [Livewire](https://livewire.laravel.com) - A full-stack framework for Laravel
+- [Tailwind CSS](https://tailwindcss.com) - A utility-first CSS framework
+- [Alpine.js](https://alpinejs.dev) - A rugged, minimal framework
+- [Spoonacular API](https://spoonacular.com/food-api) - Recipe and nutrition data
+- [DeepL API](https://www.deepl.com/api) - High-quality translations
