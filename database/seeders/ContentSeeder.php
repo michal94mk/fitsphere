@@ -5,154 +5,30 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\User;
 use App\Models\Category;
-use App\Models\CategoryTranslation;
 use App\Models\Post;
 use App\Models\PostTranslation;
-use App\Models\Comment;
-use App\Models\Trainer;
 use Illuminate\Support\Str;
 
-class FitnessContentSeeder extends Seeder
+class ContentSeeder extends Seeder
 {
     /**
-     * Seed fitness blog content.
+     * Seed blog posts and their translations.
      */
     public function run(): void
     {
-        // Create fitness categories
-        $categories = [
-            [
-                'name' => 'Trening siłowy',
-                'translations' => [
-                    'en' => [
-                        'name' => 'Strength Training',
-                        'description' => 'Articles about strength training, building muscle and improving power'
-                    ]
-                ]
-            ],
-            [
-                'name' => 'Cardio',
-                'translations' => [
-                    'en' => [
-                        'name' => 'Cardio',
-                        'description' => 'Everything about cardiovascular training, running, and aerobic exercises'
-                    ]
-                ]
-            ],
-            [
-                'name' => 'Dieta i odżywianie',
-                'translations' => [
-                    'en' => [
-                        'name' => 'Diet and Nutrition',
-                        'description' => 'Healthy eating, nutrition plans and dietary advice'
-                    ]
-                ]
-            ],
-            [
-                'name' => 'Zdrowy styl życia',
-                'translations' => [
-                    'en' => [
-                        'name' => 'Healthy Lifestyle',
-                        'description' => 'General wellness, habits and healthy living tips'
-                    ]
-                ]
-            ],
-            [
-                'name' => 'Motywacja',
-                'translations' => [
-                    'en' => [
-                        'name' => 'Motivation',
-                        'description' => 'Stay inspired and motivated on your fitness journey'
-                    ]
-                ]
-            ],
-            [
-                'name' => 'Suplementacja',
-                'translations' => [
-                    'en' => [
-                        'name' => 'Supplementation',
-                        'description' => 'Information about supplements, vitamins and sports nutrition'
-                    ]
-                ]
-            ],
-            [
-                'name' => 'Trening funkcjonalny',
-                'translations' => [
-                    'en' => [
-                        'name' => 'Functional Training',
-                        'description' => 'Training to improve everyday movements and prevent injuries'
-                    ]
-                ]
-            ],
-            [
-                'name' => 'Joga i rozciąganie',
-                'translations' => [
-                    'en' => [
-                        'name' => 'Yoga and Stretching',
-                        'description' => 'Improve flexibility, balance and mental wellbeing'
-                    ]
-                ]
-            ],
-            [
-                'name' => 'Plany treningowe',
-                'translations' => [
-                    'en' => [
-                        'name' => 'Training Plans',
-                        'description' => 'Structured workout plans for different fitness goals'
-                    ]
-                ]
-            ],
-            [
-                'name' => 'Regeneracja',
-                'translations' => [
-                    'en' => [
-                        'name' => 'Recovery',
-                        'description' => 'Rest and recovery techniques to optimize performance'
-                    ]
-                ]
-            ],
-        ];
-
-        foreach ($categories as $categoryData) {
-            $translations = $categoryData['translations'] ?? [];
-            unset($categoryData['translations']);
-            
-            $category = Category::firstOrCreate(['name' => $categoryData['name']]);
-            
-            // Add translations
-            foreach ($translations as $locale => $translationData) {
-                CategoryTranslation::updateOrCreate(
-                    [
-                        'category_id' => $category->id,
-                        'locale' => $locale
-                    ],
-                    [
-                        'name' => $translationData['name']
-                    ]
-                );
-            }
-        }
-
-        // Get admin user or create one if needed
+        // Get admin user
         $adminUser = User::where('role', 'admin')->first();
         if (!$adminUser) {
-            $adminUser = User::create([
-                'name' => 'Admin',
-                'email' => 'admin@fitsphere.com',
-                'email_verified_at' => now(),
-                'password' => bcrypt('Password123'),
-                'role' => 'admin',
-            ]);
+            $this->command->error('Admin user not found. Please run BaseDataSeeder first.');
+            return;
         }
 
-        // Create fitness posts
         $posts = [
             [
                 'title' => 'Trening siłowy dla początkujących',
                 'excerpt' => 'Poznaj podstawy treningu siłowego i rozpocznij swoją przygodę z budowaniem mięśni.',
                 'content' => 'Trening siłowy to jedna z najlepszych form aktywności fizycznej. Jako początkujący, powinieneś skupić się na nauce poprawnej techniki wykonywania podstawowych ćwiczeń, takich jak przysiad, martwy ciąg, wyciskanie na ławce i wiosłowanie. Zacznij od 2-3 treningów tygodniowo, dając mięśniom czas na regenerację.',
-                'category_id' => Category::where('name', 'Trening siłowy')->first()->id,
-                'status' => 'published',
+                'category' => 'Trening siłowy',
                 'image' => 'images/posts/post1.jpg',
                 'translations' => [
                     'en' => [
@@ -166,8 +42,7 @@ class FitnessContentSeeder extends Seeder
                 'title' => 'Najlepsze ćwiczenia cardio na spalanie tłuszczu',
                 'excerpt' => 'Skuteczne ćwiczenia cardio, które pomogą Ci szybciej spalić zbędny tłuszcz.',
                 'content' => 'Trening cardio to świetny sposób na spalanie kalorii. Najskuteczniejsze ćwiczenia to: interwały biegowe (HIIT), jazda na rowerze, pływanie, skakanie na skakance i trening na orbitreku. Szczególnie efektywne są treningi interwałowe, polegające na naprzemiennych fazach intensywnego wysiłku i odpoczynku.',
-                'category_id' => Category::where('name', 'Cardio')->first()->id,
-                'status' => 'published',
+                'category' => 'Cardio',
                 'image' => 'images/posts/post2.jpg',
                 'translations' => [
                     'en' => [
@@ -181,8 +56,7 @@ class FitnessContentSeeder extends Seeder
                 'title' => 'Dieta ketogeniczna - wszystko co musisz wiedzieć',
                 'excerpt' => 'Poznaj zasady diety ketogenicznej i dowiedz się, czy jest odpowiednia dla Ciebie.',
                 'content' => 'Dieta ketogeniczna to sposób odżywiania polegający na drastycznym ograniczeniu węglowodanów przy jednoczesnym zwiększeniu podaży tłuszczów. Głównym celem jest wprowadzenie organizmu w stan ketozy, w którym jako główne źródło energii wykorzystywane są ketony zamiast glukozy. Typowa dieta ketogeniczna zawiera około 70-80% kalorii z tłuszczów.',
-                'category_id' => Category::where('name', 'Dieta i odżywianie')->first()->id,
-                'status' => 'published',
+                'category' => 'Dieta i odżywianie',
                 'image' => 'images/posts/post3.jpg',
                 'translations' => [
                     'en' => [
@@ -196,8 +70,7 @@ class FitnessContentSeeder extends Seeder
                 'title' => 'Jak zwiększyć masę mięśniową naturalnie',
                 'excerpt' => 'Skuteczne metody na budowanie masy mięśniowej bez wspomagania.',
                 'content' => 'Budowanie masy mięśniowej w sposób naturalny wymaga cierpliwości i konsekwencji. Kluczowe aspekty to: progresywny trening oporowy, odpowiednie odżywianie (nadwyżka kaloryczna i wystarczająca ilość białka), właściwa regeneracja (7-9 godzin snu), regularne posiłki oraz minimalizacja stresu.',
-                'category_id' => Category::where('name', 'Trening siłowy')->first()->id,
-                'status' => 'published',
+                'category' => 'Trening siłowy',
                 'image' => 'images/posts/post4.jpg',
                 'translations' => [
                     'en' => [
@@ -211,8 +84,7 @@ class FitnessContentSeeder extends Seeder
                 'title' => '10 najlepszych źródeł białka w diecie sportowca',
                 'excerpt' => 'Poznaj najwartościowsze produkty białkowe dla osób aktywnych fizycznie.',
                 'content' => 'Białko jest niezbędnym składnikiem diety każdego sportowca. Oto 10 najlepszych źródeł białka: 1) Pierś z kurczaka, 2) Jaja, 3) Tuńczyk, 4) Łosoś, 5) Wołowina, 6) Twaróg, 7) Soczewica, 8) Tofu, 9) Jogurt grecki, 10) Quinoa. Warto łączyć różne źródła białka w diecie, aby zapewnić kompletny profil aminokwasowy.',
-                'category_id' => Category::where('name', 'Dieta i odżywianie')->first()->id,
-                'status' => 'published',
+                'category' => 'Dieta i odżywianie',
                 'image' => 'images/posts/post5.jpg',
                 'translations' => [
                     'en' => [
@@ -226,8 +98,7 @@ class FitnessContentSeeder extends Seeder
                 'title' => 'Jak prawidłowo wykonać martwy ciąg',
                 'excerpt' => 'Poznaj technikę wykonania jednego z najlepszych ćwiczeń na całe ciało.',
                 'content' => 'Martwy ciąg to jedno z najlepszych ćwiczeń na rozwój siły i masy mięśniowej. Poprawna technika wykonania: 1) Stań przed sztangą, stopy na szerokość bioder. 2) Schyl się i chwyć sztangę. 3) Obniż biodra, wyprostuj plecy. 4) Weź głęboki wdech. 5) Zacznij ruch od wyprostowania nóg. 6) Gdy sztanga minie kolana, pchnij biodra do przodu. 7) Wróć kontrolując ruch.',
-                'category_id' => Category::where('name', 'Trening siłowy')->first()->id,
-                'status' => 'published',
+                'category' => 'Trening siłowy',
                 'image' => 'images/posts/post6.jpg',
                 'translations' => [
                     'en' => [
@@ -241,8 +112,7 @@ class FitnessContentSeeder extends Seeder
                 'title' => 'Korzyści z treningu jogi dla sportowców',
                 'excerpt' => 'Dowiedz się, jak praktyka jogi może poprawić Twoje wyniki sportowe.',
                 'content' => 'Joga to wartościowe uzupełnienie treningu dla sportowców. Główne korzyści to: 1) Poprawa elastyczności i zakresu ruchu, 2) Wzmocnienie mięśni stabilizujących, 3) Lepsza równowaga i koordynacja, 4) Zwiększona świadomość oddechu, 5) Szybsza regeneracja mięśni, 6) Redukcja stresu i poprawa koncentracji.',
-                'category_id' => Category::where('name', 'Joga i rozciąganie')->first()->id,
-                'status' => 'published',
+                'category' => 'Joga i rozciąganie',
                 'image' => 'images/posts/post7.jpg',
                 'translations' => [
                     'en' => [
@@ -256,8 +126,7 @@ class FitnessContentSeeder extends Seeder
                 'title' => 'Suplementy - które warto stosować, a które omijać',
                 'excerpt' => 'Przewodnik po świecie suplementów dla osób aktywnych fizycznie.',
                 'content' => 'W gąszczu dostępnych suplementów łatwo się zagubić. Warto stosować: 1) Kreatynę, 2) Białko serwatkowe, 3) Kofeinę, 4) Beta-alaninę, 5) Elektrolity. Suplementy o wątpliwej skuteczności to: 1) Spalacze tłuszczu, 2) Glutamina, 3) ZMA, 4) HMB. Pamiętaj, że suplementy to tylko dodatek do zbilansowanej diety.',
-                'category_id' => Category::where('name', 'Suplementacja')->first()->id,
-                'status' => 'published',
+                'category' => 'Suplementacja',
                 'image' => 'images/posts/post8.jpg',
                 'translations' => [
                     'en' => [
@@ -271,8 +140,7 @@ class FitnessContentSeeder extends Seeder
                 'title' => '4-tygodniowy plan treningowy dla początkujących',
                 'excerpt' => 'Kompletny plan treningowy dla osób rozpoczynających przygodę z siłownią.',
                 'content' => 'Oto 4-tygodniowy plan dla początkujących, zakładający 3 treningi w tygodniu. Tydzień 1-2: Trening A: przysiad, wyciskanie, wiosłowanie. Trening B: wykroki, wyciskanie nad głowę, podciąganie. Trening C: martwy ciąg, wyciskanie skośne, przyciąganie do klatki. Tydzień 3-4: Te same ćwiczenia, ale zwiększ ciężar o 5-10%.',
-                'category_id' => Category::where('name', 'Plany treningowe')->first()->id,
-                'status' => 'published',
+                'category' => 'Plany treningowe',
                 'image' => 'images/posts/post9.jpg',
                 'translations' => [
                     'en' => [
@@ -286,8 +154,7 @@ class FitnessContentSeeder extends Seeder
                 'title' => 'Dieta śródziemnomorska dla aktywnych osób',
                 'excerpt' => 'Poznaj zasady zdrowej diety, która wspiera aktywny tryb życia.',
                 'content' => 'Dieta śródziemnomorska świetnie sprawdza się dla osób aktywnych. Jej zasady to: 1) Obfitość warzyw i owoców, 2) Pełnoziarniste produkty zbożowe, 3) Zdrowe tłuszcze z oliwy, orzechów i ryb, 4) Umiarkowane spożycie białka, 5) Ograniczenie czerwonego mięsa, 6) Minimalna ilość przetworzonych produktów.',
-                'category_id' => Category::where('name', 'Dieta i odżywianie')->first()->id,
-                'status' => 'published',
+                'category' => 'Dieta i odżywianie',
                 'image' => 'images/posts/post10.jpg',
                 'translations' => [
                     'en' => [
@@ -303,7 +170,13 @@ class FitnessContentSeeder extends Seeder
         foreach ($posts as $postData) {
             $slug = Str::slug($postData['title']);
             $translations = $postData['translations'] ?? [];
-            unset($postData['translations']);
+            
+            // Get category
+            $category = Category::where('name', $postData['category'])->first();
+            if (!$category) {
+                $this->command->error("Category '{$postData['category']}' not found. Please run BaseDataSeeder first.");
+                continue;
+            }
             
             // Check if post with this slug already exists
             if (!Post::where('slug', $slug)->exists()) {
@@ -313,8 +186,8 @@ class FitnessContentSeeder extends Seeder
                     'slug' => $slug,
                     'excerpt' => $postData['excerpt'],
                     'content' => $postData['content'],
-                    'category_id' => $postData['category_id'],
-                    'status' => $postData['status'],
+                    'category_id' => $category->id,
+                    'status' => 'published',
                     'view_count' => rand(10, 500),
                     'image' => $postData['image'],
                 ]);
@@ -330,68 +203,8 @@ class FitnessContentSeeder extends Seeder
                         'content' => $translationData['content']
                     ]);
                 }
-            }
-        }
 
-        // Get all posts including those that already existed
-        $allPosts = Post::all();
-        
-        // Only create comments if there aren't enough already
-        if (Comment::count() < 30) {
-            $commentTexts = [
-                'Świetny artykuł! Bardzo przydatne informacje, na pewno wykorzystam te porady.',
-                'Dzięki za podzielenie się wiedzą. Mam pytanie - jak często powinienem robić takie treningi?',
-                'Stosuję się do tych wskazówek od miesiąca i widzę znaczącą poprawę wyników.',
-                'To podejście zupełnie zmieniło moje myślenie o treningu. Dziękuję!',
-                'Ciekawe informacje, ale czy to podejście sprawdzi się również u osób starszych?',
-                'Wypróbowałem tę metodę i jestem pod wrażeniem rezultatów!',
-                'Artykuł bardzo merytoryczny, widać że autor ma dużą wiedzę praktyczną.',
-                'Polecam wypróbować te wskazówki, u mnie działają znakomicie.',
-                'Chyba muszę zrewidować swoje podejście do treningu po przeczytaniu tego tekstu.',
-                'Super wyjaśnione, nawet dla laika jak ja. Zaczynam wdrażać od jutra!',
-                'Czy możesz rozwinąć temat supelementacji przy tym rodzaju treningu?',
-                'Ten plan treningowy jest świetny, stosuję go od 2 tygodni i czuję się znacznie lepiej.',
-                'Właśnie tego szukałem, dzięki za uporządkowanie wiedzy na ten temat.',
-                'Interesujące podejście, choć trochę inne niż to, co czytałem wcześniej.',
-                'Wreszcie konkretne informacje bez zbędnego komplikowania tematu.',
-            ];
-
-            $commentTextsEn = [
-                'Great article! Very useful information, I will definitely use these tips.',
-                'Thanks for sharing your knowledge. I have a question - how often should I do such workouts?',
-                'I\'ve been following these guidelines for a month and I see significant improvement in my results.',
-                'This approach has completely changed my thinking about training. Thank you!',
-                'Interesting information, but will this approach also work for older people?',
-                'I tried this method and I\'m impressed with the results!',
-                'Very informative article, it\'s clear the author has great practical knowledge.',
-                'I recommend trying these tips, they work great for me.',
-                'I think I need to revise my approach to training after reading this text.',
-                'Explained very well, even for a layman like me. I\'m implementing it tomorrow!',
-                'Could you elaborate on supplementation for this type of training?',
-                'This training plan is great, I\'ve been using it for 2 weeks and I feel much better.',
-                'This is exactly what I was looking for, thanks for organizing the knowledge on this topic.',
-                'Interesting approach, though a bit different from what I\'ve read before.',
-                'Finally concrete information without unnecessarily complicating the topic.',
-            ];
-
-            $allUsers = User::where('id', '!=', $adminUser->id)->get();
-
-            // Add comments to random posts
-            for ($i = 0; $i < 15; $i++) {
-                Comment::create([
-                    'user_id' => $allUsers->random()->id,
-                    'post_id' => $allPosts->random()->id,
-                    'content' => $commentTexts[array_rand($commentTexts)],
-                ]);
-            }
-            
-            // Add English comments too
-            for ($i = 0; $i < 15; $i++) {
-                Comment::create([
-                    'user_id' => $allUsers->random()->id,
-                    'post_id' => $allPosts->random()->id,
-                    'content' => $commentTextsEn[array_rand($commentTextsEn)],
-                ]);
+                $this->command->info("Created post: {$postData['title']}");
             }
         }
     }

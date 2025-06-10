@@ -15,9 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('trainer_id')->constrained()->onDelete('cascade');
-            $table->date('date');
-            $table->time('start_time');
-            $table->time('end_time');
+            $table->dateTime('reservation_date');
             $table->enum('status', ['pending', 'confirmed', 'cancelled', 'completed'])->default('pending');
             $table->text('notes')->nullable();
             $table->timestamps();
@@ -31,4 +29,4 @@ return new class extends Migration
     {
         Schema::dropIfExists('reservations');
     }
-};
+}; 

@@ -11,8 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('category_translations', function (Blueprint $table) {
-            $table->dropColumn(['slug', 'description']);
+        Schema::create('subscribers', function (Blueprint $table) {
+            $table->id();
+            $table->string('email')->unique();
+            $table->timestamps();
         });
     }
 
@@ -21,9 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('category_translations', function (Blueprint $table) {
-            $table->string('slug')->nullable();
-            $table->text('description')->nullable();
-        });
+        Schema::dropIfExists('subscribers');
     }
-};
+}; 

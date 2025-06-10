@@ -21,10 +21,25 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->string('image')->nullable();
             $table->string('bio')->nullable();
+            $table->string('specialties')->nullable();
             $table->unsignedInteger('experience')->default(0);
             $table->boolean('is_approved')->default(false);
             $table->rememberToken();
             $table->timestamps();
+        });
+
+        Schema::create('trainer_translations', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('trainer_id')->constrained()->onDelete('cascade');
+            $table->string('locale', 2); // Language code (en, pl)
+            $table->string('name');
+            $table->text('description')->nullable();
+            $table->string('bio')->nullable();
+            $table->string('specialties')->nullable();
+            $table->timestamps();
+            
+            // Make sure we don't have duplicate translations for the same trainer and locale
+            $table->unique(['trainer_id', 'locale']);
         });
     }
 
@@ -33,6 +48,7 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::dropIfExists('trainer_translations');
         Schema::dropIfExists('trainers');
     }
 }; 

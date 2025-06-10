@@ -109,7 +109,7 @@ class TrainerSeeder extends Seeder
                     TrainerTranslation::create([
                         'trainer_id' => $trainer->id,
                         'locale' => $locale,
-                        'specialization' => $translationData['specialization'],
+                        'name' => $trainerData['name'], // Use the trainer name for translation
                         'description' => $translationData['description'],
                         'bio' => $translationData['bio'],
                         'specialties' => $translationData['specialties'] ?? null

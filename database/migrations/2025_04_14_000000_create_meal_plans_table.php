@@ -15,15 +15,14 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('name');
-            $table->date('date');
-            $table->enum('meal_type', ['breakfast', 'lunch', 'dinner', 'snack'])->nullable();
-            $table->json('recipe_data'); // Przechowuje dane przepisu z API
-            $table->decimal('calories', 7, 2)->nullable();
-            $table->decimal('protein', 7, 2)->nullable(); // w gramach
-            $table->decimal('carbs', 7, 2)->nullable(); // w gramach
-            $table->decimal('fat', 7, 2)->nullable(); // w gramach
-            $table->text('notes')->nullable();
-            $table->boolean('is_favorite')->default(false);
+            $table->text('description')->nullable();
+            $table->json('meals'); // JSON structure for meals
+            $table->integer('duration_days')->default(7);
+            $table->decimal('total_calories', 8, 2)->nullable();
+            $table->decimal('total_protein', 8, 2)->nullable();
+            $table->decimal('total_carbs', 8, 2)->nullable();
+            $table->decimal('total_fat', 8, 2)->nullable();
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
     }
@@ -35,4 +34,4 @@ return new class extends Migration
     {
         Schema::dropIfExists('meal_plans');
     }
-};
+}; 
