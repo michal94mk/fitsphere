@@ -25,8 +25,20 @@ class CommentEdit extends Component
             $this->comment = Comment::findOrFail($commentId);
             
             // Check if user has permission to edit this comment
-            if ($this->comment->user_id !== Auth::id()) {
+            if (!$this->comment->belongsToAuthUser()) {
                 session()->flash('error', __('common.comment_no_permission'));
+                return redirect()->route('post.show', ['postId' => $this->comment->post_id]);
+            }
+
+            // Check if email is verified for regular users
+            if (Auth::check() && is_null(Auth::user()->email_verified_at)) {
+                session()->flash('error', __('common.verify_email_to_comment'));
+                return redirect()->route('post.show', ['postId' => $this->comment->post_id]);
+            }
+
+            // Check if email is verified for trainers
+            if (Auth::guard('trainer')->check() && is_null(Auth::guard('trainer')->user()->email_verified_at)) {
+                session()->flash('error', __('common.verify_email_to_comment'));
                 return redirect()->route('post.show', ['postId' => $this->comment->post_id]);
             }
             
@@ -35,6 +47,7 @@ class CommentEdit extends Component
             $this->logService->error('Error loading comment for edit', [
                 'comment_id' => $commentId,
                 'user_id' => Auth::id(),
+                'trainer_id' => Auth::guard('trainer')->id(),
                 'error' => $e->getMessage()
             ]);
             
@@ -50,8 +63,20 @@ class CommentEdit extends Component
                 'content' => 'required|min:3|max:500'
             ]);
             
-            if ($this->comment->user_id !== Auth::id()) {
+            if (!$this->comment->belongsToAuthUser()) {
                 session()->flash('error', __('common.comment_no_permission'));
+                return redirect()->route('post.show', ['postId' => $this->comment->post_id]);
+            }
+
+            // Check if email is verified for regular users
+            if (Auth::check() && is_null(Auth::user()->email_verified_at)) {
+                session()->flash('error', __('common.verify_email_to_comment'));
+                return redirect()->route('post.show', ['postId' => $this->comment->post_id]);
+            }
+
+            // Check if email is verified for trainers
+            if (Auth::guard('trainer')->check() && is_null(Auth::guard('trainer')->user()->email_verified_at)) {
+                session()->flash('error', __('common.verify_email_to_comment'));
                 return redirect()->route('post.show', ['postId' => $this->comment->post_id]);
             }
             
@@ -65,6 +90,7 @@ class CommentEdit extends Component
             $this->logService->error('Error updating comment', [
                 'comment_id' => $this->comment->id,
                 'user_id' => Auth::id(),
+                'trainer_id' => Auth::guard('trainer')->id(),
                 'error' => $e->getMessage()
             ]);
             

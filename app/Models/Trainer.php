@@ -51,6 +51,11 @@ class Trainer extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Reservation::class);
     }
 
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comment::class);
+    }
+
     public function sendEmailVerificationNotification(): void
     {
         $this->notify(new \Illuminate\Auth\Notifications\VerifyEmail);

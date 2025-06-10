@@ -41,6 +41,30 @@ return new class extends Migration
             // Make sure we don't have duplicate translations for the same trainer and locale
             $table->unique(['trainer_id', 'locale']);
         });
+
+        // Create comments table if it doesn't exist
+        if (!Schema::hasTable('comments')) {
+            Schema::create('comments', function (Blueprint $table) {
+                $table->id();
+                $table->foreignId('post_id')->constrained()->onDelete('cascade');
+                $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade');
+                $table->foreignId('trainer_id')->nullable()->constrained()->onDelete('cascade');
+                $table->text('content');
+                $table->timestamps();
+                
+                // Ensure either user_id or trainer_id is set, but not both
+                $table->check('(user_id IS NOT NULL AND trainer_id IS NULL) OR (user_id IS NULL AND trainer_id IS NOT NULL)');
+            });
+        } else {
+            // Add trainer_id column to existing comments table and make user_id nullable
+            Schema::table('comments', function (Blueprint $table) {
+                if (!Schema::hasColumn('comments', 'trainer_id')) {
+                    $table->foreignId('trainer_id')->nullable()->after('user_id')->constrained()->onDelete('cascade');
+                }
+                // Make user_id nullable to allow trainer comments
+                $table->unsignedBigInteger('user_id')->nullable()->change();
+            });
+        }
     }
 
     /**
@@ -48,6 +72,17 @@ return new class extends Migration
      */
     public function down(): void
     {
+        if (Schema::hasTable('comments')) {
+            Schema::table('comments', function (Blueprint $table) {
+                if (Schema::hasColumn('comments', 'trainer_id')) {
+                    $table->dropForeign(['trainer_id']);
+                    $table->dropColumn('trainer_id');
+                }
+                // Revert user_id back to not nullable
+                $table->unsignedBigInteger('user_id')->nullable(false)->change();
+            });
+        }
+        
         Schema::dropIfExists('trainer_translations');
         Schema::dropIfExists('trainers');
     }

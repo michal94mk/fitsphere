@@ -101,7 +101,7 @@ class UpdateUserProfile extends Component
         // Refresh user data
         $this->user = $user->fresh();
 
-        session()->flash('status', __('profile.profile_updated'));
+        session()->flash('success', __('profile.profile_updated'));
     }
 
     /**
@@ -126,7 +126,7 @@ class UpdateUserProfile extends Component
 
         $this->user->sendEmailVerificationNotification();
         
-        session()->flash('status', __('profile.verification_sent', ['email' => $this->user->email]));
+        session()->flash('verification_sent', __('profile.verification_sent', ['email' => $this->user->email]));
     }
 
     /**

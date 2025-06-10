@@ -69,14 +69,14 @@ class VerifyEmailHandler extends Component
             event(new Verified($validatedUser));
             
             // Success message and redirect
-            $this->message = 'Your email address has been successfully verified!';
-            
             if ($isTrainer) {
-                $this->message .= ' An administrator will review your application soon.';
+                $this->message = __('common.trainer_email_verified_success');
+            } else {
+                $this->message = __('common.email_verified_success');
             }
             
-            // Redirect to login
-            return redirect('/login')->with('verified', $this->message);
+            // Redirect to home with success message
+            return redirect('/home')->with('success', $this->message);
             
         } catch (\Exception $e) {
             // In case of error, show message and redirect to login

@@ -60,6 +60,15 @@ return [
     'data_loading_error' => 'Could not load data. Please try again.',
     'post_not_found' => 'Post not found.',
     
+    // Comment edit page
+    'edit_comment' => 'Edit Comment',
+    'comment_content' => 'Comment Content',
+    'comment_placeholder' => 'Enter comment content...',
+    'cancel' => 'Cancel',
+    'save_changes' => 'Save Changes',
+    'polish' => 'Polish',
+    'english' => 'English',
+
     // Authentication messages
     'login_success' => 'Successfully logged in! Welcome back! 👋',
     'logout_success' => 'You have been logged out. See you soon! 👋',
@@ -67,4 +76,9 @@ return [
     'see_you_soon' => 'See you soon!',
     'register_user_success' => 'Account created successfully! Check your email to verify your address. 📧',
     'register_trainer_success' => 'Trainer account created! Check your email and wait for admin approval. 👨‍💼',
+    
+    // Email verification messages
+    'verify_email_to_comment' => 'You must verify your email address to add comments.',
+    'email_verified_success' => 'Your email address has been successfully verified! You can now use all service features. 🎉',
+    'trainer_email_verified_success' => 'Your email address has been successfully verified! An administrator will review your application soon. 👨‍💼',
 ]; 

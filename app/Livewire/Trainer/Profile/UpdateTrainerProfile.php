@@ -64,10 +64,7 @@ class UpdateTrainerProfile extends Component
             $this->newImage;
 
         if (!$emailChanged && !$profileChanged) {
-            $this->dispatch('flashMessage', [
-                'type' => 'info',
-                'message' => __('profile.no_changes')
-            ]);
+            session()->flash('info', __('profile.no_changes'));
             return;
         }
 
@@ -96,10 +93,7 @@ class UpdateTrainerProfile extends Component
 
         $trainer->save();
 
-        $this->dispatch('flashMessage', [
-            'type' => 'success',
-            'message' => __('profile.profile_updated')
-        ]);
+        session()->flash('success', __('profile.profile_updated'));
     }
 
     /**
@@ -108,27 +102,18 @@ class UpdateTrainerProfile extends Component
     public function resendVerificationEmail()
     {
         if (!$this->user) {
-            $this->dispatch('flashMessage', [
-                'type' => 'error',
-                'message' => __('profile.user_not_logged_in')
-            ]);
+            session()->flash('error', __('profile.user_not_logged_in'));
             return;
         }
 
         if ($this->user->hasVerifiedEmail()) {
-            $this->dispatch('flashMessage', [
-                'type' => 'info',
-                'message' => __('profile.email_already_verified')
-            ]);
+            session()->flash('info', __('profile.email_already_verified'));
             return;
         }
 
         $this->user->sendEmailVerificationNotification();
-
-        $this->dispatch('flashMessage', [
-            'type' => 'success',
-            'message' => __('profile.verification_sent', ['email' => $this->user->email])
-        ]);
+        
+        session()->flash('verification_sent', __('profile.verification_sent', ['email' => $this->user->email]));
     }
 
     #[Layout('layouts.trainer')]

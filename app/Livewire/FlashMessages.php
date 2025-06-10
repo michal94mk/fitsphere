@@ -20,7 +20,10 @@ class FlashMessages extends Component
     {
         $this->messages = [];
         
-        if (session('success')) {
+        // Don't show success/error messages on post detail pages (they have local messages)
+        $isPostDetailPage = request()->routeIs('post.show');
+        
+        if (session('success') && !$isPostDetailPage) {
             $this->messages[] = [
                 'type' => 'success',
                 'message' => session('success'),
@@ -28,7 +31,7 @@ class FlashMessages extends Component
             ];
         }
         
-        if (session('error')) {
+        if (session('error') && !$isPostDetailPage) {
             $this->messages[] = [
                 'type' => 'error',
                 'message' => session('error'),
@@ -49,6 +52,14 @@ class FlashMessages extends Component
                 'type' => 'warning',
                 'message' => session('warning'),
                 'icon' => 'warning'
+            ];
+        }
+        
+        if (session('verification_sent')) {
+            $this->messages[] = [
+                'type' => 'info',
+                'message' => session('verification_sent'),
+                'icon' => 'info'
             ];
         }
         

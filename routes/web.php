@@ -149,11 +149,11 @@ Route::prefix('profile')->middleware(['auth'])->group(function () {
     Route::get('/password', UserUpdatePassword::class)->name('profile.password');
 });
 
+// Comments - accessible by both users and trainers  
+Route::get('comments/{commentId}/livewire-edit', CommentEdit::class)->name('comments.livewire-edit');
+
 // Protected user routes
 Route::middleware(['auth', 'verified'])->group(function () {
-    // Comments
-    Route::get('comments/{commentId}/livewire-edit', CommentEdit::class)->name('comments.livewire-edit');
-    
     // Reservation system
     Route::prefix('reservations')->group(function () {
         Route::get('/create/{trainerId}', CreateReservation::class)->name('reservation.create');

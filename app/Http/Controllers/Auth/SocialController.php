@@ -63,6 +63,9 @@ class SocialController
 
             Auth::login($user);
             
+            // Add success message for Google users
+            session()->flash('success', __('common.login_success'));
+            
             return redirect()->route('home');
         } catch (Exception $e) {
             return redirect()->route('login')->with('error', 'Problem z logowaniem Google. Spróbuj ponownie.');

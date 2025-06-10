@@ -6,13 +6,13 @@
         {{ __('profile.personal_info') }}
     </h2>
 
-    @if (session()->has('status'))
+    @if (session()->has('verification_sent'))
         <div class="bg-gradient-to-r from-green-500 to-green-600 text-white p-4 rounded-lg shadow-md mb-6 animate-pulse">
             <div class="flex items-center">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                 </svg>
-                <span>{{ session('status') }}</span>
+                <span>{{ session('verification_sent') }}</span>
             </div>
         </div>
     @endif
@@ -118,16 +118,8 @@
 
         <div class="pt-4 flex justify-end">
             <div class="flex items-center justify-between w-full">
-                @if (session()->has('status') || session()->has('info_button') || session()->has('error'))
+                @if (session()->has('info_button') || session()->has('error'))
                     <div class="inline-flex items-center">
-                        @if (session()->has('status'))
-                            <div class="text-green-600 font-medium flex items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                                </svg>
-                                {{ session('status') }}
-                            </div>
-                        @endif
                         @if (session()->has('info_button'))
                             <div class="text-blue-600 font-medium flex items-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
