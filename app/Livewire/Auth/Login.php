@@ -32,12 +32,21 @@ class Login extends Component
         // Try to login as a regular user
         if (Auth::attempt(['email' => $this->email, 'password' => $this->password])) {
             session()->regenerate();
+            
+            // Add success message
+            session()->flash('success', __('common.login_success'));
+            
             return $this->redirect(route('home'), navigate: true);
         }
 
         // If login as a user failed, check if it's a trainer
         if (Auth::guard('trainer')->attempt(['email' => $this->email, 'password' => $this->password])) {
             session()->regenerate();
+            
+            // Add success message for trainer
+            $trainerName = Auth::guard('trainer')->user()->name;
+            session()->flash('success', __('common.login_success'));
+            
             return $this->redirect(route('home'), navigate: true);
         }
 

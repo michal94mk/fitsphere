@@ -112,7 +112,7 @@ trait ValidationTrait
             'string',
             "min:{$minLength}",
             "max:{$maxLength}",
-            'regex:/^[\pL\s\-\'\.\u{00C0}-\u{017F}]+$/u',
+            'regex:/^[\pL\s\-\'\.À-ſ]+$/u',
         ];
     }
     
@@ -176,7 +176,7 @@ trait ValidationTrait
             'string',
             "min:{$minLength}",
             "max:{$maxLength}",
-            'regex:/^[\pL\pN\s\-\'\.\,\!\?\:\;\(\)\"\/\&\@\#\$\%\+\=\*\[\]\{\}\|\\\\\u{00C0}-\u{017F}\r\n]*$/u',
+            'regex:/^[\pL\pN\s\-\'\.\,\!\?\:\;\(\)\"\/\&\@\#\$\%\+\=\*\[\]\{\}\|\\\\À-ſ\r\n]*$/u',
         ];
         
         return array_filter($rules); // Remove null values
@@ -192,7 +192,7 @@ trait ValidationTrait
             'string',
             'min:3',
             'max:200',
-            'regex:/^[\pL\pN\s\-\'\.\,\!\?\:\;\(\)\"\/\&\@\#\$\%\+\=\*\[\]\{\}\|\\\\\u{00C0}-\u{017F}]+$/u',
+            'regex:/^[\pL\pN\s\-\'\.\,\!\?\:\;\(\)\"\/\&\@\#\$\%\+\=\*\[\]\{\}\|\\\\À-ſ]+$/u',
         ];
     }
     
@@ -206,7 +206,7 @@ trait ValidationTrait
             'string',
             'min:10',
             'max:15000',
-            'regex:/^[\pL\pN\s\-\'\.\,\!\?\:\;\(\)\"\/\&\@\#\$\%\+\=\*\[\]\{\}\|\\\\\u{00C0}-\u{017F}\r\n]*$/u',
+            'regex:/^[\pL\pN\s\-\'\.\,\!\?\:\;\(\)\"\/\&\@\#\$\%\+\=\*\[\]\{\}\|\\\\À-ſ\r\n]*$/u',
         ];
     }
     
@@ -219,7 +219,7 @@ trait ValidationTrait
             'nullable',
             'string',
             'max:500',
-            'regex:/^[\pL\pN\s\-\'\.\,\!\?\:\;\(\)\"\/\&\@\#\$\%\+\=\*\[\]\{\}\|\\\\\u{00C0}-\u{017F}\r\n]*$/u',
+            'regex:/^[\pL\pN\s\-\'\.\,\!\?\:\;\(\)\"\/\&\@\#\$\%\+\=\*\[\]\{\}\|\\\\À-ſ\r\n]*$/u',
         ];
     }
     
@@ -233,7 +233,7 @@ trait ValidationTrait
             'string',
             'min:2',
             'max:50',
-            'regex:/^[\pL\pN\s\-\'\.\,\(\)\/\&\u{00C0}-\u{017F}]+$/u',
+            'regex:/^[\pL\pN\s\-\'\.\,\(\)\/\&À-ſ]+$/u',
         ];
         
         return array_merge($rules, $additionalRules);

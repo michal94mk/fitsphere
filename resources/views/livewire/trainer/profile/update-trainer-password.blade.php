@@ -1,18 +1,6 @@
 <div>
     <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
         <div class="max-w-xl">
-            @if (session('status'))
-                <div class="mb-4 p-4 bg-green-100 text-green-700 rounded-md font-medium">
-                    {{ session('status') }}
-                </div>
-            @endif
-
-            @if (session('error'))
-                <div class="mb-4 p-4 bg-red-100 text-red-700 rounded-md font-medium">
-                    {{ session('error') }}
-                </div>
-            @endif
-
             <section>
                 <header>
                     <h2 class="text-lg font-medium text-gray-900">{{ __('profile.change_password') }}</h2>

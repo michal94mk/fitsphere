@@ -133,6 +133,9 @@ Route::post('/logout', function () {
     }
     Auth::logout();
     
+    // Add logout success message
+    session()->flash('success', __('common.logout_success'));
+    
     return redirect('/home');
 })->name('logout');
 

@@ -21,6 +21,7 @@
         [x-cloak] { display: none !important; }
     </style>
     
+    @stack('styles')
     @yield('head')
 </head>
 <body class="font-sans antialiased @yield('body-class', 'bg-gray-100')">

@@ -42,12 +42,18 @@ class UpdateTrainerPassword extends Component
         $this->validate();
 
         if (!$this->user) {
-            session()->flash('error', __('profile.not_logged_in'));
+            $this->dispatch('flashMessage', [
+                'type' => 'error',
+                'message' => __('profile.not_logged_in')
+            ]);
             return;
         }
 
         if (!Hash::check($this->current_password, $this->user->password)) {
-            session()->flash('error', __('profile.current_password_incorrect'));
+            $this->dispatch('flashMessage', [
+                'type' => 'error',
+                'message' => __('profile.current_password_incorrect')
+            ]);
             return;
         }
 
@@ -55,7 +61,10 @@ class UpdateTrainerPassword extends Component
 
         $this->reset(['current_password', 'new_password', 'new_password_confirmation']);
         
-        session()->flash('status', __('profile.password_updated'));
+        $this->dispatch('flashMessage', [
+            'type' => 'success',
+            'message' => __('profile.password_updated')
+        ]);
     }
 
     #[Layout('layouts.trainer')]

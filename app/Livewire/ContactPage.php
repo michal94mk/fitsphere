@@ -37,7 +37,7 @@ class ContactPage extends Component
             'string',
             'min:2',
             'max:50',
-            'regex:/^[\pL\s\-\'\.\u{00C0}-\u{017F}]+$/u', // International characters support
+                            'regex:/^[\pL\s\-\'\.À-ſ]+$/u', // International characters support
         ],
         'email' => [
             'required',
@@ -50,7 +50,7 @@ class ContactPage extends Component
             'string',
             'min:10',
             'max:1000',
-            'regex:/^[\pL\pN\s\-\'\.\,\!\?\:\;\(\)\"\/\&\@\#\$\%\+\=\*\[\]\{\}\|\\\\\u{00C0}-\u{017F}\r\n]+$/u',
+                            'regex:/^[\pL\pN\s\-\'\.\,\!\?\:\;\(\)\"\/\&\@\#\$\%\+\=\*\[\]\{\}\|\\\\À-ſ\r\n]+$/u',
         ],
     ];
 

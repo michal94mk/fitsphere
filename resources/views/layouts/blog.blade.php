@@ -17,6 +17,9 @@
         <livewire:navigation />
     </header>
 
+    <!-- Flash Messages -->
+    <livewire:flash-messages />
+
     <main class="flex-grow">
         {{ $slot }}
     </main>

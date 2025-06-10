@@ -59,4 +59,12 @@ return [
     'search_error' => 'An error occurred while searching. Please try again.',
     'data_loading_error' => 'Could not load data. Please try again.',
     'post_not_found' => 'Post not found.',
+    
+    // Authentication messages
+    'login_success' => 'Successfully logged in! Welcome back! 👋',
+    'logout_success' => 'You have been logged out. See you soon! 👋',
+    'welcome_back' => 'Nice to see you again!',
+    'see_you_soon' => 'See you soon!',
+    'register_user_success' => 'Account created successfully! Check your email to verify your address. 📧',
+    'register_trainer_success' => 'Trainer account created! Check your email and wait for admin approval. 👨‍💼',
 ]; 

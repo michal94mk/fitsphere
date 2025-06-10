@@ -45,4 +45,12 @@ return [
     'no_summary' => 'Brak podsumowania',
     'unknown_author' => 'Nieznany autor',
     'views' => 'Wyświetlenia',
+    
+    // Authentication messages
+    'login_success' => 'Pomyślnie zalogowano! Witamy z powrotem! 👋',
+    'logout_success' => 'Zostałeś wylogowany. Do zobaczenia wkrótce! 👋',
+    'welcome_back' => 'Miło Cię widzieć ponownie!',
+    'see_you_soon' => 'Do zobaczenia wkrótce!',
+    'register_user_success' => 'Konto zostało utworzone pomyślnie! Sprawdź swoją skrzynkę pocztową, aby zweryfikować adres email. 📧',
+    'register_trainer_success' => 'Konto trenera zostało utworzone! Sprawdź email i poczekaj na zatwierdzenie przez administratora. 👨‍💼',
 ]; 

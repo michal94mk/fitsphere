@@ -83,7 +83,7 @@ class Register extends Component
                 'string',
                 'min:2',
                 'max:50',
-                'regex:/^[\pL\s\-\'\.\u{00C0}-\u{017F}]+$/u', // Supports international characters
+                'regex:/^[\pL\s\-\'\.À-ſ]+$/u', // Supports international characters
             ],
             'email' => [
                 'required',
@@ -201,12 +201,18 @@ class Register extends Component
             $this->sendWelcomeEmail($user);
             $this->setUserRegistrationSuccess();
             
+            // Add success message
+            session()->flash('success', __('common.register_user_success'));
+            
             return Redirect::to('/registration-success/user');
         } else {
             $trainer = $this->createTrainer();
             $this->sendVerificationEmail($trainer);
             $this->sendWelcomeEmailToTrainer($trainer);
             $this->setTrainerRegistrationSuccess();
+            
+            // Add success message for trainer
+            session()->flash('success', __('common.register_trainer_success'));
             
             return Redirect::to('/registration-success/trainer');
         }

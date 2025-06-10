@@ -1,10 +1,8 @@
-@extends('layouts.app')
+<?php $__env->startSection('title', $title ?? 'Trener'); ?>
 
-@section('title', $title ?? 'Trener')
+<?php $__env->startSection('body-class', 'bg-gray-100'); ?>
 
-@section('body-class', 'bg-gray-100')
-
-@section('body')
+<?php $__env->startSection('body'); ?>
     <div class="flex h-screen overflow-hidden" x-data="{ sidebarOpen: false }">
         <!-- Sidebar backdrop (mobile) -->
         <div 
@@ -26,28 +24,29 @@
                 <!-- Sidebar header -->
                 <div class="flex items-center h-16 px-4 bg-gray-900">
                     <span class="text-lg font-bold text-white">
-                        {{ config('app.name') . ' Trainer' }}
+                        <?php echo e(config('app.name') . ' Trainer'); ?>
+
                     </span>
                 </div>
                 
                 <!-- Sidebar navigation -->
                 <div class="flex flex-col flex-grow px-4 py-4 overflow-y-auto">
                     <nav class="flex-1 space-y-2">
-                        <a href="{{ route('home') }}" wire:navigate class="flex items-center px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white rounded-md">
+                        <a href="<?php echo e(route('home')); ?>" wire:navigate class="flex items-center px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white rounded-md">
                             <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
                             </svg>
                             Strona główna
                         </a>
                         
-                        <a href="{{ route('trainer.reservations') }}" wire:navigate class="flex items-center px-3 py-2 text-sm font-medium {{ request()->routeIs('trainer.reservations') ? 'text-white bg-gray-700' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }} rounded-md">
+                        <a href="<?php echo e(route('trainer.reservations')); ?>" wire:navigate class="flex items-center px-3 py-2 text-sm font-medium <?php echo e(request()->routeIs('trainer.reservations') ? 'text-white bg-gray-700' : 'text-gray-300 hover:bg-gray-700 hover:text-white'); ?> rounded-md">
                             <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                             </svg>
                             Rezerwacje
                         </a>
                         
-                        <a href="{{ route('trainer.profile') }}" wire:navigate class="flex items-center px-3 py-2 text-sm font-medium {{ request()->routeIs('trainer.profile') ? 'text-white bg-gray-700' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }} rounded-md">
+                        <a href="<?php echo e(route('trainer.profile')); ?>" wire:navigate class="flex items-center px-3 py-2 text-sm font-medium <?php echo e(request()->routeIs('trainer.profile') ? 'text-white bg-gray-700' : 'text-gray-300 hover:bg-gray-700 hover:text-white'); ?> rounded-md">
                             <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                             </svg>
@@ -60,10 +59,10 @@
                 <div class="p-4 border-t border-gray-700">
                     <div class="flex items-center">
                         <div class="w-8 h-8 rounded-full overflow-hidden mr-3">
-                            <img src="{{ Auth::guard('trainer')->user()->profile_photo_url }}" alt="{{ Auth::guard('trainer')->user()->name }}" class="w-full h-full object-cover">
+                            <img src="<?php echo e(Auth::guard('trainer')->user()->profile_photo_url); ?>" alt="<?php echo e(Auth::guard('trainer')->user()->name); ?>" class="w-full h-full object-cover">
                         </div>
                         <div>
-                            <p class="text-sm font-medium text-white">{{ Auth::guard('trainer')->user()->name }}</p>
+                            <p class="text-sm font-medium text-white"><?php echo e(Auth::guard('trainer')->user()->name); ?></p>
                             <p class="text-xs text-gray-400">Trener</p>
                         </div>
                         <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="ml-auto text-gray-400 hover:text-white">
@@ -102,27 +101,27 @@
                 
                 <!-- Mobile sidebar header -->
                 <div class="flex-shrink-0 flex items-center h-16 px-4 bg-gray-900">
-                    <span class="text-lg font-bold text-white">{{ config('app.name') . ' Trainer' }}</span>
+                    <span class="text-lg font-bold text-white"><?php echo e(config('app.name') . ' Trainer'); ?></span>
                 </div>
                 
                 <!-- Mobile sidebar navigation -->
                 <div class="mt-5 flex-1 h-0 overflow-y-auto">
                     <nav class="px-2 space-y-1">
-                        <a href="{{ route('home') }}" wire:navigate class="group flex items-center px-2 py-2 text-base font-medium rounded-md text-gray-300 hover:bg-gray-700 hover:text-white">
+                        <a href="<?php echo e(route('home')); ?>" wire:navigate class="group flex items-center px-2 py-2 text-base font-medium rounded-md text-gray-300 hover:bg-gray-700 hover:text-white">
                             <svg class="mr-3 h-6 w-6 text-gray-400 group-hover:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
                             </svg>
                             Strona główna
                         </a>
                         
-                        <a href="{{ route('trainer.reservations') }}" wire:navigate class="group flex items-center px-2 py-2 text-base font-medium rounded-md {{ request()->routeIs('trainer.reservations') ? 'text-white bg-gray-700' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
+                        <a href="<?php echo e(route('trainer.reservations')); ?>" wire:navigate class="group flex items-center px-2 py-2 text-base font-medium rounded-md <?php echo e(request()->routeIs('trainer.reservations') ? 'text-white bg-gray-700' : 'text-gray-300 hover:bg-gray-700 hover:text-white'); ?>">
                             <svg class="mr-3 h-6 w-6 text-gray-400 group-hover:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                             </svg>
                             Rezerwacje
                         </a>
                         
-                        <a href="{{ route('trainer.profile') }}" wire:navigate class="group flex items-center px-2 py-2 text-base font-medium rounded-md {{ request()->routeIs('trainer.profile') ? 'text-white bg-gray-700' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
+                        <a href="<?php echo e(route('trainer.profile')); ?>" wire:navigate class="group flex items-center px-2 py-2 text-base font-medium rounded-md <?php echo e(request()->routeIs('trainer.profile') ? 'text-white bg-gray-700' : 'text-gray-300 hover:bg-gray-700 hover:text-white'); ?>">
                             <svg class="mr-3 h-6 w-6 text-gray-400 group-hover:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                             </svg>
@@ -153,13 +152,29 @@
             <header class="bg-white shadow hidden md:block">
                 <div class="px-4 py-6 mx-auto max-w-7xl sm:px-6 lg:px-8">
                     <h1 class="text-xl font-semibold text-gray-900">
-                        {{ $header ?? 'Panel Trenera' }}
+                        <?php echo e($header ?? 'Panel Trenera'); ?>
+
                     </h1>
                 </div>
             </header>
 
             <!-- Flash Messages -->
-            <livewire:flash-messages />
+            <?php
+$__split = function ($name, $params = []) {
+    return [$name, $params];
+};
+[$__name, $__params] = $__split('flash-messages', []);
+
+$__html = app('livewire')->mount($__name, $__params, 'lw-1381164608-0', $__slots ?? [], get_defined_vars());
+
+echo $__html;
+
+unset($__html);
+unset($__name);
+unset($__params);
+unset($__split);
+if (isset($__slots)) unset($__slots);
+?>
             
             <!-- Main content -->
             <main class="flex-1 overflow-y-auto focus:outline-none">
@@ -167,14 +182,16 @@
                     <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
 
                         
-                        {{ $slot }}
+                        <?php echo e($slot); ?>
+
                     </div>
                 </div>
             </main>
         </div>
     </div>
     
-    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
-        @csrf
+    <form id="logout-form" action="<?php echo e(route('logout')); ?>" method="POST" class="hidden">
+        <?php echo csrf_field(); ?>
     </form>
-@endsection 
+<?php $__env->stopSection(); ?> 
+<?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Laravel\fitsphere\resources\views/layouts/trainer.blade.php ENDPATH**/ ?>

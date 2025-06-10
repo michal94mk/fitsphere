@@ -21,7 +21,10 @@ class UserProfileMini extends Component
         session()->invalidate();
         session()->regenerateToken();
         
-        return redirect()->route('login');
+        // Add logout success message
+        session()->flash('success', __('common.logout_success'));
+        
+        return redirect()->route('home');
     }
     
     public function render()

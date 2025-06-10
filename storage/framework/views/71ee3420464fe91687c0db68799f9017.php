@@ -45,6 +45,24 @@ if (isset($__slots)) unset($__slots);
 ?>
     </header>
 
+    <!-- Flash Messages -->
+    <?php
+$__split = function ($name, $params = []) {
+    return [$name, $params];
+};
+[$__name, $__params] = $__split('flash-messages', []);
+
+$__html = app('livewire')->mount($__name, $__params, 'lw-2514280-2', $__slots ?? [], get_defined_vars());
+
+echo $__html;
+
+unset($__html);
+unset($__name);
+unset($__params);
+unset($__split);
+if (isset($__slots)) unset($__slots);
+?>
+
     <main class="flex-grow">
         <?php echo e($slot); ?>
 
@@ -57,7 +75,7 @@ $__split = function ($name, $params = []) {
 };
 [$__name, $__params] = $__split('footer', []);
 
-$__html = app('livewire')->mount($__name, $__params, 'lw-2514280-2', $__slots ?? [], get_defined_vars());
+$__html = app('livewire')->mount($__name, $__params, 'lw-2514280-3', $__slots ?? [], get_defined_vars());
 
 echo $__html;
 

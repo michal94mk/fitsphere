@@ -22,6 +22,7 @@
         [x-cloak] { display: none !important; }
     </style>
     
+    <?php echo $__env->yieldPushContent('styles'); ?>
     <?php echo $__env->yieldContent('head'); ?>
 </head>
 <body class="font-sans antialiased <?php echo $__env->yieldContent('body-class', 'bg-gray-100'); ?>">

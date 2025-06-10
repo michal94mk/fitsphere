@@ -54,7 +54,7 @@ class PostsPage extends Component
     #[Layout('layouts.blog')]
     public function render()
     {
-        $query = Post::with(['user', 'category']);
+        $query = Post::with(['user', 'category'])->withCount('comments');
         
         // Load post translations for the current locale
         $locale = App::getLocale();

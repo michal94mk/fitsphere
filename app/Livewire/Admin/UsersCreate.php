@@ -64,7 +64,7 @@ class UsersCreate extends Component
                 'string',
                 'min:2',
                 'max:50',
-                'regex:/^[\pL\s\-\'\.\u{00C0}-\u{017F}]+$/u',
+                'regex:/^[\pL\s\-\'\.À-ſ]+$/u',
             ],
             'email' => [
                 'required',

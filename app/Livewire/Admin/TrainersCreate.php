@@ -118,7 +118,7 @@ class TrainersCreate extends Component
                 'string',
                 'min:2',
                 'max:50',
-                'regex:/^[\pL\s\-\'\.\u{00C0}-\u{017F}]+$/u',
+                'regex:/^[\pL\s\-\'\.À-ſ]+$/u',
             ],
             'email' => [
                 'required',
@@ -148,19 +148,19 @@ class TrainersCreate extends Component
                 'string',
                 'min:3',
                 'max:100',
-                'regex:/^[\pL\s\-\'\.\,\(\)\/\&\u{00C0}-\u{017F}]+$/u',
+                'regex:/^[\pL\s\-\'\.\,\(\)\/\&À-ſ]+$/u',
             ],
             'description' => [
                 'nullable',
                 'string',
                 'max:500',
-                'regex:/^[\pL\pN\s\-\'\.\,\!\?\:\;\(\)\"\/\&\@\#\$\%\+\=\*\[\]\{\}\|\\\\\u{00C0}-\u{017F}\r\n]*$/u',
+                'regex:/^[\pL\pN\s\-\'\.\,\!\?\:\;\(\)\"\/\&\@\#\$\%\+\=\*\[\]\{\}\|\\\\À-ſ\r\n]*$/u',
             ],
             'biography' => [
                 'nullable',
                 'string',
                 'max:2000',
-                'regex:/^[\pL\pN\s\-\'\.\,\!\?\:\;\(\)\"\/\&\@\#\$\%\+\=\*\[\]\{\}\|\\\\\u{00C0}-\u{017F}\r\n]*$/u',
+                'regex:/^[\pL\pN\s\-\'\.\,\!\?\:\;\(\)\"\/\&\@\#\$\%\+\=\*\[\]\{\}\|\\\\À-ſ\r\n]*$/u',
             ],
             'photo' => [
                 'nullable',
