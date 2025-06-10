@@ -145,4 +145,5 @@ return [
     'trainer_add_error' => 'An error occurred while adding the trainer: :error',
     'trainer_updated' => 'Trainer information has been updated!',
     'trainer_update_error' => 'An error occurred while updating the trainer: :error',
+    'initialization_error' => 'An error occurred while loading trainer information. Please try again.',
 ]; 

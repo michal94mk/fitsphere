@@ -202,7 +202,10 @@ class Register extends Component
             $this->setUserRegistrationSuccess();
             
             // Add success message
-            session()->flash('success', __('common.register_user_success'));
+            $this->dispatch('flashMessage', [
+                'type' => 'success',
+                'message' => __('common.register_user_success')
+            ]);
             
             return Redirect::to('/registration-success/user');
         } else {
@@ -212,7 +215,10 @@ class Register extends Component
             $this->setTrainerRegistrationSuccess();
             
             // Add success message for trainer
-            session()->flash('success', __('common.register_trainer_success'));
+            $this->dispatch('flashMessage', [
+                'type' => 'success',
+                'message' => __('common.register_trainer_success')
+            ]);
             
             return Redirect::to('/registration-success/trainer');
         }

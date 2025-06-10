@@ -43,19 +43,37 @@ return [
     'user' => [
         'name' => [
             'required' => 'Name is required.',
+            'min' => 'Name must be at least :min characters.',
+            'max' => 'Name may not be greater than :max characters.',
+            'format' => 'Name may only contain letters, spaces, hyphens, and apostrophes.',
             'regex' => 'Name may only contain letters, spaces, hyphens, and apostrophes.',
         ],
         'email' => [
             'required' => 'Email address is required.',
             'email' => 'Please enter a valid email address.',
+            'format' => 'Please enter a valid email address.',
             'unique' => 'This email address is already taken.',
+            'exists_other_type' => 'An account with this email already exists as a different user type.',
+            'max' => 'Email may not be greater than :max characters.',
             'dns' => 'The email domain appears to be invalid.',
+            'regex' => 'Please enter a valid email address.',
         ],
         'password' => [
             'required' => 'Password is required.',
             'min' => 'Password must be at least :min characters.',
+            'max' => 'Password may not be greater than :max characters.',
             'confirmed' => 'Password confirmation does not match.',
+            'complex' => 'Password must contain at least one uppercase letter, one lowercase letter, and one number.',
             'regex' => 'Password must contain at least one uppercase letter, one lowercase letter, and one number.',
+        ],
+        'password_confirmation' => [
+            'required' => 'Password confirmation is required.',
+            'min' => 'Password confirmation must be at least :min characters.',
+            'max' => 'Password confirmation may not be greater than :max characters.',
+        ],
+        'account_type' => [
+            'required' => 'Account type is required.',
+            'invalid' => 'Invalid account type selected.',
         ],
         'role' => [
             'required' => 'Role is required.',
@@ -67,6 +85,28 @@ return [
         ],
         'specialization' => [
             'required' => 'Specialization is required for trainers.',
+            'min' => 'Specialization must be at least :min characters.',
+            'max' => 'Specialization may not be greater than :max characters.',
+            'format' => 'Specialization may only contain letters, spaces, commas, and basic punctuation.',
+            'regex' => 'Specialization may only contain letters, spaces, commas, and basic punctuation.',
+        ],
+    ],
+    
+    'trainer' => [
+        'description' => [
+            'max' => 'Description may not be greater than :max characters.',
+            'format' => 'Description contains invalid characters.',
+            'regex' => 'Description contains invalid characters.',
+        ],
+        'bio' => [
+            'max' => 'Biography may not be greater than :max characters.',
+            'format' => 'Biography contains invalid characters.',
+            'regex' => 'Biography contains invalid characters.',
+        ],
+        'experience' => [
+            'integer' => 'Experience must be a valid number.',
+            'min' => 'Experience must be at least :min years.',
+            'max' => 'Experience may not be greater than :max years.',
         ],
     ],
     

@@ -34,7 +34,10 @@ class Login extends Component
             session()->regenerate();
             
             // Add success message
-            session()->flash('success', __('common.login_success'));
+            $this->dispatch('flashMessage', [
+                'type' => 'success',
+                'message' => __('common.login_success')
+            ]);
             
             return $this->redirect(route('home'), navigate: true);
         }
@@ -45,7 +48,10 @@ class Login extends Component
             
             // Add success message for trainer
             $trainerName = Auth::guard('trainer')->user()->name;
-            session()->flash('success', __('common.login_success'));
+            $this->dispatch('flashMessage', [
+                'type' => 'success',
+                'message' => __('common.login_success')
+            ]);
             
             return $this->redirect(route('home'), navigate: true);
         }

@@ -45,6 +45,7 @@ class CreateReservation extends Component
             
             // Initialize time slots immediately
             $this->updateAvailableTimeSlots();
+            
         } catch (ModelNotFoundException $e) {
             $this->logService->error('Trainer not found', [
                 'trainer_id' => $trainerId,
@@ -56,6 +57,7 @@ class CreateReservation extends Component
         } catch (Throwable $e) {
             $this->logService->exception($e, 'Error initializing reservation form', [
                 'trainer_id' => $trainerId,
+                'step' => 'initialization'
             ]);
             
             session()->flash('error', __('trainers.initialization_error'));
@@ -103,12 +105,13 @@ class CreateReservation extends Component
     
     public function updateAvailableTimeSlots()
     {
-        // Get all existing reservations for the selected date and trainer
-        $existingReservations = Reservation::where('trainer_id', $this->trainerId)
-            ->where('date', $this->date)
-            ->whereIn('status', ['pending', 'confirmed'])
-            ->orderBy('start_time')
-            ->get(['start_time', 'end_time']);
+        try {
+            // Get all existing reservations for the selected date and trainer
+            $existingReservations = Reservation::where('trainer_id', $this->trainerId)
+                ->where('date', $this->date)
+                ->whereIn('status', ['pending', 'confirmed'])
+                ->orderBy('start_time')
+                ->get(['start_time', 'end_time']);
             
         // Define training hours
         $startHour = 8;
@@ -185,6 +188,17 @@ class CreateReservation extends Component
                 'hour' => sprintf('%02d:00', $hour),
                 'slots' => $hourSlots
             ];
+        }
+        
+        } catch (Throwable $e) {
+            $this->logService->exception($e, 'Error updating available time slots', [
+                'trainer_id' => $this->trainerId,
+                'date' => $this->date
+            ]);
+            
+            // Initialize empty time slot grid on error
+            $this->timeSlotGrid = [];
+            throw $e;
         }
     }
     

@@ -18,12 +18,13 @@ class NutritionalProfileFactory extends Factory
             'age' => $this->faker->numberBetween(18, 70),
             'height' => $this->faker->numberBetween(150, 200),
             'weight' => $this->faker->numberBetween(45, 120),
-            'activity_level' => $this->faker->randomElement(['sedentary', 'light', 'moderate', 'high', 'very_high']),
+            'activity_level' => $this->faker->randomElement(['sedentary', 'light', 'moderate', 'active', 'very_active']),
             'goal' => $this->faker->randomElement(['lose', 'maintain', 'gain']),
-            'daily_calories' => $this->faker->numberBetween(1500, 3000),
-            'carbs_percentage' => $this->faker->numberBetween(30, 50),
-            'protein_percentage' => $this->faker->numberBetween(20, 35),
-            'fat_percentage' => $this->faker->numberBetween(20, 35),
+            'target_calories' => $this->faker->numberBetween(1500, 3000),
+            'target_protein' => $this->faker->numberBetween(80, 150),
+            'target_carbs' => $this->faker->numberBetween(150, 300),
+            'target_fat' => $this->faker->numberBetween(50, 100),
+            'dietary_restrictions' => [],
         ];
     }
 } 

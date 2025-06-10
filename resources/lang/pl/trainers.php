@@ -148,4 +148,5 @@ return [
     'trainer_add_error' => 'Wystąpił błąd podczas dodawania trenera: :error',
     'trainer_updated' => 'Informacje o trenerze zostały zaktualizowane!',
     'trainer_update_error' => 'Wystąpił błąd podczas aktualizacji trenera: :error',
+    'initialization_error' => 'Wystąpił błąd podczas wczytywania informacji o trenerze. Spróbuj ponownie.',
 ]; 

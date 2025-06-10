@@ -15,14 +15,14 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('name');
-            $table->text('description')->nullable();
-            $table->json('meals'); // JSON structure for meals
-            $table->integer('duration_days')->default(7);
-            $table->decimal('total_calories', 8, 2)->nullable();
-            $table->decimal('total_protein', 8, 2)->nullable();
-            $table->decimal('total_carbs', 8, 2)->nullable();
-            $table->decimal('total_fat', 8, 2)->nullable();
-            $table->boolean('is_active')->default(true);
+            $table->date('date');
+            $table->string('meal_type'); // breakfast, lunch, dinner, snack
+            $table->json('recipe_data')->nullable();
+            $table->decimal('calories', 8, 2)->nullable();
+            $table->decimal('protein', 8, 2)->nullable();
+            $table->decimal('carbs', 8, 2)->nullable();
+            $table->decimal('fat', 8, 2)->nullable();
+            $table->text('notes')->nullable();
             $table->timestamps();
         });
     }

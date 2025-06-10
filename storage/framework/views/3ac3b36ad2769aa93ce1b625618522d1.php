@@ -191,39 +191,7 @@ unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                     </div>
                 </div>
 
-                <!--[if BLOCK]><![endif]--><?php if($account_type === 'trainer'): ?>
-                <div class="space-y-6">
-                    <div class="bg-blue-50 border-l-4 border-blue-400 p-4">
-                        <div class="flex">
-                            <div class="flex-shrink-0">
-                                <svg class="h-5 w-5 text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
-                                </svg>
-                            </div>
-                            <div class="ml-3">
-                                <p class="text-sm text-blue-700">
-                                    Wybierając konto trenera, zostaniesz poproszony o podanie specjalizacji. Twoje konto będzie musiało zostać zatwierdzone przez administratora.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
 
-                    <div>
-                        <label for="specialization" class="block text-sm font-medium text-gray-700">Specjalizacja</label>
-                        <div class="mt-1">
-                            <input wire:model.defer="specialization" id="specialization" name="specialization" type="text" class="py-3 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md" placeholder="Np. Trening siłowy, Dietetyka, Joga">
-                        </div>
-                        <!--[if BLOCK]><![endif]--><?php $__errorArgs = ['specialization'];
-$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
-if ($__bag->has($__errorArgs[0])) :
-if (isset($message)) { $__messageOriginal = $message; }
-$message = $__bag->first($__errorArgs[0]); ?> <p class="mt-2 text-sm text-red-600"><?php echo e($message); ?></p> <?php unset($message);
-if (isset($__messageOriginal)) { $message = $__messageOriginal; }
-endif;
-unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
-                    </div>
-                </div>
-                <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
 
                 <div>
                     <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transform transition hover:scale-105">
