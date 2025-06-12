@@ -6,7 +6,7 @@ use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
-use App\Models\Trainer;
+use App\Models\User;
 use Livewire\Attributes\Layout;
 
 
@@ -28,9 +28,9 @@ class DeleteTrainerAccount extends Component
             'password' => 'required',
         ]);
 
-        $trainer = Auth::guard('trainer')->user();
+        $trainer = Auth::user();
 
-        if (!$trainer) {
+        if (!$trainer || !in_array('trainer', explode(',', $trainer->role))) {
             $this->errorMessage = 'You are not logged in as a trainer.';
             return;
         }
@@ -63,9 +63,9 @@ class DeleteTrainerAccount extends Component
             return;
         }
 
-        $trainer = Auth::guard('trainer')->user();
+        $trainer = Auth::user();
 
-        if (!$trainer) {
+        if (!$trainer || !in_array('trainer', explode(',', $trainer->role))) {
             $this->errorMessage = 'You are not logged in as a trainer.';
             return;
         }
@@ -77,11 +77,18 @@ class DeleteTrainerAccount extends Component
         }
 
         try {
-            Trainer::find($trainerId)->delete();
+            // Delete associated data first
+            $trainer->reservations()->delete();
+            $trainer->trainerReservations()->delete();
+            $trainer->posts()->delete();
+            $trainer->comments()->delete();
+            $trainer->nutritionalProfile()->delete();
+            $trainer->mealPlans()->delete();
             
-            Auth::guard('trainer')->logout();
-            session()->invalidate();
-            session()->regenerateToken();
+            // Delete the trainer
+            $trainer->delete();
+
+            Auth::logout();
             
             return redirect()->route('home')->with('success', 'Your account has been deleted.');
         } catch (\Exception $e) {

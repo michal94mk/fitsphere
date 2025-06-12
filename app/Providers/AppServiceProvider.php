@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Support\Facades\Event;
-use App\Models\Trainer;
+use App\Models\User;
 use App\Services\EmailService;
 use App\Services\LogService;
 use App\Services\TranslationService;
@@ -59,17 +59,11 @@ class AppServiceProvider extends ServiceProvider
         $events = $this->app['events'];
         $events->forget(Registered::class);
         
-        // Register custom listener that handles both user types
+        // Register custom listener that handles user registration
         Event::listen(Registered::class, function (Registered $event) {
-            // Select appropriate notification method based on user type
-            // Only one method is called to prevent duplicate emails
-            if ($event->user instanceof Trainer) {
-                // For Trainers, use their class-specific method
-                $event->user->sendEmailVerificationNotification();
-            } else {
-                // For regular users, use the standard handler
-                (new SendEmailVerificationNotification)->handle($event);
-            }
+            // All users (including trainers) are now User instances
+            // Use the standard email verification handler
+            (new SendEmailVerificationNotification)->handle($event);
         });
 
 

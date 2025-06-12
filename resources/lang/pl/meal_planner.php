@@ -74,7 +74,7 @@ return [
     // Modal delete meal
     'delete_meal_title' => 'Usuń przepis z planu',
     'delete_meal_description' => 'Czy na pewno chcesz usunąć ten przepis z planu posiłków? Ta akcja nie może być cofnięta.',
-    'delete_meal' => 'Usuń przepis',
+    'delete_meal' => 'Usuń posiłek',
     'recipe' => 'Przepis',
     
     // Additional meal planner keys
@@ -88,4 +88,73 @@ return [
     'notes' => 'Notatki',
     'no_meals_planned' => 'Brak zaplanowanych posiłków na ten dzień.',
     'use_generator' => 'Użyj generatora planów posiłków powyżej, aby dodać przepisy.',
+    'plan_generated_success' => 'Plan posiłków został wygenerowany pomyślnie! Kliknij na przepis, aby dodać go do planu.',
+    
+    // Recipe details
+    'recipe_details' => 'Szczegóły przepisu',
+    'ingredients' => 'Składniki',
+    'instructions' => 'Instrukcje',
+    'preparation_time' => 'Czas przygotowania',
+    'translate_to_polish' => 'Przetłumacz na polski',
+    'show_original' => 'Pokaż oryginał',
+    'no_instructions' => 'Brak instrukcji przygotowania',
+    'no_ingredients' => 'Brak listy składników',
+    
+    // Add to plan section
+    'add_to_plan' => 'Dodaj do planu',
+    'meal_type' => 'Typ posiłku',
+    
+    // Saved meals actions
+    'view_recipe_details' => 'Zobacz szczegóły przepisu',
+    'click_to_view_details' => 'Kliknij, aby zobaczyć szczegóły przepisu',
+    'recipe_details_available' => 'Dostępne szczegóły przepisu',
+    
+    // Loading states
+    'loading_recipe_details' => 'Ładowanie szczegółów przepisu...',
+    'translating_ingredients' => 'Tłumaczenie składników...',
+    'translating_instructions' => 'Tłumaczenie instrukcji...',
+    
+    // Already in plan
+    'already_in_plan' => 'Przepis już jest w planie',
+    'already_in_plan_description' => 'Ten przepis jest już dodany do Twojego planu posiłków. Możesz go zobaczyć na liście poniżej.',
+    'close' => 'Zamknij',
+    
+    // Recipe search and selection
+    'select_recipe' => 'Wybierz przepis',
+    'no_recipes_found' => 'Nie znaleziono przepisów spełniających kryteria.',
+    'intolerances' => 'Nietolerancje',
+    'no_intolerances' => 'Brak nietolerancji',
+    'egg_free' => 'Bez jaj',
+    'grain_free' => 'Bez zbóż',
+    'seafood_free' => 'Bez owoców morza',
+    'sesame_free' => 'Bez sezamu',
+    'shellfish_free' => 'Bez skorupiaków',
+    'soy_free' => 'Bez soi',
+    'sulfite_free' => 'Bez siarczanów',
+    'tree_nut_free' => 'Bez orzechów',
+    'wheat_free' => 'Bez pszenicy',
+    
+    // Extended recipe details
+    'prep_time' => 'Czas przygotowania',
+    'cooking_time' => 'Czas gotowania',
+    'health_score' => 'Wskaźnik zdrowotności',
+    'spoon_score' => 'Ocena Spoonacular',
+    'price_per_serving' => 'Cena za porcję',
+    'very_healthy' => 'Bardzo zdrowe',
+    'budget_friendly' => 'Budżetowe',
+    'very_popular' => 'Bardzo popularne',
+    'sustainable' => 'Zrównoważone',
+    'ketogenic' => 'Ketogeniczne',
+    'fiber' => 'Błonnik',
+    'sugar' => 'Cukier',
+    'saturated_fat' => 'Tłuszcz nasycony',
+    'sodium' => 'Sód',
+    'nutrition_note' => 'Uwaga: Wartości odżywcze podane przez API są już w przeliczeniu na porcję.',
+    'no_nutrition_info' => 'Brak informacji o wartościach odżywczych',
+    'cuisines' => 'Kuchnie',
+    'dish_types' => 'Rodzaje dań',
+    'serving_size_adjustment' => 'Wielkość porcji',
+    'servings_default' => 'Domyślnie',
+    'serving_size_note' => 'Dostosuj wielkość porcji do swoich potrzeb (np. 0.5 = połowa porcji, 2 = podwójna porcja)',
+    'actual_serving' => 'Rzeczywista porcja',
 ]; 

@@ -50,6 +50,7 @@ return [
     'login_required' => 'You need to be logged in to book a session.',
     'make_reservation' => 'Make a Reservation',
     'login_to_reserve' => 'Login to Reserve',
+    'cannot_book_yourself' => 'You cannot book with yourself',
     
     // Admin section
     'admin_title' => 'Manage Trainers',

@@ -17,7 +17,10 @@ class ContentSeeder extends Seeder
     public function run(): void
     {
         // Get admin user
-        $adminUser = User::where('role', 'admin')->first();
+        $adminUser = User::all()->filter(function ($user) {
+            return $user->isAdmin();
+        })->first();
+        
         if (!$adminUser) {
             $this->command->error('Admin user not found. Please run BaseDataSeeder first.');
             return;

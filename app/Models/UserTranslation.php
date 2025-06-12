@@ -6,21 +6,22 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class TrainerTranslation extends Model
+class UserTranslation extends Model
 {
     use HasFactory;
-
+    
     protected $fillable = [
-        'trainer_id',
+        'user_id',
         'locale',
-        'specialization',
+        'name',
         'description',
-        'bio',
-        'specialties'
+        'bio', 
+        'specialties',
+        'specialization',
     ];
-
-    public function trainer(): BelongsTo
+    
+    public function user(): BelongsTo
     {
-        return $this->belongsTo(Trainer::class);
+        return $this->belongsTo(User::class);
     }
 }

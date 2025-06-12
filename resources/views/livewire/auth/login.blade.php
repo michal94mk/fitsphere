@@ -10,13 +10,12 @@
             </div>
             <h2 class="text-3xl font-extrabold text-center">
                 <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-blue-500">
-                    Logowanie
+                    {{ __('auth.login') }}
                 </span>
             </h2>
             <p class="mt-2 text-sm text-gray-600">
-                Lub
                 <a href="{{ route('register') }}" wire:navigate wire:prefetch class="font-medium text-blue-600 hover:text-blue-500">
-                    utwórz nowe konto
+                    {{ __('auth.or_create_account') }}
                 </a>
             </p>
         </div>
@@ -88,14 +87,14 @@
                     <div class="w-full border-t border-gray-300"></div>
                 </div>
                 <div class="relative flex justify-center text-sm">
-                    <span class="px-2 bg-white text-gray-500">lub</span>
+                    <span class="px-2 bg-white text-gray-500">{{ __('auth.or') }}</span>
                 </div>
             </div>
 
             <form wire:submit.prevent="login" class="space-y-6">
                 {{-- Email field --}}
                 <div>
-                    <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                    <label for="email" class="block text-sm font-medium text-gray-700">{{ __('auth.email') }}</label>
                     <div class="mt-1 relative rounded-md shadow-sm">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
@@ -103,33 +102,33 @@
                                 <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
                             </svg>
                         </div>
-                        <input wire:model.defer="email" id="email" name="email" type="email" autocomplete="email" required class="py-3 text-gray-900 placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md" placeholder="you@example.com">
+                        <input wire:model.defer="email" id="email" name="email" type="email" autocomplete="email" required class="py-3 text-gray-900 placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md" placeholder="{{ __('auth.email_placeholder') }}">
                     </div>
                 </div>
 
                 <div class="space-y-1">
-                    <label for="password" class="block text-sm font-medium text-gray-700">Hasło</label>
+                    <label for="password" class="block text-sm font-medium text-gray-700">{{ __('auth.password') }}</label>
                     <div class="mt-1 relative rounded-md shadow-sm">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                                 <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
                             </svg>
                         </div>
-                        <input wire:model.defer="password" id="password" name="password" type="password" autocomplete="current-password" required class="py-3 text-gray-900 placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md" placeholder="••••••••">
+                        <input wire:model.defer="password" id="password" name="password" type="password" autocomplete="current-password" required class="py-3 text-gray-900 placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md" placeholder="{{ __('auth.password_placeholder') }}">
                     </div>
                 </div>
 
                 <div class="flex items-center justify-between">
                     <div class="text-sm">
                         <a href="{{ route('password.request') }}" wire:navigate wire:prefetch class="font-medium text-blue-600 hover:text-blue-500">
-                            Nie pamiętasz hasła?
+                            {{ __('auth.forgot_password') }}
                         </a>
                     </div>
                 </div>
 
                 <div>
                     <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transform transition hover:scale-105">
-                        Zaloguj się
+                        {{ __('auth.login_button') }}
                     </button>
                 </div>
             </form>

@@ -12,7 +12,6 @@ use App\Mail\TrainerApproved;
 use App\Mail\TrainerWelcomeEmail;
 use App\Mail\WelcomeEmail;
 use App\Models\User;
-use App\Models\Trainer;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
@@ -136,7 +135,7 @@ class EmailService
     /**
      * Wysyła email powitalny dla trenera po rejestracji
      */
-    public function sendTrainerWelcomeEmail(Trainer $trainer): bool
+    public function sendTrainerWelcomeEmail(User $trainer): bool
     {
         try {
             Mail::to($trainer->email)->queue(new TrainerWelcomeEmail($trainer));
@@ -161,7 +160,7 @@ class EmailService
     /**
      * Wysyła email powiadomienia o zatwierdzeniu trenera
      */
-    public function sendTrainerApprovedEmail(Trainer $trainer): bool
+    public function sendTrainerApprovedEmail(User $trainer): bool
     {
         try {
             Mail::to($trainer->email)->queue(new TrainerApproved($trainer));
@@ -282,7 +281,7 @@ class EmailService
     {
         try {
             // Wysyła testowy email na prawdziwą skrzynkę
-            $testEmail = 'michal94mk@o2.pl'; // Twoja prawdziwa skrzynka
+            $testEmail = 'michalkolodziejczyk307@gmail.com'; // Twoja prawdziwa skrzynka
             
             Mail::raw(
                 'Test email z FitSphere przez Brevo SMTP! 📧' . PHP_EOL . 

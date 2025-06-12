@@ -20,11 +20,12 @@ class UpdateTrainerPassword extends Component
 
     public function mount()
     {
-        if (!Auth::guard('trainer')->check()) {
+        $user = Auth::user();
+        if (!$user || !in_array('trainer', explode(',', $user->role))) {
             return redirect()->route('login');
         }
-        
-        $this->user = Auth::guard('trainer')->user();
+
+        $this->user = $user;
     }
 
     protected function messages()

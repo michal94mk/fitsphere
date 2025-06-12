@@ -98,6 +98,11 @@ return [
     'translation_info_message' => 'Funkcja tłumaczenia przepisów wykorzystuje darmowe API DeepL:',
     'translation_info_point1' => 'Tłumaczenia mogą nie być doskonałe lub mogą zawierać błędy',
     'translation_info_point2' => 'Czas tłumaczenia może być dłuższy przy rozbudowanych przepisach',
-    'translation_info_point3' => 'Przy dłuższych tekstach mogą wystąpić problemy z tłumaczeniem ze względu na ograniczenia darmowego API',
-    'translation_info_point4' => 'W razie problemów z tłumaczeniem, możesz zawsze przełączyć się na oryginalną wersję',
+    'translation_info_point3' => 'Problemy mogą wystąpić z długimi tekstami ze względu na ograniczenia darmowego API',
+    'translation_info_point4' => 'W przypadku problemów z tłumaczeniem zawsze możesz przełączyć na wersję oryginalną',
+    
+    // Meal planning redirect
+    'meal_planning' => 'Planowanie Posiłków',
+    'meal_planning_description' => 'Użyj dedykowanego Planera Posiłków, aby wyszukiwać przepisy, tworzyć plany posiłków i śledzić swoje cele żywieniowe.',
+    'go_to_meal_planner' => 'Przejdź do Planera Posiłków',
 ]; 

@@ -222,12 +222,91 @@
                 <div class="w-8"></div> <!-- Spacer for balance -->
             </div>
             
-            <!-- Page heading -->
-            <header class="bg-white shadow hidden md:block">
-                <div class="px-4 py-6 mx-auto max-w-7xl sm:px-6 lg:px-8">
-                    <h1 class="text-xl font-semibold text-gray-900">
-                        {{ $header ?? __('admin.dashboard') }}
-                    </h1>
+            <!-- Admin header navigation -->
+            <header class="bg-white shadow border-b border-gray-200">
+                <div class="px-4 py-3 mx-auto max-w-7xl sm:px-6 lg:px-8">
+                    <div class="flex items-center justify-between">
+                        <!-- Page title -->
+                        <h1 class="text-xl font-semibold text-gray-900 hidden md:block">
+                            {{ $header ?? __('admin.dashboard') }}
+                        </h1>
+                        <div class="md:hidden text-lg font-medium text-gray-900">{{ __('admin.admin_panel') }}</div>
+                        
+                        <!-- Right side - user info and actions -->
+                        <div class="flex items-center space-x-4">
+                            <!-- Language Switcher -->
+                            <livewire:language-switcher />
+                            
+                            <!-- Back to site link -->
+                            <a href="{{ route('home') }}" 
+                               class="text-sm text-gray-600 hover:text-gray-900 flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                                </svg>
+                                {{ __('admin.back_to_site') }}
+                            </a>
+                            
+                            <!-- User dropdown -->
+                            @if(Auth::check())
+                                <div x-data="{ dropdownOpen: false }" class="relative">
+                                    <button @click="dropdownOpen = !dropdownOpen"
+                                            class="flex items-center space-x-2 px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 focus:outline-none">
+                                        <div class="w-8 h-8 rounded-full overflow-hidden">
+                                            <img src="{{ Auth::user()->profile_photo_url }}" alt="{{ Auth::user()->name }}" class="w-full h-full object-cover">
+                                        </div>
+                                        <span>{{ Auth::user()->name }}</span>
+                                        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    </button>
+                                    
+                                    <div x-show="dropdownOpen" 
+                                         x-cloak
+                                         @click.away="dropdownOpen = false"
+                                         class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-50">
+                                        <div class="py-1">
+                                            <div class="px-4 py-2 border-b border-gray-100">
+                                                <p class="text-sm font-medium text-gray-900">{{ Auth::user()->name }}</p>
+                                                <p class="text-xs text-gray-500">{{ Auth::user()->email }}</p>
+                                            </div>
+                                            
+                                            <a href="{{ route('profile') }}"
+                                               class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                                {{ __('common.profile') }}
+                                            </a>
+                                            
+                                            {{-- Admin can also make reservations if has user role --}}
+                                            @if(Auth::user()->isUser())
+                                                <a href="{{ route('user.reservations') }}"
+                                                   class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                                    {{ __('common.my_reservations') }}
+                                                </a>
+                                            @endif
+                                            
+                                            <div class="border-t border-gray-100">
+                                                <form method="POST" action="{{ route('logout') }}">
+                                                    @csrf
+                                                    <button type="submit"
+                                                            class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                                        {{ __('common.logout') }}
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @else
+                                <div class="flex items-center space-x-2">
+                                    <a href="{{ route('login') }}" class="text-sm text-gray-600 hover:text-gray-900">
+                                        {{ __('common.login') }}
+                                    </a>
+                                    <a href="{{ route('register') }}" class="text-sm text-gray-600 hover:text-gray-900">
+                                        {{ __('common.register') }}
+                                    </a>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
                 </div>
             </header>
             

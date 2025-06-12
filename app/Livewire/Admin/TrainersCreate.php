@@ -2,7 +2,7 @@
 
 namespace App\Livewire\Admin;
 
-use App\Models\Trainer;
+use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -77,10 +77,11 @@ class TrainersCreate extends Component
                 $imagePath = $this->photo->store('images/trainers', 'public');
             }
             
-            Trainer::create([
+            User::create([
                 'name' => $this->name,
                 'email' => $this->email,
                 'password' => Hash::make($this->password),
+                'role' => 'trainer',
                 'specialization' => $this->specialization,
                 'description' => $this->description,
                 'bio' => $this->biography,
@@ -125,7 +126,6 @@ class TrainersCreate extends Component
                 'string',
                 'email:rfc,dns',
                 'max:100',
-                'unique:trainers,email',
                 'unique:users,email',
                 'regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/',
             ],

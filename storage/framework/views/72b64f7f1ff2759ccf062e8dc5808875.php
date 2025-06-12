@@ -275,34 +275,80 @@
                                             <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                                         </div>
                                     </div>
+                                    
+                                    <div class="mb-4">
+                                        <h5 class="font-medium mb-3"><?php echo e(__('meal_planner.ingredients')); ?></h5>
+                                        <!--[if BLOCK]><![endif]--><?php if(isset($selectedRecipe['extendedIngredients']) && is_array($selectedRecipe['extendedIngredients']) && count($selectedRecipe['extendedIngredients']) > 0): ?>
+                                            <ul class="space-y-1 text-sm">
+                                                <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $selectedRecipe['extendedIngredients']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $ingredient): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                    <li class="text-gray-700 flex items-start">
+                                                        <span class="w-2 h-2 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                                                        <span><?php echo e($ingredient['original'] ?? ($ingredient['amount'] . ' ' . $ingredient['unit'] . ' ' . $ingredient['name'])); ?></span>
+                                                    </li>
+                                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
+                                            </ul>
+                                        <?php else: ?>
+                                            <p class="text-gray-500 italic text-sm"><?php echo e(__('meal_planner.no_ingredients')); ?></p>
+                                        <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+                                    </div>
+                                    
+                                    <!-- Instructions section -->
+                                    <div class="mb-4">
+                                        <h5 class="font-medium mb-3"><?php echo e(__('meal_planner.instructions')); ?></h5>
+                                        <!--[if BLOCK]><![endif]--><?php if(isset($selectedRecipe['instructions']) && !empty($selectedRecipe['instructions'])): ?>
+                                            <div class="text-sm text-gray-700"><?php echo $selectedRecipe['instructions']; ?></div>
+                                        <?php elseif(isset($selectedRecipe['analyzedInstructions']) && is_array($selectedRecipe['analyzedInstructions']) && count($selectedRecipe['analyzedInstructions']) > 0 && isset($selectedRecipe['analyzedInstructions'][0]['steps'])): ?>
+                                            <ol class="list-decimal pl-5 space-y-2 text-sm">
+                                                <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $selectedRecipe['analyzedInstructions'][0]['steps']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $step): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                    <li class="text-gray-700"><?php echo e($step['step'] ?? 'No step description'); ?></li>
+                                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
+                                            </ol>
+                                        <?php else: ?>
+                                            <p class="text-gray-500 italic text-sm"><?php echo e(__('meal_planner.no_instructions')); ?></p>
+                                        <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+                                    </div>
                                 </div>
                                 
                                 <div>
                                     <div class="bg-white p-4 rounded-md shadow">
-                                        <h4 class="text-lg font-semibold mb-3">Zapisz do planu</h4>
+                                        <h4 class="text-lg font-semibold mb-3"><?php echo e(__('meal_planner.add_to_plan')); ?></h4>
                                         
                                         <div class="mb-4">
-                                            <label for="mealType" class="block text-sm font-medium text-gray-700 mb-1">Typ posiłku</label>
+                                            <label for="mealType" class="block text-sm font-medium text-gray-700 mb-1"><?php echo e(__('meal_planner.meal_type')); ?></label>
                                             <select wire:model="mealType" id="mealType" class="w-full rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                                                <option value="breakfast">Śniadanie</option>
-                                                <option value="lunch">Obiad</option>
-                                                <option value="dinner">Kolacja</option>
-                                                <option value="snack">Przekąska</option>
+                                                <option value="breakfast"><?php echo e(__('meal_planner.breakfast')); ?></option>
+                                                <option value="lunch"><?php echo e(__('meal_planner.lunch')); ?></option>
+                                                <option value="dinner"><?php echo e(__('meal_planner.dinner')); ?></option>
+                                                <option value="snack"><?php echo e(__('meal_planner.snacks')); ?></option>
                                             </select>
                                         </div>
                                         
                                         <div class="mb-4">
-                                            <label for="notes" class="block text-sm font-medium text-gray-700 mb-1">Notatki</label>
+                                            <label for="servingSize" class="block text-sm font-medium text-gray-700 mb-1"><?php echo e(__('meal_planner.serving_size_adjustment')); ?></label>
+                                            <div class="flex items-center space-x-3">
+                                                <input wire:model="servingSize" id="servingSize" type="number" min="0.5" max="10" step="0.5" class="w-20 rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" />
+                                                <span class="text-sm text-gray-600">
+                                                    <?php echo e(__('meal_planner.servings_default')); ?>: <?php echo e($selectedRecipe['servings'] ?? '1'); ?>
+
+                                                </span>
+                                            </div>
+                                            <p class="text-xs text-gray-500 mt-1"><?php echo e(__('meal_planner.serving_size_note')); ?></p>
+                                        </div>
+                                        
+                                        <div class="mb-4">
+                                            <label for="notes" class="block text-sm font-medium text-gray-700 mb-1"><?php echo e(__('meal_planner.notes')); ?></label>
                                             <textarea wire:model="notes" id="notes" rows="3" class="w-full rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"></textarea>
                                         </div>
                                         
                                         <div class="flex space-x-4">
                                             <button wire:click="saveMealToPlan" class="px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-md font-semibold text-xs uppercase tracking-widest hover:from-blue-600 hover:to-blue-700 transition duration-300 shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-                                                Dodaj do planu
+                                                <?php echo e(__('meal_planner.add_to_plan')); ?>
+
                                             </button>
                                             
                                             <button wire:click="$set('selectedRecipe', null)" class="px-4 py-2 bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest hover:bg-gray-300 active:bg-gray-400 focus:outline-none focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150">
-                                                Anuluj
+                                                <?php echo e(__('meal_planner.cancel')); ?>
+
                                             </button>
                                         </div>
                                         
@@ -399,8 +445,18 @@
                                                 <div class="text-xs text-gray-500 mt-1">
                                                     <!--[if BLOCK]><![endif]--><?php if(isset($meal->recipe_data['servings']) && $meal->recipe_data['servings'] > 0): ?>
                                                         <span><?php echo e(__('meal_planner.nutrition_per_serving')); ?> <?php echo e(__('meal_planner.servings')); ?>: <?php echo e($meal->recipe_data['servings']); ?></span>
+                                                        <!--[if BLOCK]><![endif]--><?php if(isset($meal->serving_size) && $meal->serving_size != 1): ?>
+                                                            <span class="ml-2 px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded">
+                                                                <?php echo e(__('meal_planner.actual_serving')); ?>: <?php echo e($meal->serving_size); ?>x
+                                                            </span>
+                                                        <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                                                     <?php else: ?>
                                                         <span><?php echo e(__('meal_planner.nutrition_per_serving')); ?></span>
+                                                        <!--[if BLOCK]><![endif]--><?php if(isset($meal->serving_size) && $meal->serving_size != 1): ?>
+                                                            <span class="ml-2 px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded">
+                                                                <?php echo e(__('meal_planner.actual_serving')); ?>: <?php echo e($meal->serving_size); ?>x
+                                                            </span>
+                                                        <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                                                     <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                                                 </div>
                                                 

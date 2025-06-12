@@ -5,6 +5,7 @@ namespace App\Livewire\Auth;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
+use App\Models\User;
 
 class Login extends Component
 {
@@ -29,24 +30,18 @@ class Login extends Component
     {
         $this->validate();
 
-        // Try to login as a regular user
         if (Auth::attempt(['email' => $this->email, 'password' => $this->password])) {
             session()->regenerate();
             
-            // Add success message
-            session()->flash('success', __('common.login_success'));
+            // Check user's role to determine redirect
+            $user = Auth::user();
+            $roles = explode(',', $user->role);
             
-            return $this->redirect(route('home'), navigate: true);
-        }
-
-        // If login as a user failed, check if it's a trainer
-        if (Auth::guard('trainer')->attempt(['email' => $this->email, 'password' => $this->password])) {
-            session()->regenerate();
-            
-            // Add success message for trainer
-            session()->flash('success', __('common.login_success'));
-            
-            return $this->redirect(route('home'), navigate: true);
+            if (in_array('trainer', $roles)) {
+                return redirect()->intended(route('home'));
+            } else {
+                return redirect()->intended(route('home'));
+            }
         }
 
         $this->addError('email', __('auth.failed'));

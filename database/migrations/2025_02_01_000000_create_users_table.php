@@ -21,6 +21,19 @@ return new class extends Migration
             $table->string('password')->nullable(); // nullable for social login
             $table->string('role')->default('user');
             $table->string('image')->nullable();
+            
+            // Trainer-specific fields
+            $table->string('specialization')->nullable();
+            $table->text('description')->nullable();
+            $table->text('bio')->nullable();
+            $table->string('specialties')->nullable();
+            $table->unsignedInteger('experience')->default(0);
+            $table->boolean('is_approved')->default(true);
+            $table->string('phone')->nullable();
+            $table->string('twitter_link')->nullable();
+            $table->string('instagram_link')->nullable();
+            $table->string('facebook_link')->nullable();
+            
             $table->rememberToken();
             $table->timestamps();
         });

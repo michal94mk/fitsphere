@@ -9,6 +9,7 @@ use Livewire\Attributes\On;
 use App\Models\Post;
 use App\Models\Comment;
 use App\Models\PostView;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\App;
@@ -106,59 +107,34 @@ class PostDetails extends Component
 
     public function addComment()
     {
-        try {
-            // Check if user or trainer is logged in
-            if (!Auth::check() && !Auth::guard('trainer')->check()) {
-                session()->flash('error', __('common.login_to_comment'));
-                return;
-            }
-
-            // Check email verification for regular users
-            if (Auth::check()) {
-                if (is_null(Auth::user()->email_verified_at)) {
-                    session()->flash('error', __('common.verify_email_to_comment'));
-                    return;
-                }
-            }
-
-            // Check email verification for trainers
-            if (Auth::guard('trainer')->check()) {
-                if (is_null(Auth::guard('trainer')->user()->email_verified_at)) {
-                    session()->flash('error', __('common.verify_email_to_comment'));
-                    return;
-                }
-            }
-    
-            $this->validate([
-                'newComment' => 'required|min:3|max:500'
-            ]);
-
-            // Create comment with appropriate user/trainer ID
-            $commentData = [
-                'post_id' => $this->post->id,
-                'content' => $this->newComment,
-            ];
-
-            if (Auth::check()) {
-                $commentData['user_id'] = Auth::id();
-            } elseif (Auth::guard('trainer')->check()) {
-                $commentData['trainer_id'] = Auth::guard('trainer')->id();
-            }
-    
-            Comment::create($commentData);
-    
-            $this->newComment = '';
-            session()->flash('success', __('common.comment_added'));
-            $this->resetPage();
-        } catch (\Throwable $e) {
-            $this->logService->error('Error adding comment', [
-                'post_id' => $this->postId,
-                'user_id' => Auth::id(),
-                'trainer_id' => Auth::guard('trainer')->id(),
-                'error' => $e->getMessage()
-            ]);
-            session()->flash('error', __('common.comment_add_error'));
+        if (!Auth::check()) {
+            $this->dispatch('login-required', ['message' => __('common.login_required')]);
+            return;
         }
+
+        $this->validate([
+            'newComment' => 'required|string|max:500',
+        ]);
+
+        $user = Auth::user();
+        
+        if (is_null($user->email_verified_at)) {
+            session()->flash('error', __('common.email_not_verified'));
+            return;
+        }
+
+        $commentData = [
+            'content' => $this->newComment,
+            'post_id' => $this->post->id,
+            'user_id' => $user->id,
+        ];
+
+        Comment::create($commentData);
+
+        $this->newComment = '';
+        $this->post->load('comments.user');
+
+        session()->flash('success', __('common.comment_added'));
     }
 
     #[Layout('layouts.blog')]
@@ -171,7 +147,7 @@ class PostDetails extends Component
             
             return view('livewire.post-details', [
                 'comments' => Comment::where('post_id', $this->post->id)
-                    ->with(['user', 'trainer'])
+                    ->with(['user'])
                     ->latest()
                     ->paginate(5)
             ]);

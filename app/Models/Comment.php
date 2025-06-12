@@ -11,16 +11,11 @@ class Comment extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['content', 'user_id', 'trainer_id', 'post_id'];
+    protected $fillable = ['content', 'user_id', 'post_id'];
 
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
-    }
-
-    public function trainer(): BelongsTo
-    {
-        return $this->belongsTo(Trainer::class);
     }
 
     public function post(): BelongsTo
@@ -29,24 +24,20 @@ class Comment extends Model
     }
 
     /**
-     * Get the author of the comment (user or trainer)
+     * Get the author of the comment
      */
     public function author()
     {
-        return $this->user_id ? $this->user : $this->trainer;
+        return $this->user;
     }
 
     /**
-     * Check if the comment belongs to a specific user (regular user or trainer)
+     * Check if the comment belongs to the authenticated user
      */
     public function belongsToAuthUser(): bool
     {
         if (Auth::check()) {
             return $this->user_id === Auth::id();
-        }
-        
-        if (Auth::guard('trainer')->check()) {
-            return $this->trainer_id === Auth::guard('trainer')->id();
         }
         
         return false;

@@ -4,7 +4,7 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Models\Trainer;
+use App\Models\User;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Url;
 use Illuminate\Support\Facades\App;
@@ -46,9 +46,11 @@ class TrainersList extends Component
         try {
             $locale = App::getLocale();
             
-            $query = Trainer::with(['translations' => function($query) use ($locale) {
-                $query->where('locale', $locale);
-            }]);
+            $query = User::trainers()
+                ->approvedTrainers()
+                ->with(['translations' => function($query) use ($locale) {
+                    $query->where('locale', $locale);
+                }]);
             
             // Apply search filter
             if ($this->search) {
@@ -81,7 +83,7 @@ class TrainersList extends Component
                 'error' => $e->getMessage()
             ]);
             
-            return collect([])->paginate(12);
+            return User::trainers()->approvedTrainers()->paginate(12);
         }
     }
 
@@ -98,7 +100,7 @@ class TrainersList extends Component
             ]);
             
             session()->flash('error', __('common.trainers_list_error'));
-            return view('livewire.trainers-list', ['trainers' => collect([])->paginate(9)]);
+            return view('livewire.trainers-list', ['trainers' => User::trainers()->approvedTrainers()->paginate(9)]);
         }
     }
 } 

@@ -24,7 +24,18 @@
                 </div>
                 <div>
                     <h3 class="text-lg leading-6 font-medium text-gray-900">{{ $user->name }}</h3>
-                    <p class="text-sm text-gray-500">{{ ucfirst($user->role) }}</p>
+                    <div class="flex gap-1 flex-wrap mt-1">
+                        @php
+                            $roles = explode(',', $user->role);
+                        @endphp
+                        @foreach($roles as $role)
+                            <span class="px-2 py-1 text-xs font-semibold rounded-full 
+                                {{ trim($role) === 'admin' ? 'bg-purple-100 text-purple-800' : 
+                                   (trim($role) === 'trainer' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800') }}">
+                                {{ ucfirst(trim($role)) }}
+                            </span>
+                        @endforeach
+                    </div>
                 </div>
             </div>
         </div>
@@ -37,9 +48,18 @@
                 <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                     <dt class="text-sm font-medium text-gray-500">{{ __('admin.role') }}</dt>
                     <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                        <span class="px-2 py-1 text-xs font-semibold rounded-full {{ $user->role === 'admin' ? 'bg-red-100 text-red-800' : 'bg-blue-100 text-blue-800' }}">
-                            {{ ucfirst($user->role) }}
-                        </span>
+                        <div class="flex gap-1 flex-wrap">
+                            @php
+                                $roles = explode(',', $user->role);
+                            @endphp
+                            @foreach($roles as $role)
+                                <span class="px-2 py-1 text-xs font-semibold rounded-full 
+                                    {{ trim($role) === 'admin' ? 'bg-purple-100 text-purple-800' : 
+                                       (trim($role) === 'trainer' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800') }}">
+                                    {{ ucfirst(trim($role)) }}
+                                </span>
+                            @endforeach
+                        </div>
                     </dd>
                 </div>
                 <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">

@@ -14,12 +14,14 @@ return [
     'login' => 'Login',
     'register' => 'Register',
     'profile' => 'Profile',
+    'trainer_profile' => 'Trainer Profile',
     'my_reservations' => 'My Reservations',
     'logout' => 'Logout',
     'switch_language' => 'Switch Language',
     'follow_us' => 'Follow Us',
     'more' => 'More',
     'trainer' => 'Trainer',
+    'admin' => 'Admin',
     
     // Wyszukiwarka
     'search' => 'Search',
@@ -81,4 +83,11 @@ return [
     'verify_email_to_comment' => 'You must verify your email address to add comments.',
     'email_verified_success' => 'Your email address has been successfully verified! You can now use all service features. 🎉',
     'trainer_email_verified_success' => 'Your email address has been successfully verified! An administrator will review your application soon. 👨‍💼',
+    
+    // Additional comment keys
+    'login_required' => 'You must be logged in.',
+    'email_not_verified' => 'You must verify your email address.',
+    'unauthorized_delete' => 'You do not have permission to delete this comment.',
+    'comment_deleted' => 'Comment has been deleted.',
+    'comment_updated' => 'Comment has been updated.',
 ]; 

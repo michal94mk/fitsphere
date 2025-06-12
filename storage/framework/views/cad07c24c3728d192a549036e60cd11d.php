@@ -102,25 +102,11 @@
                                 <span data-i18n="common.terms"><?php echo e(__('common.terms')); ?></span>
                             </a>
                             
-                            <!--[if BLOCK]><![endif]--><?php if(auth()->check() && auth()->user()->role === 'admin'): ?>
-                                <a href="<?php echo e(route('admin.dashboard')); ?>"
-                                   wire:navigate
-                                   class="rounded-md px-1 md:px-1.5 lg:px-2 py-1.5 text-xs sm:text-sm font-medium bg-red-600 text-white hover:bg-red-700">
-                                    <span data-i18n="common.admin_panel"><?php echo e(__('common.admin_panel')); ?></span>
-                                </a>
-                            <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
-                            
-                            <!--[if BLOCK]><![endif]--><?php if(Auth::guard('trainer')->check()): ?>
-                                <a href="<?php echo e(route('trainer.reservations')); ?>"
-                                   wire:navigate
-                                   class="rounded-md px-1 md:px-1.5 lg:px-2 py-1.5 text-xs sm:text-sm font-medium bg-blue-600 text-white hover:bg-blue-700">
-                                    <span data-i18n="common.trainer_panel"><?php echo e(__('common.trainer_panel')); ?></span>
-                                </a>
-                            <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+
                         </div>
 
                         <!-- Right side - authentication and language -->
-                        <div class="flex flex-wrap items-center py-1 gap-1 md:gap-1.5 lg:gap-2">
+                        <div class="flex items-center space-x-2">
                             <!-- Language Switcher Component -->
                             <?php
 $__split = function ($name, $params = []) {
@@ -140,66 +126,104 @@ if (isset($__slots)) unset($__slots);
 ?>
                             
                             <!--[if BLOCK]><![endif]--><?php if(Auth::check()): ?>
-                                <div x-data="{ dropdownOpen: false }"
-                                     x-init="$watch('currentPage', () => { dropdownOpen = false; })"
-                                     class="relative">
+                                <div x-data="{ dropdownOpen: false }" class="relative">
                                     <button @click="dropdownOpen = !dropdownOpen"
-                                            class="text-gray-300 px-1 md:px-1.5 lg:px-2 py-1.5 rounded-md hover:bg-gray-700 flex items-center text-xs sm:text-sm whitespace-nowrap">
-                                        <span class="truncate max-w-[60px] sm:max-w-[100px] md:max-w-[130px]"><?php echo e(Auth::user()->name); ?></span>
-                                        <svg class="ml-1 inline-block h-4 w-4" xmlns="http://www.w3.org/2000/svg"
-                                             fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                  d="M19 9l-7 7-7-7" />
+                                            class="flex items-center space-x-2 px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 bg-gray-200 hover:bg-gray-300 rounded-md focus:outline-none">
+                                        <div class="w-8 h-8 rounded-full overflow-hidden">
+                                            <img src="<?php echo e(Auth::user()->profile_photo_url); ?>" alt="<?php echo e(Auth::user()->name); ?>" class="w-full h-full object-cover">
+                                        </div>
+                                        <span><?php echo e(Auth::user()->name); ?></span>
+                                        <!--[if BLOCK]><![endif]--><?php if(Auth::user()->isAdmin()): ?>
+                                            <span class="text-red-600 text-xs">(<?php echo e(__('common.admin')); ?>)</span>
+                                        <?php elseif(Auth::user()->isTrainer()): ?>
+                                            <span class="text-blue-600 text-xs">(<?php echo e(__('common.trainer')); ?>)</span>
+                                        <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+                                        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                                         </svg>
                                     </button>
                                     
-                                    <!-- Dropdown menu -->
-                                    <div x-show="dropdownOpen" x-cloak
+                                    <div x-show="dropdownOpen" 
+                                         x-cloak
+                                         @click.away="dropdownOpen = false"
                                          class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-50">
-                                        <a href="<?php echo e(route('profile')); ?>"
-                                           wire:navigate
-                                           class="block w-full px-4 py-2 text-gray-800 text-left hover:bg-gray-100">
-                                            <span data-i18n="common.profile"><?php echo e(__('common.profile')); ?></span>
-                                        </a>
-                                        <a href="<?php echo e(route('user.reservations')); ?>"
-                                           wire:navigate
-                                           class="block w-full px-4 py-2 text-gray-800 text-left hover:bg-gray-100">
-                                            <span data-i18n="common.my_reservations"><?php echo e(__('common.my_reservations')); ?></span>
-                                        </a>
-                                        <form method="POST" action="<?php echo e(route('logout')); ?>">
-                                            <?php echo csrf_field(); ?>
-                                            <button type="submit"
-                                                    class="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100">
-                                                <span data-i18n="common.logout"><?php echo e(__('common.logout')); ?></span>
-                                            </button>
-                                        </form>
-                                    </div>
-                                </div>
-                            <?php elseif(Auth::guard('trainer')->check()): ?>
-                                <div x-data="{ dropdownOpen: false }"
-                                     x-init="$watch('currentPage', () => { dropdownOpen = false; })"
-                                     class="relative">
-                                    <button @click="dropdownOpen = !dropdownOpen"
-                                            class="text-gray-300 px-1 md:px-1.5 lg:px-2 py-1.5 rounded-md hover:bg-gray-700 flex items-center text-xs sm:text-sm whitespace-nowrap">
-                                        <span class="truncate max-w-[60px] sm:max-w-[100px] md:max-w-[130px]"><?php echo e(Auth::guard('trainer')->user()->name); ?></span>
-                                        <span class="ml-1 text-blue-300 text-xs hidden sm:inline">(<?php echo e(__('common.trainer')); ?>)</span>
-                                        <svg class="ml-1 inline-block h-4 w-4" xmlns="http://www.w3.org/2000/svg"
-                                             fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                  d="M19 9l-7 7-7-7" />
-                                        </svg>
-                                    </button>
-                                    
-                                    <!-- Dropdown menu -->
-                                    <div x-show="dropdownOpen" x-cloak
-                                         class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-50">
-                                        <form method="POST" action="<?php echo e(route('logout')); ?>">
-                                            <?php echo csrf_field(); ?>
-                                            <button type="submit"
-                                                    class="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100">
-                                                <span data-i18n="common.logout"><?php echo e(__('common.logout')); ?></span>
-                                            </button>
-                                        </form>
+                                        <div class="py-1">
+                                            <div class="px-4 py-2 border-b border-gray-100">
+                                                <p class="text-sm font-medium text-gray-900"><?php echo e(Auth::user()->name); ?></p>
+                                                <p class="text-xs text-gray-500"><?php echo e(Auth::user()->email); ?></p>
+                                            </div>
+                                            
+                                            
+                                            <!--[if BLOCK]><![endif]--><?php if(Auth::user()->isAdmin()): ?>
+                                                <a href="<?php echo e(route('profile')); ?>"
+                                                   wire:navigate
+                                                   @click="dropdownOpen = false"
+                                                   class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                                    <?php echo e(__('common.profile')); ?>
+
+                                                </a>
+                                                <a href="<?php echo e(route('admin.dashboard')); ?>"
+                                                   wire:navigate
+                                                   @click="dropdownOpen = false"
+                                                   class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                                    <?php echo e(__('common.admin_panel')); ?>
+
+                                                </a>
+                                                
+                                                <?php if(Auth::user()->isUser()): ?>
+                                                    <a href="<?php echo e(route('user.reservations')); ?>"
+                                                       wire:navigate
+                                                       @click="dropdownOpen = false"
+                                                       class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                                        <?php echo e(__('common.my_reservations')); ?>
+
+                                                    </a>
+                                                <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+                                            
+                                            <?php elseif(Auth::user()->isTrainer()): ?>
+                                                <a href="<?php echo e(route('trainer.profile')); ?>"
+                                                   wire:navigate
+                                                   @click="dropdownOpen = false"
+                                                   class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                                    <?php echo e(__('common.trainer_profile')); ?>
+
+                                                </a>
+                                                <a href="<?php echo e(route('trainer.my.reservations')); ?>"
+                                                   wire:navigate
+                                                   @click="dropdownOpen = false"
+                                                   class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                                    <?php echo e(__('common.my_reservations')); ?>
+
+                                                </a>
+                                            
+                                            <?php elseif(Auth::user()->isUser()): ?>
+                                                <a href="<?php echo e(route('profile')); ?>"
+                                                   wire:navigate
+                                                   @click="dropdownOpen = false"
+                                                   class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                                    <?php echo e(__('common.profile')); ?>
+
+                                                </a>
+                                                <a href="<?php echo e(route('user.reservations')); ?>"
+                                                   wire:navigate
+                                                   @click="dropdownOpen = false"
+                                                   class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                                    <?php echo e(__('common.my_reservations')); ?>
+
+                                                </a>
+                                            <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+                                            
+                                            <div class="border-t border-gray-100">
+                                                <form method="POST" action="<?php echo e(route('logout')); ?>">
+                                                    <?php echo csrf_field(); ?>
+                                                    <button type="submit"
+                                                            class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                                        <?php echo e(__('common.logout')); ?>
+
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             <?php else: ?>
@@ -292,70 +316,102 @@ if (isset($__slots)) unset($__slots);
                         <span data-i18n="common.terms"><?php echo e(__('common.terms')); ?></span>
                     </a>
                     
-                    <!--[if BLOCK]><![endif]--><?php if(auth()->check() && auth()->user()->role === 'admin'): ?>
-                        <a href="<?php echo e(route('admin.dashboard')); ?>"
-                           wire:navigate
-                           @click="mobileOpen = false"
-                           class="block w-full text-center rounded-md px-3 py-2 text-base font-medium bg-red-600 text-white hover:bg-red-700">
-                            <span data-i18n="common.admin_panel"><?php echo e(__('common.admin_panel')); ?></span>
-                        </a>
-                    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
-                    
-                    <!--[if BLOCK]><![endif]--><?php if(Auth::guard('trainer')->check()): ?>
-                        <a href="<?php echo e(route('trainer.reservations')); ?>"
-                           wire:navigate
-                           @click="mobileOpen = false"
-                           class="block w-full text-center rounded-md px-3 py-2 text-base font-medium bg-blue-600 text-white hover:bg-blue-700">
-                            <span data-i18n="common.trainer_panel"><?php echo e(__('common.trainer_panel')); ?></span>
-                        </a>
-                    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
 
-                    <!-- Mobile Authentication buttons -->
+                    
                     <!--[if BLOCK]><![endif]--><?php if(Auth::check()): ?>
                         <div x-data="{ dropdownOpen: false }" class="w-full">
                             <button @click="dropdownOpen = !dropdownOpen"
-                                    class="block w-full text-center px-4 py-2 text-gray-900 font-medium bg-gray-200 rounded-md hover:bg-gray-300">
+                                    class="flex items-center justify-center w-full px-4 py-2 text-gray-900 font-medium bg-gray-200 rounded-md hover:bg-gray-300">
+                                <div class="w-6 h-6 rounded-full overflow-hidden mr-2">
+                                    <img src="<?php echo e(Auth::user()->profile_photo_url); ?>" alt="<?php echo e(Auth::user()->name); ?>" class="w-full h-full object-cover">
+                                </div>
                                 <?php echo e(Auth::user()->name); ?>
 
+                                <!--[if BLOCK]><![endif]--><?php if(Auth::user()->isAdmin()): ?>
+                                    <span class="text-red-600 text-xs ml-1">(<?php echo e(__('common.admin')); ?>)</span>
+                                <?php elseif(Auth::user()->isTrainer()): ?>
+                                    <span class="text-blue-600 text-xs ml-1">(<?php echo e(__('common.trainer')); ?>)</span>
+                                <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                             </button>
                             <div x-show="dropdownOpen" x-cloak
                                  class="mt-2 w-full bg-white border border-gray-300 rounded-md shadow-md">
-                                <a href="<?php echo e(route('profile')); ?>"
-                                   wire:navigate
-                                   @click="dropdownOpen = false; mobileOpen = false"
-                                   class="block w-full text-center px-4 py-2 text-gray-900 hover:bg-gray-100">
-                                    <span data-i18n="common.profile"><?php echo e(__('common.profile')); ?></span>
-                                </a>
-                                <a href="<?php echo e(route('user.reservations')); ?>"
-                                   wire:navigate
-                                   @click="dropdownOpen = false; mobileOpen = false"
-                                   class="block w-full text-center px-4 py-2 text-gray-900 hover:bg-gray-100">
-                                    <span data-i18n="common.my_reservations"><?php echo e(__('common.my_reservations')); ?></span>
-                                </a>
-                                <form method="POST" action="<?php echo e(route('logout')); ?>">
-                                    <?php echo csrf_field(); ?>
-                                    <button type="submit"
+                                <div class="py-1">
+                                    <div class="px-4 py-2 border-b border-gray-100">
+                                        <p class="text-sm font-medium text-gray-900 text-center"><?php echo e(Auth::user()->name); ?></p>
+                                        <p class="text-xs text-gray-500 text-center"><?php echo e(Auth::user()->email); ?></p>
+                                    </div>
+                                    
+                                    
+                                    <!--[if BLOCK]><![endif]--><?php if(Auth::user()->isAdmin()): ?>
+                                        <a href="<?php echo e(route('profile')); ?>"
+                                           wire:navigate
+                                           @click="dropdownOpen = false"
+                                           class="block w-full text-center px-4 py-2 text-gray-900 hover:bg-gray-100">
+                                             <?php echo e(__('common.profile')); ?>
+
+                                         </a>
+                                         <a href="<?php echo e(route('admin.dashboard')); ?>"
+                                            wire:navigate
+                                            @click="dropdownOpen = false"
                                             class="block w-full text-center px-4 py-2 text-gray-900 hover:bg-gray-100">
-                                        <span data-i18n="common.logout"><?php echo e(__('common.logout')); ?></span>
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-                    <?php elseif(Auth::guard('trainer')->check()): ?>
-                        <div x-data="{ dropdownOpen: false }" class="w-full">
-                            <button @click="dropdownOpen = !dropdownOpen"
-                                    class="block w-full text-center px-4 py-2 text-gray-900 font-medium bg-gray-200 rounded-md hover:bg-gray-300">
-                                <?php echo e(Auth::guard('trainer')->user()->name); ?> <span class="text-blue-600 text-xs">(<?php echo e(__('common.trainer')); ?>)</span>
-                            </button>
-                            <div x-show="dropdownOpen" x-cloak
-                                 class="mt-2 w-full bg-white border border-gray-300 rounded-md shadow-md">
-                                <form method="POST" action="<?php echo e(route('logout')); ?>">
-                                    <?php echo csrf_field(); ?>
-                                    <button type="submit"
-                                            class="block w-full text-center px-4 py-2 text-gray-900 hover:bg-gray-100">
-                                        <span data-i18n="common.logout"><?php echo e(__('common.logout')); ?></span>
-                                    </button>
-                                </form>
+                                             <?php echo e(__('common.admin_panel')); ?>
+
+                                         </a>
+                                         
+                                         <?php if(Auth::user()->isUser()): ?>
+                                             <a href="<?php echo e(route('user.reservations')); ?>"
+                                                wire:navigate
+                                                @click="dropdownOpen = false"
+                                                class="block w-full text-center px-4 py-2 text-gray-900 hover:bg-gray-100">
+                                                 <?php echo e(__('common.my_reservations')); ?>
+
+                                             </a>
+                                         <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+                                    
+                                    <?php elseif(Auth::user()->isTrainer()): ?>
+                                        <a href="<?php echo e(route('trainer.profile')); ?>"
+                                           wire:navigate
+                                           @click="dropdownOpen = false"
+                                           class="block w-full text-center px-4 py-2 text-gray-900 hover:bg-gray-100">
+                                            <?php echo e(__('common.trainer_profile')); ?>
+
+                                        </a>
+                                        <a href="<?php echo e(route('trainer.my.reservations')); ?>"
+                                           wire:navigate
+                                           @click="dropdownOpen = false"
+                                           class="block w-full text-center px-4 py-2 text-gray-900 hover:bg-gray-100">
+                                            <?php echo e(__('common.my_reservations')); ?>
+
+                                        </a>
+                                    
+                                    <?php elseif(Auth::user()->isUser()): ?>
+                                        <a href="<?php echo e(route('profile')); ?>"
+                                           wire:navigate
+                                           @click="dropdownOpen = false"
+                                           class="block w-full text-center px-4 py-2 text-gray-900 hover:bg-gray-100">
+                                            <?php echo e(__('common.profile')); ?>
+
+                                        </a>
+                                        <a href="<?php echo e(route('user.reservations')); ?>"
+                                           wire:navigate
+                                           @click="dropdownOpen = false"
+                                           class="block w-full text-center px-4 py-2 text-gray-900 hover:bg-gray-100">
+                                            <?php echo e(__('common.my_reservations')); ?>
+
+                                        </a>
+                                    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+                                    
+                                    <div class="border-t border-gray-100">
+                                        <form method="POST" action="<?php echo e(route('logout')); ?>">
+                                            <?php echo csrf_field(); ?>
+                                            <button type="submit"
+                                                    class="block w-full text-center px-4 py-2 text-gray-900 hover:bg-gray-100">
+                                                <?php echo e(__('common.logout')); ?>
+
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     <?php else: ?>

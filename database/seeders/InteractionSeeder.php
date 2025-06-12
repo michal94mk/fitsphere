@@ -6,6 +6,7 @@ use Illuminate\Database\Seeder;
 use App\Models\User;
 use App\Models\Post;
 use App\Models\Comment;
+use App\Models\Reservation;
 
 class InteractionSeeder extends Seeder
 {
@@ -15,13 +16,16 @@ class InteractionSeeder extends Seeder
     public function run(): void
     {
         $this->seedComments();
+        $this->seedReservations();
     }
 
     private function seedComments(): void
     {
         // Get all posts and users
         $allPosts = Post::all();
-        $allUsers = User::where('role', '!=', 'admin')->get();
+        $allUsers = User::all()->filter(function ($user) {
+            return !$user->isAdmin();
+        });
 
         if ($allPosts->isEmpty() || $allUsers->isEmpty()) {
             $this->command->error('No posts or users found. Please run other seeders first.');
@@ -99,6 +103,75 @@ class InteractionSeeder extends Seeder
             $this->command->info('Created comments for posts');
         } else {
             $this->command->info('Comments already exist, skipping...');
+        }
+    }
+    
+    private function seedReservations(): void
+    {
+        // Get trainers and regular users
+        $trainers = User::all()->filter(function ($user) {
+            return $user->isTrainer();
+        });
+        $users = User::all()->filter(function ($user) {
+            return $user->isUser() && !$user->isAdmin();
+        });
+
+        if ($trainers->isEmpty() || $users->isEmpty()) {
+            $this->command->error('No trainers or users found. Please run BaseDataSeeder first.');
+            return;
+        }
+
+        // Only create reservations if there aren't enough already
+        if (Reservation::count() < 20) {
+            $statuses = ['pending', 'confirmed', 'completed', 'cancelled'];
+            
+            // Create reservations from users to trainers
+            for ($i = 0; $i < 10; $i++) {
+                $trainer = $trainers->random();
+                $user = $users->random();
+                $date = now()->addDays(rand(-30, 30))->format('Y-m-d');
+                $startHour = rand(8, 18);
+                $endHour = $startHour + rand(1, 2);
+                
+                Reservation::create([
+                    'trainer_id' => $trainer->id,
+                    'user_id' => $user->id, // Legacy field
+                    'client_id' => $user->id,
+                    'client_type' => User::class,
+                    'date' => $date,
+                    'start_time' => sprintf('%02d:00', $startHour),
+                    'end_time' => sprintf('%02d:00', $endHour),
+                    'status' => $statuses[array_rand($statuses)],
+                    'notes' => 'Seeded reservation for testing purposes',
+                    'created_at' => now()->subDays(rand(1, 30)),
+                ]);
+            }
+            
+            // Create reservations from trainers to other trainers
+            for ($i = 0; $i < 5; $i++) {
+                $trainer = $trainers->random();
+                $clientTrainer = $trainers->where('id', '!=', $trainer->id)->random();
+                $date = now()->addDays(rand(-15, 45))->format('Y-m-d');
+                $startHour = rand(8, 18);
+                $endHour = $startHour + rand(1, 2);
+                
+                Reservation::create([
+                    'trainer_id' => $trainer->id,
+                    'user_id' => $clientTrainer->id, // Set for backward compatibility
+                    'client_id' => $clientTrainer->id,
+                    'client_type' => User::class,
+                    'date' => $date,
+                    'start_time' => sprintf('%02d:00', $startHour),
+                    'end_time' => sprintf('%02d:00', $endHour),
+                    'status' => $statuses[array_rand($statuses)],
+                    'notes' => 'Trainer-to-trainer reservation for professional consultation',
+                    'created_at' => now()->subDays(rand(1, 15)),
+                ]);
+            }
+
+            $this->command->info('Created sample reservations');
+        } else {
+            $this->command->info('Reservations already exist, skipping...');
         }
     }
 } 

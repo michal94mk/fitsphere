@@ -4,31 +4,29 @@ namespace App\Livewire\Trainer;
 
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 use Livewire\Attributes\Computed;
 
 class ProfileMini extends Component
 {
     public function mount()
     {
-        if (!Auth::guard('trainer')->check()) {
+        $user = Auth::user();
+        if (!$user || !in_array('trainer', explode(',', $user->role))) {
             return redirect()->route('login');
         }
     }
     
-    #[Computed]
-    public function trainer()
+    public function getUserProperty()
     {
-        return Auth::guard('trainer')->user();
+        return Auth::user();
     }
     
     public function logout()
     {
-        Auth::guard('trainer')->logout();
+        Auth::logout();
         session()->invalidate();
         session()->regenerateToken();
-        
-        // Add logout success message
-        session()->flash('success', __('common.logout_success'));
         
         return redirect()->route('home');
     }

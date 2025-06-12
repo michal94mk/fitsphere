@@ -123,7 +123,7 @@
                 </a>
                 @endif
                 
-                @if(Auth::guard('trainer')->check())
+                                    @if(Auth::check() && in_array('trainer', explode(',', Auth::user()->role)))
                 <!-- Panel Trenera - Only for trainers -->
                 <a href="{{ route('trainer.reservations') }}" wire:navigate class="bg-white rounded-xl shadow-md p-6 flex flex-col items-center text-center transform transition-all duration-300 hover:shadow-lg hover:scale-105 hover:bg-blue-50 w-full sm:w-[calc(50%-12px)] md:w-[calc(33.333%-16px)] lg:w-60 min-h-[190px]">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-blue-500 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">

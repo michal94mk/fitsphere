@@ -14,12 +14,14 @@ return [
     'login' => 'Zaloguj',
     'register' => 'Rejestracja',
     'profile' => 'Profil',
+    'trainer_profile' => 'Profil Trenera',
     'my_reservations' => 'Moje rezerwacje',
     'logout' => 'Wyloguj się',
     'switch_language' => 'Zmień język',
     'follow_us' => 'Obserwuj nas',
     'more' => 'Więcej',
     'trainer' => 'Trener',
+    'admin' => 'Admin',
     
     // Search
     'search' => 'Szukaj',
@@ -81,4 +83,11 @@ return [
     'verify_email_to_comment' => 'Aby dodawać komentarze, musisz zweryfikować swój adres email.',
     'email_verified_success' => 'Twój adres email został pomyślnie zweryfikowany! Możesz teraz korzystać ze wszystkich funkcji serwisu. 🎉',
     'trainer_email_verified_success' => 'Twój adres email został pomyślnie zweryfikowany! Administrator wkrótce sprawdzi Twoje zgłoszenie. 👨‍💼',
+    
+    // Additional comment keys
+    'login_required' => 'Musisz być zalogowany.',
+    'email_not_verified' => 'Musisz zweryfikować swój adres email.',
+    'unauthorized_delete' => 'Nie masz uprawnień do usunięcia tego komentarza.',
+    'comment_deleted' => 'Komentarz został usunięty.',
+    'comment_updated' => 'Komentarz został zaktualizowany.',
 ]; 

@@ -100,4 +100,9 @@ return [
     'translation_info_point2' => 'Translation time may be longer for extensive recipes',
     'translation_info_point3' => 'Problems may occur with longer texts due to limitations of the free API',
     'translation_info_point4' => 'In case of translation issues, you can always switch to the original version',
+    
+    // Meal planning redirect
+    'meal_planning' => 'Meal Planning',
+    'meal_planning_description' => 'Use the dedicated Meal Planner to search for recipes, create meal plans, and track your nutrition goals.',
+    'go_to_meal_planner' => 'Go to Meal Planner',
 ]; 

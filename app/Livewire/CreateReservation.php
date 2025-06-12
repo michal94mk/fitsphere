@@ -4,7 +4,7 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use Livewire\Attributes\Layout;
-use App\Models\Trainer;
+use App\Models\User;
 use App\Models\Reservation;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
@@ -17,10 +17,12 @@ class CreateReservation extends Component
     public $trainerId;
     public $trainer;
     public $date;
+    public $selectedDate;
     public $startTime;
     public $endTime;
     public $notes;
     public $availableTimeSlots = [];
+    public $timeSlots = [];
     public $timeSlotGrid = [];
     
     protected $logService;
@@ -35,32 +37,22 @@ class CreateReservation extends Component
         if (!Auth::check()) {
             return redirect()->route('login');
         }
-        
+
         try {
+            // Load the trainer by ID
             $this->trainerId = $trainerId;
-            $this->trainer = Trainer::findOrFail($trainerId);
+            $this->trainer = User::whereRaw("FIND_IN_SET('trainer', role)")->findOrFail($trainerId);
             
-            // Always set today's date by default
-            $this->date = Carbon::today()->format('Y-m-d');
-            
-            // Initialize time slots immediately
-            $this->updateAvailableTimeSlots();
-            
+            $this->selectedDate = now()->format('Y-m-d');
+            $this->date = $this->selectedDate;
+            $this->timeSlots = $this->getAvailableTimeSlots();
         } catch (ModelNotFoundException $e) {
             $this->logService->error('Trainer not found', [
                 'trainer_id' => $trainerId,
                 'error' => $e->getMessage()
             ]);
             
-            session()->flash('error', __('common.trainer_not_found'));
-            return redirect()->route('trainers.list');
-        } catch (Throwable $e) {
-            $this->logService->exception($e, 'Error initializing reservation form', [
-                'trainer_id' => $trainerId,
-                'step' => 'initialization'
-            ]);
-            
-            session()->flash('error', __('trainers.initialization_error'));
+            session()->flash('error', __('trainers.trainer_not_found'));
             return redirect()->route('trainers.list');
         }
     }
@@ -103,11 +95,17 @@ class CreateReservation extends Component
         $this->endTime = null;
     }
     
+    public function getAvailableTimeSlots()
+    {
+        // Initialize with empty array, will be populated by updateAvailableTimeSlots
+        return [];
+    }
+    
     public function updateAvailableTimeSlots()
     {
         try {
             // Get all existing reservations for the selected date and trainer
-            $existingReservations = Reservation::where('trainer_id', $this->trainerId)
+            $existingReservations = Reservation::where('trainer_id', $this->trainer->id)
                 ->where('date', $this->date)
                 ->whereIn('status', ['pending', 'confirmed'])
                 ->orderBy('start_time')
@@ -192,7 +190,7 @@ class CreateReservation extends Component
         
         } catch (Throwable $e) {
             $this->logService->exception($e, 'Error updating available time slots', [
-                'trainer_id' => $this->trainerId,
+                'trainer_id' => $this->trainer->id,
                 'date' => $this->date
             ]);
             
@@ -220,7 +218,7 @@ class CreateReservation extends Component
             ]);
             
             // Improved logic for checking existing reservations
-            $existingReservation = Reservation::where('trainer_id', $this->trainerId)
+            $existingReservation = Reservation::where('trainer_id', $this->trainer->id)
                 ->where('date', $this->date)
                 ->whereIn('status', ['pending', 'confirmed'])
                 ->where(function($query) {
@@ -247,20 +245,36 @@ class CreateReservation extends Component
                 return;
             }
             
+            // Determine client details based on user role
+            $user = Auth::user();
+            $clientData = [];
+            
+            if ($user->role === 'user') {
+                $clientData = [
+                    'user_id' => $user->id, // For backward compatibility
+                    'client_id' => $user->id,
+                    'client_type' => User::class,
+                ];
+            } elseif ($user->role === 'trainer') {
+                $clientData = [
+                    'client_id' => $user->id,
+                    'client_type' => User::class,
+                ];
+            }
+            
             // Create reservation
             $reservation = Reservation::create([
-                'user_id' => Auth::id(),
-                'trainer_id' => $this->trainerId,
+                'trainer_id' => $this->trainer->id,
                 'date' => $this->date,
                 'start_time' => $this->startTime,
                 'end_time' => $this->endTime,
                 'status' => 'pending',
                 'notes' => $this->notes,
-            ]);
+            ] + $clientData);
             
             $this->logService->info('New reservation created', [
                 'reservation_id' => $reservation->id,
-                'trainer_id' => $this->trainerId,
+                'trainer_id' => $this->trainer->id,
                 'user_id' => Auth::id(),
                 'date' => $this->date,
                 'time_slot' => $this->startTime . ' - ' . $this->endTime,
@@ -271,7 +285,7 @@ class CreateReservation extends Component
             return redirect()->route('user.reservations');
         } catch (Throwable $e) {
             $this->logService->exception($e, 'Error creating reservation', [
-                'trainer_id' => $this->trainerId,
+                'trainer_id' => $this->trainer->id,
                 'date' => $this->date,
                 'time_slot' => $this->startTime . ' - ' . $this->endTime,
             ]);
@@ -311,6 +325,70 @@ class CreateReservation extends Component
         $this->updateAvailableTimeSlots();
         $this->startTime = null;
         $this->endTime = null;
+    }
+
+    public function confirmReservation()
+    {
+        if (!$this->selectedTime) {
+            $this->addError('selectedTime', __('trainers.select_time'));
+            return;
+        }
+
+        $this->validate([
+            'selectedDate' => ['required', 'date', 'after_or_equal:today'],
+            'selectedTime' => ['required', 'string'],
+            'notes' => ['nullable', 'string', 'max:500'],
+        ]);
+
+        try {
+            $dateTime = Carbon::createFromFormat('Y-m-d H:i', $this->selectedDate . ' ' . $this->selectedTime);
+            
+            if (!$dateTime || $dateTime->isPast()) {
+                $this->addError('selectedTime', __('trainers.invalid_date_time'));
+                return;
+            }
+
+            $conflictingReservation = Reservation::where('trainer_id', $this->trainer->id)
+                ->where('date', $dateTime)
+                ->where('status', '!=', 'cancelled')
+                ->first();
+
+            if ($conflictingReservation) {
+                $this->addError('selectedTime', __('trainers.time_not_available'));
+                return;
+            }
+
+            $authenticatedUser = Auth::user();
+            
+            $reservationData = [
+                'trainer_id' => $this->trainer->id,
+                'date' => $dateTime,
+                'status' => 'pending',
+                'notes' => $this->notes,
+            ];
+
+            // Set appropriate client relationship
+            if ($authenticatedUser->role === 'user') {
+                $reservationData['user_id'] = $authenticatedUser->id;
+            } elseif ($authenticatedUser->role === 'trainer') {
+                $reservationData['client_id'] = $authenticatedUser->id;
+                $reservationData['client_type'] = User::class;
+            }
+
+            Reservation::create($reservationData);
+
+            // Success message is handled by createReservation method to avoid duplication
+            return redirect()->route('user.reservations');
+        } catch (Throwable $e) {
+            $this->logService->exception($e, 'Error confirming reservation', [
+                'trainer_id' => $this->trainer->id,
+                'date' => $this->selectedDate,
+                'time' => $this->selectedTime,
+            ]);
+            
+            session()->flash('error', __('trainers.reservation_confirmation_error'));
+            return;
+        }
     }
 
     #[Layout('layouts.blog')]

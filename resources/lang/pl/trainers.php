@@ -50,6 +50,7 @@ return [
     'login_required' => 'Musisz być zalogowany, aby zarezerwować sesję.',
     'make_reservation' => 'Zarezerwuj termin',
     'login_to_reserve' => 'Zaloguj się, aby zarezerwować',
+    'cannot_book_yourself' => 'Nie możesz zarezerwować sam u siebie',
     
     // Admin section
     'admin_title' => 'Zarządzaj Trenerami',

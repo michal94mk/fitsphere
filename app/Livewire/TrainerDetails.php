@@ -3,7 +3,7 @@
 namespace App\Livewire;
 
 use Livewire\Component;
-use App\Models\Trainer;
+use App\Models\User;
 use Illuminate\Support\Facades\App;
 use Livewire\Attributes\Layout;
 use App\Services\LogService;
@@ -27,9 +27,11 @@ class TrainerDetails extends Component
             
             // Load trainer with appropriate translation for current locale
             $locale = App::getLocale();
-            $this->trainer = Trainer::with(['translations' => function($query) use ($locale) {
-                $query->where('locale', $locale);
-            }])->findOrFail($trainerId);
+            $this->trainer = User::approvedTrainers()
+                ->with(['translations' => function($query) use ($locale) {
+                    $query->where('locale', $locale);
+                }])
+                ->findOrFail($trainerId);
         } catch (ModelNotFoundException $e) {
             // Log error with LogService
             $this->logService->error('Trainer not found', [

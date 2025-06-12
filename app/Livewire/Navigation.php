@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\On;
+use App\Models\User;
 
 class Navigation extends Component
 {
@@ -104,8 +105,10 @@ class Navigation extends Component
     public function isAdmin()
     {
         // Only users with 'admin' role have access to the admin panel
-        if (Auth::check() && Auth::user()->role === 'admin') {
-            return true;
+        if (Auth::check()) {
+            /** @var User $user */
+            $user = Auth::user();
+            return $user instanceof User && $user->isAdmin();
         }
         
         return false;

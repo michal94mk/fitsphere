@@ -14,6 +14,21 @@ class FlashMessages extends Component
     {
         // Check for existing session messages
         $this->loadSessionMessages();
+        
+        // Clear session flash messages after loading to prevent reloading
+        $this->clearSessionMessages();
+    }
+    
+    private function clearSessionMessages()
+    {
+        $isPostDetailPage = request()->routeIs('post.show');
+        $isAdminPage = request()->routeIs('admin.*');
+        
+        // Always clear messages after display except on post detail pages
+        if (!$isPostDetailPage) {
+            session()->forget(['success', 'error']);
+        }
+        session()->forget(['info', 'warning', 'verification_sent']);
     }
     
     private function loadSessionMessages()
@@ -22,45 +37,42 @@ class FlashMessages extends Component
         
         // Don't show success/error messages on post detail pages (they have local messages)
         $isPostDetailPage = request()->routeIs('post.show');
+        // Admin pages should show all messages globally
+        $isAdminPage = request()->routeIs('admin.*');
+        
+        // Helper function to add message if it doesn't exist
+        $addUniqueMessage = function($type, $message, $icon = null) {
+            $exists = collect($this->messages)->contains(function ($msg) use ($type, $message) {
+                return $msg['type'] === $type && $msg['message'] === $message;
+            });
+            
+            if (!$exists) {
+                $this->messages[] = [
+                    'type' => $type,
+                    'message' => $message,
+                    'icon' => $icon ?? $type
+                ];
+            }
+        };
         
         if (session('success') && !$isPostDetailPage) {
-            $this->messages[] = [
-                'type' => 'success',
-                'message' => session('success'),
-                'icon' => 'success'
-            ];
+            $addUniqueMessage('success', session('success'), 'success');
         }
         
         if (session('error') && !$isPostDetailPage) {
-            $this->messages[] = [
-                'type' => 'error',
-                'message' => session('error'),
-                'icon' => 'error'
-            ];
+            $addUniqueMessage('error', session('error'), 'error');
         }
         
         if (session('info')) {
-            $this->messages[] = [
-                'type' => 'info',
-                'message' => session('info'),
-                'icon' => 'info'
-            ];
+            $addUniqueMessage('info', session('info'), 'info');
         }
         
         if (session('warning')) {
-            $this->messages[] = [
-                'type' => 'warning',
-                'message' => session('warning'),
-                'icon' => 'warning'
-            ];
+            $addUniqueMessage('warning', session('warning'), 'warning');
         }
         
         if (session('verification_sent')) {
-            $this->messages[] = [
-                'type' => 'info',
-                'message' => session('verification_sent'),
-                'icon' => 'info'
-            ];
+            $addUniqueMessage('info', session('verification_sent'), 'info');
         }
         
         $this->show = !empty($this->messages);

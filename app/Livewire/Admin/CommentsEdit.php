@@ -52,10 +52,10 @@ class CommentsEdit extends Component
             
             $comment->save();
             
-            session()->flash('success', __('comments.comment_updated'));
+            session()->flash('success', __('common.comment_update_success'));
             return redirect()->route('admin.comments.index');
         } catch (\Exception $e) {
-            session()->flash('error', __('comments.comment_update_error', ['error' => $e->getMessage()]));
+            session()->flash('error', __('common.comment_update_error'));
         }
     }
 

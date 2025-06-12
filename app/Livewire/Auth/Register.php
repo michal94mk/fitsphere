@@ -4,7 +4,6 @@ namespace App\Livewire\Auth;
 
 use Livewire\Component;
 use App\Models\User;
-use App\Models\Trainer;
 use App\Services\EmailService;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
@@ -91,6 +90,7 @@ class Register extends Component
                 'email:rfc,dns',
                 'max:100',
                 'regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/',
+                'unique:users,email', // Unified email uniqueness check
             ],
             'password' => [
                 'required',
@@ -113,13 +113,8 @@ class Register extends Component
             ],
         ];
 
-        // Add email uniqueness validation based on account type
-        if ($this->account_type === 'regular') {
-            $rules['email'][] = 'unique:users,email';
-            $rules['email'][] = 'not_in:' . collect(\App\Models\Trainer::pluck('email'))->implode(',');
-        } else {
-            $rules['email'][] = 'unique:trainers,email'; 
-            $rules['email'][] = 'not_in:' . collect(\App\Models\User::pluck('email'))->implode(',');
+        // Add specialization validation for trainers
+        if ($this->account_type === 'trainer') {
             $rules['specialization'] = [
                 'required',
                 'string',
@@ -201,19 +196,15 @@ class Register extends Component
             $this->sendWelcomeEmail($user);
             $this->setUserRegistrationSuccess();
             
-            // Add success message
             session()->flash('success', __('common.register_user_success'));
-            
             return Redirect::to('/registration-success/user');
         } else {
-            $trainer = $this->createTrainer();
-            $this->sendVerificationEmail($trainer);
-            $this->sendWelcomeEmailToTrainer($trainer);
+            $user = $this->createTrainer();
+            $this->sendVerificationEmail($user);
+            $this->sendWelcomeEmailToTrainer($user);
             $this->setTrainerRegistrationSuccess();
             
-            // Add success message for trainer
             session()->flash('success', __('common.register_trainer_success'));
-            
             return Redirect::to('/registration-success/trainer');
         }
     }
@@ -227,6 +218,7 @@ class Register extends Component
             'name'     => $this->name,
             'email'    => $this->email,
             'password' => Hash::make($this->password),
+            'role'     => 'user',
         ]);
     }
     
@@ -235,10 +227,11 @@ class Register extends Component
      */
     private function createTrainer()
     {
-        return Trainer::create([
+        return User::create([
             'name'           => $this->name,
             'email'          => $this->email,
             'password'       => Hash::make($this->password),
+            'role'           => 'trainer',
             'specialization' => $this->specialization,
             'is_approved'    => false, 
         ]);
@@ -275,16 +268,16 @@ class Register extends Component
     /**
      * Wysyła email powitalny dla trenera przez Brevo
      */
-    private function sendWelcomeEmailToTrainer(Trainer $trainer)
+    private function sendWelcomeEmailToTrainer(User $user)
     {
         try {
             $emailService = app(EmailService::class);
-            $emailService->sendTrainerWelcomeEmail($trainer);
+            $emailService->sendTrainerWelcomeEmail($user);
         } catch (\Exception $e) {
             // Log błąd ale nie przerywaj procesu rejestracji
             Log::error('Failed to send welcome email to trainer during registration', [
-                'trainer_id' => $trainer->id,
-                'email' => $trainer->email,
+                'user_id' => $user->id,
+                'email' => $user->email,
                 'error' => $e->getMessage()
             ]);
         }

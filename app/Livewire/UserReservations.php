@@ -6,6 +6,7 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\Attributes\Layout;
 use App\Models\Reservation;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
@@ -52,18 +53,35 @@ class UserReservations extends Component
     public function openCancelModal($id)
     {
         try {
-            $this->reservationToCancel = Reservation::where('id', $id)
-                ->where('user_id', Auth::id())
-                ->first();
-                
+            $authenticatedUser = Auth::user();
+            
+            // Check if this reservation belongs to the authenticated user
+            $query = Reservation::where('id', $id);
+            
+            if ($authenticatedUser->isUser()) {
+                // For regular users, check user_id
+                $query->where('user_id', $authenticatedUser->id);
+            } elseif ($authenticatedUser->isTrainer()) {
+                // For trainers, check client relationship
+                $query->where(function($q) use ($authenticatedUser) {
+                    $q->where('user_id', $authenticatedUser->id) // backward compatibility
+                      ->orWhere(function($q2) use ($authenticatedUser) {
+                          $q2->where('client_id', $authenticatedUser->id)
+                             ->where('client_type', get_class($authenticatedUser));
+                      });
+                });
+            }
+            
+            $this->reservationToCancel = $query->first();
+            
             if (!$this->reservationToCancel) {
-                session()->flash('error', __('trainers.reservation_not_found'));
+                $this->addError('cancel', 'Rezerwacja nie została znaleziona lub nie masz uprawnień do jej anulowania.');
                 return;
             }
             
             $this->showCancelModal = true;
         } catch (\Exception $e) {
-            $this->handleError($e, 'Error opening cancel modal');
+            $this->handleError($e, 'Failed to prepare reservation cancellation');
         }
     }
     
@@ -99,8 +117,11 @@ class UserReservations extends Component
     
     protected function handleError(\Exception $e, string $message)
     {
+        $authenticatedUser = Auth::user();
+        
         Log::error($message, [
-            'user_id' => Auth::id(),
+            'user_id' => $authenticatedUser ? $authenticatedUser->id : null,
+            'user_type' => $authenticatedUser ? get_class($authenticatedUser) : null,
             'error' => $e->getMessage(),
             'trace' => $e->getTraceAsString()
         ]);
@@ -112,8 +133,26 @@ class UserReservations extends Component
     public function render()
     {
         try {
-            $query = Reservation::where('user_id', Auth::id())
-                ->with('trainer');
+            $authenticatedUser = Auth::user();
+            
+            // Build query based on authentication type
+            if ($authenticatedUser->isUser()) {
+                // For regular users, show reservations where they are the client
+                $query = Reservation::where('user_id', $authenticatedUser->id)
+                    ->with('trainer');
+            } elseif ($authenticatedUser->isTrainer()) {
+                // For trainers, show reservations where they are the client
+                $query = Reservation::where(function($q) use ($authenticatedUser) {
+                    $q->where('user_id', $authenticatedUser->id) // backward compatibility
+                      ->orWhere(function($q2) use ($authenticatedUser) {
+                          $q2->where('client_id', $authenticatedUser->id)
+                             ->where('client_type', get_class($authenticatedUser));
+                      });
+                })->with('trainer');
+            } else {
+                // Fallback, should not happen due to mount check
+                return redirect()->route('login');
+            }
                 
             // Apply status filter
             if ($this->statusFilter) {

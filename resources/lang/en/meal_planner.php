@@ -73,4 +73,77 @@ return [
     'delete_meal_description' => 'Are you sure you want to delete this recipe from your meal plan? This action cannot be undone.',
     'delete_meal' => 'Delete Recipe',
     'recipe' => 'Recipe',
+    'plan_generated_success' => 'Meal plan generated successfully! Click on a recipe to add it to your plan.',
+    
+    // Recipe details
+    'recipe_details' => 'Recipe Details',
+    'ingredients' => 'Ingredients',
+    'instructions' => 'Instructions',
+    'preparation_time' => 'Preparation Time',
+    'servings' => 'Servings',
+    'nutrition_per_serving' => 'Nutrition (per serving)',
+    'translate_to_polish' => 'Translate to Polish',
+    'show_original' => 'Show Original',
+    'no_instructions' => 'No preparation instructions available',
+    'no_ingredients' => 'No ingredients list available',
+    
+    // Add to plan section
+    'add_to_plan' => 'Add to Plan',
+    'meal_type' => 'Meal Type',
+    'notes' => 'Notes',
+    'cancel' => 'Cancel',
+    
+    // Saved meals actions
+    'view_recipe_details' => 'View Recipe Details',
+    'click_to_view_details' => 'Click to view recipe details',
+    'recipe_details_available' => 'Recipe details available',
+    
+    // Loading states
+    'loading_recipe_details' => 'Loading recipe details...',
+    'translating_ingredients' => 'Translating ingredients...',
+    'translating_instructions' => 'Translating instructions...',
+    
+    // Already in plan
+    'already_in_plan' => 'Recipe already in plan',
+    'already_in_plan_description' => 'This recipe is already added to your meal plan. You can see it in the list below.',
+    'close' => 'Close',
+    
+    // Recipe search and selection
+    'select_recipe' => 'Select Recipe',
+    'no_recipes_found' => 'No recipes found matching your criteria.',
+    'intolerances' => 'Intolerances',
+    'no_intolerances' => 'No intolerances',
+    'egg_free' => 'Egg-Free',
+    'grain_free' => 'Grain-Free', 
+    'seafood_free' => 'Seafood-Free',
+    'sesame_free' => 'Sesame-Free',
+    'shellfish_free' => 'Shellfish-Free',
+    'soy_free' => 'Soy-Free',
+    'sulfite_free' => 'Sulfite-Free',
+    'tree_nut_free' => 'Tree Nut Free',
+    'wheat_free' => 'Wheat Free',
+    
+    // Extended recipe details
+    'prep_time' => 'Prep Time',
+    'cooking_time' => 'Cooking Time',
+    'health_score' => 'Health Score',
+    'spoon_score' => 'Spoonacular Score',
+    'price_per_serving' => 'Price Per Serving',
+    'very_healthy' => 'Very Healthy',
+    'budget_friendly' => 'Budget Friendly',
+    'very_popular' => 'Very Popular',
+    'sustainable' => 'Sustainable',
+    'ketogenic' => 'Ketogenic',
+    'fiber' => 'Fiber',
+    'sugar' => 'Sugar',
+    'saturated_fat' => 'Saturated Fat',
+    'sodium' => 'Sodium',
+    'nutrition_note' => 'Note: Nutritional values provided by API are already calculated per serving.',
+    'no_nutrition_info' => 'No nutritional information available',
+    'cuisines' => 'Cuisines',
+    'dish_types' => 'Dish Types',
+    'serving_size_adjustment' => 'Serving Size',
+    'servings_default' => 'Default',
+    'serving_size_note' => 'Adjust serving size to your needs (e.g. 0.5 = half serving, 2 = double serving)',
+    'actual_serving' => 'Actual serving',
 ]; 

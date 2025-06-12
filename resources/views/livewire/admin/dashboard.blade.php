@@ -345,9 +345,18 @@
                                             </a>
                                         </div>
                                         <div class="mt-1 flex items-center">
-                                            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium {{ $user->role === 'admin' ? 'bg-red-100 text-red-800' : 'bg-blue-100 text-blue-800' }}">
-                                                {{ $user->role === 'admin' ? 'Administrator' : 'Użytkownik' }}
-                                            </span>
+                                            <div class="flex gap-1 flex-wrap">
+                                                @php
+                                                    $roles = explode(',', $user->role);
+                                                @endphp
+                                                @foreach($roles as $role)
+                                                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium 
+                                                        {{ trim($role) === 'admin' ? 'bg-purple-100 text-purple-800' : 
+                                                           (trim($role) === 'trainer' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800') }}">
+                                                        {{ ucfirst(trim($role)) }}
+                                                    </span>
+                                                @endforeach
+                                            </div>
                                             <span class="text-xs text-gray-500 ml-2">Dołączył {{ $user->created_at->diffForHumans() }}</span>
                                         </div>
                                     </div>

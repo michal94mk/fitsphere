@@ -2,7 +2,7 @@
 
 namespace App\Livewire\Admin;
 
-use App\Models\Trainer;
+use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
@@ -32,7 +32,7 @@ class TrainersEdit extends Component
     public function mount($id)
     {
         $this->trainerId = $id;
-        $trainer = Trainer::findOrFail($id);
+        $trainer = User::where('role', 'trainer')->findOrFail($id);
         
         $this->name = $trainer->name;
         $this->email = $trainer->email;
@@ -53,7 +53,7 @@ class TrainersEdit extends Component
     {
         return [
             'name' => 'required|string|min:3|max:50|regex:/^[\pL\s\-\']+$/u',
-            'email' => ['required', 'string', 'email:rfc,dns', 'max:255', Rule::unique('trainers')->ignore($this->trainerId)],
+            'email' => ['required', 'string', 'email:rfc,dns', 'max:255', Rule::unique('users')->ignore($this->trainerId)],
             'specialization' => 'required|string|max:255',
             'description' => 'nullable|string',
             'photo' => 'nullable|image|max:1024',
@@ -87,7 +87,7 @@ class TrainersEdit extends Component
         $this->validate();
         
         try {
-            $trainer = Trainer::findOrFail($this->trainerId);
+            $trainer = User::where('role', 'trainer')->findOrFail($this->trainerId);
             
             $imagePath = $trainer->image;
             if ($this->photo) {
@@ -147,7 +147,7 @@ class TrainersEdit extends Component
                 }
                 
                 // Update the database to remove the image reference
-                $trainer = Trainer::findOrFail($this->trainerId);
+                $trainer = User::where('role', 'trainer')->findOrFail($this->trainerId);
                 $trainer->image = null;
                 $trainer->save();
                 

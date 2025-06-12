@@ -505,6 +505,11 @@ class SpoonacularService
                         }
                     }
                     
+                    // Format image URL if present
+                    if (isset($data['image']) && !empty($data['image'])) {
+                        $data['image'] = $this->formatImageUrl($data['image']);
+                    }
+                    
                     return $data;
                 } else {
                     Log::error('Spoonacular API error', [
@@ -538,6 +543,45 @@ class SpoonacularService
     }
 
     /**
+     * Generate image URL from recipe ID
+     * Fallback method when image URL is not provided by API
+     */
+    public function generateImageUrlFromId(int $recipeId, string $size = '312x231'): string
+    {
+        return "https://spoonacular.com/recipeImages/{$recipeId}-{$size}.jpg";
+    }
+
+    /**
+     * Format image URL for Spoonacular recipes
+     * Spoonacular images may need specific sizing parameters
+     */
+    public function formatImageUrl(string $imageUrl, string $size = '312x231'): string
+    {
+        // If it's already a full URL, return as is
+        if (str_starts_with($imageUrl, 'http')) {
+            return $imageUrl;
+        }
+        
+        // If it's a Spoonacular image filename (like "123456-312x231.jpg")
+        if (preg_match('/^\d+(-\d+x\d+)?\.(jpg|jpeg|png|webp)$/i', $imageUrl)) {
+            return "https://spoonacular.com/recipeImages/{$imageUrl}";
+        }
+        
+        // If it's just a recipe ID number, construct the URL with size
+        if (is_numeric($imageUrl)) {
+            return "https://spoonacular.com/recipeImages/{$imageUrl}-{$size}.jpg";
+        }
+        
+        // If it's a relative path, construct the full URL
+        if (str_starts_with($imageUrl, '/')) {
+            return "https://spoonacular.com/recipeImages" . $imageUrl;
+        }
+        
+        // Default case - assume it's a filename and construct the URL
+        return "https://spoonacular.com/recipeImages/{$imageUrl}";
+    }
+
+    /**
      * Generate a meal plan from Spoonacular API
      */
     public function generateMealPlan(int $targetCalories, array $params = [])
@@ -560,6 +604,8 @@ class SpoonacularService
                     'apiKey' => $this->apiKey,
                     'timeFrame' => 'day',
                     'targetCalories' => $targetCalories,
+                    'addRecipeInformation' => true,
+                    'fillIngredients' => true,
                 ], $params);
                 
                 $httpClient = Http::timeout(15);
@@ -574,10 +620,40 @@ class SpoonacularService
                 if ($response->successful()) {
                     $data = $response->json();
                     
+                    // Format image URLs for meals
                     if (isset($data['meals']) && is_array($data['meals'])) {
+                        foreach ($data['meals'] as &$meal) {
+                            // If meal doesn't have image, try to get it from recipe information
+                            if (!isset($meal['image']) || empty($meal['image'])) {
+                                if (isset($meal['id'])) {
+                                    try {
+                                        // Get full recipe information to get the image
+                                        $recipeInfo = $this->getRecipeInformation($meal['id']);
+                                        if (isset($recipeInfo['image']) && !empty($recipeInfo['image'])) {
+                                            $meal['image'] = $recipeInfo['image'];
+                                        } else {
+                                            // Fallback: generate image URL from recipe ID
+                                            $meal['image'] = $this->generateImageUrlFromId($meal['id']);
+                                        }
+                                    } catch (\Exception $e) {
+                                        Log::warning('Could not fetch recipe image for meal', [
+                                            'meal_id' => $meal['id'],
+                                            'error' => $e->getMessage()
+                                        ]);
+                                        // Fallback: generate image URL from recipe ID
+                                        $meal['image'] = $this->generateImageUrlFromId($meal['id']);
+                                    }
+                                }
+                            } else {
+                                // Format existing image URL
+                                $meal['image'] = $this->formatImageUrl($meal['image']);
+                            }
+                        }
+                        
                         Log::info('Received meal plan from Spoonacular API', [
                             'meals_count' => count($data['meals']),
-                            'meal_titles' => collect($data['meals'])->pluck('title')->toArray()
+                            'meal_titles' => collect($data['meals'])->pluck('title')->toArray(),
+                            'meal_images' => collect($data['meals'])->pluck('image')->toArray()
                         ]);
                     } else {
                         Log::warning('Received meal plan from API, but structure is different than expected');

@@ -49,13 +49,36 @@
                         <h2 class="text-lg font-medium text-gray-900 border-b pb-2">{{ __('admin.user_profile') }}</h2>
                         <div class="mt-4">
                             <div>
-                                <label for="role" class="block text-sm font-medium text-gray-700 mb-1">{{ __('admin.role') }}</label>
-                                <select id="role" wire:model="role" 
-                                    class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required>
-                                    <option value="admin">{{ __('admin.admin') }}</option>
-                                    <option value="user">{{ __('admin.user') }}</option>
-                                </select>
-                                @error('role') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                                <label class="block text-sm font-medium text-gray-700 mb-3">{{ __('admin.roles') }}</label>
+                                <div class="space-y-2">
+                                    <label class="inline-flex items-center">
+                                        <input type="checkbox" wire:model="roles" value="admin" 
+                                               class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                                        <span class="ml-2 text-sm text-gray-700">
+                                            <span class="font-medium">{{ __('admin.admin_role') }}</span>
+                                            <span class="text-gray-500"> - {{ __('admin.admin_role_desc') }}</span>
+                                        </span>
+                                    </label>
+                                    
+                                    <label class="inline-flex items-center">
+                                        <input type="checkbox" wire:model="roles" value="user" 
+                                               class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                                        <span class="ml-2 text-sm text-gray-700">
+                                            <span class="font-medium">{{ __('admin.user_role') }}</span>
+                                            <span class="text-gray-500"> - {{ __('admin.user_role_desc') }}</span>
+                                        </span>
+                                    </label>
+                                    
+                                    <label class="inline-flex items-center">
+                                        <input type="checkbox" wire:model="roles" value="trainer" 
+                                               class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                                        <span class="ml-2 text-sm text-gray-700">
+                                            <span class="font-medium">{{ __('admin.trainer_role') }}</span>
+                                            <span class="text-gray-500"> - {{ __('admin.trainer_role_desc') }}</span>
+                                        </span>
+                                    </label>
+                                </div>
+                                @error('roles') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                             </div>
                         </div>
                     </div>

@@ -113,10 +113,16 @@
                                 </span>
                             @endif
                             <div class="flex gap-1 flex-wrap">
-                                <span class="px-2 py-1 inline-flex text-xs leading-4 font-semibold rounded-full 
-                                    {{ $user->role === 'admin' ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800' }}">
-                                    {{ ucfirst($user->role) }}
-                                </span>
+                                @php
+                                    $roles = explode(',', $user->role);
+                                @endphp
+                                @foreach($roles as $role)
+                                    <span class="px-2 py-1 inline-flex text-xs leading-4 font-semibold rounded-full 
+                                        {{ trim($role) === 'admin' ? 'bg-purple-100 text-purple-800' : 
+                                           (trim($role) === 'trainer' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800') }}">
+                                        {{ ucfirst(trim($role)) }}
+                                    </span>
+                                @endforeach
                                 @if($user->provider)
                                     <span class="px-2 py-1 inline-flex text-xs leading-4 font-semibold rounded-full bg-indigo-100 text-indigo-800 items-center">
                                         <svg class="w-3 h-3 mr-1" viewBox="0 0 24 24">

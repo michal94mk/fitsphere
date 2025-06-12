@@ -64,6 +64,7 @@ use App\Livewire\Admin\TrainersIndex;
 use App\Livewire\Admin\TrainersCreate;
 use App\Livewire\Admin\TrainersEdit;
 use App\Livewire\Admin\TrainersShow;
+use App\Livewire\Admin\UserTranslations;
 
 // -----------------------------------------
 // PUBLIC ROUTES
@@ -128,9 +129,6 @@ Route::get('/password/confirm', ConfirmPassword::class)->name('password.confirm'
 
 // Logout
 Route::post('/logout', function () {
-    if (Auth::guard('trainer')->check()) {
-        Auth::guard('trainer')->logout();
-    }
     Auth::logout();
     
     // Add logout success message
@@ -152,22 +150,31 @@ Route::prefix('profile')->middleware(['auth'])->group(function () {
 // Comments - accessible by both users and trainers  
 Route::get('comments/{commentId}/livewire-edit', CommentEdit::class)->name('comments.livewire-edit');
 
-// Protected user routes
-Route::middleware(['auth', 'verified'])->group(function () {
-    // Reservation system
-    Route::prefix('reservations')->group(function () {
+// Explicit route for user reservations (debug)
+Route::get('/user/reservations', UserReservations::class)->name('user.reservations')->middleware('auth');
+
+// User reservations - accessible by authenticated users  
+Route::middleware(['auth'])->group(function () {
+    Route::prefix('user/reservations')->group(function () {
+        Route::get('/my', UserReservations::class)->name('user.reservations.alt');
         Route::get('/create/{trainerId}', CreateReservation::class)->name('reservation.create');
-        Route::get('/my', UserReservations::class)->name('user.reservations');
     });
 });
 
 // -----------------------------------------
-// TRAINER ROUTES
+// TRAINER ROUTES (Now using unified auth with role checks)
 // -----------------------------------------
 
-Route::middleware('auth:trainer')->prefix('trainer')->name('trainer.')->group(function () {
-    Route::get('/reservations', TrainerReservations::class)->name('reservations');
-    Route::get('/profile', \App\Livewire\Trainer\Profile\TrainerProfile::class)->name('profile');
+Route::middleware(['auth'])->group(function () {
+    // Trainer-specific routes (role will be checked in components)
+    Route::get('/trainer/reservations', TrainerReservations::class)->name('trainer.reservations');
+    Route::get('/trainer/profile', \App\Livewire\Trainer\Profile\TrainerProfile::class)->name('trainer.profile');
+    
+    // Trainer reservations
+    Route::prefix('trainer/reservations')->group(function () {
+        Route::get('/create/{trainerId}', CreateReservation::class)->name('reservation.create.trainer');
+        Route::get('/my', UserReservations::class)->name('trainer.my.reservations');
+    });
 });
 
 // -----------------------------------------
@@ -204,6 +211,7 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
         Route::get('/create', UsersCreate::class)->name('users.create');
         Route::get('/{id}/edit', UsersEdit::class)->name('users.edit');
         Route::get('/{id}', UsersShow::class)->name('users.show');
+        Route::get('/{id}/translations', UserTranslations::class)->name('users.translations');
     });
     
     // Trainers management
@@ -212,6 +220,6 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
         Route::get('/create', TrainersCreate::class)->name('trainers.create');
         Route::get('/{id}/edit', TrainersEdit::class)->name('trainers.edit');
         Route::get('/{id}', TrainersShow::class)->name('trainers.show');
-        Route::get('/{id}/translations', App\Livewire\Admin\TrainerTranslations::class)->name('trainers.translations');
+        Route::get('/{id}/translations', UserTranslations::class)->name('trainers.translations');
     });
 });

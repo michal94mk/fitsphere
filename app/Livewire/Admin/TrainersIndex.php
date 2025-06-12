@@ -2,7 +2,7 @@
 
 namespace App\Livewire\Admin;
 
-use App\Models\Trainer;
+use App\Models\User;
 use App\Services\EmailService;
 use App\Livewire\Admin\Traits\HasFlashMessages;
 use Illuminate\Support\Facades\Storage;
@@ -42,7 +42,7 @@ class TrainersIndex extends Component
         $this->clearMessages();
         
         try {
-            $trainer = Trainer::findOrFail($id);
+            $trainer = User::where('role', 'trainer')->findOrFail($id);
             $trainer->is_approved = true;
             $trainer->save();
             
@@ -64,7 +64,7 @@ class TrainersIndex extends Component
         $this->clearMessages();
         
         try {
-            $trainer = Trainer::findOrFail($id);
+            $trainer = User::where('role', 'trainer')->findOrFail($id);
             $trainer->is_approved = false;
             $trainer->save();
             
@@ -101,7 +101,7 @@ class TrainersIndex extends Component
         }
         
         try {
-            $trainer = Trainer::findOrFail($this->trainerIdBeingDeleted);
+            $trainer = User::where('role', 'trainer')->findOrFail($this->trainerIdBeingDeleted);
             
             // Delete profile image if it exists
             if ($trainer->image && Storage::disk('public')->exists($trainer->image)) {
@@ -129,7 +129,7 @@ class TrainersIndex extends Component
     #[Layout('layouts.admin', ['header' => 'Trainer Management'])]
     public function render()
     {
-        $trainers = Trainer::query()
+        $trainers = User::where('role', 'trainer')
             ->when($this->search, function ($query) {
                 $query->where(function ($query) {
                     $query->where('name', 'like', '%' . $this->search . '%')

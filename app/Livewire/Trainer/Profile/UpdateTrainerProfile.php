@@ -18,23 +18,37 @@ class UpdateTrainerProfile extends Component
     public $user;
     public $name;
     public $email;
+    public $phone;
     public $specialization;
+    public $description;
     public $bio;
+    public $specialties;
+    public $experience;
+    public $twitter_link;
+    public $instagram_link;
+    public $facebook_link;
     public $newImage;
     public $image;
 
     public function mount()
     {
-        // Redirect if not logged in
-        if (!Auth::guard('trainer')->check()) {
+        $user = Auth::user();
+        if (!$user || !in_array('trainer', explode(',', $user->role))) {
             return redirect()->route('login');
         }
 
-        $this->user = Auth::guard('trainer')->user();
+        $this->user = $user;
         $this->name = $this->user->name;
         $this->email = $this->user->email;
+        $this->phone = $this->user->phone;
         $this->specialization = $this->user->specialization;
+        $this->description = $this->user->description;
         $this->bio = $this->user->bio;
+        $this->specialties = $this->user->specialties;
+        $this->experience = $this->user->experience;
+        $this->twitter_link = $this->user->twitter_link;
+        $this->instagram_link = $this->user->instagram_link;
+        $this->facebook_link = $this->user->facebook_link;
         $this->image = $this->user->image;
     }
 

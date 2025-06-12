@@ -10,6 +10,7 @@ return [
     'submit' => 'Send Message',
     'success' => 'Your message has been sent successfully!',
     'error' => 'There was an error sending your message. Please try again.',
+    'email_error' => 'There was an error sending the email. Please try again.',
     'address_title' => 'Office Address',
     'phone_title' => 'Phone Number',
     'email_title' => 'Email Address',

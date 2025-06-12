@@ -28,17 +28,12 @@ class NutritionCalculator extends Component
     public $dietaryRestrictions = [];
     
     public $bmi;
+    public $bmr;
     public $dailyCalories;
     public $protein;
     public $carbs;
     public $fat;
     
-    public $searchQuery = '';
-    public $searchResults = [];
-    public $loading = false;
-    public $dietFilters = null;
-    public $intolerances = null;
-    public $maxCalories = null;
     public $showDietaryInfo = false;
     
     public $selectedRecipe = null;
@@ -47,6 +42,7 @@ class NutritionCalculator extends Component
     public $translatedInstructions = null;
     public $translatedIngredients = [];
     public $translatedTitle = null;
+    public $loading = false;
     public $autoTranslate = false;
     
     protected $spoonacularService;
@@ -67,43 +63,29 @@ class NutritionCalculator extends Component
     
     public function mount()
     {
-        $user = Auth::user();
-        if (!$user) {
-            return;
-        }
-        
-        $profile = $user->nutritionalProfile;
-        
-        if ($profile) {
-            $this->age = $profile->age;
-            $this->gender = $profile->gender;
-            $this->weight = $profile->weight;
-            $this->height = $profile->height;
-            $this->activityLevel = $profile->activity_level;
-            $this->goal = $profile->goal;
-            $this->dietaryRestrictions = $profile->dietary_restrictions ?? [];
+        // Initialize for both users and trainers
+        if (Auth::check()) {
+            $user = Auth::user();
             
-            // Only show dietary info if all required fields are filled
-            if ($this->weight && $this->height && $this->age && $this->gender && $this->activityLevel) {
+            // Load existing nutritional profile
+            $profile = $user->nutritionalProfile;
+            
+            if ($profile) {
+                $this->age = $profile->age;
+                $this->weight = $profile->weight;
+                $this->height = $profile->height;
+                $this->gender = $profile->gender;
+                $this->activityLevel = $profile->activity_level;
+                $this->goal = $profile->goal;
+                $this->dailyCalories = $profile->target_calories;
+                $this->protein = $profile->target_protein;
+                $this->carbs = $profile->target_carbs;
+                $this->fat = $profile->target_fat;
                 $this->showDietaryInfo = true;
                 
-                // Create temporary profile for calculations
-                $tempProfile = new NutritionalProfile([
-                    'age' => $this->age,
-                    'gender' => $this->gender,
-                    'weight' => $this->weight,
-                    'height' => $this->height,
-                    'activity_level' => $this->activityLevel,
-                    'goal' => $this->goal,
-                ]);
-                
-                $this->bmi = $tempProfile->calculateBMI();
-                $this->dailyCalories = $tempProfile->calculateDailyCalories();
-                
-                // Calculate macronutrients
-                $this->protein = round(($this->dailyCalories * 0.30) / 4, 0); // 4 calories per gram of protein
-                $this->carbs = round(($this->dailyCalories * 0.40) / 4, 0);   // 4 calories per gram of carbs
-                $this->fat = round(($this->dailyCalories * 0.30) / 9, 0);     // 9 calories per gram of fat
+                // Calculate BMI and BMR from existing profile data
+                $this->bmi = $profile->calculateBMI();
+                $this->bmr = $profile->calculateBMR();
             }
         }
     }
@@ -131,6 +113,7 @@ class NutritionCalculator extends Component
         ]);
         
         $this->bmi = $profile->calculateBMI();
+        $this->bmr = $profile->calculateBMR();
         $this->dailyCalories = $profile->calculateDailyCalories();
         
         // Calculate macronutrients
@@ -154,12 +137,13 @@ class NutritionCalculator extends Component
             return;
         }
         
-        $user = Auth::user();
+        // Get the authenticated user
+        $authenticatedUser = Auth::user();
         
-        $profile = $user->nutritionalProfile;
+        $profile = $authenticatedUser->nutritionalProfile;
         
         if (!$profile) {
-            $profile = new NutritionalProfile(['user_id' => $user->id]);
+            $profile = new NutritionalProfile(['user_id' => $authenticatedUser->id]);
         }
         
         $profile->age = $this->age;
@@ -180,117 +164,6 @@ class NutritionCalculator extends Component
         $profile->save();
         
         session()->flash('success', __('nutrition_calculator.profile_saved'));
-    }
-    
-    public function searchRecipes()
-    {
-        if (!Auth::check()) {
-            $this->dispatch('login-required', ['message' => __('nutrition_calculator.login_required')]);
-            return;
-        }
-        
-        if (empty($this->searchQuery)) {
-            session()->flash('search_error', __('nutrition_calculator.search_error'));
-            return;
-        }
-        
-        $this->loading = true;
-        
-        $params = [];
-        
-        if ($this->dietFilters) {
-            $params['diet'] = $this->dietFilters;
-        }
-        
-        if ($this->intolerances) {
-            $params['intolerances'] = $this->intolerances;
-        }
-        
-        if ($this->maxCalories) {
-            $params['maxCalories'] = $this->maxCalories;
-        }
-        
-        // If user has a profile with dietary restrictions
-        $user = Auth::user();
-        if ($user && $user->nutritionalProfile && !empty($user->nutritionalProfile->dietary_restrictions)) {
-            if (!isset($params['intolerances'])) {
-                $params['intolerances'] = implode(',', $user->nutritionalProfile->dietary_restrictions);
-            }
-        }
-        
-        // Save original query for comparison
-        $originalQuery = $this->searchQuery;
-        $searchTerm = $originalQuery;
-        
-        // For Polish users, attempt to translate the query to English for better search results
-        // since Spoonacular primarily has English content
-        $wasTranslated = false;
-        
-        try {
-            if (App::getLocale() === 'pl') {
-                // Check if we have access to translation API
-                if (config('services.deepl.key')) {
-                    try {
-                        $translatedQuery = $this->translateService->translate($originalQuery, 'pl', 'en');
-                        
-                        if ($translatedQuery && $translatedQuery !== $originalQuery) {
-                            $searchTerm = $translatedQuery;
-                            $wasTranslated = true;
-                        }
-                    } catch (ApiException $e) {
-                        app(LogService::class)->exception($e, 'Translation API error during recipe search');
-                        // Falls back to Spoonacular translation
-                    } catch (Throwable $e) {
-                        app(LogService::class)->exception($e, 'Error translating search query');
-                    }
-                }
-                
-                // As a fallback, try using Spoonacular's translation
-                if (!$wasTranslated) {
-                    try {
-                        $spoonacularTranslated = $this->spoonacularService->translate($originalQuery, 'pl', 'en');
-                        if ($spoonacularTranslated && $spoonacularTranslated !== $originalQuery) {
-                            $searchTerm = $spoonacularTranslated;
-                            $wasTranslated = true;
-                        }
-                    } catch (ApiException $e) {
-                        app(LogService::class)->exception($e, 'Spoonacular translation error during recipe search');
-                        // Continue with original query
-                    } catch (Throwable $e) {
-                        app(LogService::class)->exception($e, 'Error translating search query with Spoonacular');
-                    }
-                }
-            }
-            
-            // Perform the search with the potentially translated term
-            try {
-                $results = $this->spoonacularService->searchRecipes($searchTerm, $params);
-                
-                // If search was translated, show the translated term to the user
-                if ($wasTranslated) {
-                    // Only show translation information if the website is in Polish
-                    if (App::getLocale() === 'pl') {
-                        $message = __('nutrition_calculator.translation_detail', [
-                            'original' => $originalQuery,
-                            'translated' => $searchTerm
-                        ]);
-                        session()->flash('info', $message);
-                    }
-                }
-                
-                $this->searchResults = $results;
-            } catch (ApiException $e) {
-                app(LogService::class)->exception($e, 'API error during recipe search');
-                session()->flash('error', __('nutrition_calculator.search_api_error'));
-                $this->searchResults = ['results' => []];
-            }
-        } catch (Throwable $e) {
-            app(LogService::class)->exception($e, 'Unexpected error during recipe search');
-            session()->flash('error', __('nutrition_calculator.search_error_general'));
-            $this->searchResults = ['results' => []];
-        } finally {
-            $this->loading = false;
-        }
     }
     
     public function viewRecipeDetails($recipeId)

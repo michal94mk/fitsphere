@@ -15,15 +15,9 @@ class VerifyEmail extends Component
 
     public function mount()
     {
-        // Check which guard is active
         if (Auth::check()) {
             $this->user = Auth::user();
-            $this->isTrainer = false;
-        } elseif (Auth::guard('trainer')->check()) {
-            $this->user = Auth::guard('trainer')->user();
-            $this->isTrainer = true;
         } else {
-            // If no user is logged in, redirect to login page
             return redirect()->route('login');
         }
     }

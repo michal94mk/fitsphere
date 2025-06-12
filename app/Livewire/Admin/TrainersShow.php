@@ -2,7 +2,7 @@
 
 namespace App\Livewire\Admin;
 
-use App\Models\Trainer;
+use App\Models\User;
 use App\Services\EmailService;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
@@ -13,7 +13,7 @@ class TrainersShow extends Component
     
     public function mount($id)
     {
-        $this->trainer = Trainer::findOrFail($id);
+        $this->trainer = User::where('role', 'trainer')->findOrFail($id);
     }
     
     public function disapproveTrainer()

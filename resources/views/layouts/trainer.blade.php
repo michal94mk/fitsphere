@@ -59,12 +59,11 @@
                 <!-- User profile area -->
                 <div class="p-4 border-t border-gray-700">
                     <div class="flex items-center">
-                        <div class="w-8 h-8 rounded-full overflow-hidden mr-3">
-                            <img src="{{ Auth::guard('trainer')->user()->profile_photo_url }}" alt="{{ Auth::guard('trainer')->user()->name }}" class="w-full h-full object-cover">
+                        <div class="w-10 h-10 rounded-full overflow-hidden bg-gray-300">
+                            <img src="{{ Auth::user()->profile_photo_url }}" alt="{{ Auth::user()->name }}" class="w-full h-full object-cover">
                         </div>
-                        <div>
-                            <p class="text-sm font-medium text-white">{{ Auth::guard('trainer')->user()->name }}</p>
-                            <p class="text-xs text-gray-400">Trener</p>
+                        <div class="ml-3">
+                            <p class="text-sm font-medium text-white">{{ Auth::user()->name }}</p>
                         </div>
                         <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="ml-auto text-gray-400 hover:text-white">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

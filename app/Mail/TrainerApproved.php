@@ -2,7 +2,7 @@
 
 namespace App\Mail;
 
-use App\Models\Trainer;
+use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -18,9 +18,9 @@ class TrainerApproved extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
-    public Trainer $trainer;
+    public User $trainer;
 
-    public function __construct(Trainer $trainer)
+    public function __construct(User $trainer)
     {
         $this->trainer = $trainer;
         $this->onQueue('emails');

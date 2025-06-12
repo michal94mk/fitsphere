@@ -4,7 +4,7 @@ namespace App\Livewire\Admin;
 
 use App\Models\User;
 use App\Models\Post;
-use App\Models\Trainer;
+// use App\Models\Trainer; // Removed - trainers are now Users with role='trainer'
 use App\Models\Comment;
 use App\Models\Category;
 use App\Services\EmailService;
@@ -29,12 +29,12 @@ class Dashboard extends Component
         
         // Basic statistics
         $this->stats = [
-            'users' => User::count(),
-            'trainers' => Trainer::count(),
+            'users' => User::where('role', 'user')->count(),
+            'trainers' => User::where('role', 'trainer')->count(),
             'posts' => Post::count(),
             'comments' => Comment::count() ?? 0,
             'bookings' => 0, // Placeholder for bookings stats
-            'pendingTrainers' => Trainer::where('is_approved', false)->count(),
+            'pendingTrainers' => User::where('role', 'trainer')->where('is_approved', false)->count(),
             'publishedPosts' => Post::where('status', 'published')->count(),
             'draftPosts' => Post::where('status', 'draft')->count(),
         ];
@@ -43,10 +43,11 @@ class Dashboard extends Component
         $this->recentUsers = User::latest()->take(5)->get();
             
         // All trainers
-        $this->trainerUsers = Trainer::latest()->take(5)->get();
+        $this->trainerUsers = User::where('role', 'trainer')->latest()->take(5)->get();
         
         // Pending trainers
-        $this->pendingTrainers = Trainer::where('is_approved', false)
+        $this->pendingTrainers = User::where('role', 'trainer')
+            ->where('is_approved', false)
             ->latest()
             ->take(5)
             ->get();
@@ -70,19 +71,20 @@ class Dashboard extends Component
     public function approveTrainer($trainerId)
     {
         try {
-            // Find and update the trainer
-            $trainer = Trainer::findOrFail($trainerId);
+            // Find and update the trainer (now a User with role='trainer')
+            $trainer = User::where('role', 'trainer')->findOrFail($trainerId);
             $trainer->is_approved = true;
             $trainer->save();
             
             // Update the pending trainers list
-            $this->pendingTrainers = Trainer::where('is_approved', false)
+            $this->pendingTrainers = User::where('role', 'trainer')
+                ->where('is_approved', false)
                 ->latest()
                 ->take(5)
                 ->get();
                 
             // Update the stats
-            $this->stats['pendingTrainers'] = Trainer::where('is_approved', false)->count();
+            $this->stats['pendingTrainers'] = User::where('role', 'trainer')->where('is_approved', false)->count();
             
             // Send notification email using the email service
             $result = $this->emailService->sendTrainerApprovedEmail($trainer);

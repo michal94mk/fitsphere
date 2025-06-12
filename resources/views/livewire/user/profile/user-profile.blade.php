@@ -37,10 +37,6 @@
                             <span class="font-medium text-gray-800">
                                 @if(Auth::check())
                                     {{ Auth::user()->created_at->format('d.m.Y') }}
-                                @elseif(Auth::guard('trainer')->check())
-                                    {{ Auth::guard('trainer')->user()->created_at->format('d.m.Y') }}
-                                @else
-                                    --
                                 @endif
                             </span>
                         </div>
@@ -49,8 +45,6 @@
                             <span class="font-medium text-gray-800">
                                 @if(Auth::check())
                                     {{ ucfirst(Auth::user()->role ?? __('profile.user')) }}
-                                @elseif(Auth::guard('trainer')->check()) 
-                                    {{ __('profile.trainer') }}
                                 @else
                                     --
                                 @endif
@@ -79,7 +73,9 @@
             <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100 transform transition-all duration-300 hover:shadow-2xl">
                 <div class="h-2 bg-gradient-to-r from-blue-500 to-blue-600"></div>
                 <div class="p-8">
-                    <livewire:user.profile.update-user-profile />
+                    @if(Auth::check())
+                        <livewire:user.profile.update-user-profile />
+                    @endif
                 </div>
             </div>
 

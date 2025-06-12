@@ -5,7 +5,6 @@ namespace App\Livewire\Auth;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
 use App\Models\User;
-use App\Models\Trainer;
 use Illuminate\Auth\Events\Registered;
 
 class RegistrationSuccess extends Component
@@ -27,12 +26,8 @@ class RegistrationSuccess extends Component
             return;
         }
         
-        // Find user or trainer based on email address
-        if ($this->userType == 'trainer') {
-            $user = Trainer::where('email', $this->email)->first();
-        } else {
-            $user = User::where('email', $this->email)->first();
-        }
+        // Find user by email address
+        $user = User::where('email', $this->email)->first();
         
         if (!$user) {
             session()->flash('error', 'No account found with this email address.');

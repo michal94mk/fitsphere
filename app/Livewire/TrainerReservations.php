@@ -9,6 +9,7 @@ use App\Models\Reservation;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use App\Services\LogService;
+use Illuminate\Support\Facades\Log;
 
 class TrainerReservations extends Component
 {
@@ -42,8 +43,9 @@ class TrainerReservations extends Component
     // Initialize component and check authentication
     public function mount()
     {
-        if (!Auth::guard('trainer')->check()) {
-            return redirect()->route('trainer.login');
+        $user = Auth::user();
+        if (!$user || !in_array('trainer', explode(',', $user->role))) {
+            return redirect()->route('login');
         }
         
         $this->loadReservationCounts();
@@ -53,7 +55,8 @@ class TrainerReservations extends Component
     public function loadReservationCounts()
     {
         try {
-            $trainerId = Auth::guard('trainer')->id();
+            $user = Auth::user();
+            $trainerId = $user->id;
             
             $this->pendingCount = Reservation::where('trainer_id', $trainerId)
                 ->where('status', 'pending')
@@ -95,6 +98,12 @@ class TrainerReservations extends Component
     public function confirmReservation($id)
     {
         try {
+            $user = Auth::user();
+            if (!$user || !in_array('trainer', explode(',', $user->role))) {
+                session()->flash('error', 'Unauthorized access.');
+                return;
+            }
+            
             $reservation = $this->getReservationForTrainer($id);
             
             if (!$reservation) {
@@ -114,6 +123,12 @@ class TrainerReservations extends Component
     public function cancelReservation($id)
     {
         try {
+            $user = Auth::user();
+            if (!$user || !in_array('trainer', explode(',', $user->role))) {
+                session()->flash('error', 'Unauthorized access.');
+                return;
+            }
+            
             $reservation = $this->getReservationForTrainer($id);
             
             if (!$reservation) {
@@ -133,6 +148,12 @@ class TrainerReservations extends Component
     public function completeReservation($id)
     {
         try {
+            $user = Auth::user();
+            if (!$user || !in_array('trainer', explode(',', $user->role))) {
+                session()->flash('error', 'Unauthorized access.');
+                return;
+            }
+            
             $reservation = $this->getReservationForTrainer($id);
             
             if (!$reservation) {
@@ -152,7 +173,7 @@ class TrainerReservations extends Component
     protected function getReservationForTrainer($id)
     {
         return Reservation::where('id', $id)
-            ->where('trainer_id', Auth::guard('trainer')->id())
+            ->where('trainer_id', Auth::user()->id)
             ->first();
     }
     
@@ -160,7 +181,7 @@ class TrainerReservations extends Component
     protected function handleError(\Throwable $e, string $message)
     {
         $this->logService->error($message, [
-            'trainer_id' => Auth::guard('trainer')->id(),
+            'trainer_id' => Auth::user()->id,
             'error' => $e->getMessage(),
             'trace' => $e->getTraceAsString()
         ]);
@@ -173,51 +194,76 @@ class TrainerReservations extends Component
     public function render()
     {
         try {
-            $trainerId = Auth::guard('trainer')->id();
-            $query = Reservation::where('trainer_id', $trainerId)
-                ->with('user');
-                
+            $user = Auth::user();
+            $trainerId = $user->id;
+            
+            $reservationsQuery = Reservation::with(['user', 'trainer'])
+                ->where('trainer_id', $trainerId)
+                ->orderBy('date', 'desc');
+            
+            // Apply filters
             if ($this->statusFilter) {
-                $query->where('status', $this->statusFilter);
+                $reservationsQuery->where('status', $this->statusFilter);
             }
             
             if ($this->dateFilter) {
                 $today = Carbon::today();
-                $tomorrow = Carbon::tomorrow();
-                
                 switch ($this->dateFilter) {
                     case 'today':
-                        $query->whereDate('date', $today);
-                        break;
-                    case 'tomorrow':
-                        $query->whereDate('date', $tomorrow);
+                        $reservationsQuery->whereDate('date', $today);
                         break;
                     case 'this_week':
-                        $query->whereBetween('date', [$today, $today->copy()->endOfWeek()]);
+                        $reservationsQuery->whereBetween('date', [$today->startOfWeek(), $today->endOfWeek()]);
                         break;
-                    case 'next_week':
-                        $nextWeekStart = $today->copy()->addWeek()->startOfWeek();
-                        $nextWeekEnd = $nextWeekStart->copy()->endOfWeek();
-                        $query->whereBetween('date', [$nextWeekStart, $nextWeekEnd]);
+                    case 'this_month':
+                        $reservationsQuery->whereMonth('date', $today->month);
                         break;
                 }
             }
             
             if ($this->search) {
-                $query->whereHas('user', function($q) {
+                $reservationsQuery->whereHas('user', function($q) {
                     $q->where('name', 'like', '%' . $this->search . '%')
                       ->orWhere('email', 'like', '%' . $this->search . '%');
                 });
             }
             
-            return view('livewire.trainer-reservations', [
-                'reservations' => $query->latest()->paginate(10)
+            $reservations = $reservationsQuery->paginate(10);
+            
+            return view('livewire.trainer-reservations', compact('reservations'));
+        } catch (\Exception $e) {
+            Log::error('Error rendering trainer reservations: ' . $e->getMessage());
+            return view('livewire.trainer-reservations', ['reservations' => collect()]);
+        }
+    }
+
+    public function updateStatus($reservationId, $status)
+    {
+        try {
+            $user = Auth::user();
+            if (!$user || !in_array('trainer', explode(',', $user->role))) {
+                session()->flash('error', 'Unauthorized access.');
+                return;
+            }
+            
+            $reservation = Reservation::where('id', $reservationId)
+                ->where('trainer_id', $user->id)
+                ->first();
+                
+            if (!$reservation) {
+                session()->flash('error', 'Reservation not found.');
+                return;
+            }
+            
+            $reservation->update([
+                'status' => $status,
+                'trainer_id' => $user->id,
             ]);
-        } catch (\Throwable $e) {
-            $this->handleError($e, 'Error loading reservations');
-            return view('livewire.trainer-reservations', [
-                'reservations' => collect([])
-            ]);
+            
+            session()->flash('success', 'Status updated successfully.');
+        } catch (\Exception $e) {
+            Log::error('Error updating reservation status: ' . $e->getMessage());
+            session()->flash('error', 'An error occurred while updating the status.');
         }
     }
 }

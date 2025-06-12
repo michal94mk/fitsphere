@@ -5,7 +5,6 @@ namespace App\Livewire\Auth;
 use Livewire\Component;
 use Illuminate\Auth\Events\Verified;
 use App\Models\User;
-use App\Models\Trainer;
 
 class VerifyEmailHandler extends Component
 {
@@ -20,56 +19,33 @@ class VerifyEmailHandler extends Component
         $this->hash = $hash;
         
         try {
-            // Try to find both user and trainer
-            $userModel = null;
-            $trainerModel = null;
-            $isTrainer = false;
-            $validatedUser = null;
+            // Find the user by ID
+            $user = User::find($id);
             
-            try {
-                // Try to find a user
-                $userModel = User::find($id);
-            } catch (\Exception $e) {
-                // Ignore errors
-            }
-            
-            try {
-                // Try to find a trainer
-                $trainerModel = Trainer::find($id);
-            } catch (\Exception $e) {
-                // Ignore errors
-            }
-            
-            // If neither user nor trainer found, return error
-            if (!$userModel && !$trainerModel) {
+            // If user not found, return error
+            if (!$user) {
                 throw new \Exception('User not found with the provided ID.');
             }
             
-            // Check which model matches the hash (only one can be valid)
-            if ($userModel && hash_equals(sha1($userModel->getEmailForVerification()), (string) $hash)) {
-                $validatedUser = $userModel;
-                $isTrainer = false;
-            } elseif ($trainerModel && hash_equals(sha1($trainerModel->getEmailForVerification()), (string) $hash)) {
-                $validatedUser = $trainerModel;
-                $isTrainer = true;
-            } else {
+            // Check if the hash matches
+            if (!hash_equals(sha1($user->getEmailForVerification()), (string) $hash)) {
                 throw new \Exception('Invalid verification hash for the provided user.');
             }
             
             // Check if email is already verified
-            if ($validatedUser->hasVerifiedEmail()) {
+            if ($user->hasVerifiedEmail()) {
                 $this->message = 'Your email address has already been verified!';
                 return redirect('/login')->with('verified', $this->message);
             }
 
             // Mark email as verified and save changes
-            $validatedUser->markEmailAsVerified();
+            $user->markEmailAsVerified();
             
             // Trigger Verified event
-            event(new Verified($validatedUser));
+            event(new Verified($user));
             
             // Success message and redirect
-            if ($isTrainer) {
+            if ($user->isTrainer()) {
                 $this->message = __('common.trainer_email_verified_success');
             } else {
                 $this->message = __('common.email_verified_success');

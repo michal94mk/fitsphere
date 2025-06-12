@@ -131,20 +131,16 @@
                             <div class="flex items-start">
                                 <div class="flex-shrink-0 mr-3">
                                     <div class="h-10 w-10 rounded-full overflow-hidden">
-                                        @if($comment->user_id)
-                                            <img src="{{ $comment->user->profile_photo_url }}" alt="{{ $comment->user->name }}" class="h-10 w-10 object-cover">
-                                        @else
-                                            <img src="{{ $comment->trainer->profile_photo_url ?? '/images/default-avatar.png' }}" alt="{{ $comment->trainer->name }}" class="h-10 w-10 object-cover">
-                                        @endif
+                                        <img src="{{ $comment->user->profile_photo_url ?? '/images/default-avatar.png' }}" alt="{{ $comment->user->name }}" class="h-10 w-10 object-cover">
                                     </div>
                                 </div>
                                 <div class="flex-1 min-w-0">
                                     <div class="flex items-center justify-between">
                                         <div class="flex items-center">
                                             <h3 class="text-sm font-medium text-gray-900">
-                                                {{ $comment->user_id ? $comment->user->name : $comment->trainer->name }}
+                                                {{ $comment->user->name }}
                                             </h3>
-                                            @if($comment->trainer_id)
+                                            @if($comment->user->role === 'trainer')
                                                 <span class="ml-2 text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">{{ __('common.trainer') }}</span>
                                             @endif
                                         </div>
@@ -184,11 +180,10 @@
             @endif
 
             <!-- Add Comment Section (for authenticated and verified users/trainers) -->
-            @if(auth()->check() || auth()->guard('trainer')->check())
+            @if(auth()->check())
                 @php
-                    $user = auth()->check() ? auth()->user() : null;
-                    $trainer = auth()->guard('trainer')->check() ? auth()->guard('trainer')->user() : null;
-                    $isVerified = ($user && $user->email_verified_at) || ($trainer && $trainer->email_verified_at);
+                    $user = auth()->user();
+                    $isVerified = $user && $user->email_verified_at;
                 @endphp
                 
                 @if($isVerified)
@@ -239,7 +234,7 @@
                         <p class="text-gray-700 mb-3">{{ __('common.login_to_comment') }}</p>
                         <a href="{{ route('login') }}" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-medium text-xs text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013 3v1" />
                             </svg>
                             {{ __('common.login') }}
                         </a>

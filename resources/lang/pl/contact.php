@@ -10,6 +10,7 @@ return [
     'submit' => 'Wyślij Wiadomość',
     'success' => 'Twoja wiadomość została wysłana pomyślnie!',
     'error' => 'Wystąpił błąd podczas wysyłania wiadomości. Spróbuj ponownie.',
+    'email_error' => 'Wystąpił błąd podczas wysyłania wiadomości e-mail. Spróbuj ponownie.',
     'address_title' => 'Adres biura',
     'phone_title' => 'Numer telefonu',
     'email_title' => 'Adres email',

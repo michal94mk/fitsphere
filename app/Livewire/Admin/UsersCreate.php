@@ -6,7 +6,6 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use App\Models\Trainer;
 use Livewire\Attributes\Layout;
 
 class UsersCreate extends Component
@@ -17,7 +16,7 @@ class UsersCreate extends Component
     public $email = '';
     public $password = '';
     public $password_confirmation = '';
-    public $role = 'user';
+    public $roles = ['user']; // Default to user role
     public $photo;
     
     /**
@@ -47,8 +46,9 @@ class UsersCreate extends Component
             case 'email':
                 $this->email = trim(strtolower(strip_tags($this->email)));
                 break;
-            case 'role':
-                $this->role = trim(strip_tags($this->role));
+            case 'roles':
+                // Sanitize roles array
+                $this->roles = array_map(fn($role) => trim(strip_tags($role)), $this->roles);
                 break;
         }
     }
@@ -72,7 +72,6 @@ class UsersCreate extends Component
                 'email:rfc,dns',
                 'max:100',
                 'unique:users,email',
-                'unique:trainers,email',
                 'regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/',
             ],
             'password' => [
@@ -89,10 +88,13 @@ class UsersCreate extends Component
                 'min:8',
                 'max:128',
             ],
-            'role' => [
+            'roles' => [
                 'required',
-                'string',
-                'in:admin,user',
+                'array',
+                'min:1',
+            ],
+            'roles.*' => [
+                'in:admin,user,trainer',
             ],
             'photo' => [
                 'nullable',
@@ -114,7 +116,7 @@ class UsersCreate extends Component
             'email' => __('validation.attributes.email_address'),
             'password' => __('validation.attributes.password'),
             'password_confirmation' => __('validation.attributes.password_confirmation'),
-            'role' => __('validation.attributes.user_role'),
+            'roles' => __('validation.attributes.user_roles'),
             'photo' => __('validation.attributes.profile_photo'),
         ];
     }
@@ -151,8 +153,9 @@ class UsersCreate extends Component
             'password_confirmation.max' => __('validation.user.password_confirmation.max'),
             
             // Role validation
-            'role.required' => __('validation.user.role.required'),
-            'role.in' => __('validation.user.role.invalid'),
+            'roles.required' => __('validation.user.roles.required'),
+            'roles.min' => __('validation.user.roles.min'),
+            'roles.*.in' => __('validation.user.roles.invalid'),
             
             // Photo validation
             'photo.image' => __('validation.user.photo.image'),
@@ -182,7 +185,7 @@ class UsersCreate extends Component
         $user->name = $this->name;
         $user->email = $this->email;
         $user->password = Hash::make($this->password);
-        $user->role = $this->role;
+        $user->role = implode(',', $this->roles);
         
         if ($this->photo) {
             $imagePath = $this->photo->store('images/users', 'public');

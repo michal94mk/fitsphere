@@ -26,7 +26,7 @@ class BaseDataSeeder extends Seeder
                 'name' => 'Admin',
                 'email' => 'admin@fitsphere.com',
                 'password' => 'Password123',
-                'role' => 'admin',
+                'role' => 'admin,user',
                 'image' => 'images/users/user8.jpg',
             ],
             [
@@ -78,6 +78,52 @@ class BaseDataSeeder extends Seeder
                 'role' => 'user',
                 'image' => 'images/users/user7.jpg',
             ],
+            // Trainers
+            [
+                'name' => 'Jan Kowalski',
+                'email' => 'jan.kowalski@fitsphere.com',
+                'password' => 'Password123',
+                'role' => 'trainer',
+                'specialization' => 'Trening siłowy',
+                'is_approved' => true,
+                'image' => 'images/trainers/trainer1.jpg',
+            ],
+            [
+                'name' => 'Anna Nowakówna',
+                'email' => 'anna.nowakówna@fitsphere.com',
+                'password' => 'Password123',
+                'role' => 'trainer',
+                'specialization' => 'Joga i pilates',
+                'is_approved' => true,
+                'image' => 'images/trainers/trainer2.jpg',
+            ],
+            [
+                'name' => 'Marek Wiśniewski',
+                'email' => 'marek.wisniewski@fitsphere.com',
+                'password' => 'Password123',
+                'role' => 'trainer',
+                'specialization' => 'Trening funkcjonalny',
+                'is_approved' => true,
+                'image' => 'images/trainers/trainer3.jpg',
+            ],
+            [
+                'name' => 'Katarzyna Włodarczyk',
+                'email' => 'katarzyna.wlodarczyk@fitsphere.com',
+                'password' => 'Password123',
+                'role' => 'trainer',
+                'specialization' => 'Fitness i cardio',
+                'is_approved' => true,
+                'image' => 'images/trainers/trainer4.jpg',
+            ],
+            [
+                'name' => 'Robert Mazur',
+                'email' => 'robert.mazur@fitsphere.com',
+                'password' => 'Password123',
+                'role' => 'trainer',
+                'specialization' => 'CrossFit i sporty walki',
+                'is_approved' => true,
+                'image' => 'images/trainers/trainer5.jpg',
+            ],
         ];
 
         foreach ($users as $userData) {
@@ -88,6 +134,8 @@ class BaseDataSeeder extends Seeder
                     'email_verified_at' => now(),
                     'password' => bcrypt($userData['password']),
                     'role' => $userData['role'],
+                    'specialization' => $userData['specialization'] ?? null,
+                    'is_approved' => $userData['is_approved'] ?? true, // Default true for all users
                     'image' => $userData['image'],
                 ]);
             }

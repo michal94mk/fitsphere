@@ -19,7 +19,7 @@ class UsersEdit extends Component
     public $email = '';
     public $password = '';
     public $password_confirmation = '';
-    public $role = '';
+    public $roles = [];
     public $photo = null;
     public $currentImage = '';
     public $existing_photo = null;
@@ -34,7 +34,7 @@ class UsersEdit extends Component
         
         $this->name = $user->name;
         $this->email = $user->email;
-        $this->role = $user->role;
+        $this->roles = explode(',', $user->role);
         $this->currentImage = $user->image;
         $this->provider = $user->provider;
         $this->provider_id = $user->provider_id;
@@ -50,7 +50,8 @@ class UsersEdit extends Component
         return [
             'name' => 'required|string|min:3|max:50|regex:/^[\pL\s\-\']+$/u',
             'email' => ['required', 'string', 'email:rfc,dns', 'max:255', Rule::unique('users')->ignore($this->userId)],
-            'role' => 'required|in:admin,user',
+            'roles' => 'required|array|min:1',
+            'roles.*' => 'in:admin,user,trainer',
             'password' => $this->changePassword ? 'required|string|min:8|confirmed|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/' : 'nullable',
             'photo' => 'nullable|image|max:1024',
         ];
@@ -68,8 +69,9 @@ class UsersEdit extends Component
             'password.min' => __('validation.user.password.min', ['min' => 8]),
             'password.confirmed' => __('validation.user.password.confirmed'),
             'password.regex' => __('validation.user.password.regex'),
-            'role.required' => __('validation.user.role.required'),
-            'role.in' => __('validation.user.role.in'),
+            'roles.required' => __('validation.user.role.required'),
+            'roles.min' => 'Musisz wybrać przynajmniej jedną rolę.',
+            'roles.*.in' => __('validation.user.role.in'),
             'photo.image' => __('validation.user.image.image'),
             'photo.max' => __('validation.user.image.max', ['max' => 1024]),
         ];
@@ -92,7 +94,7 @@ class UsersEdit extends Component
             
             $user->name = $this->name;
             $user->email = $this->email;
-            $user->role = $this->role;
+            $user->role = implode(',', $this->roles);
             
             if ($this->changePassword && $this->password) {
                 $user->password = Hash::make($this->password);

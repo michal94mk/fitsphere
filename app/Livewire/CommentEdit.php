@@ -36,18 +36,11 @@ class CommentEdit extends Component
                 return redirect()->route('post.show', ['postId' => $this->comment->post_id]);
             }
 
-            // Check if email is verified for trainers
-            if (Auth::guard('trainer')->check() && is_null(Auth::guard('trainer')->user()->email_verified_at)) {
-                session()->flash('error', __('common.verify_email_to_comment'));
-                return redirect()->route('post.show', ['postId' => $this->comment->post_id]);
-            }
-            
             $this->content = $this->comment->content;
         } catch (\Exception $e) {
             $this->logService->error('Error loading comment for edit', [
                 'comment_id' => $commentId,
                 'user_id' => Auth::id(),
-                'trainer_id' => Auth::guard('trainer')->id(),
                 'error' => $e->getMessage()
             ]);
             
@@ -74,12 +67,6 @@ class CommentEdit extends Component
                 return redirect()->route('post.show', ['postId' => $this->comment->post_id]);
             }
 
-            // Check if email is verified for trainers
-            if (Auth::guard('trainer')->check() && is_null(Auth::guard('trainer')->user()->email_verified_at)) {
-                session()->flash('error', __('common.verify_email_to_comment'));
-                return redirect()->route('post.show', ['postId' => $this->comment->post_id]);
-            }
-            
             $this->comment->update([
                 'content' => $this->content
             ]);
@@ -90,7 +77,6 @@ class CommentEdit extends Component
             $this->logService->error('Error updating comment', [
                 'comment_id' => $this->comment->id,
                 'user_id' => Auth::id(),
-                'trainer_id' => Auth::guard('trainer')->id(),
                 'error' => $e->getMessage()
             ]);
             
@@ -102,6 +88,81 @@ class CommentEdit extends Component
     public function cancel()
     {
         return redirect()->route('post.show', ['postId' => $this->comment->post_id]);
+    }
+    
+    public function saveComment()
+    {
+        if (!Auth::check()) {
+            session()->flash('error', __('common.login_required'));
+            return;
+        }
+
+        $user = Auth::user();
+        
+        if (is_null($user->email_verified_at)) {
+            session()->flash('error', __('common.email_not_verified'));
+            return;
+        }
+
+        $this->validate([
+            'content' => 'required|string|max:500',
+        ]);
+
+        $updateData = [
+            'content' => $this->content,
+        ];
+
+        // Set appropriate relationship
+        $roles = explode(',', $user->role);
+        if (in_array('trainer', $roles)) {
+            $updateData['trainer_id'] = $user->id;
+        } else {
+            $updateData['user_id'] = $user->id;
+        }
+
+        $this->comment->update($updateData);
+
+        session()->flash('success', __('common.comment_updated'));
+        $this->dispatch('comment-updated');
+    }
+
+    public function deleteComment()
+    {
+        if (!Auth::check()) {
+            session()->flash('error', __('common.login_required'));
+            return;
+        }
+
+        $user = Auth::user();
+        
+        if (is_null($user->email_verified_at)) {
+            session()->flash('error', __('common.email_not_verified'));
+            return;
+        }
+
+        // Check ownership
+        if (($this->comment->user_id && $this->comment->user_id !== $user->id) ||
+            ($this->comment->trainer_id && $this->comment->trainer_id !== $user->id)) {
+            session()->flash('error', __('common.unauthorized_delete'));
+            return;
+        }
+
+        $deleteData = [
+            'deleted_at' => now(),
+        ];
+
+        // Set appropriate relationship  
+        $roles = explode(',', $user->role);
+        if (in_array('trainer', $roles)) {
+            $deleteData['trainer_id'] = $user->id;
+        } else {
+            $deleteData['user_id'] = $user->id;
+        }
+
+        $this->comment->update($deleteData);
+
+        session()->flash('success', __('common.comment_deleted'));
+        $this->dispatch('comment-deleted');
     }
     
     #[Layout('layouts.blog')]

@@ -20,11 +20,8 @@
                 <div class="h-3 bg-gradient-to-r from-blue-500 to-blue-600"></div>
                 <div class="p-8">
                     <div class="space-y-3">
-                        <div class="flex justify-between text-sm">
-                            <span class="text-gray-500">Członek od</span>
-                            <span class="font-medium text-gray-800">
-                                {{ Auth::guard('trainer')->user()->created_at->format('d.m.Y') }}
-                            </span>
+                        <div class="text-sm text-gray-600 dark:text-gray-400">
+                            {{ __('common.member_since') }}: {{ Auth::user()->created_at->format('d.m.Y') }}
                         </div>
                         <div class="flex justify-between text-sm">
                             <span class="text-gray-500">Rola</span>
