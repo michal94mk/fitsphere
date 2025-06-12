@@ -157,4 +157,21 @@ return [
     'servings_default' => 'Domyślnie',
     'serving_size_note' => 'Dostosuj wielkość porcji do swoich potrzeb (np. 0.5 = połowa porcji, 2 = podwójna porcja)',
     'actual_serving' => 'Rzeczywista porcja',
+    
+    // Recipe search
+    'recipe_search' => 'Wyszukiwarka przepisów',
+    'search_recipes' => 'Wyszukaj przepisy',
+    'search_placeholder' => 'np. kurczak, makaron, sałatka...',
+    'search_button' => 'Szukaj',
+    'search_results' => 'Wyniki wyszukiwania',
+    'no_recipes_found' => 'Nie znaleziono przepisów',
+    'search_loading' => 'Wyszukiwanie...',
+    'search_empty' => 'Wprowadź nazwę przepisu lub składniki',
+    'toggle_search' => 'Pokaż/ukryj wyszukiwarkę',
+    'max_calories_per_serving' => 'Maks. kalorie na porcję',
+    'clear_search' => 'Wyczyść wyszukiwanie',
+    'search_results_for' => 'Wyniki dla:',
+    'recipe_added_to_plan' => 'Przepis został dodany do planu!',
+
+    'click_to_see_details' => 'Kliknij aby zobaczyć szczegóły',
 ]; 

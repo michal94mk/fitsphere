@@ -1,3 +1,12 @@
+<style>
+    .line-clamp-2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+</style>
+
 <div>
     <div class="bg-gradient-to-br from-gray-50 to-gray-100 py-8 md:py-12">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -200,18 +209,377 @@
                         </div>
                     </div>
 
-                    <!-- Panel dodawania przepisu do planu (druga część w kolejnym edicie) -->
+                    <!-- Sekcja wyszukiwania przepisów -->
+                    <div class="mb-8 bg-gray-50 p-6 rounded-lg shadow-sm">
+                        <div class="mb-4">
+                            <h3 class="text-xl font-semibold">{{ __('meal_planner.recipe_search') }}</h3>
+                        </div>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                                <div class="md:col-span-2">
+                                    <label for="searchQuery" class="block text-sm font-medium text-gray-700 mb-1">{{ __('meal_planner.search_recipes') }}</label>
+                                    <div class="flex">
+                                        <input 
+                                            type="text" 
+                                            wire:model="searchQuery" 
+                                            id="searchQuery" 
+                                            placeholder="{{ __('meal_planner.search_placeholder') }}" 
+                                            class="flex-1 rounded-l-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                                            wire:keydown.enter="searchRecipes"
+                                        >
+                                        <button 
+                                            wire:click="searchRecipes" 
+                                            class="px-4 py-2 bg-blue-500 text-white rounded-r-md hover:bg-blue-600 transition duration-300"
+                                            @if($searchLoading) disabled @endif
+                                        >
+                                            @if($searchLoading)
+                                                <svg class="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                                </svg>
+                                            @else
+                                                {{ __('meal_planner.search_button') }}
+                                            @endif
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <label for="maxCalories" class="block text-sm font-medium text-gray-700 mb-1">{{ __('meal_planner.max_calories_per_serving') }}</label>
+                                    <input 
+                                        type="number" 
+                                        wire:model="maxCalories" 
+                                        id="maxCalories" 
+                                        placeholder="np. 500" 
+                                        class="w-full rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                                    >
+                                </div>
+                            </div>
+                            
+                            <!-- Search results -->
+                            @if($searchLoading)
+                                <div class="flex justify-center items-center h-32">
+                                    <div class="text-center">
+                                        <svg class="animate-spin h-10 w-10 text-indigo-600 mx-auto mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 818-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                        </svg>
+                                        <p class="text-gray-600">{{ __('meal_planner.search_loading') }}</p>
+                                    </div>
+                                </div>
+                            @elseif(!empty($searchResults) && isset($searchResults['results']))
+                                <div class="bg-white p-4 rounded-md shadow">
+                                    <h4 class="text-lg font-semibold mb-3">
+                                        {{ __('meal_planner.search_results') }}
+                                        @if(!empty($searchQuery))
+                                            <span class="text-gray-500 font-normal text-sm">{{ __('meal_planner.search_results_for') }} "{{ $searchQuery }}"</span>
+                                        @endif
+                                    </h4>
+                                    
+                                    @if(count($searchResults['results']) > 0)
+                                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                            @foreach($searchResults['results'] as $recipe)
+                                                <div class="border rounded-lg overflow-hidden hover:shadow-md cursor-pointer transition duration-200 flex flex-col h-full" wire:click="selectRecipe({{ $recipe['id'] }}, '{{ $recipe['title'] }}')">
+                                                    <!-- Image section - fixed height -->
+                                                    <div class="relative">
+                                                        @if(isset($recipe['image']))
+                                                            <img src="{{ $recipe['image'] }}" alt="{{ $recipe['title'] }}" class="w-full h-40 object-cover">
+                                                        @else
+                                                            <div class="w-full h-40 bg-gray-200 flex items-center justify-center">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                                </svg>
+                                                            </div>
+                                                        @endif
+                                                        
+                                                        <!-- Floating dietary tags on image -->
+                                                        @if((isset($recipe['vegetarian']) && $recipe['vegetarian']) || (isset($recipe['vegan']) && $recipe['vegan']) || (isset($recipe['glutenFree']) && $recipe['glutenFree']))
+                                                            <div class="absolute top-2 left-2 flex flex-wrap gap-1">
+                                                                @if(isset($recipe['vegan']) && $recipe['vegan'])
+                                                                    <span class="px-2 py-1 bg-green-600 text-white text-xs font-medium rounded-full shadow-sm">V</span>
+                                                                @elseif(isset($recipe['vegetarian']) && $recipe['vegetarian'])
+                                                                    <span class="px-2 py-1 bg-green-500 text-white text-xs font-medium rounded-full shadow-sm">VEG</span>
+                                                                @endif
+                                                                @if(isset($recipe['glutenFree']) && $recipe['glutenFree'])
+                                                                    <span class="px-2 py-1 bg-yellow-500 text-white text-xs font-medium rounded-full shadow-sm">GF</span>
+                                                                @endif
+                                                            </div>
+                                                        @endif
+                                                    </div>
+                                                    
+                                                    <!-- Content section - flexible height -->
+                                                    <div class="p-4 flex flex-col flex-grow">
+                                                        <!-- Title - fixed height area -->
+                                                        <h5 class="font-medium text-sm mb-3 line-clamp-2 min-h-[2.5rem]">{{ $recipe['title'] }}</h5>
+                                                        
+                                                        <!-- Info section - fixed height area -->
+                                                        <div class="flex items-center justify-between text-xs text-gray-500 mb-3">
+                                                            <div class="flex items-center">
+                                                                @if(isset($recipe['readyInMinutes']))
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                                    </svg>
+                                                                    <span>{{ $recipe['readyInMinutes'] }} min</span>
+                                                                @endif
+                                                            </div>
+                                                            <div class="flex items-center">
+                                                                @if(isset($recipe['servings']))
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                                                                    </svg>
+                                                                    <span>{{ $recipe['servings'] }} {{ __('meal_planner.servings') }}</span>
+                                                                @endif
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        <!-- Hover effect overlay -->
+                                                        <div class="mt-auto">
+                                                            <div class="text-xs text-blue-600 font-medium">{{ __('meal_planner.click_to_see_details') }}</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    @else
+                                        <p class="text-gray-500 italic">{{ __('meal_planner.no_recipes_found') }}</p>
+                                    @endif
+                                </div>
+                            @elseif(!empty($searchQuery))
+                                <div class="bg-white p-4 rounded-md shadow text-center">
+                                    <p class="text-gray-500">{{ __('meal_planner.no_recipes_found') }}</p>
+                                </div>
+                            @endif
+                            
+                            <!-- Search messages -->
+                            @if(session()->has('search_translated'))
+                                @php
+                                    $translated = session('search_translated');
+                                @endphp
+                                <div class="mt-3 bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-3 text-sm">
+                                    <p>{{ __('nutrition_calculator.translation_detail', ['original' => $translated['original'], 'translated' => $translated['translated']]) }}</p>
+                                </div>
+                            @endif
+                            
+                            @if(session()->has('info'))
+                                <div class="mt-3 bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-3 text-sm">
+                                    {{ session('info') }}
+                                </div>
+                            @endif
+                            
+                            @if(session()->has('error'))
+                                <div class="mt-3 bg-red-100 border-l-4 border-red-500 text-red-700 p-3 text-sm">
+                                    {{ session('error') }}
+                                </div>
+                            @endif
+                    </div>
+
+                    <!-- Panel szczegółów przepisu z tłumaczeniem -->
                     @if ($selectedRecipe)
                         <div class="mb-8 bg-gray-50 p-6 rounded-lg shadow-sm">
-                            <h3 class="text-xl font-semibold mb-4">Dodaj przepis do planu</h3>
+                            <!-- Header with title and translation toggle -->
+                            <div class="flex justify-between items-start mb-4">
+                                <div class="relative flex-1">
+                                    <!-- Recipe title -->
+                                    <h3 class="text-2xl font-bold text-gray-900" 
+                                        x-data="{ titleLoading: @entangle('titleLoading') }"
+                                        x-show="!titleLoading">
+                                        @if($translateRecipe && $translatedTitle)
+                                            {{ $translatedTitle }}
+                                        @else
+                                            {{ $selectedRecipe['name'] ?? $selectedRecipe['title'] }}
+                                        @endif
+                                    </h3>
+                                    
+                                    <!-- Title loading animation -->
+                                    <div 
+                                        x-data="{ titleLoading: @entangle('titleLoading') }"
+                                        x-show="titleLoading" 
+                                        class="flex items-center space-x-2 py-2"
+                                        style="display: none;"
+                                    >
+                                        <div class="h-6 w-6">
+                                            <svg class="animate-spin h-6 w-6 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 714 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                            </svg>
+                                        </div>
+                                        <div class="h-8 bg-gray-200 rounded w-64 animate-pulse"></div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Translation toggle button for Polish users -->
+                                @if(App::getLocale() === 'pl')
+                                    <div class="ml-4">
+                                        <button 
+                                            wire:click="toggleRecipeTranslation" 
+                                            class="px-3 py-2 bg-blue-500 text-white rounded-md text-sm hover:bg-blue-600 transition duration-200 flex items-center space-x-2"
+                                            @if($loadingRecipeDetails || $titleLoading || $instructionsLoading || $ingredientsLoading) disabled @endif
+                                        >
+                                            @if($translateRecipe)
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 716.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
+                                                </svg>
+                                                <span>{{ __('meal_planner.show_original') }}</span>
+                                            @else
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 716.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
+                                                </svg>
+                                                <span>{{ __('meal_planner.translate_to_polish') }}</span>
+                                            @endif
+                                        </button>
+                                    </div>
+                                @endif
+                            </div>
                             
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div>
+                            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                                <!-- Recipe details column -->
+                                <div class="lg:col-span-2">
                                     @if (isset($selectedRecipe['image']))
-                                        <img src="{{ $selectedRecipe['image'] }}" alt="{{ $selectedRecipe['name'] }}" class="w-full h-48 object-cover rounded-md mb-4">
+                                        <img src="{{ $selectedRecipe['image'] }}" alt="{{ $selectedRecipe['name'] ?? $selectedRecipe['title'] }}" class="w-full h-64 object-cover rounded-md mb-4">
                                     @endif
                                     
-                                    <h4 class="text-lg font-semibold mb-2">{{ $selectedRecipe['name'] }}</h4>
+                                    <!-- Recipe tags and basic info -->
+                                    <div class="flex flex-wrap gap-2 mb-4">
+                                        @if (isset($selectedRecipe['vegetarian']) && $selectedRecipe['vegetarian'])
+                                            <span class="px-2 py-1 bg-green-100 text-green-800 text-xs font-semibold rounded-full">{{ __('meal_planner.vegetarian') }}</span>
+                                        @endif
+                                        @if (isset($selectedRecipe['vegan']) && $selectedRecipe['vegan'])
+                                            <span class="px-2 py-1 bg-green-100 text-green-800 text-xs font-semibold rounded-full">{{ __('meal_planner.vegan') }}</span>
+                                        @endif
+                                        @if (isset($selectedRecipe['glutenFree']) && $selectedRecipe['glutenFree'])
+                                            <span class="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs font-semibold rounded-full">{{ __('meal_planner.gluten_free') }}</span>
+                                        @endif
+                                        @if (isset($selectedRecipe['dairyFree']) && $selectedRecipe['dairyFree'])
+                                            <span class="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs font-semibold rounded-full">{{ __('meal_planner.dairy_free') }}</span>
+                                        @endif
+                                    </div>
+                                    
+                                    <!-- Recipe info grid -->
+                                    <div class="grid grid-cols-2 gap-4 mb-6">
+                                        <div class="bg-white p-3 rounded-md">
+                                            <span class="text-sm text-gray-500">{{ __('meal_planner.preparation_time') }}:</span>
+                                            <div class="font-semibold">{{ $selectedRecipe['readyInMinutes'] ?? '?' }} min</div>
+                                        </div>
+                                        <div class="bg-white p-3 rounded-md">
+                                            <span class="text-sm text-gray-500">{{ __('meal_planner.servings') }}:</span>
+                                            <div class="font-semibold">{{ $selectedRecipe['servings'] ?? '1' }}</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Nutrition information -->
+                                    <div class="bg-white p-4 rounded-md mb-6">
+                                        <h5 class="font-medium mb-3">{{ __('meal_planner.nutritional_info') }}</h5>
+                                        <div class="grid grid-cols-2 gap-3">
+                                            @if (isset($selectedRecipe['nutrition']['nutrients']))
+                                                @php
+                                                    $calories = collect($selectedRecipe['nutrition']['nutrients'])->firstWhere('name', 'Calories');
+                                                    $protein = collect($selectedRecipe['nutrition']['nutrients'])->firstWhere('name', 'Protein');
+                                                    $carbs = collect($selectedRecipe['nutrition']['nutrients'])->firstWhere('name', 'Carbohydrates');
+                                                    $fat = collect($selectedRecipe['nutrition']['nutrients'])->firstWhere('name', 'Fat');
+                                                @endphp
+                                                
+                                                <div class="text-sm">
+                                                    <span class="text-gray-500">{{ __('meal_planner.calories') }}:</span>
+                                                    <span class="font-semibold ml-1">{{ $calories ? round($calories['amount']) : '?' }} kcal</span>
+                                                </div>
+                                                <div class="text-sm">
+                                                    <span class="text-gray-500">{{ __('meal_planner.protein') }}:</span>
+                                                    <span class="font-semibold ml-1">{{ $protein ? round($protein['amount']) : '?' }} g</span>
+                                                </div>
+                                                <div class="text-sm">
+                                                    <span class="text-gray-500">{{ __('meal_planner.carbs') }}:</span>
+                                                    <span class="font-semibold ml-1">{{ $carbs ? round($carbs['amount']) : '?' }} g</span>
+                                                </div>
+                                                <div class="text-sm">
+                                                    <span class="text-gray-500">{{ __('meal_planner.fat') }}:</span>
+                                                    <span class="font-semibold ml-1">{{ $fat ? round($fat['amount']) : '?' }} g</span>
+                                                </div>
+                                                
+                                                <div class="col-span-2 text-xs text-gray-500 mt-2">
+                                                    <span>{{ __('meal_planner.nutrition_note') }}</span>
+                                                </div>
+                                            @else
+                                                <div class="col-span-2 text-gray-500 italic">{{ __('meal_planner.no_nutrition_info') }}</div>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Ingredients section -->
+                                    <div class="bg-white p-4 rounded-md mb-6">
+                                        <div class="flex items-center justify-between mb-3">
+                                            <h5 class="font-medium">{{ __('meal_planner.ingredients') }}</h5>
+                                            <div x-data="{ ingredientsLoading: @entangle('ingredientsLoading') }"
+                                                 x-show="ingredientsLoading && @js(App::getLocale() === 'pl') && @entangle('translateRecipe')" 
+                                                 class="flex items-center space-x-2"
+                                                 style="display: none;">
+                                                <svg class="animate-spin h-4 w-4 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 818-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 714 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                                </svg>
+                                                <span class="text-sm text-blue-600">{{ __('meal_planner.translating_ingredients') }}</span>
+                                            </div>
+                                        </div>
+                                        
+                                        @if (isset($selectedRecipe['extendedIngredients']) && is_array($selectedRecipe['extendedIngredients']) && count($selectedRecipe['extendedIngredients']) > 0)
+                                            <ul class="space-y-2 text-sm" 
+                                                x-data="{ ingredientsLoading: @entangle('ingredientsLoading') }"
+                                                x-show="!ingredientsLoading">
+                                                @foreach ($selectedRecipe['extendedIngredients'] as $index => $ingredient)
+                                                    <li class="text-gray-700 flex items-start">
+                                                        <span class="w-2 h-2 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                                                        <span>
+                                                            @if($translateRecipe && isset($translatedIngredients[$index]))
+                                                                {{ $translatedIngredients[$index] }}
+                                                            @else
+                                                                {{ $ingredient['original'] ?? ($ingredient['amount'] . ' ' . $ingredient['unit'] . ' ' . $ingredient['name']) }}
+                                                            @endif
+                                                        </span>
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                        @else
+                                            <p class="text-gray-500 italic text-sm">{{ __('meal_planner.no_ingredients') }}</p>
+                                        @endif
+                                    </div>
+                                    
+                                    <!-- Instructions section -->
+                                    <div class="bg-white p-4 rounded-md mb-6">
+                                        <div class="flex items-center justify-between mb-3">
+                                            <h5 class="font-medium">{{ __('meal_planner.instructions') }}</h5>
+                                            <div x-data="{ instructionsLoading: @entangle('instructionsLoading') }"
+                                                 x-show="instructionsLoading && @js(App::getLocale() === 'pl') && @entangle('translateRecipe')" 
+                                                 class="flex items-center space-x-2"
+                                                 style="display: none;">
+                                                <svg class="animate-spin h-4 w-4 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 818-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 714 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                                </svg>
+                                                <span class="text-sm text-blue-600">{{ __('meal_planner.translating_instructions') }}</span>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Instructions content -->
+                                        <div x-data="{ instructionsLoading: @entangle('instructionsLoading') }"
+                                             x-show="!instructionsLoading">
+                                            @if($translateRecipe && $translatedInstructions)
+                                                <div class="text-gray-700 text-sm">
+                                                    {!! $translatedInstructions !!}
+                                                </div>
+                                            @elseif(isset($selectedRecipe['analyzedInstructions']) && is_array($selectedRecipe['analyzedInstructions']) && count($selectedRecipe['analyzedInstructions']) > 0 && isset($selectedRecipe['analyzedInstructions'][0]['steps']))
+                                                <ol class="list-decimal pl-5 space-y-2 text-sm">
+                                                    @foreach($selectedRecipe['analyzedInstructions'][0]['steps'] as $step)
+                                                        <li class="text-gray-700">{{ $step['step'] }}</li>
+                                                    @endforeach
+                                                </ol>
+                                            @elseif(isset($selectedRecipe['instructions']) && !empty($selectedRecipe['instructions']))
+                                                <div class="text-gray-700 text-sm">
+                                                    {!! nl2br(e($selectedRecipe['instructions'])) !!}
+                                                </div>
+                                            @else
+                                                <p class="text-gray-500 italic text-sm">{{ __('meal_planner.no_instructions') }}</p>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
                                     
                                     <div class="flex flex-wrap gap-2 mb-4">
                                         @if (isset($selectedRecipe['vegetarian']) && $selectedRecipe['vegetarian'])
@@ -266,38 +634,6 @@
                                                 <div class="col-span-2 text-gray-500 italic">Brak informacji o wartościach odżywczych</div>
                                             @endif
                                         </div>
-                                    </div>
-                                    
-                                    <div class="mb-4">
-                                        <h5 class="font-medium mb-3">{{ __('meal_planner.ingredients') }}</h5>
-                                        @if (isset($selectedRecipe['extendedIngredients']) && is_array($selectedRecipe['extendedIngredients']) && count($selectedRecipe['extendedIngredients']) > 0)
-                                            <ul class="space-y-1 text-sm">
-                                                @foreach ($selectedRecipe['extendedIngredients'] as $ingredient)
-                                                    <li class="text-gray-700 flex items-start">
-                                                        <span class="w-2 h-2 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                                                        <span>{{ $ingredient['original'] ?? ($ingredient['amount'] . ' ' . $ingredient['unit'] . ' ' . $ingredient['name']) }}</span>
-                                                    </li>
-                                                @endforeach
-                                            </ul>
-                                        @else
-                                            <p class="text-gray-500 italic text-sm">{{ __('meal_planner.no_ingredients') }}</p>
-                                        @endif
-                                    </div>
-                                    
-                                    <!-- Instructions section -->
-                                    <div class="mb-4">
-                                        <h5 class="font-medium mb-3">{{ __('meal_planner.instructions') }}</h5>
-                                        @if(isset($selectedRecipe['instructions']) && !empty($selectedRecipe['instructions']))
-                                            <div class="text-sm text-gray-700">{!! $selectedRecipe['instructions'] !!}</div>
-                                        @elseif(isset($selectedRecipe['analyzedInstructions']) && is_array($selectedRecipe['analyzedInstructions']) && count($selectedRecipe['analyzedInstructions']) > 0 && isset($selectedRecipe['analyzedInstructions'][0]['steps']))
-                                            <ol class="list-decimal pl-5 space-y-2 text-sm">
-                                                @foreach($selectedRecipe['analyzedInstructions'][0]['steps'] as $step)
-                                                    <li class="text-gray-700">{{ $step['step'] ?? 'No step description' }}</li>
-                                                @endforeach
-                                            </ol>
-                                        @else
-                                            <p class="text-gray-500 italic text-sm">{{ __('meal_planner.no_instructions') }}</p>
-                                        @endif
                                     </div>
                                 </div>
                                 
@@ -374,84 +710,159 @@
                         @if (count($mealPlans) > 0)
                             <div class="space-y-4">
                                 @foreach ($mealPlans as $meal)
-                                    <div class="bg-white rounded-md shadow p-4">
-                                        <div class="flex justify-between">
-                                            <h4 class="font-semibold">
-                                                <span class="inline-block mr-2">
-                                                    @switch($meal->meal_type)
-                                                        @case('breakfast')
-                                                            <span class="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs font-semibold rounded-full">{{ __('meal_planner.breakfast') }}</span>
-                                                            @break
-                                                        
-                                                        @case('lunch')
-                                                            <span class="px-2 py-1 bg-green-100 text-green-800 text-xs font-semibold rounded-full">{{ __('meal_planner.lunch') }}</span>
-                                                            @break
-                                                        
-                                                        @case('dinner')
-                                                            <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs font-semibold rounded-full">{{ __('meal_planner.dinner') }}</span>
-                                                            @break
-                                                        
-                                                        @case('snack')
-                                                            <span class="px-2 py-1 bg-purple-100 text-purple-800 text-xs font-semibold rounded-full">{{ __('meal_planner.snacks') }}</span>
-                                                            @break
-                                                    @endswitch
-                                                </span>
-                                                {{ $meal->name }}
-                                            </h4>
-                                            
-                                            <div class="flex space-x-2">
-                                                <button 
-                                                    x-data
-                                                    @click="$dispatch('open-delete-modal', { mealId: {{ $meal->id }}, mealName: '{{ $meal->name }}' })"
-                                                    class="text-gray-400 hover:text-red-500" 
-                                                >
-                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                                    </svg>
-                                                </button>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 mt-3">
-                                            <div class="sm:col-span-1">
-                                                @if (isset($meal->recipe_data['image']))
-                                                    <img src="{{ $meal->recipe_data['image'] }}" alt="{{ $meal->name }}" class="w-full h-24 object-cover rounded">
-                                                @endif
-                                            </div>
-                                            
-                                            <div class="sm:col-span-3">
-                                                <div class="flex flex-wrap gap-4 mb-2 text-sm">
-                                                    <div><span class="font-semibold">{{ __('meal_planner.calories') }}:</span> {{ !is_null($meal->calories) && $meal->calories > 0 ? round($meal->calories) : __('meal_planner.na') }} {{ __('meal_planner.kcal') }}</div>
-                                                    <div><span class="font-semibold">{{ __('meal_planner.protein') }}:</span> {{ !is_null($meal->protein) && $meal->protein > 0 ? round($meal->protein) : __('meal_planner.na') }} {{ __('meal_planner.g') }}</div>
-                                                    <div><span class="font-semibold">{{ __('meal_planner.carbs') }}:</span> {{ !is_null($meal->carbs) && $meal->carbs > 0 ? round($meal->carbs) : __('meal_planner.na') }} {{ __('meal_planner.g') }}</div>
-                                                    <div><span class="font-semibold">{{ __('meal_planner.fat') }}:</span> {{ !is_null($meal->fat) && $meal->fat > 0 ? round($meal->fat) : __('meal_planner.na') }} {{ __('meal_planner.g') }}</div>
-                                                </div>
-                                                
-                                                <div class="text-xs text-gray-500 mt-1">
-                                                    @if(isset($meal->recipe_data['servings']) && $meal->recipe_data['servings'] > 0)
-                                                        <span>{{ __('meal_planner.nutrition_per_serving') }} {{ __('meal_planner.servings') }}: {{ $meal->recipe_data['servings'] }}</span>
-                                                        @if(isset($meal->serving_size) && $meal->serving_size != 1)
-                                                            <span class="ml-2 px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded">
-                                                                {{ __('meal_planner.actual_serving') }}: {{ $meal->serving_size }}x
-                                                            </span>
-                                                        @endif
-                                                    @else
-                                                        <span>{{ __('meal_planner.nutrition_per_serving') }}</span>
-                                                        @if(isset($meal->serving_size) && $meal->serving_size != 1)
-                                                            <span class="ml-2 px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded">
-                                                                {{ __('meal_planner.actual_serving') }}: {{ $meal->serving_size }}x
-                                                            </span>
-                                                        @endif
-                                                    @endif
-                                                </div>
-                                                
-                                                @if ($meal->notes)
-                                                    <div class="mt-2 text-sm text-gray-600">
-                                                        <span class="font-semibold">{{ __('meal_planner.notes') }}:</span> {{ $meal->notes }}
+                                    <div class="bg-white rounded-md shadow relative">
+                                        <!-- Clickable recipe area if recipe data exists -->
+                                        @if(isset($meal->recipe_data) && is_array($meal->recipe_data))
+                                            <div 
+                                                wire:click="viewSavedMealDetails({{ $meal->id }})"
+                                                class="p-4 cursor-pointer hover:bg-gray-50 transition duration-200 rounded-md"
+                                            >
+                                                <div class="flex justify-between">
+                                                    <h4 class="font-semibold">
+                                                        <span class="inline-block mr-2">
+                                                            @switch($meal->meal_type)
+                                                                @case('breakfast')
+                                                                    <span class="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs font-semibold rounded-full">{{ __('meal_planner.breakfast') }}</span>
+                                                                    @break
+                                                                
+                                                                @case('lunch')
+                                                                    <span class="px-2 py-1 bg-green-100 text-green-800 text-xs font-semibold rounded-full">{{ __('meal_planner.lunch') }}</span>
+                                                                    @break
+                                                                
+                                                                @case('dinner')
+                                                                    <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs font-semibold rounded-full">{{ __('meal_planner.dinner') }}</span>
+                                                                    @break
+                                                                
+                                                                @case('snack')
+                                                                    <span class="px-2 py-1 bg-purple-100 text-purple-800 text-xs font-semibold rounded-full">{{ __('meal_planner.snacks') }}</span>
+                                                                    @break
+                                                            @endswitch
+                                                        </span>
+                                                        {{ $meal->name }}
+                                                    </h4>
+                                                    
+                                                    <div class="text-xs text-blue-500 font-medium">
+                                                        {{ __('meal_planner.click_to_see_details') }}
                                                     </div>
-                                                @endif
+                                                </div>
+                                                
+                                                <!-- Recipe content area -->
+                                                <div class="flex flex-col sm:flex-row gap-4 mt-4">
+                                                    <!-- Image section -->
+                                                    <div class="flex-shrink-0">
+                                                        @if (isset($meal->recipe_data['image']))
+                                                            <img src="{{ $meal->recipe_data['image'] }}" alt="{{ $meal->name }}" class="w-full sm:w-24 h-20 object-cover rounded-lg">
+                                                        @else
+                                                            <div class="w-full sm:w-24 h-20 bg-gray-200 rounded-lg flex items-center justify-center">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                                </svg>
+                                                            </div>
+                                                        @endif
+                                                    </div>
+                                                    
+                                                    <!-- Content section -->
+                                                    <div class="flex-grow min-w-0">
+                                                        <!-- Nutrition info in compact grid -->
+                                                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-3">
+                                                            <div class="bg-gray-50 px-3 py-2 rounded-md text-center">
+                                                                <div class="text-lg font-semibold text-orange-600">{{ !is_null($meal->calories) && $meal->calories > 0 ? round($meal->calories) : '---' }}</div>
+                                                                <div class="text-xs text-gray-500">{{ __('meal_planner.kcal') }}</div>
+                                                            </div>
+                                                            <div class="bg-gray-50 px-3 py-2 rounded-md text-center">
+                                                                <div class="text-lg font-semibold text-blue-600">{{ !is_null($meal->protein) && $meal->protein > 0 ? round($meal->protein) : '---' }}</div>
+                                                                <div class="text-xs text-gray-500">{{ __('meal_planner.protein') }} (g)</div>
+                                                            </div>
+                                                            <div class="bg-gray-50 px-3 py-2 rounded-md text-center">
+                                                                <div class="text-lg font-semibold text-green-600">{{ !is_null($meal->carbs) && $meal->carbs > 0 ? round($meal->carbs) : '---' }}</div>
+                                                                <div class="text-xs text-gray-500">{{ __('meal_planner.carbs') }} (g)</div>
+                                                            </div>
+                                                            <div class="bg-gray-50 px-3 py-2 rounded-md text-center">
+                                                                <div class="text-lg font-semibold text-purple-600">{{ !is_null($meal->fat) && $meal->fat > 0 ? round($meal->fat) : '---' }}</div>
+                                                                <div class="text-xs text-gray-500">{{ __('meal_planner.fat') }} (g)</div>
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        <!-- Additional info -->
+                                                        <div class="flex flex-wrap items-center gap-3 text-xs text-gray-500">
+                                                            @if(isset($meal->recipe_data['servings']) && $meal->recipe_data['servings'] > 0)
+                                                                <div class="flex items-center">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                                                                    </svg>
+                                                                    <span>{{ $meal->recipe_data['servings'] }} {{ __('meal_planner.servings') }}</span>
+                                                                </div>
+                                                            @endif
+                                                            
+                                                            @if(isset($meal->serving_size) && $meal->serving_size != 1)
+                                                                <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full font-medium">
+                                                                    {{ __('meal_planner.actual_serving') }}: {{ $meal->serving_size }}x
+                                                                </span>
+                                                            @endif
+                                                        </div>
+                                                        
+                                                        @if ($meal->notes)
+                                                            <div class="mt-3 p-2 bg-yellow-50 rounded-md border-l-3 border-yellow-200">
+                                                                <div class="text-sm text-gray-700">
+                                                                    <span class="font-medium text-yellow-800">{{ __('meal_planner.notes') }}:</span> {{ $meal->notes }}
+                                                                </div>
+                                                            </div>
+                                                        @endif
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
+                                            
+                                            <!-- Delete button - positioned absolutely to avoid click interference -->
+                                            <button 
+                                                x-data
+                                                @click.stop="$dispatch('open-delete-modal', { mealId: {{ $meal->id }}, mealName: '{{ $meal->name }}' })"
+                                                class="absolute top-4 right-4 text-gray-400 hover:text-red-500 transition duration-200 p-1 bg-white rounded-full shadow-sm border" 
+                                                title="{{ __('meal_planner.delete_meal') }}"
+                                            >
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                </svg>
+                                            </button>
+                                        @else
+                                            <!-- Non-clickable area for meals without recipe data -->
+                                            <div class="p-4">
+                                                <div class="flex justify-between">
+                                                    <h4 class="font-semibold">
+                                                        <span class="inline-block mr-2">
+                                                            @switch($meal->meal_type)
+                                                                @case('breakfast')
+                                                                    <span class="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs font-semibold rounded-full">{{ __('meal_planner.breakfast') }}</span>
+                                                                    @break
+                                                                
+                                                                @case('lunch')
+                                                                    <span class="px-2 py-1 bg-green-100 text-green-800 text-xs font-semibold rounded-full">{{ __('meal_planner.lunch') }}</span>
+                                                                    @break
+                                                                
+                                                                @case('dinner')
+                                                                    <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs font-semibold rounded-full">{{ __('meal_planner.dinner') }}</span>
+                                                                    @break
+                                                                
+                                                                @case('snack')
+                                                                    <span class="px-2 py-1 bg-purple-100 text-purple-800 text-xs font-semibold rounded-full">{{ __('meal_planner.snacks') }}</span>
+                                                                    @break
+                                                            @endswitch
+                                                        </span>
+                                                        {{ $meal->name }}
+                                                    </h4>
+                                                    
+                                                    <!-- Delete button -->
+                                                    <button 
+                                                        x-data
+                                                        @click="$dispatch('open-delete-modal', { mealId: {{ $meal->id }}, mealName: '{{ $meal->name }}' })"
+                                                        class="text-gray-400 hover:text-red-500 transition duration-200" 
+                                                        title="{{ __('meal_planner.delete_meal') }}"
+                                                    >
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                        </svg>
+                                                    </button>
+                                                </div>
+                                        @endif
                                     </div>
                                 @endforeach
                             </div>

@@ -92,6 +92,7 @@ return [
     'meal_type' => 'Meal Type',
     'notes' => 'Notes',
     'cancel' => 'Cancel',
+    'click_to_see_details' => 'Click to see details',
     
     // Saved meals actions
     'view_recipe_details' => 'View Recipe Details',
@@ -146,4 +147,20 @@ return [
     'servings_default' => 'Default',
     'serving_size_note' => 'Adjust serving size to your needs (e.g. 0.5 = half serving, 2 = double serving)',
     'actual_serving' => 'Actual serving',
+    
+    // Recipe search
+    'recipe_search' => 'Recipe Search',
+    'search_recipes' => 'Search Recipes',
+    'search_placeholder' => 'e.g. chicken, pasta, salad...',
+    'search_button' => 'Search',
+    'search_results' => 'Search Results',
+    'no_recipes_found' => 'No recipes found',
+    'search_loading' => 'Searching...',
+    'search_empty' => 'Enter recipe name or ingredients',
+    'toggle_search' => 'Show/hide recipe search',
+    'max_calories_per_serving' => 'Max calories per serving',
+    'clear_search' => 'Clear search',
+    'search_results_for' => 'Results for:',
+    'recipe_added_to_plan' => 'Recipe added to plan!',
+
 ]; 

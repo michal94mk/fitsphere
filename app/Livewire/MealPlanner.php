@@ -788,6 +788,8 @@ class MealPlanner extends Component
         }
     }
     
+
+    
     public function closeRecipeDetails()
     {
         $this->selectedRecipe = null;
