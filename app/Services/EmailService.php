@@ -239,7 +239,7 @@ class EmailService
     public function sendContactFormEmail(string $name, string $email, string $message, ?string $recipientEmail = null): bool
     {
         try {
-            $recipient = $recipientEmail ?? 'michalkolodziejczyk307@gmail.com';
+            $recipient = $recipientEmail ?? config('mail.contact.address', 'michalkolodziejczyk307@gmail.com');
             Mail::to($recipient)->queue(new ContactFormMail($name, $email, $message));
             
             Log::info('Contact form email queued', [

@@ -86,36 +86,6 @@ if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
 
-            
-            <div class="mb-6">
-                <?php
-$__split = function ($name, $params = []) {
-    return [$name, $params];
-};
-[$__name, $__params] = $__split('auth.social-login', []);
-
-$__html = app('livewire')->mount($__name, $__params, 'lw-3000508392-0', $__slots ?? [], get_defined_vars());
-
-echo $__html;
-
-unset($__html);
-unset($__name);
-unset($__params);
-unset($__split);
-if (isset($__slots)) unset($__slots);
-?>
-            </div>
-
-            
-            <div class="relative my-6">
-                <div class="absolute inset-0 flex items-center">
-                    <div class="w-full border-t border-gray-300"></div>
-                </div>
-                <div class="relative flex justify-center text-sm">
-                    <span class="px-2 bg-white text-gray-500"><?php echo e(__('auth.or')); ?></span>
-                </div>
-            </div>
-
             <form wire:submit.prevent="login" class="space-y-6">
                 
                 <div>
@@ -159,6 +129,36 @@ if (isset($__slots)) unset($__slots);
                     </button>
                 </div>
             </form>
+
+            
+            <div class="relative my-6">
+                <div class="absolute inset-0 flex items-center">
+                    <div class="w-full border-t border-gray-300"></div>
+                </div>
+                <div class="relative flex justify-center text-sm">
+                    <span class="px-2 bg-white text-gray-500"><?php echo e(__('auth.or')); ?></span>
+                </div>
+            </div>
+
+            
+            <div class="mt-6">
+                <?php
+$__split = function ($name, $params = []) {
+    return [$name, $params];
+};
+[$__name, $__params] = $__split('auth.social-login', []);
+
+$__html = app('livewire')->mount($__name, $__params, 'lw-3000508392-0', $__slots ?? [], get_defined_vars());
+
+echo $__html;
+
+unset($__html);
+unset($__name);
+unset($__params);
+unset($__split);
+if (isset($__slots)) unset($__slots);
+?>
+            </div>
         </div>
     </div>
 </div><?php /**PATH C:\Laravel\fitsphere\resources\views/livewire/auth/login.blade.php ENDPATH**/ ?>

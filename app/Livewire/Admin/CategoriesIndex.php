@@ -92,6 +92,7 @@ class CategoriesIndex extends Component
     public function render()
     {
         $categories = Category::query()
+            ->with(['translations'])
             ->withCount('posts')
             ->when($this->search, fn($query) => $query->where('name', 'like', '%' . $this->search . '%'))
             ->orderBy($this->sortField, $this->sortDirection)

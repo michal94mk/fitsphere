@@ -10,13 +10,16 @@
             </div>
             <h2 class="text-3xl font-extrabold text-center">
                 <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-blue-500">
-                    {{ __('auth.register') }}
+                    <?php echo e(__('auth.register')); ?>
+
                 </span>
             </h2>
             <p class="mt-2 text-sm text-gray-600">
-                {{ __('auth.already_have_account') }}
-                <a href="{{ route('login') }}" wire:navigate wire:prefetch class="font-medium text-blue-600 hover:text-blue-500">
-                    {{ __('auth.sign_in') }}
+                <?php echo e(__('auth.already_have_account')); ?>
+
+                <a href="<?php echo e(route('login')); ?>" wire:navigate wire:prefetch class="font-medium text-blue-600 hover:text-blue-500">
+                    <?php echo e(__('auth.sign_in')); ?>
+
                 </a>
             </p>
         </div>
@@ -24,20 +27,27 @@
         <div class="bg-white py-8 px-4 shadow-xl sm:rounded-2xl sm:px-10 border border-gray-100">
             <form wire:submit.prevent="register" class="space-y-6">
                 <div>
-                    <label for="name" class="block text-sm font-medium text-gray-700">{{ __('auth.name') }}</label>
+                    <label for="name" class="block text-sm font-medium text-gray-700"><?php echo e(__('auth.name')); ?></label>
                     <div class="mt-1 relative rounded-md shadow-sm">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                                 <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
                             </svg>
                         </div>
-                        <input wire:model.defer="name" id="name" name="name" type="text" required class="py-3 text-gray-900 placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md" placeholder="{{ __('auth.name_placeholder') }}">
+                        <input wire:model.defer="name" id="name" name="name" type="text" required class="py-3 text-gray-900 placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md" placeholder="<?php echo e(__('auth.name_placeholder')); ?>">
                     </div>
-                    @error('name') <p class="mt-2 text-sm text-red-600">{{ $message }}</p> @enderror
+                    <!--[if BLOCK]><![endif]--><?php $__errorArgs = ['name'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <p class="mt-2 text-sm text-red-600"><?php echo e($message); ?></p> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                 </div>
 
                 <div>
-                    <label for="email" class="block text-sm font-medium text-gray-700">{{ __('auth.email') }}</label>
+                    <label for="email" class="block text-sm font-medium text-gray-700"><?php echo e(__('auth.email')); ?></label>
                     <div class="mt-1 relative rounded-md shadow-sm">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
@@ -45,38 +55,52 @@
                                 <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
                             </svg>
                         </div>
-                        <input wire:model.defer="email" id="email" name="email" type="email" autocomplete="email" required class="py-3 text-gray-900 placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md" placeholder="{{ __('auth.email_placeholder') }}">
+                        <input wire:model.defer="email" id="email" name="email" type="email" autocomplete="email" required class="py-3 text-gray-900 placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md" placeholder="<?php echo e(__('auth.email_placeholder')); ?>">
                     </div>
-                    @error('email') <p class="mt-2 text-sm text-red-600">{{ $message }}</p> @enderror
+                    <!--[if BLOCK]><![endif]--><?php $__errorArgs = ['email'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <p class="mt-2 text-sm text-red-600"><?php echo e($message); ?></p> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                 </div>
 
                 <div>
-                    <label for="password" class="block text-sm font-medium text-gray-700">{{ __('auth.password') }}</label>
+                    <label for="password" class="block text-sm font-medium text-gray-700"><?php echo e(__('auth.password')); ?></label>
                     <div class="mt-1 relative rounded-md shadow-sm">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                                 <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
                             </svg>
                         </div>
-                        <input wire:model.defer="password" id="password" name="password" type="password" autocomplete="new-password" required class="py-3 text-gray-900 placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md" placeholder="{{ __('auth.password_placeholder') }}">
+                        <input wire:model.defer="password" id="password" name="password" type="password" autocomplete="new-password" required class="py-3 text-gray-900 placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md" placeholder="<?php echo e(__('auth.password_placeholder')); ?>">
                     </div>
-                    @error('password') <p class="mt-2 text-sm text-red-600">{{ $message }}</p> @enderror
+                    <!--[if BLOCK]><![endif]--><?php $__errorArgs = ['password'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <p class="mt-2 text-sm text-red-600"><?php echo e($message); ?></p> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                 </div>
 
                 <div>
-                    <label for="password_confirmation" class="block text-sm font-medium text-gray-700">{{ __('auth.confirm_password') }}</label>
+                    <label for="password_confirmation" class="block text-sm font-medium text-gray-700"><?php echo e(__('auth.confirm_password')); ?></label>
                     <div class="mt-1 relative rounded-md shadow-sm">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                                 <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
                             </svg>
                         </div>
-                        <input wire:model.defer="password_confirmation" id="password_confirmation" name="password_confirmation" type="password" autocomplete="new-password" required class="py-3 text-gray-900 placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md" placeholder="{{ __('auth.confirm_password_placeholder') }}">
+                        <input wire:model.defer="password_confirmation" id="password_confirmation" name="password_confirmation" type="password" autocomplete="new-password" required class="py-3 text-gray-900 placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md" placeholder="<?php echo e(__('auth.confirm_password_placeholder')); ?>">
                     </div>
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">{{ __('auth.account_type') }}</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-2"><?php echo e(__('auth.account_type')); ?></label>
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <input type="radio" id="user_type_regular" name="account_type" value="regular" wire:model="account_type" checked class="hidden peer">
@@ -84,7 +108,7 @@
                                 <svg xmlns="http://www.w3.org/2000/svg" class="mb-2 h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                                 </svg>
-                                <span class="text-sm font-medium">{{ __('auth.user_account') }}</span>
+                                <span class="text-sm font-medium"><?php echo e(__('auth.user_account')); ?></span>
                             </label>
                         </div>
                         
@@ -94,11 +118,18 @@
                                 <svg xmlns="http://www.w3.org/2000/svg" class="mb-2 h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                                 </svg>
-                                <span class="text-sm font-medium">{{ __('auth.trainer_account') }}</span>
+                                <span class="text-sm font-medium"><?php echo e(__('auth.trainer_account')); ?></span>
                             </label>
                         </div>
                     </div>
-                    @error('account_type') <p class="mt-2 text-sm text-red-600">{{ $message }}</p> @enderror
+                    <!--[if BLOCK]><![endif]--><?php $__errorArgs = ['account_type'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <p class="mt-2 text-sm text-red-600"><?php echo e($message); ?></p> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                 </div>
 
                 <div x-data="{ show: false }" x-show="$wire.account_type === 'trainer'" x-transition class="space-y-6">
@@ -111,42 +142,66 @@
                             </div>
                             <div class="ml-3">
                                 <p class="text-sm text-blue-700">
-                                    {{ __('auth.trainer_info') }}
+                                    <?php echo e(__('auth.trainer_info')); ?>
+
                                 </p>
                             </div>
                         </div>
                     </div>
 
                     <div>
-                        <label for="specialization" class="block text-sm font-medium text-gray-700">{{ __('auth.specialization') }}</label>
+                        <label for="specialization" class="block text-sm font-medium text-gray-700"><?php echo e(__('auth.specialization')); ?></label>
                         <div class="mt-1">
-                            <input wire:model.defer="specialization" id="specialization" name="specialization" type="text" class="py-3 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md" placeholder="{{ __('auth.specialization_placeholder') }}">
+                            <input wire:model.defer="specialization" id="specialization" name="specialization" type="text" class="py-3 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md" placeholder="<?php echo e(__('auth.specialization_placeholder')); ?>">
                         </div>
-                        @error('specialization') <p class="mt-2 text-sm text-red-600">{{ $message }}</p> @enderror
+                        <!--[if BLOCK]><![endif]--><?php $__errorArgs = ['specialization'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <p class="mt-2 text-sm text-red-600"><?php echo e($message); ?></p> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
                     </div>
                 </div>
 
                 <div>
                     <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transform transition hover:scale-105">
-                        {{ __('auth.register_button') }}
+                        <?php echo e(__('auth.register_button')); ?>
+
                     </button>
                 </div>
             </form>
 
-            {{-- Divider --}}
+            
             <div class="relative my-6">
                 <div class="absolute inset-0 flex items-center">
                     <div class="w-full border-t border-gray-300"></div>
                 </div>
                 <div class="relative flex justify-center text-sm">
-                    <span class="px-2 bg-white text-gray-500">{{ __('auth.or') }}</span>
+                    <span class="px-2 bg-white text-gray-500"><?php echo e(__('auth.or')); ?></span>
                 </div>
             </div>
 
-            {{-- Social Login Component --}}
+            
             <div class="mt-6">
-                <livewire:auth.social-login />
+                <?php
+$__split = function ($name, $params = []) {
+    return [$name, $params];
+};
+[$__name, $__params] = $__split('auth.social-login', []);
+
+$__html = app('livewire')->mount($__name, $__params, 'lw-565688664-0', $__slots ?? [], get_defined_vars());
+
+echo $__html;
+
+unset($__html);
+unset($__name);
+unset($__params);
+unset($__split);
+if (isset($__slots)) unset($__slots);
+?>
             </div>
         </div>
     </div>
-</div>
+</div><?php /**PATH C:\Laravel\fitsphere\resources\views/livewire/auth/register.blade.php ENDPATH**/ ?>

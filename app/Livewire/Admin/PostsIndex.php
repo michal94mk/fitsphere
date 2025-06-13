@@ -92,7 +92,7 @@ class PostsIndex extends Component
     public function render()
     {
         $posts = Post::query()
-            ->with(['user', 'category'])
+            ->with(['user', 'category', 'translations'])
             ->when($this->search, function ($query) {
                 $query->where(function ($query) {
                     $query->where('title', 'like', '%' . $this->search . '%')

@@ -130,11 +130,11 @@
                                     <div x-show="dropdownOpen" 
                                          x-cloak
                                          @click.away="dropdownOpen = false"
-                                         class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-50">
+                                         class="absolute right-0 mt-2 w-64 bg-white border border-gray-200 rounded-md shadow-lg z-50">
                                         <div class="py-1">
                                             <div class="px-4 py-2 border-b border-gray-100">
-                                                <p class="text-sm font-medium text-gray-900">{{ Auth::user()->name }}</p>
-                                                <p class="text-xs text-gray-500">{{ Auth::user()->email }}</p>
+                                                <p class="text-sm font-medium text-gray-900 truncate">{{ Auth::user()->name }}</p>
+                                                <p class="text-xs text-gray-500 truncate" title="{{ Auth::user()->email }}">{{ Auth::user()->email }}</p>
                                             </div>
                                             
                                             {{-- Admin Section --}}
@@ -296,8 +296,8 @@
                                  class="mt-2 w-full bg-white border border-gray-300 rounded-md shadow-md">
                                 <div class="py-1">
                                     <div class="px-4 py-2 border-b border-gray-100">
-                                        <p class="text-sm font-medium text-gray-900 text-center">{{ Auth::user()->name }}</p>
-                                        <p class="text-xs text-gray-500 text-center">{{ Auth::user()->email }}</p>
+                                        <p class="text-sm font-medium text-gray-900 text-center truncate">{{ Auth::user()->name }}</p>
+                                        <p class="text-xs text-gray-500 text-center truncate" title="{{ Auth::user()->email }}">{{ Auth::user()->email }}</p>
                                     </div>
                                     
                                     {{-- Admin Section --}}

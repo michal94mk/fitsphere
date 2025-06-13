@@ -114,4 +114,19 @@ return [
         'name' => env('MAIL_FROM_NAME', 'FitSphere'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Contact Form Email
+    |--------------------------------------------------------------------------
+    |
+    | This address will receive all messages sent through the contact form.
+    | If not specified, contact form emails will be sent to the default
+    | recipient configured in the EmailService class.
+    |
+    */
+
+    'contact' => [
+        'address' => env('CONTACT_EMAIL', 'michalkolodziejczyk307@gmail.com'),
+    ],
+
 ];

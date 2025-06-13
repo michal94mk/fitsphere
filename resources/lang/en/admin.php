@@ -338,4 +338,11 @@ return [
     'user_email' => 'User Email',
     'user_role' => 'User Role',
     'description' => 'Description',
+    
+    // Additional translations
+    'popular_posts' => 'Popular Posts',
+    'no_popular_posts' => 'No popular posts data available',
+    'new_users' => 'New Users',
+    'no_new_users' => 'No new users',
+    'joined' => 'Joined',
 ]; 

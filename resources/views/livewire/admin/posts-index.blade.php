@@ -83,7 +83,7 @@
                             </div>
                             <div class="ml-4">
                                 <div class="text-sm font-semibold text-gray-900">
-                                    {{ $post->title }}
+                                    {{ $post->getTranslatedTitle() }}
                                 </div>
                                 <div class="text-xs text-gray-500 truncate max-w-48">
                                     {{ Str::limit($post->slug, 40) }}
@@ -94,7 +94,7 @@
                     <td class="px-4 py-3 whitespace-nowrap">
                         <div class="space-y-1">
                             <div class="text-xs text-gray-900"><span class="font-medium">{{ __('admin.author') }}:</span> {{ optional($post->user)->name ?? __('admin.unknown') }}</div>
-                            <div class="text-xs text-gray-900"><span class="font-medium">{{ __('admin.post_category') }}:</span> {{ optional($post->category)->name ?? __('admin.none') }}</div>
+                            <div class="text-xs text-gray-900"><span class="font-medium">{{ __('admin.post_category') }}:</span> {{ optional($post->category)->getTranslatedName() ?? __('admin.none') }}</div>
                             <span class="px-2 py-1 inline-flex text-xs leading-4 font-semibold rounded-full 
                                 {{ $post->status === 'published' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' }}">
                                 {{ $post->status === 'published' ? __('admin.status_published') : __('admin.status_draft') }}

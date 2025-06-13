@@ -55,14 +55,14 @@ class Dashboard extends Component
         // Popular posts
         $this->popularPosts = Post::withCount('views')
             ->withCount('comments')
-            ->with('user')
-            ->orderBy('views_count', 'desc')
+            ->with(['user', 'translations'])
+            ->orderBy('view_count', 'desc')
             ->take(5)
             ->get();
             
         // Draft posts
         $this->draftPosts = Post::where('status', 'draft')
-            ->with('user')
+            ->with(['user', 'translations'])
             ->latest()
             ->take(5)
             ->get();

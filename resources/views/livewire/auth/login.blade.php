@@ -76,21 +76,6 @@
                 </div>
             @enderror
 
-            {{-- Social Login Component --}}
-            <div class="mb-6">
-                <livewire:auth.social-login />
-            </div>
-
-            {{-- Divider --}}
-            <div class="relative my-6">
-                <div class="absolute inset-0 flex items-center">
-                    <div class="w-full border-t border-gray-300"></div>
-                </div>
-                <div class="relative flex justify-center text-sm">
-                    <span class="px-2 bg-white text-gray-500">{{ __('auth.or') }}</span>
-                </div>
-            </div>
-
             <form wire:submit.prevent="login" class="space-y-6">
                 {{-- Email field --}}
                 <div>
@@ -132,6 +117,21 @@
                     </button>
                 </div>
             </form>
+
+            {{-- Divider --}}
+            <div class="relative my-6">
+                <div class="absolute inset-0 flex items-center">
+                    <div class="w-full border-t border-gray-300"></div>
+                </div>
+                <div class="relative flex justify-center text-sm">
+                    <span class="px-2 bg-white text-gray-500">{{ __('auth.or') }}</span>
+                </div>
+            </div>
+
+            {{-- Social Login Component --}}
+            <div class="mt-6">
+                <livewire:auth.social-login />
+            </div>
         </div>
     </div>
 </div>

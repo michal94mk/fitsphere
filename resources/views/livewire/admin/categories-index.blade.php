@@ -69,7 +69,7 @@
                         </div>
                     </td>
                     <td class="px-4 py-3 whitespace-nowrap">
-                        <div class="text-sm font-semibold text-gray-900">{{ $category->name }}</div>
+                        <div class="text-sm font-semibold text-gray-900">{{ $category->getTranslatedName() }}</div>
                     </td>
                     <td class="px-4 py-3 whitespace-nowrap">
                         <span class="px-2 py-1 inline-flex text-xs leading-4 font-semibold rounded-full {{ $category->posts_count > 0 ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800' }}">
