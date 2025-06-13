@@ -198,4 +198,48 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $query->trainers()->where('is_approved', true);
     }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($user) {
+            cache()->tags(['users'])->flush();
+        });
+
+        static::updated(function ($user) {
+            cache()->tags(['users'])->flush();
+        });
+
+        static::deleted(function ($user) {
+            cache()->tags(['users'])->flush();
+        });
+    }
+
+    public function getProfileDataAttribute()
+    {
+        return cache()->remember('user.' . $this->id . '.profile', 3600, function () {
+            return [
+                'name' => $this->name,
+                'email' => $this->email,
+                'role' => $this->role,
+                'specialization' => $this->specialization,
+                'bio' => $this->bio,
+                'is_approved' => $this->is_approved,
+                'created_at' => $this->created_at,
+                'updated_at' => $this->updated_at,
+            ];
+        });
+    }
+
+    public function getStatisticsAttribute()
+    {
+        return cache()->remember('user.' . $this->id . '.statistics', 300, function () {
+            return [
+                'posts_count' => $this->posts()->count(),
+                'comments_count' => $this->comments()->count(),
+                'views_count' => $this->posts()->sum('view_count'),
+            ];
+        });
+    }
 }

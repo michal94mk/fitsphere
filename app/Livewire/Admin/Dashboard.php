@@ -11,6 +11,7 @@ use App\Services\EmailService;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
+use Illuminate\Support\Facades\App;
 
 class Dashboard extends Component
 {
@@ -117,6 +118,31 @@ class Dashboard extends Component
     #[Layout('layouts.admin', ['header' => 'Dashboard'])]
     public function render()
     {
-        return view('livewire.admin.dashboard');
+        $cacheKey = 'admin.dashboard.' . App::getLocale();
+        
+        $data = cache()->remember($cacheKey, now()->addMinutes(15), function () {
+            return [
+                'totalUsers' => User::count(),
+                'totalPosts' => Post::count(),
+                'totalCategories' => Category::count(),
+                'pendingTrainers' => User::where('role', 'trainer')
+                    ->where('is_approved', false)
+                    ->count(),
+                'popularPosts' => Post::with(['user', 'translations'])
+                    ->orderBy('view_count', 'desc')
+                    ->take(5)
+                    ->get(),
+                'draftPosts' => Post::with(['user', 'translations'])
+                    ->where('status', 'draft')
+                    ->latest()
+                    ->take(5)
+                    ->get(),
+                'recentUsers' => User::latest()
+                    ->take(5)
+                    ->get(),
+            ];
+        });
+
+        return view('livewire.admin.dashboard', $data);
     }
 } 

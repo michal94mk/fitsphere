@@ -20,21 +20,41 @@ class TrainersIndex extends Component
     public $sortDirection = 'desc';
     public $trainerIdBeingDeleted = null;
     public $confirmingTrainerDeletion = false;
-    protected $queryString = ['search', 'status', 'sortField', 'sortDirection'];
+    public $page = 1;
+    protected $queryString = ['search', 'status', 'sortField', 'sortDirection', 'page'];
     
     public function updatingSearch()
     {
         $this->resetPage();
+        $this->clearCache();
     }
 
     public function updatingStatus()
     {
         $this->resetPage();
+        $this->clearCache();
     }
     
-    public function updatingSortField()
+    public function sortBy($field)
     {
-        $this->resetPage();
+        if ($this->sortField === $field) {
+            $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->sortField = $field;
+            $this->sortDirection = 'asc';
+        }
+        $this->clearCache();
+    }
+
+    public function updatingPage()
+    {
+        $this->clearCache();
+    }
+
+    protected function clearCache()
+    {
+        $cacheKey = 'admin.trainers.' . $this->search . '.' . $this->status . '.' . $this->sortField . '.' . $this->sortDirection . '.' . $this->page;
+        cache()->forget($cacheKey);
     }
 
     public function approveTrainer($id)
@@ -71,16 +91,6 @@ class TrainersIndex extends Component
             $this->setSuccessMessage(__('admin.trainer_disapproved', ['name' => $trainer->name]));
         } catch (\Exception $e) {
             $this->setErrorMessage(__('admin.trainer_disapprove_error', ['error' => $e->getMessage()]));
-        }
-    }
-
-    public function setSorting($field)
-    {
-        if ($this->sortField === $field) {
-            $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
-        } else {
-            $this->sortField = $field;
-            $this->sortDirection = 'asc';
         }
     }
 
@@ -129,23 +139,24 @@ class TrainersIndex extends Component
     #[Layout('layouts.admin', ['header' => 'Trainer Management'])]
     public function render()
     {
-        $trainers = User::where('role', 'trainer')
-            ->when($this->search, function ($query) {
-                $query->where(function ($query) {
-                    $query->where('name', 'like', '%' . $this->search . '%')
-                        ->orWhere('email', 'like', '%' . $this->search . '%')
-                        ->orWhere('specialization', 'like', '%' . $this->search . '%');
-                });
-            })
-            ->when($this->status === 'approved', function ($query) {
-                $query->where('is_approved', true);
-            })
-            ->when($this->status === 'pending', function ($query) {
-                $query->where('is_approved', false);
-            })
-            ->orderBy($this->sortField, $this->sortDirection)
-            ->paginate(10);
+        $cacheKey = 'admin.trainers.' . $this->search . '.' . $this->status . '.' . $this->sortField . '.' . $this->sortDirection . '.' . $this->page;
         
+        $trainers = cache()->remember($cacheKey, 300, function () {
+            return User::query()
+                ->where('role', 'trainer')
+                ->when($this->search, function ($query) {
+                    $query->where(function ($query) {
+                        $query->where('name', 'like', '%' . $this->search . '%')
+                            ->orWhere('email', 'like', '%' . $this->search . '%');
+                    });
+                })
+                ->when($this->status, function ($query) {
+                    $query->where('is_approved', $this->status === 'approved');
+                })
+                ->orderBy($this->sortField, $this->sortDirection)
+                ->paginate(10);
+        });
+
         return view('livewire.admin.trainers-index', [
             'trainers' => $trainers
         ]);

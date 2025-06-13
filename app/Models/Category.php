@@ -26,7 +26,11 @@ class Category extends Model
     public function translation($locale = null)
     {
         $locale = $locale ?: App::getLocale();
-        return $this->translations()->where('locale', $locale)->first();
+        $cacheKey = "category.{$this->id}.translation.{$locale}";
+        
+        return cache()->remember($cacheKey, now()->addHours(24), function () use ($locale) {
+            return $this->translations()->where('locale', $locale)->first();
+        });
     }
 
     public function hasTranslation($locale = null): bool
@@ -37,7 +41,25 @@ class Category extends Model
     
     public function getTranslatedName(): string
     {
-        $translation = $this->translation();
-        return $translation ? $translation->name : $this->name;
+        $cacheKey = "category.{$this->id}.name." . App::getLocale();
+        
+        return cache()->remember($cacheKey, now()->addHours(24), function () {
+            $translation = $this->translation();
+            return $translation ? $translation->name : $this->name;
+        });
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+        
+        // Clear cache when category is updated or deleted
+        static::updated(function ($category) {
+            cache()->tags(['categories'])->flush();
+        });
+
+        static::deleted(function ($category) {
+            cache()->tags(['categories'])->flush();
+        });
     }
 }

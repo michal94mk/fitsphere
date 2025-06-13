@@ -19,17 +19,20 @@ class UsersIndex extends Component
     public $sortDirection = 'desc';
     public $userIdBeingDeleted = null;
     public $confirmingUserDeletion = false;
+    public $page = 1;
 
-    protected $queryString = ['search', 'role', 'sortField', 'sortDirection'];
+    protected $queryString = ['search', 'role', 'sortField', 'sortDirection', 'page'];
     
     public function updatingSearch()
     {
         $this->resetPage();
+        $this->clearCache();
     }
     
     public function updatingRole()
     {
         $this->resetPage();
+        $this->clearCache();
     }
     
     public function updatingSortField()
@@ -37,7 +40,7 @@ class UsersIndex extends Component
         $this->resetPage();
     }
     
-    public function setSorting($field)
+    public function sortBy($field)
     {
         if ($this->sortField === $field) {
             $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
@@ -45,6 +48,18 @@ class UsersIndex extends Component
             $this->sortField = $field;
             $this->sortDirection = 'asc';
         }
+        $this->clearCache();
+    }
+    
+    public function updatingPage()
+    {
+        $this->clearCache();
+    }
+    
+    protected function clearCache()
+    {
+        $cacheKey = 'admin.users.' . $this->search . '.' . $this->role . '.' . $this->sortField . '.' . $this->sortDirection . '.' . $this->page;
+        cache()->forget($cacheKey);
     }
     
     public function mount($role = 'all')
@@ -97,32 +112,37 @@ class UsersIndex extends Component
     #[Layout('layouts.admin', ['header' => 'User Management'])]
     public function render()
     {
-        $query = User::query()
-            ->select('users.*') // Make sure we select all fields
-            ->when($this->search, function ($query) {
-                $query->where(function ($query) {
-                    $search = '%' . $this->search . '%';
-                    $query->where('name', 'like', $search)
-                        ->orWhere('email', 'like', $search)
-                        ->orWhere('id', 'like', $search);
-                });
-            })
-            ->when($this->role != 'all', function ($query) {
-                $query->where('role', $this->role);
-            })
-            ->orderBy($this->sortField, $this->sortDirection);
+        $cacheKey = 'admin.users.' . $this->search . '.' . $this->role . '.' . $this->sortField . '.' . $this->sortDirection . '.' . $this->page;
         
-        $users = $query->paginate(10);
+        $users = cache()->remember($cacheKey, 300, function () {
+            $query = User::query()
+                ->select('users.*') // Make sure we select all fields
+                ->when($this->search, function ($query) {
+                    $query->where(function ($query) {
+                        $search = '%' . $this->search . '%';
+                        $query->where('name', 'like', $search)
+                            ->orWhere('email', 'like', $search)
+                            ->orWhere('id', 'like', $search);
+                    });
+                })
+                ->when($this->role != 'all', function ($query) {
+                    $query->where('role', $this->role);
+                })
+                ->orderBy($this->sortField, $this->sortDirection);
+
+            return $query->paginate(10);
+        });
         
         // Make sure all needed attributes are available
-        $users->each(function ($user) {
-            // Get profile photo URL
-            $user->append('profile_photo_url');
+        $users->getCollection()->transform(function ($user) {
+            $user->role = $user->role ?? 'user';
+            $user->is_approved = $user->is_approved ?? false;
+            $user->specialization = $user->specialization ?? null;
+            return $user;
         });
         
         return view('livewire.admin.users-index', [
-            'users' => $users,
-            'role' => $this->role
+            'users' => $users
         ]);
     }
 } 
