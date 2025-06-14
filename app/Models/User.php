@@ -125,6 +125,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasOne(NutritionalProfile::class);
     }
     
+    public function nutritionalProfiles(): HasMany
+    {
+        return $this->hasMany(NutritionalProfile::class);
+    }
+    
     public function mealPlans(): HasMany
     {
         return $this->hasMany(MealPlan::class);
@@ -204,15 +209,15 @@ class User extends Authenticatable implements MustVerifyEmail
         parent::boot();
 
         static::created(function ($user) {
-            cache()->tags(['users'])->flush();
+            cache()->forget('user.' . $user->id . '.profile');
         });
 
         static::updated(function ($user) {
-            cache()->tags(['users'])->flush();
+            cache()->forget('user.' . $user->id . '.profile');
         });
 
         static::deleted(function ($user) {
-            cache()->tags(['users'])->flush();
+            cache()->forget('user.' . $user->id . '.profile');
         });
     }
 
@@ -241,5 +246,10 @@ class User extends Authenticatable implements MustVerifyEmail
                 'views_count' => $this->posts()->sum('view_count'),
             ];
         });
+    }
+
+    public function getFullName(): string
+    {
+        return $this->name;
     }
 }

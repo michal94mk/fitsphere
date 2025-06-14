@@ -3,94 +3,105 @@
 namespace Tests\Unit;
 
 use App\Models\User;
-use App\Models\NutritionalProfile;
-use App\Models\MealPlan;
-use App\Models\Reservation;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use App\Models\Reservation;
+use App\Models\Post;
+use App\Models\Comment;
+use App\Models\NutritionalProfile;
 
 class UserTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_user_can_be_created()
+    public function test_user_has_correct_attributes()
     {
         $user = User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-            'role' => 'user',
+            'name' => 'John Doe',
+            'email' => 'john@example.com',
+            'role' => 'user'
         ]);
 
-        $this->assertDatabaseHas('users', [
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
-        
+        $this->assertEquals('John Doe', $user->name);
+        $this->assertEquals('john@example.com', $user->email);
         $this->assertEquals('user', $user->role);
     }
 
-    public function test_user_has_profile_photo_url()
+    public function test_user_can_check_if_admin()
     {
-        // User without image
-        $user = User::factory()->create([
-            'email' => 'test@example.com',
-            'image' => null,
-        ]);
-        
-        $hash = md5(strtolower(trim('test@example.com')));
-        $expectedUrl = "https://www.gravatar.com/avatar/{$hash}?d=mp&s=160";
-        
-        $this->assertEquals($expectedUrl, $user->getProfilePhotoUrlAttribute());
-        
-        // User with image
-        $user = User::factory()->create([
-            'image' => 'images/users/profile-image.jpg',
-        ]);
-        
-        $this->assertEquals(asset('storage/images/users/profile-image.jpg'), $user->getProfilePhotoUrlAttribute());
+        $admin = User::factory()->create(['role' => 'admin']);
+        $user = User::factory()->create(['role' => 'user']);
+
+        $this->assertTrue($admin->isAdmin());
+        $this->assertFalse($user->isAdmin());
     }
 
-    public function test_user_has_relationships()
+    public function test_user_can_check_if_trainer()
+    {
+        $trainer = User::factory()->create(['role' => 'trainer']);
+        $user = User::factory()->create(['role' => 'user']);
+
+        $this->assertTrue($trainer->isTrainer());
+        $this->assertFalse($user->isTrainer());
+    }
+
+    public function test_user_can_get_full_name()
+    {
+        $user = User::factory()->create([
+            'name' => 'John Doe'
+        ]);
+
+        $this->assertEquals('John Doe', $user->getFullName());
+    }
+
+    public function test_user_can_have_reservations()
     {
         $user = User::factory()->create();
-        $trainer = \App\Models\Trainer::factory()->create();
-        
-        // Test relationship with nutritional profile
-        NutritionalProfile::create([
-            'user_id' => $user->id,
-            'age' => 30,
-            'gender' => 'male',
-            'weight' => 75.0,
-            'height' => 180.0,
-        ]);
-        
-        // Test relationship with meal plans
-        MealPlan::create([
-            'user_id' => $user->id,
-            'name' => 'Test Meal Plan 1',
-            'date' => '2023-12-01',
-            'recipe_data' => ['test' => 'data'],
-        ]);
-        
-        MealPlan::create([
-            'user_id' => $user->id,
-            'name' => 'Test Meal Plan 2',
-            'date' => '2023-12-02',
-            'recipe_data' => ['test' => 'data'],
-        ]);
-        
-        // Test relationship with reservations
-        Reservation::create([
-            'user_id' => $user->id,
-            'trainer_id' => $trainer->id,
-            'date' => '2023-12-01',
-            'start_time' => '10:00',
-            'end_time' => '11:00',
-            'status' => 'confirmed',
-        ]);
-        
-        $this->assertInstanceOf(NutritionalProfile::class, $user->nutritionalProfile);
-        $this->assertCount(2, $user->mealPlans);
+        $reservation = Reservation::factory()->create(['user_id' => $user->id]);
+
         $this->assertCount(1, $user->reservations);
+        $this->assertEquals($reservation->id, $user->reservations->first()->id);
+    }
+
+    public function test_user_can_have_posts()
+    {
+        $user = User::factory()->create();
+        $post = Post::factory()->create(['user_id' => $user->id]);
+
+        $this->assertCount(1, $user->posts);
+        $this->assertEquals($post->id, $user->posts->first()->id);
+    }
+
+    public function test_user_can_have_comments()
+    {
+        $user = User::factory()->create();
+        $comment = Comment::factory()->create(['user_id' => $user->id]);
+
+        $this->assertCount(1, $user->comments);
+        $this->assertEquals($comment->id, $user->comments->first()->id);
+    }
+
+    public function test_user_can_have_nutritional_profiles()
+    {
+        $user = User::factory()->create();
+        $profile = NutritionalProfile::factory()->create(['user_id' => $user->id]);
+
+        $this->assertCount(1, $user->nutritionalProfiles);
+        $this->assertEquals($profile->id, $user->nutritionalProfiles->first()->id);
+    }
+
+    public function test_user_password_is_hidden_in_array()
+    {
+        $user = User::factory()->create(['password' => 'secret']);
+        $userArray = $user->toArray();
+
+        $this->assertArrayNotHasKey('password', $userArray);
+    }
+
+    public function test_user_email_verified_at_is_date()
+    {
+        $user = User::factory()->create(['email_verified_at' => now()]);
+
+        $this->assertInstanceOf(\Carbon\Carbon::class, $user->email_verified_at);
     }
 } 

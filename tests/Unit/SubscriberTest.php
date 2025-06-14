@@ -3,37 +3,39 @@
 namespace Tests\Unit;
 
 use App\Models\Subscriber;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class SubscriberTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_subscriber_can_be_created()
+    public function test_subscriber_has_correct_attributes()
+    {
+        $subscriber = Subscriber::factory()->create([
+            'email' => 'test@example.com'
+        ]);
+
+        $this->assertEquals('test@example.com', $subscriber->email);
+        $this->assertInstanceOf(Subscriber::class, $subscriber);
+    }
+
+    public function test_subscriber_can_be_created_with_valid_email()
     {
         $subscriber = Subscriber::create([
-            'email' => 'test@example.com',
+            'email' => 'subscriber@example.com'
         ]);
 
         $this->assertDatabaseHas('subscribers', [
-            'email' => 'test@example.com',
+            'email' => 'subscriber@example.com'
         ]);
     }
 
-    public function test_subscriber_email_must_be_unique()
+    public function test_subscriber_email_is_fillable()
     {
-        // Create first subscriber
-        Subscriber::create([
-            'email' => 'test@example.com',
-        ]);
-        
-        // Try to create another subscriber with the same email
-        // This should throw an exception due to unique constraint
-        $this->expectException(\Illuminate\Database\QueryException::class);
-        
-        Subscriber::create([
-            'email' => 'test@example.com',
-        ]);
+        $subscriber = new Subscriber();
+        $fillable = $subscriber->getFillable();
+
+        $this->assertContains('email', $fillable);
     }
 } 

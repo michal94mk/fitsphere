@@ -14,33 +14,14 @@ class PostFactory extends Factory
 
     public function definition(): array
     {
-        $title = $this->faker->sentence;
-        $content = $this->faker->paragraphs(5, true);
-        
-        // Available post images
-        $postImages = [
-            'images/posts/post1.jpg',
-            'images/posts/post2.jpg',
-            'images/posts/post3.jpg',
-            'images/posts/post4.jpg',
-            'images/posts/post5.jpg',
-            'images/posts/post6.jpg',
-            'images/posts/post7.jpg',
-            'images/posts/post8.jpg',
-            'images/posts/post9.jpg',
-            'images/posts/post10.jpg',
-        ];
-        
         return [
             'user_id' => User::factory(),
             'category_id' => Category::factory(),
-            'title' => $title,
-            'slug' => Str::slug($title),
-            'excerpt' => $this->faker->paragraph,
-            'content' => $content,
-            'status' => $this->faker->randomElement(['draft', 'published']),
-            'view_count' => $this->faker->numberBetween(0, 1000),
-            'image' => $this->faker->randomElement($postImages),
+            'title' => $this->faker->sentence(3),
+            'slug' => $this->faker->slug,
+            'excerpt' => $this->faker->sentence(10),
+            'content' => $this->faker->paragraph(3),
+            'status' => 'published',
         ];
     }
     

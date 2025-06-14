@@ -35,6 +35,23 @@ class MealPlan extends Model
         'serving_size' => 'float',
     ];
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($mealPlan) {
+            cache()->forget('meal_plan.' . $mealPlan->id . '.data');
+        });
+
+        static::updated(function ($mealPlan) {
+            cache()->forget('meal_plan.' . $mealPlan->id . '.data');
+        });
+
+        static::deleted(function ($mealPlan) {
+            cache()->forget('meal_plan.' . $mealPlan->id . '.data');
+        });
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

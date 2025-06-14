@@ -33,13 +33,16 @@ class Post extends Model
             $post->slug = Str::slug($post->title);
         });
 
-        // Clear cache when post is updated or deleted
+        static::created(function ($post) {
+            cache()->forget('post.' . $post->id . '.data');
+        });
+
         static::updated(function ($post) {
-            cache()->tags(['posts'])->flush();
+            cache()->forget('post.' . $post->id . '.data');
         });
 
         static::deleted(function ($post) {
-            cache()->tags(['posts'])->flush();
+            cache()->forget('post.' . $post->id . '.data');
         });
     }
 

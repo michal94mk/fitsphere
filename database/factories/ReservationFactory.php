@@ -15,9 +15,10 @@ class ReservationFactory extends Factory
     {
         return [
             'user_id' => User::factory(),
-            'trainer_id' => Trainer::factory(),
+            'trainer_id' => User::factory()->create(['role' => 'trainer'])->id,
             'date' => $this->faker->dateTimeBetween('+1 day', '+2 months')->format('Y-m-d'),
-            'time' => $this->faker->randomElement(['09:00', '10:00', '11:00', '15:00', '16:00', '17:00']),
+            'start_time' => $this->faker->time('H:i:s'),
+            'end_time' => $this->faker->time('H:i:s'),
             'status' => $this->faker->randomElement(['pending', 'confirmed', 'cancelled']),
             'notes' => $this->faker->optional(0.7)->sentence,
         ];

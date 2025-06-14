@@ -55,11 +55,11 @@ class Category extends Model
         
         // Clear cache when category is updated or deleted
         static::updated(function ($category) {
-            cache()->tags(['categories'])->flush();
+            cache()->forget('category.' . $category->id . '.data');
         });
 
         static::deleted(function ($category) {
-            cache()->tags(['categories'])->flush();
+            cache()->forget('category.' . $category->id . '.data');
         });
     }
 }
