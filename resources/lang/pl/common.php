@@ -88,6 +88,6 @@ return [
     'login_required' => 'Musisz być zalogowany.',
     'email_not_verified' => 'Musisz zweryfikować swój adres email.',
     'unauthorized_delete' => 'Nie masz uprawnień do usunięcia tego komentarza.',
-    'comment_deleted' => 'Komentarz został usunięty.',
+        'comment_deleted' => 'Komentarz został usunięty.',
     'comment_updated' => 'Komentarz został zaktualizowany.',
 ]; 

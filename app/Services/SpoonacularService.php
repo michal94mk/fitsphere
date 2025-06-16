@@ -732,4 +732,78 @@ class SpoonacularService
             }
         });
     }
+
+    /**
+     * Get random recipes
+     */
+    public function getRandomRecipes(int $number = 3, array $params = [])
+    {
+        if (empty($this->apiKey) || $this->apiKey === 'your_spoonacular_api_key_here') {
+            Log::error('Attempt to get random recipes without valid Spoonacular API key');
+            throw ApiException::spoonacular(
+                '/recipes/random', 
+                'Missing or invalid Spoonacular API key', 
+                401
+            );
+        }
+
+        $cacheKey = 'spoonacular_random_recipes_' . md5(serialize($params) . $number);
+        
+        return Cache::remember($cacheKey, 300, function () use ($number, $params) {
+            $defaultParams = [
+                'number' => $number,
+                'include-tags' => 'vegetarian,vegan,gluten-free,dairy-free',
+                'exclude-tags' => 'very-expensive'
+            ];
+            
+            $queryParams = array_merge($defaultParams, $params, ['apiKey' => $this->apiKey]);
+            
+            try {
+                $httpClient = Http::timeout(30);
+                
+                // Disable SSL verification in local environment
+                if (app()->environment('local')) {
+                    $httpClient = $httpClient->withOptions(['verify' => false]);
+                }
+                
+                $response = $httpClient->get($this->baseUrl . '/recipes/random', $queryParams);
+                
+                if (!$response->successful()) {
+                    Log::error('Spoonacular API error for random recipes', [
+                        'status' => $response->status(),
+                        'body' => $response->body()
+                    ]);
+                    
+                    throw ApiException::spoonacular(
+                        '/recipes/random',
+                        'Failed to get random recipes: ' . $response->body(),
+                        $response->status()
+                    );
+                }
+                
+                $data = $response->json();
+                
+                Log::info('Successfully retrieved random recipes', [
+                    'count' => count($data['recipes'] ?? [])
+                ]);
+                
+                return $data;
+                
+            } catch (Throwable $e) {
+                if ($e instanceof ApiException) {
+                    throw $e;
+                }
+                
+                Log::error('Error getting random recipes', [
+                    'error' => $e->getMessage()
+                ]);
+                
+                throw ApiException::spoonacular(
+                    '/recipes/random',
+                    'Network error: ' . $e->getMessage(),
+                    0
+                );
+            }
+        });
+    }
 }

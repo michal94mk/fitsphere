@@ -1,7 +1,3 @@
-{{-- 
-    Komponent powiadomień - pokazuje znajomość zaawansowanych funkcji Livewire i Alpine.js
-    Wykorzystane: wire:key, x-transition, wire:click
---}}
 <div>
     @if($show)
         <div 

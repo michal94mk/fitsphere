@@ -126,13 +126,34 @@ class NutritionCalculator extends Component
     
     public function saveProfile()
     {
+        \Illuminate\Support\Facades\Log::info('saveProfile called', [
+            'age' => $this->age,
+            'gender' => $this->gender,
+            'weight' => $this->weight,
+            'height' => $this->height,
+            'activityLevel' => $this->activityLevel,
+            'goal' => $this->goal,
+            'dailyCalories' => $this->dailyCalories,
+            'protein' => $this->protein,
+            'carbs' => $this->carbs,
+            'fat' => $this->fat
+        ]);
+        
         if (!Auth::check()) {
+            \Illuminate\Support\Facades\Log::info('User not authenticated in saveProfile');
             $this->dispatch('login-required', ['message' => __('nutrition_calculator.login_required')]);
             return;
         }
         
         // Validate required fields
         if (!$this->weight || !$this->height || !$this->age || !$this->gender || !$this->activityLevel) {
+            \Illuminate\Support\Facades\Log::info('Validation failed in saveProfile', [
+                'weight' => $this->weight,
+                'height' => $this->height,
+                'age' => $this->age,
+                'gender' => $this->gender,
+                'activityLevel' => $this->activityLevel
+            ]);
             session()->flash('error', __('nutrition_calculator.profile_error'));
             return;
         }
@@ -161,7 +182,14 @@ class NutritionCalculator extends Component
             $profile->target_fat = $this->fat;
         }
         
-        $profile->save();
+        $saved = $profile->save();
+        
+        \Illuminate\Support\Facades\Log::info('Profile save result', [
+            'saved' => $saved,
+            'profile_id' => $profile->id,
+            'target_calories' => $profile->target_calories,
+            'user_id' => $profile->user_id
+        ]);
         
         session()->flash('success', __('nutrition_calculator.profile_saved'));
     }

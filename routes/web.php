@@ -104,6 +104,22 @@ Route::prefix('trainers')->group(function () {
 Route::get('/nutrition-calculator', NutritionCalculator::class)->name('nutrition.calculator');
 Route::get('/meal-planner', MealPlanner::class)->name('meal-planner');
 
+Route::get('/meal-planner-debug', function () {
+    $user = \Illuminate\Support\Facades\Auth::user();
+    $spoonacularKey = config('services.spoonacular.key');
+    
+    $diagnostics = [
+        'authenticated' => $user ? true : false,
+        'user_id' => $user ? $user->id : null,
+        'spoonacular_key_set' => !empty($spoonacularKey) && $spoonacularKey !== 'your_spoonacular_api_key_here',
+        'spoonacular_key_preview' => $spoonacularKey ? substr($spoonacularKey, 0, 10) . '...' : 'NOT SET',
+        'has_nutritional_profile' => $user && $user->nutritionalProfile ? true : false,
+        'target_calories' => $user && $user->nutritionalProfile ? $user->nutritionalProfile->target_calories : null,
+    ];
+    
+    return response()->json($diagnostics);
+})->name('meal-planner.debug');
+
 // -----------------------------------------
 // AUTHENTICATION ROUTES
 // -----------------------------------------

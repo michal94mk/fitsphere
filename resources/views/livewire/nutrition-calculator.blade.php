@@ -72,6 +72,19 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <!-- Formularz profilu -->
                         <div>
+                            <!-- Debug Info - TEMPORARY -->
+                            <div class="mb-4 p-4 bg-yellow-100 border border-yellow-300 rounded">
+                                <h4 class="font-bold">Debug Info:</h4>
+                                <p>Age: {{ $age ?? 'NULL' }}</p>
+                                <p>Gender: {{ $gender ?? 'NULL' }}</p>
+                                <p>Weight: {{ $weight ?? 'NULL' }}</p>
+                                <p>Height: {{ $height ?? 'NULL' }}</p>
+                                <p>Activity Level: {{ $activityLevel ?? 'NULL' }}</p>
+                                <p>Goal: {{ $goal ?? 'NULL' }}</p>
+                                <p>Daily Calories: {{ $dailyCalories ?? 'NULL' }}</p>
+                                <p>Show Dietary Info: {{ $showDietaryInfo ? 'TRUE' : 'FALSE' }}</p>
+                            </div>
+                            
                             <div class="bg-gray-50 p-6 rounded-lg shadow-sm">
                                 <h3 class="text-xl font-semibold mb-4">{{ __('nutrition_calculator.personal_info') }}</h3>
                                 

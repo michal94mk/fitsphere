@@ -74,6 +74,19 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <!-- Formularz profilu -->
                         <div>
+                            <!-- Debug Info - TEMPORARY -->
+                            <div class="mb-4 p-4 bg-yellow-100 border border-yellow-300 rounded">
+                                <h4 class="font-bold">Debug Info:</h4>
+                                <p>Age: <?php echo e($age ?? 'NULL'); ?></p>
+                                <p>Gender: <?php echo e($gender ?? 'NULL'); ?></p>
+                                <p>Weight: <?php echo e($weight ?? 'NULL'); ?></p>
+                                <p>Height: <?php echo e($height ?? 'NULL'); ?></p>
+                                <p>Activity Level: <?php echo e($activityLevel ?? 'NULL'); ?></p>
+                                <p>Goal: <?php echo e($goal ?? 'NULL'); ?></p>
+                                <p>Daily Calories: <?php echo e($dailyCalories ?? 'NULL'); ?></p>
+                                <p>Show Dietary Info: <?php echo e($showDietaryInfo ? 'TRUE' : 'FALSE'); ?></p>
+                            </div>
+                            
                             <div class="bg-gray-50 p-6 rounded-lg shadow-sm">
                                 <h3 class="text-xl font-semibold mb-4"><?php echo e(__('nutrition_calculator.personal_info')); ?></h3>
                                 

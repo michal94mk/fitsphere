@@ -4,15 +4,12 @@
 
 <div>
     <div class="container mx-auto p-6">
-        {{-- Flash messages are handled globally by admin layout FlashMessages component --}}
 
         <!-- Header -->
         <div class="mb-4">
             <h1 class="text-2xl font-bold">{{ __('admin.edit_trainer') }}</h1>
         </div>
         
-
-
         <div class="bg-white rounded-lg shadow overflow-hidden">
             <form wire:submit="save">
                 <div class="p-6 space-y-6">
