@@ -11,9 +11,6 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-/**
- * Email powitalny wysyłany po rejestracji użytkownika
- */
 class WelcomeEmail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;

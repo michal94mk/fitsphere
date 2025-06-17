@@ -11,9 +11,6 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-/**
- * Email potwierdzenia subskrypcji
- */
 class SubscriptionConfirmation extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;

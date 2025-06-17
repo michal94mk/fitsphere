@@ -24,9 +24,6 @@ class UserTranslations extends Component
     public $translations = [];
     public $editingTranslationId = null;
     
-    /**
-     * Mount the component
-     */
     public function mount($id)
     {
         $this->userId = $id;
@@ -41,17 +38,11 @@ class UserTranslations extends Component
         $this->loadTranslations();
     }
     
-    /**
-     * Load translations for this user
-     */
     public function loadTranslations()
     {
         $this->translations = $this->user->translations()->get()->toArray();
     }
     
-    /**
-     * Reset form fields
-     */
     public function resetFormFields()
     {
         $this->editingTranslationId = null;
@@ -63,9 +54,6 @@ class UserTranslations extends Component
         $this->specialties = '';
     }
 
-    /**
-     * Start editing an existing translation
-     */
     public function editTranslation($translationId)
     {
         $translation = UserTranslation::findOrFail($translationId);
@@ -79,9 +67,6 @@ class UserTranslations extends Component
         $this->specialties = $translation->specialties;
     }
 
-    /**
-     * Delete a translation
-     */
     public function deleteTranslation($translationId)
     {
         $translation = UserTranslation::findOrFail($translationId);
@@ -91,9 +76,6 @@ class UserTranslations extends Component
         session()->flash('success', __('admin.translation_deleted'));
     }
 
-    /**
-     * Save translation
-     */
     public function saveTranslation()
     {
         $this->validate([
@@ -136,9 +118,6 @@ class UserTranslations extends Component
         session()->flash('success', __('admin.translation_saved'));
     }
     
-    /**
-     * Cancel editing
-     */
     public function cancelEdit()
     {
         if ($this->user->isTrainer()) {
@@ -148,9 +127,6 @@ class UserTranslations extends Component
         }
     }
     
-    /**
-     * Render the component
-     */
     #[Layout('layouts.admin', ['header' => 'Manage User Translations'])]
     public function render()
     {

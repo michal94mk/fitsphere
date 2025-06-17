@@ -16,23 +16,23 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 /**
- * Serwis do zarządzania wysyłaniem emaili przez Brevo SMTP
+ * Service for managing email sending via Brevo SMTP
  * 
- * Obsługuje:
- * - Emaile powitalne po rejestracji
- * - Emaile weryfikacyjne 
- * - Emaile resetowania hasła
- * - Powiadomienia o zmianie hasła
- * - Powiadomienia o zatwierdzeniu trenera
- * - Potwierdzenia subskrypcji
- * - Emaile z formularza kontaktowego
+ * Handles:
+ * - Welcome emails after registration
+ * - Verification emails
+ * - Password reset emails
+ * - Password change notifications
+ * - Trainer approval notifications
+ * - Subscription confirmations
+ * - Contact form emails
  * 
- * Wszystkie emaile są kolejkowane i wysyłane asynchronicznie
+ * All emails are queued and sent asynchronously
  */
 class EmailService
 {
     /**
-     * Wysyła email powitalny po rejestracji
+     * Sends a welcome email after registration
      */
     public function sendWelcomeEmail(User $user): bool
     {
@@ -57,7 +57,7 @@ class EmailService
     }
 
     /**
-     * Wysyła email weryfikacyjny
+     * Sends a verification email
      */
     public function sendEmailVerification(User $user): bool
     {
@@ -82,7 +82,7 @@ class EmailService
     }
 
     /**
-     * Wysyła email resetowania hasła
+     * Sends a password reset email
      */
     public function sendPasswordResetEmail(User $user, string $token): bool
     {
@@ -107,12 +107,11 @@ class EmailService
     }
 
     /**
-     * Wysyła email powiadomienia o zmianie hasła
+     * Sends a password change notification email
      */
     public function sendPasswordChangeNotification(User $user): bool
     {
         try {
-            // Możesz stworzyć osobną klasę mailową dla tego
             Mail::to($user->email)->queue(new PasswordChangeNotification($user));
             
             Log::info('Password change notification sent', [
@@ -133,7 +132,7 @@ class EmailService
     }
 
     /**
-     * Wysyła email powitalny dla trenera po rejestracji
+     * Sends a welcome email to a trainer after registration
      */
     public function sendTrainerWelcomeEmail(User $trainer): bool
     {
@@ -158,7 +157,7 @@ class EmailService
     }
 
     /**
-     * Wysyła email powiadomienia o zatwierdzeniu trenera
+     * Sends a trainer approval notification email
      */
     public function sendTrainerApprovedEmail(User $trainer): bool
     {
@@ -183,7 +182,7 @@ class EmailService
     }
 
     /**
-     * Wysyła email potwierdzenia subskrypcji
+     * Sends a subscription confirmation email
      */
     public function sendSubscriptionConfirmationEmail(User $user, string $subscriptionType): bool
     {
@@ -210,7 +209,7 @@ class EmailService
     }
 
     /**
-     * Wysyła email potwierdzenia subskrypcji newslettera (bez tworzenia User)
+     * Sends a newsletter subscription confirmation email (without creating a User)
      */
     public function sendNewsletterSubscriptionConfirmation(string $email): bool
     {
@@ -234,7 +233,7 @@ class EmailService
     }
 
     /**
-     * Wysyła email z formularza kontaktowego
+     * Sends an email from the contact form
      */
     public function sendContactFormEmail(string $name, string $email, string $message, ?string $recipientEmail = null): bool
     {
@@ -262,52 +261,14 @@ class EmailService
     }
 
     /**
-     * Sprawdza status kolejki emaili
+     * Checks the status of the email queue
      */
     public function getEmailQueueStatus(): array
     {
-        // Możesz dodać logikę sprawdzania statusu kolejki
         return [
-            'pending_jobs' => 0, // Można pobrać z bazy danych
+            'pending_jobs' => 0,
             'failed_jobs' => 0,
             'last_processed' => now()
         ];
     }
-
-    /**
-     * Testuje konfigurację mailową z Brevo
-     */
-    public function testEmailConfiguration(): bool
-    {
-        try {
-            // Wysyła testowy email na prawdziwą skrzynkę
-            $testEmail = 'michalkolodziejczyk307@gmail.com'; // Twoja prawdziwa skrzynka
-            
-            Mail::raw(
-                'Test email z FitSphere przez Brevo SMTP! 📧' . PHP_EOL . 
-                'Konfiguracja działa poprawnie.' . PHP_EOL .
-                'Data: ' . now()->format('Y-m-d H:i:s'),
-                function ($message) use ($testEmail) {
-                    $message->to($testEmail)
-                            ->subject('✅ Test Brevo SMTP - FitSphere');
-                }
-            );
-            
-            Log::info('Brevo test email sent successfully', [
-                'recipient' => $testEmail,
-                'mailer' => config('mail.default'),
-                'host' => config('mail.mailers.smtp.host')
-            ]);
-            
-            return true;
-        } catch (\Exception $e) {
-            Log::error('Brevo email configuration test failed', [
-                'error' => $e->getMessage(),
-                'mailer' => config('mail.default'),
-                'host' => config('mail.mailers.smtp.host')
-            ]);
-            
-            return false;
-        }
-    }
-} 
+}

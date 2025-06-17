@@ -2,15 +2,8 @@
 
 namespace App\Livewire\Traits;
 
-/**
- * Trait z metodami pomocniczymi dla walidacji w komponentach Livewire
- * Zgodny z najlepszymi praktykami TALL stack dla junior developerów
- */
 trait ValidationTrait
 {
-    /**
-     * Sanitize common input types for security
-     */
     protected function sanitizeInput(string $propertyName, $value = null): void
     {
         $value = $value ?? $this->{$propertyName};
@@ -50,9 +43,6 @@ trait ValidationTrait
         }
     }
     
-    /**
-     * Sanitize name fields (supports international characters)
-     */
     protected function sanitizeName(string $value): string
     {
         $cleaned = trim(strip_tags($value));
@@ -61,17 +51,11 @@ trait ValidationTrait
         return $cleaned;
     }
     
-    /**
-     * Sanitize email field
-     */
     protected function sanitizeEmail(string $value): string
     {
         return trim(strtolower(strip_tags($value)));
     }
     
-    /**
-     * Sanitize plain text fields
-     */
     protected function sanitizeText(string $value): string
     {
         $cleaned = trim(strip_tags($value));
@@ -80,9 +64,6 @@ trait ValidationTrait
         return $cleaned;
     }
     
-    /**
-     * Sanitize rich text fields (allows basic HTML)
-     */
     protected function sanitizeRichText(string $value): string
     {
         $allowedTags = '<br><p><strong><em><u><ol><ul><li>';
@@ -92,9 +73,6 @@ trait ValidationTrait
         return $cleaned;
     }
     
-    /**
-     * Sanitize phone number
-     */
     protected function sanitizePhone(string $value): string
     {
         // Remove everything except digits, spaces, +, -, ()
@@ -102,9 +80,6 @@ trait ValidationTrait
         return trim($cleaned);
     }
     
-    /**
-     * Common validation rules for names
-     */
     protected function getNameValidationRules(int $minLength = 2, int $maxLength = 50): array
     {
         return [
@@ -116,9 +91,6 @@ trait ValidationTrait
         ];
     }
     
-    /**
-     * Common validation rules for emails
-     */
     protected function getEmailValidationRules(array $additionalRules = []): array
     {
         $rules = [
@@ -132,9 +104,6 @@ trait ValidationTrait
         return array_merge($rules, $additionalRules);
     }
     
-    /**
-     * Common validation rules for passwords
-     */
     protected function getPasswordValidationRules(bool $requireConfirmation = true): array
     {
         $rules = [
@@ -152,9 +121,6 @@ trait ValidationTrait
         return $rules;
     }
     
-    /**
-     * Common validation rules for photos/images
-     */
     protected function getPhotoValidationRules(int $maxSizeKB = 1024): array
     {
         return [
@@ -166,9 +132,6 @@ trait ValidationTrait
         ];
     }
     
-    /**
-     * Common validation rules for text content
-     */
     protected function getTextValidationRules(int $minLength = 3, int $maxLength = 500, bool $nullable = false): array
     {
         $rules = [
@@ -182,9 +145,6 @@ trait ValidationTrait
         return array_filter($rules); // Remove null values
     }
     
-    /**
-     * Validation rules for post titles
-     */
     protected function getPostTitleValidationRules(): array
     {
         return [
@@ -196,9 +156,6 @@ trait ValidationTrait
         ];
     }
     
-    /**
-     * Validation rules for post content
-     */
     protected function getPostContentValidationRules(): array
     {
         return [
@@ -210,9 +167,6 @@ trait ValidationTrait
         ];
     }
     
-    /**
-     * Validation rules for post excerpts
-     */
     protected function getPostExcerptValidationRules(): array
     {
         return [
@@ -223,9 +177,6 @@ trait ValidationTrait
         ];
     }
     
-    /**
-     * Validation rules for category names
-     */
     protected function getCategoryNameValidationRules(array $additionalRules = []): array
     {
         $rules = [
@@ -239,9 +190,6 @@ trait ValidationTrait
         return array_merge($rules, $additionalRules);
     }
     
-    /**
-     * Validate single field with real-time feedback
-     */
     protected function validateFieldRealTime(string $propertyName): void
     {
         // First sanitize
@@ -254,9 +202,6 @@ trait ValidationTrait
         $this->validateOnly($propertyName);
     }
     
-    /**
-     * Get common validation attributes in Polish
-     */
     protected function getCommonValidationAttributes(): array
     {
         return [

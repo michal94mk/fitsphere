@@ -11,25 +11,25 @@ use Illuminate\Support\Facades\Storage;
 
 class MealPlanner extends Component
 {
-    // Właściwości kalendarza
+    // Calendar properties
     public $currentWeekStart;
     public $selectedDate;
     
-    // Zapisane plany
+    // Saved plans
     public $savedPlans = [];
     
-    // Wygenerowane posiłki
+    // Generated meals
     public $generatedMeals = [];
     
-    // Wybrany przepis do szczegółów
+    // Selected recipe for details
     public $selectedRecipe = null;
     
-    // Wyszukiwanie
+    // Search
     public $searchQuery = '';
     public $searchResults = [];
     public $searchLoading = false;
     
-    // Tłumaczenia
+    // Translations
     public $translatedIngredients = [];
     public $translatedInstructions = '';
     
@@ -68,7 +68,7 @@ class MealPlanner extends Component
     
     public function updatedSelectedDate()
     {
-        // Aktualizuj tydzień jeśli wybrana data jest poza aktualnym tygodniem
+        // Update week if selected date is outside of the current week
         $selectedCarbon = Carbon::parse($this->selectedDate);
         $weekStart = $selectedCarbon->copy()->startOfWeek();
         
@@ -86,18 +86,18 @@ class MealPlanner extends Component
         }
         
         try {
-            // Generuj 3 losowe przepisy
+            // Generate 3 random recipes
             $recipes = $this->spoonacularService->getRandomRecipes(3);
             
             if (isset($recipes['recipes']) && count($recipes['recipes']) > 0) {
                 $this->generatedMeals = [];
                 
                 foreach ($recipes['recipes'] as $recipe) {
-                    // Pobierz szczegółowe informacje o przepisie
+                    // Get detailed recipe information
                     $detailedRecipe = $this->spoonacularService->getRecipeInformation($recipe['id']);
                     
                     if ($detailedRecipe) {
-                        // Dodaj podstawowe wartości odżywcze
+                        // Add basic nutrition values
                         $nutrition = $this->extractNutrition($detailedRecipe);
                         $detailedRecipe['nutrition'] = $nutrition;
                         
@@ -121,13 +121,13 @@ class MealPlanner extends Component
             return;
         }
         
-        // Zapisz plan do pliku JSON
+        // Save plan to JSON file
         $this->savedPlans[$date] = $this->generatedMeals;
         $this->savePlansToFile();
         
         session()->flash('success', __('meal_planner.plan_saved'));
         
-        // Wyczyść wygenerowany plan
+        // Clear generated plan
         $this->generatedMeals = [];
     }
     
@@ -146,13 +146,13 @@ class MealPlanner extends Component
             $recipe = $this->spoonacularService->getRecipeInformation($recipeId);
             
             if ($recipe) {
-                // Dodaj wartości odżywcze
+                // Add nutrition values
                 $nutrition = $this->extractNutrition($recipe);
                 $recipe['nutrition'] = $nutrition;
                 
                 $this->selectedRecipe = $recipe;
                 
-                // Resetuj tłumaczenia
+                // Reset translations
                 $this->translatedIngredients = [];
                 $this->translatedInstructions = '';
             }

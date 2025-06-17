@@ -12,9 +12,7 @@ use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\URL;
 
-/**
- * Email weryfikacyjny dla potwierdzenia adresu email
- */
+
 class EmailVerification extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
@@ -33,7 +31,7 @@ class EmailVerification extends Mailable implements ShouldQueue
     {
         $this->verificationUrl = URL::temporarySignedRoute(
             'verification.verify',
-            now()->addMinutes(60), // Link ważny przez 60 minut
+            now()->addMinutes(60), // Link valid for 60 minutes
             [
                 'id' => $this->user->id,
                 'hash' => sha1($this->user->email),

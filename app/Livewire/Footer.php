@@ -66,7 +66,7 @@ class Footer extends Component
 
     protected function sendConfirmationEmail()
     {
-        // Sprawdź czy subscriber już istnieje, jeśli nie - utwórz
+        // Check if the subscriber already exists; if not, create one
         $subscriber = Subscriber::where('email', $this->email)->first();
         
         if (!$subscriber) {

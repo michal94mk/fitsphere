@@ -11,9 +11,6 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-/**
- * Email powiadomienia o zatwierdzeniu jako trener
- */
 class TrainerApproved extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;

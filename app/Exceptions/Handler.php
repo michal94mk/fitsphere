@@ -69,9 +69,14 @@ class Handler extends ExceptionHandler
         // Add specialized rendering for API exceptions when in API context
         $this->renderable(function (ApiException $e, $request) {
             if ($request->expectsJson() || $request->is('api/*')) {
+                // Use translated message for user-facing API responses
+                $userMessage = $e->getServiceName() === 'Spoonacular' 
+                    ? __('exceptions.spoonacular_api_failed')
+                    : __('exceptions.api_call_failed');
+                
                 return response()->json([
                     'error' => true,
-                    'message' => $e->getMessage(),
+                    'message' => $userMessage,
                     'service' => $e->getServiceName(),
                     'status_code' => $e->getStatusCode() ?: 500
                 ], $e->getStatusCode() ?: 500);
@@ -83,7 +88,7 @@ class Handler extends ExceptionHandler
             if ($request->expectsJson() || $request->is('api/*')) {
                 return response()->json([
                     'error' => true,
-                    'message' => $e->getMessage(),
+                    'message' => __('exceptions.email_sending_failed'),
                 ], 500);
             }
         });
@@ -93,7 +98,7 @@ class Handler extends ExceptionHandler
             if ($request->expectsJson() || $request->is('api/*')) {
                 return response()->json([
                     'error' => true,
-                    'message' => 'Dane wejściowe są nieprawidłowe',
+                    'message' => __('exceptions.validation_failed'),
                     'errors' => $e->errors(),
                 ], 422);
             }
@@ -109,7 +114,7 @@ class Handler extends ExceptionHandler
                 
                 return response()->json([
                     'error' => true,
-                    'message' => $e->getMessage(),
+                    'message' => __('exceptions.rate_limit_exceeded', ['retry_after' => $e->getRetryAfter()]),
                     'service' => $e->getServiceName(),
                     'retry_after' => $e->getRetryAfter(),
                 ], 429, $headers);

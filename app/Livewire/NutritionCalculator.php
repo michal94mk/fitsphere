@@ -215,15 +215,7 @@ class NutritionCalculator extends Component
             if (!empty($this->searchResults) && isset($this->searchResults['results'])) {
                 foreach ($this->searchResults['results'] as $recipe) {
                     if ($recipe['id'] == $recipeId) {
-                        // Debug the structure of the recipe data
-                        \Illuminate\Support\Facades\Log::info('Recipe data from search results:', [
-                            'recipe_id' => $recipe['id'],
-                            'title' => $recipe['title'],
-                            'has_instructions' => isset($recipe['instructions']),
-                            'has_analyzed_instructions' => isset($recipe['analyzedInstructions']),
-                            'has_extended_ingredients' => isset($recipe['extendedIngredients']),
-                            'data_keys' => array_keys($recipe)
-                        ]);
+
                         
                         // For search results, we might need to fetch complete data
                         // Since search results might not include all details we need
@@ -253,15 +245,7 @@ class NutritionCalculator extends Component
                     $recipe = $this->spoonacularService->getRecipeInformation($recipeId);
                     
                     if ($recipe) {
-                        // Debug the structure of the recipe data from direct API call
-                        \Illuminate\Support\Facades\Log::info('Recipe data from direct API call:', [
-                            'recipe_id' => $recipe['id'],
-                            'title' => $recipe['title'],
-                            'has_instructions' => isset($recipe['instructions']),
-                            'has_analyzed_instructions' => isset($recipe['analyzedInstructions']),
-                            'has_extended_ingredients' => isset($recipe['extendedIngredients']),
-                            'data_keys' => array_keys($recipe)
-                        ]);
+
                         
                         $this->selectedRecipe = $recipe;
                         $recipeFound = true;

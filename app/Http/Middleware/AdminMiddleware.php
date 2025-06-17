@@ -18,7 +18,7 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        // Sprawdź czy zalogowany użytkownik ma rolę 'admin'  
+        // Check if the logged-in user has the 'admin' role
         if (Auth::check()) {
             /** @var User $user */
             $user = Auth::user();
@@ -27,6 +27,6 @@ class AdminMiddleware
             }
         }
         
-        return redirect()->route('home')->with('error', 'Brak dostępu do panelu administratora.');
+        return redirect()->route('home')->with('error', __('middleware.admin_access_required'));
     }
 }
