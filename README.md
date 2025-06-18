@@ -64,16 +64,18 @@
 ## 📋 Requirements
 
 - PHP 8.2 or higher
-- Composer
-- Node.js & NPM
+- Composer 2.5+
+- Node.js 18+ & NPM
 - MySQL 8.0+ or PostgreSQL 13+
+- Redis (recommended for production)
 - Web server (Apache/Nginx)
+- SSL Certificate (production)
 
 ## ⚡ Quick Start
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/your-username/fitsphere.git
+git clone https://github.com/michal94mk/fitsphere.git
 cd fitsphere
 ```
 
@@ -208,7 +210,57 @@ FitSphere supports multiple languages:
 - **English** (default)
 - **Polish** (complete translation)
 
-Language files are located in `resources/lang/` directory.
+Language files are located in `lang/` directory and include:
+- User interface translations
+- Exception and error messages
+- Middleware messages
+- Admin panel content
+
+## 🚀 Production Deployment
+
+### Pre-deployment Checklist
+- [ ] Set `APP_ENV=production` and `APP_DEBUG=false`
+- [ ] Configure SSL certificates
+- [ ] Set up Redis for caching and sessions
+- [ ] Configure production database
+- [ ] Set up email service (Brevo SMTP)
+- [ ] Configure API keys (Spoonacular, DeepL, Google OAuth)
+- [ ] Set up queue workers
+- [ ] Configure proper logging
+- [ ] Enable security cookies (`SESSION_SECURE_COOKIE=true`)
+
+### Deployment Commands
+```bash
+# Install dependencies
+composer install --optimize-autoloader --no-dev
+
+# Build frontend assets
+npm ci
+npm run build
+
+# Configure application
+php artisan key:generate
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+
+# Database
+php artisan migrate --force
+php artisan db:seed
+
+# Queue worker (supervisor recommended)
+php artisan queue:work --daemon
+
+# Set permissions
+chown -R www-data:www-data storage bootstrap/cache
+chmod -R 775 storage bootstrap/cache
+```
+
+### Server Configuration
+See `ssl-production-setup.md` for detailed SSL setup instructions.
+
+### Environment Variables
+See `production-env-example.txt` for complete production configuration.
 
 ## 📁 Project Structure
 
