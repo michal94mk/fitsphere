@@ -6,6 +6,8 @@ return [
     'weekly_calendar' => 'Kalendarz Tygodniowy',
     'previous_week' => 'Poprzedni tydzień',
     'next_week' => 'Następny tydzień',
+    'previous' => 'Poprzedni',
+    'next' => 'Następny',
     'prev_week' => '← Poprzedni tydzień',
     'selected_day' => 'Wybrany dzień',
     'saved_meals' => 'Zapisane posiłki',

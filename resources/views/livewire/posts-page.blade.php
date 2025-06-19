@@ -47,10 +47,10 @@
                 <!-- Sorting options -->
                 <div class="w-full sm:w-auto p-4 border-t sm:border-t-0 border-gray-200 sm:border-none sm:pr-8">
                     <p class="text-gray-500 text-sm mb-1 font-medium">{{ __('common.sort') }}</p>
-                    <div class="flex space-x-3">
+                    <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
                         <!-- Newest first option -->
                         <button wire:click="$set('sortBy', 'newest')" 
-                            class="flex items-center px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-200 
+                            class="flex items-center justify-center px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-200 
                             {{ $sortBy === 'newest' ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-md' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' }}">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12" />
@@ -60,7 +60,7 @@
                         
                         <!-- Oldest first option -->
                         <button wire:click="$set('sortBy', 'oldest')" 
-                            class="flex items-center px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-200 
+                            class="flex items-center justify-center px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-200 
                             {{ $sortBy === 'oldest' ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-md' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' }}">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h13M3 8h9m-9 4h9m5-4v12m0 0l-4-4m4 4l4-4" />
@@ -70,7 +70,7 @@
                         
                         <!-- Popular option -->
                         <button wire:click="$set('sortBy', 'popular')" 
-                            class="flex items-center px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-200 
+                            class="flex items-center justify-center px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-200 
                             {{ $sortBy === 'popular' ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-md' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' }}">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />

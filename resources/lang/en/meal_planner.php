@@ -6,6 +6,8 @@ return [
     'weekly_calendar' => 'Weekly Calendar',
     'previous_week' => 'Previous Week',
     'next_week' => 'Next Week',
+    'previous' => 'Previous',
+    'next' => 'Next',
     'prev_week' => '← Previous Week',
     'selected_day' => 'Selected Day',
     'saved_meals' => 'Saved Meals',

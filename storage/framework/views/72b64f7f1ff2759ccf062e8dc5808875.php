@@ -7,23 +7,23 @@
             <h2 class="text-xl font-semibold mb-4"><?php echo e(__('meal_planner.weekly_calendar')); ?></h2>
             
             <!-- Nawigacja tygodnia -->
-            <div class="flex justify-between items-center mb-6">
-                <button wire:click="previousWeek" class="flex items-center px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-md transition-colors">
+            <div class="flex flex-col sm:flex-row justify-between items-center mb-6 space-y-4 sm:space-y-0">
+                <button wire:click="previousWeek" class="flex items-center justify-center w-full sm:w-auto px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-md transition-colors">
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                     </svg>
-                    <?php echo e(__('meal_planner.previous_week')); ?>
-
+                    <span class="hidden sm:inline"><?php echo e(__('meal_planner.previous_week')); ?></span>
+                    <span class="sm:hidden"><?php echo e(__('meal_planner.previous')); ?></span>
                 </button>
                 
-                <h3 class="text-lg font-medium">
+                <h3 class="text-base sm:text-lg font-medium text-center">
                     <?php echo e($currentWeekStart->format('d.m.Y')); ?> - <?php echo e($currentWeekStart->copy()->endOfWeek()->format('d.m.Y')); ?>
 
                 </h3>
                 
-                <button wire:click="nextWeek" class="flex items-center px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-md transition-colors">
-                    <?php echo e(__('meal_planner.next_week')); ?>
-
+                <button wire:click="nextWeek" class="flex items-center justify-center w-full sm:w-auto px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-md transition-colors">
+                    <span class="hidden sm:inline"><?php echo e(__('meal_planner.next_week')); ?></span>
+                    <span class="sm:hidden"><?php echo e(__('meal_planner.next')); ?></span>
                     <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                     </svg>
@@ -31,7 +31,7 @@
             </div>
             
             <!-- Kalendarz dni -->
-            <div class="grid grid-cols-7 gap-2">
+            <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2">
                 <!--[if BLOCK]><![endif]--><?php for($i = 0; $i < 7; $i++): ?>
                     <?php
                         $date = $currentWeekStart->copy()->addDays($i);
@@ -43,13 +43,13 @@
                     ?>
                     
                     <div class="text-center">
-                        <div class="text-sm font-medium text-gray-600 mb-2">
+                        <div class="text-xs sm:text-sm font-medium text-gray-600 mb-2">
                             <?php echo e(__('meal_planner.days.' . strtolower($date->format('l')))); ?>
 
                         </div>
                         <button 
                             wire:click="selectDate('<?php echo e($dateString); ?>')"
-                            class="w-full p-3 rounded-lg border-2 transition-all duration-200 relative
+                            class="w-full p-2 sm:p-3 rounded-lg border-2 transition-all duration-200 relative
                                 <?php echo e($isPast ? 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed' : 'hover:border-blue-300'); ?>
 
                                 <?php echo e($isSelected ? 'border-blue-500 bg-blue-50' : 'border-gray-200'); ?>
@@ -58,7 +58,7 @@
                             <?php echo e($isPast ? 'disabled' : ''); ?>
 
                         >
-                            <div class="text-lg font-semibold"><?php echo e($date->day); ?></div>
+                            <div class="text-base sm:text-lg font-semibold"><?php echo e($date->day); ?></div>
                             <!--[if BLOCK]><![endif]--><?php if($hasSavedPlan): ?>
                                 <div class="absolute top-1 right-1 w-2 h-2 bg-green-500 rounded-full"></div>
                                 <div class="text-xs text-gray-500 mt-1">
@@ -346,16 +346,16 @@
         <div class="bg-white rounded-lg shadow-md p-6">
             <h2 class="text-xl font-semibold mb-4"><?php echo e(__('meal_planner.search_recipes')); ?></h2>
             
-            <div class="flex space-x-4 mb-4">
+            <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 mb-4">
                 <input 
                     type="text" 
                     wire:model="searchQuery"
                     placeholder="<?php echo e(__('meal_planner.search_placeholder')); ?>"
-                    class="flex-1 border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    class="w-full sm:flex-1 border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                 <button 
                     wire:click="searchRecipes"
-                    class="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors disabled:opacity-50"
+                    class="w-full sm:w-auto px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors disabled:opacity-50"
                     wire:loading.attr="disabled"
                 >
                     <span wire:loading.remove><?php echo e(__('meal_planner.search')); ?></span>

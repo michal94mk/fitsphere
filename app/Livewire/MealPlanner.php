@@ -33,14 +33,7 @@ class MealPlanner extends Component
     public $translatedIngredients = [];
     public $translatedInstructions = '';
     
-    protected $spoonacularService;
-    protected $translateService;
-    
-    public function boot(SpoonacularService $spoonacularService, DeepLTranslateService $translateService)
-    {
-        $this->spoonacularService = $spoonacularService;
-        $this->translateService = $translateService;
-    }
+
     
     public function mount()
     {
@@ -86,15 +79,17 @@ class MealPlanner extends Component
         }
         
         try {
+            $spoonacularService = app(SpoonacularService::class);
+            
             // Generate 3 random recipes
-            $recipes = $this->spoonacularService->getRandomRecipes(3);
+            $recipes = $spoonacularService->getRandomRecipes(3);
             
             if (isset($recipes['recipes']) && count($recipes['recipes']) > 0) {
                 $this->generatedMeals = [];
                 
                 foreach ($recipes['recipes'] as $recipe) {
                     // Get detailed recipe information
-                    $detailedRecipe = $this->spoonacularService->getRecipeInformation($recipe['id']);
+                    $detailedRecipe = $spoonacularService->getRecipeInformation($recipe['id']);
                     
                     if ($detailedRecipe) {
                         // Add basic nutrition values
@@ -110,7 +105,7 @@ class MealPlanner extends Component
                 session()->flash('error', __('meal_planner.generation_failed'));
             }
         } catch (\Exception $e) {
-            session()->flash('error', __('meal_planner.api_error'));
+            session()->flash('error', __('meal_planner.api_error') . ': ' . $e->getMessage());
         }
     }
     
@@ -143,7 +138,8 @@ class MealPlanner extends Component
     public function viewRecipeDetails($recipeId)
     {
         try {
-            $recipe = $this->spoonacularService->getRecipeInformation($recipeId);
+            $spoonacularService = app(SpoonacularService::class);
+            $recipe = $spoonacularService->getRecipeInformation($recipeId);
             
             if ($recipe) {
                 // Add nutrition values
@@ -157,7 +153,7 @@ class MealPlanner extends Component
                 $this->translatedInstructions = '';
             }
         } catch (\Exception $e) {
-            session()->flash('error', __('meal_planner.recipe_load_error'));
+            session()->flash('error', __('meal_planner.recipe_load_error') . ': ' . $e->getMessage());
         }
     }
     
@@ -170,10 +166,11 @@ class MealPlanner extends Component
         $this->searchLoading = true;
         
         try {
-            $results = $this->spoonacularService->searchRecipes($this->searchQuery);
+            $spoonacularService = app(SpoonacularService::class);
+            $results = $spoonacularService->searchRecipes($this->searchQuery);
             $this->searchResults = $results['results'] ?? [];
         } catch (\Exception $e) {
-            session()->flash('error', __('meal_planner.search_error'));
+            session()->flash('error', __('meal_planner.search_error') . ': ' . $e->getMessage());
             $this->searchResults = [];
         } finally {
             $this->searchLoading = false;
@@ -187,15 +184,16 @@ class MealPlanner extends Component
         }
         
         try {
+            $translateService = app(DeepLTranslateService::class);
             $ingredients = [];
             foreach ($this->selectedRecipe['extendedIngredients'] as $ingredient) {
                 $ingredients[] = $ingredient['original'];
             }
             
-            $translatedText = $this->translateService->translate(implode("\n", $ingredients), 'en', 'pl');
+            $translatedText = $translateService->translate(implode("\n", $ingredients), 'en', 'pl');
             $this->translatedIngredients = explode("\n", $translatedText);
         } catch (\Exception $e) {
-            session()->flash('error', __('meal_planner.translation_error'));
+            session()->flash('error', __('meal_planner.translation_error') . ': ' . $e->getMessage());
         }
     }
     
@@ -206,13 +204,14 @@ class MealPlanner extends Component
         }
         
         try {
-            $this->translatedInstructions = $this->translateService->translate(
+            $translateService = app(DeepLTranslateService::class);
+            $this->translatedInstructions = $translateService->translate(
                 strip_tags($this->selectedRecipe['instructions']), 
                 'en', 
                 'pl'
             );
         } catch (\Exception $e) {
-            session()->flash('error', __('meal_planner.translation_error'));
+            session()->flash('error', __('meal_planner.translation_error') . ': ' . $e->getMessage());
         }
     }
     
