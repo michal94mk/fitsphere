@@ -146,7 +146,8 @@ class MealPlanner extends Component
                 }
             }
             
-            // Generate recipes based on user profile
+            // Generate recipes based on user profile - skip cache for fresh meals
+            $searchParams['skipCache'] = true;
             $recipes = $spoonacularService->getRandomRecipes(3, $searchParams);
             
             if (isset($recipes['recipes']) && count($recipes['recipes']) > 0) {

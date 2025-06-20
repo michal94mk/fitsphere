@@ -747,65 +747,82 @@ class SpoonacularService
             );
         }
 
+        // Check if we should skip cache (for fresh meal generation)
+        $skipCache = $params['skipCache'] ?? false;
+        unset($params['skipCache']); // Remove this param before sending to API
+        
+        if ($skipCache) {
+            // Generate fresh recipes without cache
+            return $this->fetchRandomRecipes($number, $params);
+        }
+
         // Add timestamp to cache key to ensure freshness every 5 minutes
         $timestampKey = floor(time() / 300); // New key every 5 minutes
         $cacheKey = 'spoonacular_random_recipes_' . md5(serialize($params) . $number . $timestampKey);
         
         return Cache::remember($cacheKey, 300, function () use ($number, $params) {
-            $defaultParams = [
-                'number' => $number,
-                'include-tags' => 'vegetarian,vegan,gluten-free,dairy-free',
-                'exclude-tags' => 'very-expensive'
-            ];
+            return $this->fetchRandomRecipes($number, $params);
+        });
+    }
+    
+    /**
+     * Fetch random recipes from API (without cache)
+     */
+    private function fetchRandomRecipes(int $number, array $params)
+    {
+        $defaultParams = [
+            'number' => $number,
+            'include-tags' => 'vegetarian,vegan,gluten-free,dairy-free',
+            'exclude-tags' => 'very-expensive'
+        ];
+        
+        $queryParams = array_merge($defaultParams, $params, ['apiKey' => $this->apiKey]);
+        
+        try {
+            $httpClient = Http::timeout(30);
             
-            $queryParams = array_merge($defaultParams, $params, ['apiKey' => $this->apiKey]);
+            // Disable SSL verification in local environment
+            if (app()->environment('local')) {
+                $httpClient = $httpClient->withOptions(['verify' => false]);
+            }
             
-            try {
-                $httpClient = Http::timeout(30);
-                
-                // Disable SSL verification in local environment
-                if (app()->environment('local')) {
-                    $httpClient = $httpClient->withOptions(['verify' => false]);
-                }
-                
-                $response = $httpClient->get($this->baseUrl . '/recipes/random', $queryParams);
-                
-                if (!$response->successful()) {
-                    Log::error('Spoonacular API error for random recipes', [
-                        'status' => $response->status(),
-                        'body' => $response->body()
-                    ]);
-                    
-                    throw ApiException::spoonacular(
-                        '/recipes/random',
-                        'Failed to get random recipes: ' . $response->body(),
-                        $response->status()
-                    );
-                }
-                
-                $data = $response->json();
-                
-                Log::info('Successfully retrieved random recipes', [
-                    'count' => count($data['recipes'] ?? [])
-                ]);
-                
-                return $data;
-                
-            } catch (Throwable $e) {
-                if ($e instanceof ApiException) {
-                    throw $e;
-                }
-                
-                Log::error('Error getting random recipes', [
-                    'error' => $e->getMessage()
+            $response = $httpClient->get($this->baseUrl . '/recipes/random', $queryParams);
+            
+            if (!$response->successful()) {
+                Log::error('Spoonacular API error for random recipes', [
+                    'status' => $response->status(),
+                    'body' => $response->body()
                 ]);
                 
                 throw ApiException::spoonacular(
                     '/recipes/random',
-                    'Network error: ' . $e->getMessage(),
-                    0
+                    'Failed to get random recipes: ' . $response->body(),
+                    $response->status()
                 );
             }
-        });
+            
+            $data = $response->json();
+            
+            Log::info('Successfully retrieved random recipes', [
+                'count' => count($data['recipes'] ?? [])
+            ]);
+            
+            return $data;
+            
+        } catch (Throwable $e) {
+            if ($e instanceof ApiException) {
+                throw $e;
+            }
+            
+            Log::error('Error getting random recipes', [
+                'error' => $e->getMessage()
+            ]);
+            
+            throw ApiException::spoonacular(
+                '/recipes/random',
+                'Network error: ' . $e->getMessage(),
+                0
+            );
+        }
     }
 }

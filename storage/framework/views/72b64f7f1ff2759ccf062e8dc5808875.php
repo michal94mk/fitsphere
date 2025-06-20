@@ -8,7 +8,16 @@
             
             <!-- Nawigacja tygodnia -->
             <div class="flex flex-col sm:flex-row justify-between items-center mb-6 space-y-4 sm:space-y-0">
-                <button wire:click="previousWeek" class="flex items-center justify-center w-full sm:w-auto px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-md transition-colors">
+                <?php
+                    $isCurrentWeek = $currentWeekStart->isSameDay(\Carbon\Carbon::now());
+                ?>
+                <button 
+                    wire:click="previousWeek" 
+                    class="flex items-center justify-center w-full sm:w-auto px-4 py-2 rounded-md transition-colors
+                        <?php echo e($isCurrentWeek ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-gray-200 hover:bg-gray-300'); ?>"
+                    <?php echo e($isCurrentWeek ? 'disabled' : ''); ?>
+
+                >
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                     </svg>
@@ -87,30 +96,71 @@
         <!-- Zapisane posiłki na wybrany dzień -->
         <!--[if BLOCK]><![endif]--><?php if($selectedDate && isset($savedPlans[$selectedDate]) && count($savedPlans[$selectedDate]) > 0): ?>
             <div class="bg-white rounded-lg shadow-md p-6 mb-8">
-                <h2 class="text-xl font-semibold mb-4"><?php echo e(__('meal_planner.saved_meals')); ?> - <?php echo e(\Carbon\Carbon::parse($selectedDate)->format('d.m.Y')); ?></h2>
+                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 space-y-2 sm:space-y-0">
+                    <h2 class="text-xl font-semibold"><?php echo e(__('meal_planner.saved_meals')); ?> - <?php echo e(\Carbon\Carbon::parse($selectedDate)->format('d.m.Y')); ?></h2>
+                    <button 
+                        wire:click="deletePlanFromDate('<?php echo e($selectedDate); ?>')"
+                        class="w-full sm:w-auto px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors font-medium"
+                    >
+                        <svg class="w-4 h-4 mr-2 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                        </svg>
+                        <?php echo e(__('meal_planner.delete_whole_plan')); ?>
+
+                    </button>
+                </div>
                 
                 <div class="space-y-4">
-                    <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $savedPlans[$selectedDate]; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $meal): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $savedPlans[$selectedDate]; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $meal): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                         <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
-                            <div class="flex justify-between items-start">
-                                <div class="flex-1">
-                                    <h3 class="font-semibold text-lg"><?php echo e($meal['title']); ?></h3>
+                            <div class="flex flex-col sm:flex-row sm:items-center space-y-4 sm:space-y-0 sm:space-x-4">
+                                <!--[if BLOCK]><![endif]--><?php if(isset($meal['image'])): ?>
+                                    <div class="flex justify-center sm:justify-start">
+                                        <img src="<?php echo e($meal['image']); ?>" alt="<?php echo e($meal['title']); ?>" class="w-20 h-20 object-cover rounded-lg">
+                                    </div>
+                                <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+                                <div class="flex-1 text-center sm:text-left">
+                                    <h3 class="font-semibold text-lg mb-2"><?php echo e($meal['title']); ?></h3>
                                     <!--[if BLOCK]><![endif]--><?php if(isset($meal['nutrition'])): ?>
-                                        <div class="grid grid-cols-4 gap-4 mt-2 text-sm text-gray-600">
-                                            <div><?php echo e(__('meal_planner.calories')); ?>: <?php echo e(round($meal['nutrition']['calories'])); ?> kcal</div>
-                                            <div><?php echo e(__('meal_planner.protein')); ?>: <?php echo e(round($meal['nutrition']['protein'])); ?>g</div>
-                                            <div><?php echo e(__('meal_planner.carbs')); ?>: <?php echo e(round($meal['nutrition']['carbs'])); ?>g</div>
-                                            <div><?php echo e(__('meal_planner.fat')); ?>: <?php echo e(round($meal['nutrition']['fat'])); ?>g</div>
+                                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-sm text-gray-600">
+                                            <div class="bg-gray-50 p-2 rounded">
+                                                <span class="font-medium"><?php echo e(__('meal_planner.calories')); ?>:</span> <?php echo e(round($meal['nutrition']['calories'])); ?> kcal
+                                            </div>
+                                            <div class="bg-gray-50 p-2 rounded">
+                                                <span class="font-medium"><?php echo e(__('meal_planner.protein')); ?>:</span> <?php echo e(round($meal['nutrition']['protein'])); ?>g
+                                            </div>
+                                            <div class="bg-gray-50 p-2 rounded">
+                                                <span class="font-medium"><?php echo e(__('meal_planner.carbs')); ?>:</span> <?php echo e(round($meal['nutrition']['carbs'])); ?>g
+                                            </div>
+                                            <div class="bg-gray-50 p-2 rounded">
+                                                <span class="font-medium"><?php echo e(__('meal_planner.fat')); ?>:</span> <?php echo e(round($meal['nutrition']['fat'])); ?>g
+                                            </div>
                                         </div>
                                     <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                                 </div>
-                                <button 
-                                    wire:click="deletePlanFromDate('<?php echo e($selectedDate); ?>')"
-                                    class="ml-4 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
-                                >
-                                    <?php echo e(__('meal_planner.delete')); ?>
-
-                                </button>
+                                <div class="flex flex-col sm:flex-row justify-center sm:justify-end space-y-2 sm:space-y-0 sm:space-x-3">
+                                    <button 
+                                        wire:click="viewRecipeDetails(<?php echo e($meal['id']); ?>)"
+                                        class="w-full sm:w-auto px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors font-medium"
+                                        wire:loading.attr="disabled"
+                                        wire:target="viewRecipeDetails(<?php echo e($meal['id']); ?>)"
+                                    >
+                                        <span wire:loading.remove wire:target="viewRecipeDetails(<?php echo e($meal['id']); ?>)"><?php echo e(__('meal_planner.see_details')); ?></span>
+                                        <span wire:loading wire:target="viewRecipeDetails(<?php echo e($meal['id']); ?>)"><?php echo e(__('meal_planner.loading')); ?></span>
+                                    </button>
+                                    <button 
+                                        wire:click="removeMealFromPlan('<?php echo e($selectedDate); ?>', <?php echo e($index); ?>)"
+                                        class="w-full sm:w-auto px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors font-medium"
+                                        wire:loading.attr="disabled"
+                                        wire:target="removeMealFromPlan('<?php echo e($selectedDate); ?>', <?php echo e($index); ?>)"
+                                    >
+                                        <svg class="w-4 h-4 mr-1 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                        </svg>
+                                        <span wire:loading.remove wire:target="removeMealFromPlan('<?php echo e($selectedDate); ?>', <?php echo e($index); ?>)"><?php echo e(__('meal_planner.remove')); ?></span>
+                                        <span wire:loading wire:target="removeMealFromPlan('<?php echo e($selectedDate); ?>', <?php echo e($index); ?>)"><?php echo e(__('meal_planner.removing')); ?></span>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
@@ -127,21 +177,39 @@
         <div class="bg-white rounded-lg shadow-md p-6 mb-8">
             <h2 class="text-xl font-semibold mb-4"><?php echo e(__('meal_planner.generate_plan')); ?></h2>
             
-            <!--[if BLOCK]><![endif]--><?php if($selectedDate): ?>
-                <div class="mb-4">
-                    <p class="text-sm text-gray-600"><?php echo e(__('meal_planner.select_day')); ?>: <span class="font-semibold"><?php echo e(\Carbon\Carbon::parse($selectedDate)->format('d.m.Y')); ?></span></p>
+            <!--[if BLOCK]><![endif]--><?php if(auth()->guard()->guest()): ?>
+                <div class="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                    <div class="flex items-center">
+                        <svg class="w-5 h-5 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        <span class="text-blue-800"><?php echo e(__('meal_planner.login_required_info')); ?></span>
+                    </div>
+                    <div class="mt-3">
+                        <a href="<?php echo e(route('login')); ?>" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 active:bg-blue-900 focus:outline-none focus:border-blue-900 focus:ring ring-blue-300 disabled:opacity-25 transition ease-in-out duration-150">
+                            <?php echo e(__('Login')); ?>
+
+                        </a>
+                    </div>
                 </div>
-                
-                <button 
-                    wire:click="generateMealPlan" 
-                    class="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors disabled:opacity-50"
-                    wire:loading.attr="disabled"
-                >
-                    <span wire:loading.remove><?php echo e(__('meal_planner.generate')); ?></span>
-                    <span wire:loading><?php echo e(__('meal_planner.generating')); ?></span>
-                </button>
             <?php else: ?>
-                <p class="text-gray-500"><?php echo e(__('meal_planner.select_day')); ?></p>
+                <!--[if BLOCK]><![endif]--><?php if($selectedDate): ?>
+                    <div class="mb-4">
+                        <p class="text-sm text-gray-600"><?php echo e(__('meal_planner.select_day')); ?>: <span class="font-semibold"><?php echo e(\Carbon\Carbon::parse($selectedDate)->format('d.m.Y')); ?></span></p>
+                    </div>
+                    
+                    <button 
+                        wire:click="generateMealPlan" 
+                        class="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors disabled:opacity-50"
+                        wire:loading.attr="disabled"
+                        wire:target="generateMealPlan"
+                    >
+                        <span wire:loading.remove wire:target="generateMealPlan"><?php echo e(__('meal_planner.generate')); ?></span>
+                        <span wire:loading wire:target="generateMealPlan"><?php echo e(__('meal_planner.generating')); ?></span>
+                    </button>
+                <?php else: ?>
+                    <p class="text-gray-500"><?php echo e(__('meal_planner.select_day')); ?></p>
+                <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
             <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
             
             <!-- Komunikaty -->
@@ -167,42 +235,67 @@
                 
                 <div class="space-y-4 mb-6">
                     <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $generatedMeals; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $meal): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                        <div class="border border-gray-200 rounded-lg p-4">
-                            <div class="flex items-center space-x-4">
+                        <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                            <div class="flex flex-col sm:flex-row sm:items-center space-y-4 sm:space-y-0 sm:space-x-4">
                                 <!--[if BLOCK]><![endif]--><?php if(isset($meal['image'])): ?>
-                                    <img src="<?php echo e($meal['image']); ?>" alt="<?php echo e($meal['title']); ?>" class="w-16 h-16 object-cover rounded">
+                                    <div class="flex justify-center sm:justify-start">
+                                        <img src="<?php echo e($meal['image']); ?>" alt="<?php echo e($meal['title']); ?>" class="w-20 h-20 object-cover rounded-lg">
+                                    </div>
                                 <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
-                                <div class="flex-1">
-                                    <h3 class="font-semibold"><?php echo e($meal['title']); ?></h3>
-                                    <div class="text-sm text-gray-600 mt-1">
+                                <div class="flex-1 text-center sm:text-left">
+                                    <h3 class="font-semibold text-lg mb-2"><?php echo e($meal['title']); ?></h3>
+                                    <div class="text-sm text-gray-600 space-y-1">
                                         <!--[if BLOCK]><![endif]--><?php if(isset($meal['readyInMinutes'])): ?>
-                                            <span class="mr-4"><?php echo e($meal['readyInMinutes']); ?> <?php echo e(__('meal_planner.time_min')); ?></span>
+                                            <div class="flex items-center justify-center sm:justify-start">
+                                                <svg class="w-4 h-4 mr-1 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                                </svg>
+                                                <?php echo e($meal['readyInMinutes']); ?> <?php echo e(__('meal_planner.time_min')); ?>
+
+                                            </div>
                                         <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                                         <!--[if BLOCK]><![endif]--><?php if(isset($meal['servings'])): ?>
-                                            <span><?php echo e($meal['servings']); ?> <?php echo e(__('meal_planner.servings')); ?></span>
+                                            <div class="flex items-center justify-center sm:justify-start">
+                                                <svg class="w-4 h-4 mr-1 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                                                </svg>
+                                                <?php echo e($meal['servings']); ?> <?php echo e(__('meal_planner.servings')); ?>
+
+                                            </div>
                                         <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                                     </div>
                                 </div>
-                                <button 
-                                    wire:click="viewRecipeDetails(<?php echo e($meal['id']); ?>)"
-                                    class="px-4 py-2 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition-colors"
-                                >
-                                    <?php echo e(__('meal_planner.see_details')); ?>
-
-                                </button>
+                                <div class="flex justify-center sm:justify-end">
+                                    <button 
+                                        wire:click="viewRecipeDetails(<?php echo e($meal['id']); ?>)"
+                                        class="w-full sm:w-auto px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors font-medium"
+                                        wire:loading.attr="disabled"
+                                        wire:target="viewRecipeDetails(<?php echo e($meal['id']); ?>)"
+                                    >
+                                        <span wire:loading.remove wire:target="viewRecipeDetails(<?php echo e($meal['id']); ?>)"><?php echo e(__('meal_planner.see_details')); ?></span>
+                                        <span wire:loading wire:target="viewRecipeDetails(<?php echo e($meal['id']); ?>)"><?php echo e(__('meal_planner.loading')); ?></span>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
                 </div>
                 
                 <!--[if BLOCK]><![endif]--><?php if($selectedDate): ?>
-                    <button 
-                        wire:click="savePlanToDate('<?php echo e($selectedDate); ?>')"
-                        class="px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
-                    >
-                        <?php echo e(__('meal_planner.save_on')); ?> <?php echo e(\Carbon\Carbon::parse($selectedDate)->format('d.m.Y')); ?>
-
-                    </button>
+                    <div class="text-center">
+                        <button 
+                            wire:click="savePlanToDate('<?php echo e($selectedDate); ?>')"
+                            class="w-full sm:w-auto px-8 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors font-medium"
+                            wire:loading.attr="disabled"
+                            wire:target="savePlanToDate('<?php echo e($selectedDate); ?>')"
+                        >
+                            <svg class="w-5 h-5 mr-2 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/>
+                            </svg>
+                            <span wire:loading.remove wire:target="savePlanToDate('<?php echo e($selectedDate); ?>')"><?php echo e(__('meal_planner.save_on')); ?> <?php echo e(\Carbon\Carbon::parse($selectedDate)->format('d.m.Y')); ?></span>
+                            <span wire:loading wire:target="savePlanToDate('<?php echo e($selectedDate); ?>')"><?php echo e(__('meal_planner.saving')); ?></span>
+                        </button>
+                    </div>
                 <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
             </div>
         <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
@@ -210,16 +303,43 @@
         <!-- Szczegóły przepisu -->
         <!--[if BLOCK]><![endif]--><?php if($selectedRecipe): ?>
             <div class="bg-white rounded-lg shadow-md p-6">
-                <div class="flex justify-between items-start mb-4">
+                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-4 space-y-3 sm:space-y-0">
                     <h2 class="text-xl font-semibold"><?php echo e($selectedRecipe['title']); ?></h2>
-                    <button 
-                        wire:click="$set('selectedRecipe', null)"
-                        class="px-4 py-2 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition-colors"
-                    >
-                        <?php echo e(__('meal_planner.back_to_list')); ?>
+                    <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4">
+                        <!--[if BLOCK]><![endif]--><?php if($selectedDate): ?>
+                            <button 
+                                wire:click="addRecipeToPlan(<?php echo e($selectedRecipe['id']); ?>)"
+                                class="w-full sm:w-auto px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors font-medium"
+                                wire:loading.attr="disabled"
+                                wire:target="addRecipeToPlan(<?php echo e($selectedRecipe['id']); ?>)"
+                            >
+                                <svg class="w-4 h-4 mr-1 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                                </svg>
+                                <span wire:loading.remove wire:target="addRecipeToPlan(<?php echo e($selectedRecipe['id']); ?>)"><?php echo e(__('meal_planner.add_to_plan')); ?></span>
+                                <span wire:loading wire:target="addRecipeToPlan(<?php echo e($selectedRecipe['id']); ?>)"><?php echo e(__('meal_planner.adding')); ?></span>
+                            </button>
+                        <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+                        <button 
+                            wire:click="$set('selectedRecipe', null)"
+                            class="w-full sm:w-auto px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+                        >
+                            <?php echo e(__('meal_planner.back_to_list')); ?>
 
-                    </button>
+                        </button>
+                    </div>
                 </div>
+                
+                <!--[if BLOCK]><![endif]--><?php if(!$selectedDate): ?>
+                    <div class="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                        <div class="flex items-center">
+                            <svg class="w-5 h-5 text-yellow-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 15.5c-.77.833.192 2.5 1.732 2.5z"/>
+                            </svg>
+                            <span class="text-yellow-800"><?php echo e(__('meal_planner.select_date_to_add')); ?></span>
+                        </div>
+                    </div>
+                <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                 
                 <!--[if BLOCK]><![endif]--><?php if(isset($selectedRecipe['image'])): ?>
                     <img src="<?php echo e($selectedRecipe['image']); ?>" alt="<?php echo e($selectedRecipe['title']); ?>" class="w-full max-w-md mx-auto rounded-lg mb-6">
@@ -346,49 +466,95 @@
         <div class="bg-white rounded-lg shadow-md p-6">
             <h2 class="text-xl font-semibold mb-4"><?php echo e(__('meal_planner.search_recipes')); ?></h2>
             
-            <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 mb-4">
-                <input 
-                    type="text" 
-                    wire:model="searchQuery"
-                    placeholder="<?php echo e(__('meal_planner.search_placeholder')); ?>"
-                    class="w-full sm:flex-1 border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                <button 
-                    wire:click="searchRecipes"
-                    class="w-full sm:w-auto px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors disabled:opacity-50"
-                    wire:loading.attr="disabled"
-                >
-                    <span wire:loading.remove><?php echo e(__('meal_planner.search')); ?></span>
-                    <span wire:loading><?php echo e(__('meal_planner.searching')); ?></span>
-                </button>
-            </div>
+            <form wire:submit.prevent="searchRecipes" class="mb-4">
+                <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
+                    <input 
+                        type="text" 
+                        wire:model="searchQuery"
+                        placeholder="<?php echo e(__('meal_planner.search_placeholder')); ?>"
+                        class="w-full sm:flex-1 border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                    <button 
+                        type="submit"
+                        class="w-full sm:w-auto px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors disabled:opacity-50"
+                        wire:loading.attr="disabled"
+                        wire:target="searchRecipes"
+                    >
+                        <span wire:loading.remove wire:target="searchRecipes"><?php echo e(__('meal_planner.search')); ?></span>
+                        <span wire:loading wire:target="searchRecipes"><?php echo e(__('meal_planner.searching')); ?></span>
+                    </button>
+                </div>
+            </form>
             
             <!--[if BLOCK]><![endif]--><?php if(!empty($searchResults)): ?>
+                <!--[if BLOCK]><![endif]--><?php if(!$selectedDate): ?>
+                    <div class="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                        <div class="flex items-center">
+                            <svg class="w-5 h-5 text-yellow-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 15.5c-.77.833.192 2.5 1.732 2.5z"/>
+                            </svg>
+                            <span class="text-yellow-800"><?php echo e(__('meal_planner.select_date_to_add')); ?></span>
+                        </div>
+                    </div>
+                <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+                
                 <div class="space-y-4">
                     <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $searchResults; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $recipe): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                         <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
-                            <div class="flex items-center space-x-4">
+                            <div class="flex flex-col sm:flex-row sm:items-center space-y-4 sm:space-y-0 sm:space-x-4">
                                 <!--[if BLOCK]><![endif]--><?php if(isset($recipe['image'])): ?>
-                                    <img src="<?php echo e($recipe['image']); ?>" alt="<?php echo e($recipe['title']); ?>" class="w-16 h-16 object-cover rounded">
+                                    <div class="flex justify-center sm:justify-start">
+                                        <img src="<?php echo e($recipe['image']); ?>" alt="<?php echo e($recipe['title']); ?>" class="w-24 h-24 object-cover rounded-lg">
+                                    </div>
                                 <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
-                                <div class="flex-1">
-                                    <h3 class="font-semibold"><?php echo e($recipe['title']); ?></h3>
-                                    <div class="text-sm text-gray-600 mt-1">
+                                <div class="flex-1 text-center sm:text-left">
+                                    <h3 class="font-semibold text-lg mb-2"><?php echo e($recipe['title']); ?></h3>
+                                    <div class="text-sm text-gray-600 space-y-1">
                                         <!--[if BLOCK]><![endif]--><?php if(isset($recipe['readyInMinutes'])): ?>
-                                            <span class="mr-4"><?php echo e($recipe['readyInMinutes']); ?> <?php echo e(__('meal_planner.time_min')); ?></span>
+                                            <div class="flex items-center justify-center sm:justify-start">
+                                                <svg class="w-4 h-4 mr-1 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                                </svg>
+                                                <?php echo e($recipe['readyInMinutes']); ?> <?php echo e(__('meal_planner.time_min')); ?>
+
+                                            </div>
                                         <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                                         <!--[if BLOCK]><![endif]--><?php if(isset($recipe['servings'])): ?>
-                                            <span><?php echo e($recipe['servings']); ?> <?php echo e(__('meal_planner.servings')); ?></span>
+                                            <div class="flex items-center justify-center sm:justify-start">
+                                                <svg class="w-4 h-4 mr-1 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                                                </svg>
+                                                <?php echo e($recipe['servings']); ?> <?php echo e(__('meal_planner.servings')); ?>
+
+                                            </div>
                                         <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                                     </div>
                                 </div>
-                                <button 
-                                    wire:click="viewRecipeDetails(<?php echo e($recipe['id']); ?>)"
-                                    class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
-                                >
-                                    <?php echo e(__('meal_planner.see_details')); ?>
-
-                                </button>
+                                <div class="flex flex-col sm:flex-row justify-center sm:justify-end space-y-3 sm:space-y-0 sm:space-x-4">
+                                    <button 
+                                        wire:click="viewRecipeDetails(<?php echo e($recipe['id']); ?>)"
+                                        class="w-full sm:w-auto px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors font-medium"
+                                        wire:loading.attr="disabled"
+                                        wire:target="viewRecipeDetails(<?php echo e($recipe['id']); ?>)"
+                                    >
+                                        <span wire:loading.remove wire:target="viewRecipeDetails(<?php echo e($recipe['id']); ?>)"><?php echo e(__('meal_planner.see_details')); ?></span>
+                                        <span wire:loading wire:target="viewRecipeDetails(<?php echo e($recipe['id']); ?>)"><?php echo e(__('meal_planner.loading')); ?></span>
+                                    </button>
+                                    <!--[if BLOCK]><![endif]--><?php if($selectedDate): ?>
+                                        <button 
+                                            wire:click="addRecipeToPlan(<?php echo e($recipe['id']); ?>)"
+                                            class="w-full sm:w-auto px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors font-medium"
+                                            wire:loading.attr="disabled"
+                                            wire:target="addRecipeToPlan(<?php echo e($recipe['id']); ?>)"
+                                        >
+                                            <svg class="w-4 h-4 mr-1 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                                            </svg>
+                                            <span wire:loading.remove wire:target="addRecipeToPlan(<?php echo e($recipe['id']); ?>)"><?php echo e(__('meal_planner.add_to_plan')); ?></span>
+                                            <span wire:loading wire:target="addRecipeToPlan(<?php echo e($recipe['id']); ?>)"><?php echo e(__('meal_planner.adding')); ?></span>
+                                        </button>
+                                    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+                                </div>
                             </div>
                         </div>
                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
