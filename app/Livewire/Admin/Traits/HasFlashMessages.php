@@ -19,9 +19,6 @@ trait HasFlashMessages
         
         // Set session flash for FlashMessages component
         session()->flash('success', $message);
-        
-        // Dispatch event to refresh FlashMessages component
-        $this->dispatch('flash', type: 'success', message: $message);
     }
     
     /**
@@ -35,9 +32,6 @@ trait HasFlashMessages
         
         // Set session flash for FlashMessages component
         session()->flash('error', $message);
-        
-        // Dispatch event to refresh FlashMessages component
-        $this->dispatch('flash', type: 'error', message: $message);
     }
     
     /**
@@ -51,9 +45,6 @@ trait HasFlashMessages
         
         // Set session flash for FlashMessages component
         session()->flash('info', $message);
-        
-        // Dispatch event to refresh FlashMessages component
-        $this->dispatch('flash', type: 'info', message: $message);
     }
     
     /**

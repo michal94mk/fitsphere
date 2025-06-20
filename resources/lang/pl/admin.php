@@ -49,6 +49,7 @@ return [
     'no_pending' => 'Brak oczekujących',
     'approvals' => 'Zatwierdzenia',
     'approve' => 'Zatwierdź',
+    'approving' => 'Zatwierdzanie',
     'details' => 'Szczegóły',
     
     // Users management

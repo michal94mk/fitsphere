@@ -49,6 +49,7 @@ return [
     'no_pending' => 'No pending',
     'approvals' => 'Approvals',
     'approve' => 'Approve',
+    'approving' => 'Approving',
     'details' => 'Details',
     
     // Users management

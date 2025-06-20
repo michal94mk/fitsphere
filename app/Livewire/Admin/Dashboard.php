@@ -22,12 +22,8 @@ class Dashboard extends Component
     public $popularPosts = [];
     public $draftPosts = [];
     
-    protected $emailService;
-    
-    public function mount(EmailService $emailService)
+    public function mount()
     {
-        $this->emailService = $emailService;
-        
         // Basic statistics
         $this->stats = [
             'users' => User::where('role', 'user')->count(),
@@ -88,7 +84,8 @@ class Dashboard extends Component
             $this->stats['pendingTrainers'] = User::where('role', 'trainer')->where('is_approved', false)->count();
             
             // Send notification email using the email service
-            $result = $this->emailService->sendTrainerApprovedEmail($trainer);
+            $emailService = app(EmailService::class);
+            $result = $emailService->sendTrainerApprovedEmail($trainer);
             
             // Flash appropriate message based on the result
             if ($result) {
