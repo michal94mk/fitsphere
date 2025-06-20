@@ -15,7 +15,7 @@
     </div>
     
     <!-- Flash Messages -->
-    @if ($successMessage)
+    @if (session('success'))
         <div class="bg-green-50 border-l-4 border-green-400 p-4 mb-6">
             <div class="flex">
                 <div class="flex-shrink-0">
@@ -24,13 +24,13 @@
                     </svg>
                 </div>
                 <div class="ml-3">
-                    <p class="text-sm text-green-700">{{ $successMessage }}</p>
+                    <p class="text-sm text-green-700">{{ session('success') }}</p>
                 </div>
             </div>
         </div>
     @endif
 
-    @if ($errorMessage)
+    @if (session('error'))
         <div class="bg-red-50 border-l-4 border-red-400 p-4 mb-6">
             <div class="flex">
                 <div class="flex-shrink-0">
@@ -39,7 +39,7 @@
                     </svg>
                 </div>
                 <div class="ml-3">
-                    <p class="text-sm text-red-700">{{ $errorMessage }}</p>
+                    <p class="text-sm text-red-700">{{ session('error') }}</p>
                 </div>
             </div>
         </div>

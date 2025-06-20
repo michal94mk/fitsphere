@@ -66,6 +66,9 @@ class TrainersIndex extends Component
             $trainer->is_approved = true;
             $trainer->save();
             
+            // Clear cache to refresh the list
+            $this->clearCache();
+            
             // Send notification email
             try {
                 $emailService = new EmailService();
@@ -87,6 +90,9 @@ class TrainersIndex extends Component
             $trainer = User::where('role', 'trainer')->findOrFail($id);
             $trainer->is_approved = false;
             $trainer->save();
+            
+            // Clear cache to refresh the list
+            $this->clearCache();
             
             $this->setSuccessMessage(__('admin.trainer_disapproved', ['name' => $trainer->name]));
         } catch (\Exception $e) {

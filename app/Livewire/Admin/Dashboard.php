@@ -73,6 +73,10 @@ class Dashboard extends Component
             $trainer->is_approved = true;
             $trainer->save();
             
+            // Clear dashboard cache
+            $cacheKey = 'admin.dashboard.' . App::getLocale();
+            cache()->forget($cacheKey);
+            
             // Update the pending trainers list
             $this->pendingTrainers = User::where('role', 'trainer')
                 ->where('is_approved', false)
