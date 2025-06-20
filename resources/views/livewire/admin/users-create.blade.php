@@ -120,19 +120,23 @@
                     </div>
                 </div>
                 
-                <div class="px-6 py-3 bg-gray-50 flex justify-between">
-                    <x-admin.form-button style="secondary" :href="route('admin.users.index')" navigate>
-                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-                        </svg>
-                        {{ __('admin.back_to_list') }}
-                    </x-admin.form-button>
-                    <x-admin.form-button type="submit" style="success" loading>
-                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                        </svg>
-                        {{ __('admin.create') }}
-                    </x-admin.form-button>
+                <div class="px-6 py-3 bg-gray-50 flex flex-col sm:flex-row justify-between space-y-3 sm:space-y-0">
+                    <div class="w-full sm:w-auto">
+                        <x-admin.form-button style="secondary" :href="route('admin.users.index')" navigate>
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                            </svg>
+                            {{ __('admin.back_to_list') }}
+                        </x-admin.form-button>
+                    </div>
+                    <div class="w-full sm:w-auto">
+                        <x-admin.form-button type="submit" style="success" loading>
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                            </svg>
+                            {{ __('admin.create') }}
+                        </x-admin.form-button>
+                    </div>
                 </div>
             </form>
         </div>

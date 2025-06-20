@@ -1,7 +1,7 @@
 @props(['type' => 'button', 'style' => 'primary', 'size' => 'normal', 'href' => null, 'navigate' => false, 'loading' => false])
 
 @php
-$baseClasses = 'inline-flex items-center border rounded-md font-semibold text-xs uppercase tracking-widest focus:outline-none focus:ring transition ease-in-out duration-150';
+$baseClasses = 'w-full sm:w-auto inline-flex items-center justify-center border rounded-md font-semibold text-xs uppercase tracking-widest focus:outline-none focus:ring transition ease-in-out duration-150';
 
 $sizeClasses = [
     'small' => 'px-3 py-1.5',
