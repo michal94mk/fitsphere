@@ -159,4 +159,8 @@ return [
     'search_error' => 'Error during search.',
     'translation_error' => 'Error during translation.',
     'delete_whole_plan' => 'Delete entire plan',
+    'add_to_plan' => 'Add to Plan',
+    'adding' => 'Adding...',
+    'recipe_added_to_plan' => 'Recipe has been added to the plan!',
+    'select_date_to_add' => 'Select a date in the calendar above to be able to add recipes to the plan',
 ]; 

@@ -159,4 +159,8 @@ return [
     'search_error' => 'Błąd podczas wyszukiwania.',
     'translation_error' => 'Błąd podczas tłumaczenia.',
     'delete_whole_plan' => 'Usuń cały plan',
+    'add_to_plan' => 'Dodaj do planu',
+    'adding' => 'Dodawanie...',
+    'recipe_added_to_plan' => 'Przepis został dodany do planu!',
+    'select_date_to_add' => 'Wybierz datę w kalendarzu powyżej, aby móc dodawać przepisy do planu',
 ]; 

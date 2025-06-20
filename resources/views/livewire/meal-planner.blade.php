@@ -252,15 +252,41 @@
         <!-- Szczegóły przepisu -->
         @if ($selectedRecipe)
             <div class="bg-white rounded-lg shadow-md p-6">
-                <div class="flex justify-between items-start mb-4">
+                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-4 space-y-3 sm:space-y-0">
                     <h2 class="text-xl font-semibold">{{ $selectedRecipe['title'] }}</h2>
-                    <button 
-                        wire:click="$set('selectedRecipe', null)"
-                        class="px-4 py-2 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition-colors"
-                    >
-                        {{ __('meal_planner.back_to_list') }}
-                    </button>
+                    <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
+                        @if ($selectedDate)
+                            <button 
+                                wire:click="addRecipeToPlan({{ $selectedRecipe['id'] }})"
+                                class="w-full sm:w-auto px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors font-medium"
+                                wire:loading.attr="disabled"
+                            >
+                                <svg class="w-4 h-4 mr-1 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                                </svg>
+                                <span wire:loading.remove wire:target="addRecipeToPlan({{ $selectedRecipe['id'] }})">{{ __('meal_planner.add_to_plan') }}</span>
+                                <span wire:loading wire:target="addRecipeToPlan({{ $selectedRecipe['id'] }})">{{ __('meal_planner.adding') }}</span>
+                            </button>
+                        @endif
+                        <button 
+                            wire:click="$set('selectedRecipe', null)"
+                            class="w-full sm:w-auto px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+                        >
+                            {{ __('meal_planner.back_to_list') }}
+                        </button>
+                    </div>
                 </div>
+                
+                @if (!$selectedDate)
+                    <div class="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                        <div class="flex items-center">
+                            <svg class="w-5 h-5 text-yellow-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 15.5c-.77.833.192 2.5 1.732 2.5z"/>
+                            </svg>
+                            <span class="text-yellow-800">{{ __('meal_planner.select_date_to_add') }}</span>
+                        </div>
+                    </div>
+                @endif
                 
                 @if (isset($selectedRecipe['image']))
                     <img src="{{ $selectedRecipe['image'] }}" alt="{{ $selectedRecipe['title'] }}" class="w-full max-w-md mx-auto rounded-lg mb-6">
@@ -401,6 +427,17 @@
             </div>
             
             @if (!empty($searchResults))
+                @if (!$selectedDate)
+                    <div class="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                        <div class="flex items-center">
+                            <svg class="w-5 h-5 text-yellow-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 15.5c-.77.833.192 2.5 1.732 2.5z"/>
+                            </svg>
+                            <span class="text-yellow-800">{{ __('meal_planner.select_date_to_add') }}</span>
+                        </div>
+                    </div>
+                @endif
+                
                 <div class="space-y-4">
                     @foreach ($searchResults as $recipe)
                         <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
@@ -431,13 +468,26 @@
                                         @endif
                                     </div>
                                 </div>
-                                <div class="flex justify-center sm:justify-end">
+                                <div class="flex flex-col sm:flex-row justify-center sm:justify-end space-y-2 sm:space-y-0 sm:space-x-2">
                                     <button 
                                         wire:click="viewRecipeDetails({{ $recipe['id'] }})"
-                                        class="w-full sm:w-auto px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors font-medium"
+                                        class="w-full sm:w-auto px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors font-medium"
                                     >
                                         {{ __('meal_planner.see_details') }}
                                     </button>
+                                    @if ($selectedDate)
+                                        <button 
+                                            wire:click="addRecipeToPlan({{ $recipe['id'] }})"
+                                            class="w-full sm:w-auto px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors font-medium"
+                                            wire:loading.attr="disabled"
+                                        >
+                                            <svg class="w-4 h-4 mr-1 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                                            </svg>
+                                            <span wire:loading.remove wire:target="addRecipeToPlan({{ $recipe['id'] }})">{{ __('meal_planner.add_to_plan') }}</span>
+                                            <span wire:loading wire:target="addRecipeToPlan({{ $recipe['id'] }})">{{ __('meal_planner.adding') }}</span>
+                                        </button>
+                                    @endif
                                 </div>
                             </div>
                         </div>

@@ -142,6 +142,43 @@ class MealPlanner extends Component
         }
     }
     
+    public function addRecipeToPlan($recipeId)
+    {
+        if (!$this->selectedDate) {
+            session()->flash('error', __('meal_planner.select_day_first'));
+            return;
+        }
+        
+        try {
+            $spoonacularService = app(SpoonacularService::class);
+            $recipe = $spoonacularService->getRecipeInformation($recipeId);
+            
+            if ($recipe) {
+                // Add nutrition values
+                $nutrition = $this->extractNutrition($recipe);
+                $recipe['nutrition'] = $nutrition;
+                
+                // Initialize saved plans for the date if it doesn't exist
+                if (!isset($this->savedPlans[$this->selectedDate])) {
+                    $this->savedPlans[$this->selectedDate] = [];
+                }
+                
+                // Add recipe to the selected date's plan
+                $this->savedPlans[$this->selectedDate][] = $recipe;
+                $this->savePlansToFile();
+                
+                session()->flash('success', __('meal_planner.recipe_added_to_plan'));
+                
+                // Close recipe details if open
+                $this->selectedRecipe = null;
+            } else {
+                session()->flash('error', __('meal_planner.recipe_load_error'));
+            }
+        } catch (\Exception $e) {
+            session()->flash('error', __('meal_planner.recipe_load_error') . ': ' . $e->getMessage());
+        }
+    }
+    
     public function viewRecipeDetails($recipeId)
     {
         try {
