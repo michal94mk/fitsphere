@@ -85,6 +85,9 @@ class CategoriesIndex extends Component
             
             $category->delete();
             
+            // Clear cache to refresh the list
+            $this->clearCache();
+            
             $this->setSuccessMessage(__('admin.category_deleted', ['name' => $categoryName]));
         } catch (\Exception $e) {
             $this->setErrorMessage(__('admin.category_delete_error', ['error' => $e->getMessage()]));

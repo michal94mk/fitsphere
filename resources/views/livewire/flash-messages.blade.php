@@ -36,17 +36,6 @@
                         
                         <span class="text-sm font-medium">{{ $message['message'] }}</span>
                     </div>
-                    
-                    <button 
-                        wire:click="removeMessage({{ $index }})"
-                        @click="show = false"
-                        type="button" 
-                        class="absolute right-4 top-1/2 transform -translate-y-1/2 inline-flex text-gray-500 hover:text-gray-700 focus:outline-none focus:text-gray-700 transition ease-in-out duration-150"
-                    >
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
-                        </svg>
-                    </button>
                 </div>
                 
                 {{-- Auto-hide po 3 sekundach --}}

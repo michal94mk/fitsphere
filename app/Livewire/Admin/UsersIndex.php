@@ -94,6 +94,9 @@ class UsersIndex extends Component
             $userName = $user->name;
             $user->delete();
             
+            // Clear cache to refresh the list
+            $this->clearCache();
+            
             $this->setSuccessMessage(__('admin.user_deleted', ['name' => $userName]));
         } catch (\Exception $e) {
             $this->setErrorMessage(__('admin.user_delete_error', ['error' => $e->getMessage()]));

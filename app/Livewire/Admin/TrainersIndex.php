@@ -120,6 +120,9 @@ class TrainersIndex extends Component
             $trainerName = $trainer->name;
             $trainer->delete();
             
+            // Clear cache to refresh the list
+            $this->clearCache();
+            
             session()->flash('success', __('admin.trainer_deleted', ['name' => $trainerName]));
         } catch (\Exception $e) {
             session()->flash('error', __('admin.trainer_delete_error', ['error' => $e->getMessage()]));

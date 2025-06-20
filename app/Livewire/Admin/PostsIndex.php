@@ -88,6 +88,9 @@ class PostsIndex extends Component
             $postTitle = $post->title;
             $post->delete();
             
+            // Clear cache to refresh the list
+            $this->clearCache();
+            
             $this->setSuccessMessage(__('admin.post_deleted', ['title' => $postTitle]));
         } catch (\Exception $e) {
             $this->setErrorMessage(__('admin.post_delete_error', ['error' => $e->getMessage()]));

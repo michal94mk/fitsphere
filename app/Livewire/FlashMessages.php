@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use Livewire\Attributes\On;
+use Illuminate\Support\Facades\Auth;
 
 class FlashMessages extends Component
 {
@@ -23,6 +24,23 @@ class FlashMessages extends Component
     {
         $isPostDetailPage = request()->routeIs('post.show');
         $isAdminPage = request()->routeIs('admin.*');
+        
+        // Clear authentication-related error messages if user is not logged in
+        if (!Auth::check() && session('error')) {
+            $errorMessage = session('error');
+            $isAuthRelatedError = str_contains($errorMessage, 'administrator access') ||
+                                str_contains($errorMessage, 'dostęp administratora') ||
+                                str_contains($errorMessage, 'login') ||
+                                str_contains($errorMessage, 'zaloguj') ||
+                                str_contains($errorMessage, 'access denied') ||
+                                str_contains($errorMessage, 'dostęp zabroniony') ||
+                                str_contains($errorMessage, 'session') ||
+                                str_contains($errorMessage, 'sesja');
+            
+            if ($isAuthRelatedError) {
+                session()->forget('error');
+            }
+        }
         
         // Always clear messages after display except on post detail pages
         if (!$isPostDetailPage) {
@@ -59,8 +77,25 @@ class FlashMessages extends Component
             $addUniqueMessage('success', session('success'), 'success');
         }
         
+        // Only show error messages if session is valid or user is authenticated
+        // This prevents showing middleware errors after session expiration
         if (session('error') && !$isPostDetailPage) {
-            $addUniqueMessage('error', session('error'), 'error');
+            // Don't show admin access errors if user is not authenticated
+            $errorMessage = session('error');
+            $isAdminAccessError = str_contains($errorMessage, 'administrator access') || 
+                                str_contains($errorMessage, 'dostęp administratora');
+            
+            // Also filter out other authentication-related errors when user is not logged in
+            $isAuthError = str_contains($errorMessage, 'login') ||
+                          str_contains($errorMessage, 'zaloguj') ||
+                          str_contains($errorMessage, 'access denied') ||
+                          str_contains($errorMessage, 'dostęp zabroniony') ||
+                          str_contains($errorMessage, 'session') ||
+                          str_contains($errorMessage, 'sesja');
+            
+            if ((!$isAdminAccessError && !$isAuthError) || Auth::check()) {
+                $addUniqueMessage('error', $errorMessage, 'error');
+            }
         }
         
         if (session('info')) {
