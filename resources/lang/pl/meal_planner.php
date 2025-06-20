@@ -163,4 +163,8 @@ return [
     'adding' => 'Dodawanie...',
     'recipe_added_to_plan' => 'Przepis został dodany do planu!',
     'select_date_to_add' => 'Wybierz datę w kalendarzu powyżej, aby móc dodawać przepisy do planu',
+    'remove' => 'Usuń',
+    'removing' => 'Usuwanie...',
+    'meal_removed' => 'Posiłek został usunięty z planu.',
+    'loading' => 'Ładowanie...',
 ]; 

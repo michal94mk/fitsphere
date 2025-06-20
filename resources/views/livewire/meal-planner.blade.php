@@ -9,7 +9,7 @@
             <!-- Nawigacja tygodnia -->
             <div class="flex flex-col sm:flex-row justify-between items-center mb-6 space-y-4 sm:space-y-0">
                 @php
-                    $isCurrentWeek = $currentWeekStart->isSameWeek(\Carbon\Carbon::now());
+                    $isCurrentWeek = $currentWeekStart->isSameDay(\Carbon\Carbon::now());
                 @endphp
                 <button 
                     wire:click="previousWeek" 
@@ -103,7 +103,7 @@
                 </div>
                 
                 <div class="space-y-4">
-                    @foreach ($savedPlans[$selectedDate] as $meal)
+                    @foreach ($savedPlans[$selectedDate] as $index => $meal)
                         <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
                             <div class="flex flex-col sm:flex-row sm:items-center space-y-4 sm:space-y-0 sm:space-x-4">
                                 @if (isset($meal['image']))
@@ -130,12 +130,27 @@
                                         </div>
                                     @endif
                                 </div>
-                                <div class="flex justify-center sm:justify-end">
+                                <div class="flex flex-col sm:flex-row justify-center sm:justify-end space-y-2 sm:space-y-0 sm:space-x-3">
                                     <button 
                                         wire:click="viewRecipeDetails({{ $meal['id'] }})"
-                                        class="w-full sm:w-auto px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors font-medium"
+                                        class="w-full sm:w-auto px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors font-medium"
+                                        wire:loading.attr="disabled"
+                                        wire:target="viewRecipeDetails({{ $meal['id'] }})"
                                     >
-                                        {{ __('meal_planner.see_details') }}
+                                        <span wire:loading.remove wire:target="viewRecipeDetails({{ $meal['id'] }})">{{ __('meal_planner.see_details') }}</span>
+                                        <span wire:loading wire:target="viewRecipeDetails({{ $meal['id'] }})">{{ __('meal_planner.loading') }}</span>
+                                    </button>
+                                    <button 
+                                        wire:click="removeMealFromPlan('{{ $selectedDate }}', {{ $index }})"
+                                        class="w-full sm:w-auto px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors font-medium"
+                                        wire:loading.attr="disabled"
+                                        wire:target="removeMealFromPlan('{{ $selectedDate }}', {{ $index }})"
+                                    >
+                                        <svg class="w-4 h-4 mr-1 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                        </svg>
+                                        <span wire:loading.remove wire:target="removeMealFromPlan('{{ $selectedDate }}', {{ $index }})">{{ __('meal_planner.remove') }}</span>
+                                        <span wire:loading wire:target="removeMealFromPlan('{{ $selectedDate }}', {{ $index }})">{{ __('meal_planner.removing') }}</span>
                                     </button>
                                 </div>
                             </div>
@@ -254,12 +269,13 @@
             <div class="bg-white rounded-lg shadow-md p-6">
                 <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-4 space-y-3 sm:space-y-0">
                     <h2 class="text-xl font-semibold">{{ $selectedRecipe['title'] }}</h2>
-                    <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
+                    <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4">
                         @if ($selectedDate)
                             <button 
                                 wire:click="addRecipeToPlan({{ $selectedRecipe['id'] }})"
                                 class="w-full sm:w-auto px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors font-medium"
                                 wire:loading.attr="disabled"
+                                wire:target="addRecipeToPlan({{ $selectedRecipe['id'] }})"
                             >
                                 <svg class="w-4 h-4 mr-1 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
@@ -409,22 +425,25 @@
         <div class="bg-white rounded-lg shadow-md p-6">
             <h2 class="text-xl font-semibold mb-4">{{ __('meal_planner.search_recipes') }}</h2>
             
-            <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 mb-4">
-                <input 
-                    type="text" 
-                    wire:model="searchQuery"
-                    placeholder="{{ __('meal_planner.search_placeholder') }}"
-                    class="w-full sm:flex-1 border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                <button 
-                    wire:click="searchRecipes"
-                    class="w-full sm:w-auto px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors disabled:opacity-50"
-                    wire:loading.attr="disabled"
-                >
-                    <span wire:loading.remove>{{ __('meal_planner.search') }}</span>
-                    <span wire:loading>{{ __('meal_planner.searching') }}</span>
-                </button>
-            </div>
+            <form wire:submit.prevent="searchRecipes" class="mb-4">
+                <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
+                    <input 
+                        type="text" 
+                        wire:model="searchQuery"
+                        placeholder="{{ __('meal_planner.search_placeholder') }}"
+                        class="w-full sm:flex-1 border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                    <button 
+                        type="submit"
+                        class="w-full sm:w-auto px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors disabled:opacity-50"
+                        wire:loading.attr="disabled"
+                        wire:target="searchRecipes"
+                    >
+                        <span wire:loading.remove wire:target="searchRecipes">{{ __('meal_planner.search') }}</span>
+                        <span wire:loading wire:target="searchRecipes">{{ __('meal_planner.searching') }}</span>
+                    </button>
+                </div>
+            </form>
             
             @if (!empty($searchResults))
                 @if (!$selectedDate)
@@ -468,18 +487,22 @@
                                         @endif
                                     </div>
                                 </div>
-                                <div class="flex flex-col sm:flex-row justify-center sm:justify-end space-y-2 sm:space-y-0 sm:space-x-2">
+                                <div class="flex flex-col sm:flex-row justify-center sm:justify-end space-y-3 sm:space-y-0 sm:space-x-4">
                                     <button 
                                         wire:click="viewRecipeDetails({{ $recipe['id'] }})"
                                         class="w-full sm:w-auto px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors font-medium"
+                                        wire:loading.attr="disabled"
+                                        wire:target="viewRecipeDetails({{ $recipe['id'] }})"
                                     >
-                                        {{ __('meal_planner.see_details') }}
+                                        <span wire:loading.remove wire:target="viewRecipeDetails({{ $recipe['id'] }})">{{ __('meal_planner.see_details') }}</span>
+                                        <span wire:loading wire:target="viewRecipeDetails({{ $recipe['id'] }})">{{ __('meal_planner.loading') }}</span>
                                     </button>
                                     @if ($selectedDate)
                                         <button 
                                             wire:click="addRecipeToPlan({{ $recipe['id'] }})"
                                             class="w-full sm:w-auto px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors font-medium"
                                             wire:loading.attr="disabled"
+                                            wire:target="addRecipeToPlan({{ $recipe['id'] }})"
                                         >
                                             <svg class="w-4 h-4 mr-1 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>

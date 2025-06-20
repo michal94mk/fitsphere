@@ -163,4 +163,8 @@ return [
     'adding' => 'Adding...',
     'recipe_added_to_plan' => 'Recipe has been added to the plan!',
     'select_date_to_add' => 'Select a date in the calendar above to be able to add recipes to the plan',
+    'remove' => 'Remove',
+    'removing' => 'Removing...',
+    'meal_removed' => 'Meal has been removed from the plan.',
+    'loading' => 'Loading...',
 ]; 

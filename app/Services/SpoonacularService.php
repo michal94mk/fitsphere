@@ -747,7 +747,9 @@ class SpoonacularService
             );
         }
 
-        $cacheKey = 'spoonacular_random_recipes_' . md5(serialize($params) . $number);
+        // Add timestamp to cache key to ensure freshness every 5 minutes
+        $timestampKey = floor(time() / 300); // New key every 5 minutes
+        $cacheKey = 'spoonacular_random_recipes_' . md5(serialize($params) . $number . $timestampKey);
         
         return Cache::remember($cacheKey, 300, function () use ($number, $params) {
             $defaultParams = [

@@ -37,7 +37,8 @@ class MealPlanner extends Component
     
     public function mount()
     {
-        $this->currentWeekStart = Carbon::now()->startOfWeek();
+        // Start calendar from today instead of beginning of week
+        $this->currentWeekStart = Carbon::now();
         $this->selectedDate = Carbon::now()->format('Y-m-d');
         $this->loadSavedPlans();
     }
@@ -47,8 +48,8 @@ class MealPlanner extends Component
         $newWeekStart = $this->currentWeekStart->copy()->subWeek();
         
         // Prevent navigating to weeks that start before today
-        if ($newWeekStart->startOfWeek()->lt(Carbon::now()->startOfWeek())) {
-            return; // Don't allow going to previous weeks
+        if ($newWeekStart->lt(Carbon::now())) {
+            return; // Don't allow going to past weeks
         }
         
         $this->currentWeekStart = $newWeekStart;
@@ -85,15 +86,16 @@ class MealPlanner extends Component
             return;
         }
         
+        // Always clear previous generated meals to ensure fresh generation
+        $this->generatedMeals = [];
+        
         try {
             $spoonacularService = app(SpoonacularService::class);
             
-            // Generate 3 random recipes
+            // Generate 3 random recipes - cache disabled for freshness
             $recipes = $spoonacularService->getRandomRecipes(3);
             
             if (isset($recipes['recipes']) && count($recipes['recipes']) > 0) {
-                $this->generatedMeals = [];
-                
                 foreach ($recipes['recipes'] as $recipe) {
                     // Get detailed recipe information
                     $detailedRecipe = $spoonacularService->getRecipeInformation($recipe['id']);
@@ -139,6 +141,24 @@ class MealPlanner extends Component
             unset($this->savedPlans[$date]);
             $this->savePlansToFile();
             session()->flash('success', __('meal_planner.plan_deleted'));
+        }
+    }
+    
+    public function removeMealFromPlan($date, $index)
+    {
+        if (isset($this->savedPlans[$date][$index])) {
+            unset($this->savedPlans[$date][$index]);
+            
+            // Re-index array to prevent gaps
+            $this->savedPlans[$date] = array_values($this->savedPlans[$date]);
+            
+            // If no meals left for this date, remove the date entry entirely
+            if (empty($this->savedPlans[$date])) {
+                unset($this->savedPlans[$date]);
+            }
+            
+            $this->savePlansToFile();
+            session()->flash('success', __('meal_planner.meal_removed'));
         }
     }
     
