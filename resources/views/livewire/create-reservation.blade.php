@@ -271,10 +271,10 @@
             </div>
         </div>
         
-        <div class="px-4 py-3 bg-gray-50 text-right sm:px-6 border-t border-gray-200">
+        <div class="px-4 py-3 bg-gray-50 text-center sm:px-6 border-t border-gray-200">
             <button type="submit" 
                 {{ $this->isPastDate || !$startTime || !$endTime ? 'disabled' : '' }} 
-                class="inline-flex justify-center items-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white 
+                class="w-full sm:w-auto inline-flex justify-center items-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white 
                 {{ $this->isPastDate || !$startTime || !$endTime ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500' }}">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
