@@ -58,11 +58,14 @@ class UserReservations extends Component
             // Check if this reservation belongs to the authenticated user
             $query = Reservation::where('id', $id);
             
-            if ($authenticatedUser->isUser()) {
+            if (str_contains($authenticatedUser->role, 'user') && !str_contains($authenticatedUser->role, 'admin') && !str_contains($authenticatedUser->role, 'trainer')) {
                 // For regular users, check user_id
                 $query->where('user_id', $authenticatedUser->id);
-            } elseif ($authenticatedUser->isTrainer()) {
-                // For trainers, check client relationship
+            } elseif (str_contains($authenticatedUser->role, 'admin')) {
+                // For admins, allow all reservations (no additional filtering)
+                // Admin can cancel any reservation
+            } elseif (str_contains($authenticatedUser->role, 'trainer')) {
+                // For trainers, check client relationship  
                 $query->where(function($q) use ($authenticatedUser) {
                     $q->where('user_id', $authenticatedUser->id) // backward compatibility
                       ->orWhere(function($q2) use ($authenticatedUser) {
@@ -136,11 +139,14 @@ class UserReservations extends Component
             $authenticatedUser = Auth::user();
             
             // Build query based on authentication type
-            if ($authenticatedUser->isUser()) {
+            if (str_contains($authenticatedUser->role, 'user') && !str_contains($authenticatedUser->role, 'admin') && !str_contains($authenticatedUser->role, 'trainer')) {
                 // For regular users, show reservations where they are the client
                 $query = Reservation::where('user_id', $authenticatedUser->id)
                     ->with('trainer');
-            } elseif ($authenticatedUser->isTrainer()) {
+            } elseif (str_contains($authenticatedUser->role, 'admin')) {
+                // For admins, show all reservations in the system
+                $query = Reservation::with(['trainer', 'user']);
+            } elseif (str_contains($authenticatedUser->role, 'trainer')) {
                 // For trainers, show reservations where they are the client
                 $query = Reservation::where(function($q) use ($authenticatedUser) {
                     $q->where('user_id', $authenticatedUser->id) // backward compatibility

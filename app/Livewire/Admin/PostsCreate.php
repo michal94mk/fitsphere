@@ -63,10 +63,10 @@ class PostsCreate extends Component
             
             $post->save();
             
-            session()->flash('success', 'Post has been successfully created.');
+            session()->flash('success', __('admin.post_created_success'));
             return redirect()->route('admin.posts.index');
         } catch (\Exception $e) {
-            session()->flash('error', 'An error occurred while creating the post: ' . $e->getMessage());
+            session()->flash('error', __('admin.post_create_error', ['error' => $e->getMessage()]));
         }
     }
     

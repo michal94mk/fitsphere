@@ -19,7 +19,7 @@
         </div>
     @endif
 
-    @if (!$user->hasVerifiedEmail())
+    @if (!$user->hasVerifiedEmail() && $user->provider !== 'google')
         <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
             <div class="flex">
                 <div class="flex-shrink-0">

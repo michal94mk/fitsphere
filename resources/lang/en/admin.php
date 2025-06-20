@@ -84,6 +84,10 @@ return [
     'post_deleted' => 'Article ":title" has been deleted successfully.',
     'post_delete_missing_id' => 'Cannot delete article, missing identifier.',
     'post_delete_error' => 'An error occurred while deleting the article: :error',
+    'post_created_success' => 'Post has been successfully created.',
+    'post_create_error' => 'An error occurred while creating the post: :error',
+    'post_updated_success' => 'Post has been successfully updated.',
+    'post_update_error' => 'An error occurred while updating the post: :error',
     
     // Trainers
     'trainer_approved_with_email' => 'Trainer :name has been approved and notification email has been sent.',

@@ -87,10 +87,10 @@ class PostsEdit extends Component
             
             $post->save();
             
-            session()->flash('success', 'Post has been successfully updated.');
+            session()->flash('success', __('admin.post_updated_success'));
             return redirect()->route('admin.posts.index');
         } catch (\Exception $e) {
-            session()->flash('error', 'An error occurred while updating the post: ' . $e->getMessage());
+            session()->flash('error', __('admin.post_update_error', ['error' => $e->getMessage()]));
         }
     }
     

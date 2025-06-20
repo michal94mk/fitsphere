@@ -85,6 +85,10 @@ return [
     'post_deleted' => 'Artykuł ":title" został usunięty pomyślnie.',
     'post_delete_missing_id' => 'Nie można usunąć artykułu - brak identyfikatora.',
     'post_delete_error' => 'Wystąpił błąd podczas usuwania artykułu: :error',
+    'post_created_success' => 'Post został pomyślnie utworzony.',
+    'post_create_error' => 'Wystąpił błąd podczas tworzenia postu: :error',
+    'post_updated_success' => 'Post został pomyślnie zaktualizowany.',
+    'post_update_error' => 'Wystąpił błąd podczas aktualizacji postu: :error',
     
     // Trainers
     'trainer_approved_with_email' => 'Trener :name został zatwierdzony, a powiadomienie email zostało wysłane.',
