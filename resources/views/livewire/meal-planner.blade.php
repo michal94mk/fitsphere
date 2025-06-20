@@ -169,22 +169,39 @@
         <div class="bg-white rounded-lg shadow-md p-6 mb-8">
             <h2 class="text-xl font-semibold mb-4">{{ __('meal_planner.generate_plan') }}</h2>
             
-            @if ($selectedDate)
-                <div class="mb-4">
-                    <p class="text-sm text-gray-600">{{ __('meal_planner.select_day') }}: <span class="font-semibold">{{ \Carbon\Carbon::parse($selectedDate)->format('d.m.Y') }}</span></p>
+            @guest
+                <div class="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                    <div class="flex items-center">
+                        <svg class="w-5 h-5 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        <span class="text-blue-800">{{ __('meal_planner.login_required_info') }}</span>
+                    </div>
+                    <div class="mt-3">
+                        <a href="{{ route('login') }}" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 active:bg-blue-900 focus:outline-none focus:border-blue-900 focus:ring ring-blue-300 disabled:opacity-25 transition ease-in-out duration-150">
+                            {{ __('Login') }}
+                        </a>
+                    </div>
                 </div>
-                
-                <button 
-                    wire:click="generateMealPlan" 
-                    class="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors disabled:opacity-50"
-                    wire:loading.attr="disabled"
-                >
-                    <span wire:loading.remove>{{ __('meal_planner.generate') }}</span>
-                    <span wire:loading>{{ __('meal_planner.generating') }}</span>
-                </button>
             @else
-                <p class="text-gray-500">{{ __('meal_planner.select_day') }}</p>
-            @endif
+                @if ($selectedDate)
+                    <div class="mb-4">
+                        <p class="text-sm text-gray-600">{{ __('meal_planner.select_day') }}: <span class="font-semibold">{{ \Carbon\Carbon::parse($selectedDate)->format('d.m.Y') }}</span></p>
+                    </div>
+                    
+                    <button 
+                        wire:click="generateMealPlan" 
+                        class="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors disabled:opacity-50"
+                        wire:loading.attr="disabled"
+                        wire:target="generateMealPlan"
+                    >
+                        <span wire:loading.remove wire:target="generateMealPlan">{{ __('meal_planner.generate') }}</span>
+                        <span wire:loading wire:target="generateMealPlan">{{ __('meal_planner.generating') }}</span>
+                    </button>
+                @else
+                    <p class="text-gray-500">{{ __('meal_planner.select_day') }}</p>
+                @endif
+            @endguest
             
             <!-- Komunikaty -->
             @if (session()->has('success'))
@@ -239,8 +256,11 @@
                                     <button 
                                         wire:click="viewRecipeDetails({{ $meal['id'] }})"
                                         class="w-full sm:w-auto px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors font-medium"
+                                        wire:loading.attr="disabled"
+                                        wire:target="viewRecipeDetails({{ $meal['id'] }})"
                                     >
-                                        {{ __('meal_planner.see_details') }}
+                                        <span wire:loading.remove wire:target="viewRecipeDetails({{ $meal['id'] }})">{{ __('meal_planner.see_details') }}</span>
+                                        <span wire:loading wire:target="viewRecipeDetails({{ $meal['id'] }})">{{ __('meal_planner.loading') }}</span>
                                     </button>
                                 </div>
                             </div>
@@ -253,11 +273,14 @@
                         <button 
                             wire:click="savePlanToDate('{{ $selectedDate }}')"
                             class="w-full sm:w-auto px-8 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors font-medium"
+                            wire:loading.attr="disabled"
+                            wire:target="savePlanToDate('{{ $selectedDate }}')"
                         >
                             <svg class="w-5 h-5 mr-2 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/>
                             </svg>
-                            {{ __('meal_planner.save_on') }} {{ \Carbon\Carbon::parse($selectedDate)->format('d.m.Y') }}
+                            <span wire:loading.remove wire:target="savePlanToDate('{{ $selectedDate }}')">{{ __('meal_planner.save_on') }} {{ \Carbon\Carbon::parse($selectedDate)->format('d.m.Y') }}</span>
+                            <span wire:loading wire:target="savePlanToDate('{{ $selectedDate }}')">{{ __('meal_planner.saving') }}</span>
                         </button>
                     </div>
                 @endif

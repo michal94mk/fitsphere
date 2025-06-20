@@ -8,6 +8,7 @@ use App\Services\DeepLTranslateService;
 use Carbon\Carbon;
 use Livewire\Attributes\Layout;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 class MealPlanner extends Component
 {
@@ -81,6 +82,21 @@ class MealPlanner extends Component
     
     public function generateMealPlan()
     {
+        // Check if user is logged in
+        if (!Auth::check()) {
+            session()->flash('error', __('meal_planner.login_required'));
+            return;
+        }
+        
+        // Check if user has nutritional profile
+        $user = Auth::user();
+        $profile = $user->nutritionalProfile;
+        
+        if (!$profile || !$profile->target_calories) {
+            session()->flash('error', __('meal_planner.profile_required'));
+            return;
+        }
+        
         if (!$this->selectedDate) {
             session()->flash('error', __('meal_planner.select_day_first'));
             return;
@@ -92,8 +108,46 @@ class MealPlanner extends Component
         try {
             $spoonacularService = app(SpoonacularService::class);
             
-            // Generate 3 random recipes - cache disabled for freshness
-            $recipes = $spoonacularService->getRandomRecipes(3);
+            // Build search parameters based on user's nutritional profile
+            $searchParams = [];
+            
+            // Set calorie target per meal (divide daily calories by 3 meals)
+            $caloriesPerMeal = round($profile->target_calories / 3);
+            $searchParams['maxCalories'] = $caloriesPerMeal + 200; // Add some flexibility
+            $searchParams['minCalories'] = max(200, $caloriesPerMeal - 200);
+            
+            // Add dietary restrictions if any
+            if ($profile->dietary_restrictions && is_array($profile->dietary_restrictions)) {
+                $excludeTags = [];
+                $includeTags = [];
+                
+                foreach ($profile->dietary_restrictions as $restriction) {
+                    switch ($restriction) {
+                        case 'vegetarian':
+                            $includeTags[] = 'vegetarian';
+                            break;
+                        case 'vegan':
+                            $includeTags[] = 'vegan';
+                            break;
+                        case 'gluten_free':
+                            $includeTags[] = 'gluten free';
+                            break;
+                        case 'dairy_free':
+                            $includeTags[] = 'dairy free';
+                            break;
+                        case 'keto':
+                            $includeTags[] = 'ketogenic';
+                            break;
+                    }
+                }
+                
+                if (!empty($includeTags)) {
+                    $searchParams['includeTags'] = implode(',', $includeTags);
+                }
+            }
+            
+            // Generate recipes based on user profile
+            $recipes = $spoonacularService->getRandomRecipes(3, $searchParams);
             
             if (isset($recipes['recipes']) && count($recipes['recipes']) > 0) {
                 foreach ($recipes['recipes'] as $recipe) {
@@ -109,7 +163,7 @@ class MealPlanner extends Component
                     }
                 }
                 
-                session()->flash('success', __('meal_planner.plan_generated'));
+                session()->flash('success', __('meal_planner.plan_generated_with_profile'));
             } else {
                 session()->flash('error', __('meal_planner.generation_failed'));
             }
@@ -120,12 +174,19 @@ class MealPlanner extends Component
     
     public function savePlanToDate($date)
     {
+        // Check if user is logged in
+        if (!Auth::check()) {
+            session()->flash('error', __('meal_planner.login_required'));
+            return;
+        }
+        
         if (empty($this->generatedMeals)) {
             session()->flash('error', __('meal_planner.no_plan_to_save'));
             return;
         }
         
-        // Save plan to JSON file
+        // Save plan to JSON file with user prefix
+        $userId = Auth::id();
         $this->savedPlans[$date] = $this->generatedMeals;
         $this->savePlansToFile();
         
@@ -164,6 +225,12 @@ class MealPlanner extends Component
     
     public function addRecipeToPlan($recipeId)
     {
+        // Check if user is logged in
+        if (!Auth::check()) {
+            session()->flash('error', __('meal_planner.login_required'));
+            return;
+        }
+        
         if (!$this->selectedDate) {
             session()->flash('error', __('meal_planner.select_day_first'));
             return;
@@ -281,8 +348,16 @@ class MealPlanner extends Component
     
     private function loadSavedPlans()
     {
-        if (Storage::exists('meal_plans.json')) {
-            $data = Storage::get('meal_plans.json');
+        if (!Auth::check()) {
+            $this->savedPlans = [];
+            return;
+        }
+        
+        $userId = Auth::id();
+        $filename = "meal_plans_user_{$userId}.json";
+        
+        if (Storage::exists($filename)) {
+            $data = Storage::get($filename);
             $this->savedPlans = json_decode($data, true) ?? [];
         } else {
             $this->savedPlans = [];
@@ -291,7 +366,13 @@ class MealPlanner extends Component
     
     private function savePlansToFile()
     {
-        Storage::put('meal_plans.json', json_encode($this->savedPlans, JSON_PRETTY_PRINT));
+        if (!Auth::check()) {
+            return;
+        }
+        
+        $userId = Auth::id();
+        $filename = "meal_plans_user_{$userId}.json";
+        Storage::put($filename, json_encode($this->savedPlans, JSON_PRETTY_PRINT));
     }
     
     private function extractNutrition($recipe)

@@ -167,4 +167,9 @@ return [
     'removing' => 'Usuwanie...',
     'meal_removed' => 'Posiłek został usunięty z planu.',
     'loading' => 'Ładowanie...',
+    'saving' => 'Zapisywanie...',
+    'login_required' => 'Musisz być zalogowany, aby korzystać z planera posiłków.',
+    'login_required_info' => 'Zaloguj się, aby generować spersonalizowane plany żywieniowe na podstawie Twojego profilu.',
+    'profile_required' => 'Musisz mieć profil żywieniowy. Przejdź do Kalkulatora Żywienia, aby go utworzyć.',
+    'plan_generated_with_profile' => 'Plan żywieniowy został wygenerowany na podstawie Twojego profilu!',
 ]; 

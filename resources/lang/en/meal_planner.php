@@ -167,4 +167,9 @@ return [
     'removing' => 'Removing...',
     'meal_removed' => 'Meal has been removed from the plan.',
     'loading' => 'Loading...',
+    'saving' => 'Saving...',
+    'login_required' => 'You must be logged in to use the meal planner.',
+    'login_required_info' => 'Log in to generate personalized meal plans based on your nutritional profile.',
+    'profile_required' => 'You must have a nutritional profile. Go to Nutrition Calculator to create one.',
+    'plan_generated_with_profile' => 'Meal plan has been generated based on your profile!',
 ]; 
