@@ -44,7 +44,14 @@ class MealPlanner extends Component
     
     public function previousWeek()
     {
-        $this->currentWeekStart = $this->currentWeekStart->subWeek();
+        $newWeekStart = $this->currentWeekStart->copy()->subWeek();
+        
+        // Prevent navigating to weeks that start before today
+        if ($newWeekStart->startOfWeek()->lt(Carbon::now()->startOfWeek())) {
+            return; // Don't allow going to previous weeks
+        }
+        
+        $this->currentWeekStart = $newWeekStart;
         $this->loadSavedPlans();
     }
     

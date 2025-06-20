@@ -8,7 +8,15 @@
             
             <!-- Nawigacja tygodnia -->
             <div class="flex flex-col sm:flex-row justify-between items-center mb-6 space-y-4 sm:space-y-0">
-                <button wire:click="previousWeek" class="flex items-center justify-center w-full sm:w-auto px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-md transition-colors">
+                @php
+                    $isCurrentWeek = $currentWeekStart->isSameWeek(\Carbon\Carbon::now());
+                @endphp
+                <button 
+                    wire:click="previousWeek" 
+                    class="flex items-center justify-center w-full sm:w-auto px-4 py-2 rounded-md transition-colors
+                        {{ $isCurrentWeek ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-gray-200 hover:bg-gray-300' }}"
+                    {{ $isCurrentWeek ? 'disabled' : '' }}
+                >
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                     </svg>
@@ -81,29 +89,55 @@
         <!-- Zapisane posiłki na wybrany dzień -->
         @if ($selectedDate && isset($savedPlans[$selectedDate]) && count($savedPlans[$selectedDate]) > 0)
             <div class="bg-white rounded-lg shadow-md p-6 mb-8">
-                <h2 class="text-xl font-semibold mb-4">{{ __('meal_planner.saved_meals') }} - {{ \Carbon\Carbon::parse($selectedDate)->format('d.m.Y') }}</h2>
+                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 space-y-2 sm:space-y-0">
+                    <h2 class="text-xl font-semibold">{{ __('meal_planner.saved_meals') }} - {{ \Carbon\Carbon::parse($selectedDate)->format('d.m.Y') }}</h2>
+                    <button 
+                        wire:click="deletePlanFromDate('{{ $selectedDate }}')"
+                        class="w-full sm:w-auto px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors font-medium"
+                    >
+                        <svg class="w-4 h-4 mr-2 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                        </svg>
+                        {{ __('meal_planner.delete_whole_plan') }}
+                    </button>
+                </div>
                 
                 <div class="space-y-4">
                     @foreach ($savedPlans[$selectedDate] as $meal)
                         <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
-                            <div class="flex justify-between items-start">
-                                <div class="flex-1">
-                                    <h3 class="font-semibold text-lg">{{ $meal['title'] }}</h3>
+                            <div class="flex flex-col sm:flex-row sm:items-center space-y-4 sm:space-y-0 sm:space-x-4">
+                                @if (isset($meal['image']))
+                                    <div class="flex justify-center sm:justify-start">
+                                        <img src="{{ $meal['image'] }}" alt="{{ $meal['title'] }}" class="w-20 h-20 object-cover rounded-lg">
+                                    </div>
+                                @endif
+                                <div class="flex-1 text-center sm:text-left">
+                                    <h3 class="font-semibold text-lg mb-2">{{ $meal['title'] }}</h3>
                                     @if (isset($meal['nutrition']))
-                                        <div class="grid grid-cols-4 gap-4 mt-2 text-sm text-gray-600">
-                                            <div>{{ __('meal_planner.calories') }}: {{ round($meal['nutrition']['calories']) }} kcal</div>
-                                            <div>{{ __('meal_planner.protein') }}: {{ round($meal['nutrition']['protein']) }}g</div>
-                                            <div>{{ __('meal_planner.carbs') }}: {{ round($meal['nutrition']['carbs']) }}g</div>
-                                            <div>{{ __('meal_planner.fat') }}: {{ round($meal['nutrition']['fat']) }}g</div>
+                                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-sm text-gray-600">
+                                            <div class="bg-gray-50 p-2 rounded">
+                                                <span class="font-medium">{{ __('meal_planner.calories') }}:</span> {{ round($meal['nutrition']['calories']) }} kcal
+                                            </div>
+                                            <div class="bg-gray-50 p-2 rounded">
+                                                <span class="font-medium">{{ __('meal_planner.protein') }}:</span> {{ round($meal['nutrition']['protein']) }}g
+                                            </div>
+                                            <div class="bg-gray-50 p-2 rounded">
+                                                <span class="font-medium">{{ __('meal_planner.carbs') }}:</span> {{ round($meal['nutrition']['carbs']) }}g
+                                            </div>
+                                            <div class="bg-gray-50 p-2 rounded">
+                                                <span class="font-medium">{{ __('meal_planner.fat') }}:</span> {{ round($meal['nutrition']['fat']) }}g
+                                            </div>
                                         </div>
                                     @endif
                                 </div>
-                                <button 
-                                    wire:click="deletePlanFromDate('{{ $selectedDate }}')"
-                                    class="ml-4 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
-                                >
-                                    {{ __('meal_planner.delete') }}
-                                </button>
+                                <div class="flex justify-center sm:justify-end">
+                                    <button 
+                                        wire:click="viewRecipeDetails({{ $meal['id'] }})"
+                                        class="w-full sm:w-auto px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors font-medium"
+                                    >
+                                        {{ __('meal_planner.see_details') }}
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     @endforeach
@@ -158,40 +192,59 @@
                 
                 <div class="space-y-4 mb-6">
                     @foreach ($generatedMeals as $meal)
-                        <div class="border border-gray-200 rounded-lg p-4">
-                            <div class="flex items-center space-x-4">
+                        <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                            <div class="flex flex-col sm:flex-row sm:items-center space-y-4 sm:space-y-0 sm:space-x-4">
                                 @if (isset($meal['image']))
-                                    <img src="{{ $meal['image'] }}" alt="{{ $meal['title'] }}" class="w-16 h-16 object-cover rounded">
+                                    <div class="flex justify-center sm:justify-start">
+                                        <img src="{{ $meal['image'] }}" alt="{{ $meal['title'] }}" class="w-20 h-20 object-cover rounded-lg">
+                                    </div>
                                 @endif
-                                <div class="flex-1">
-                                    <h3 class="font-semibold">{{ $meal['title'] }}</h3>
-                                    <div class="text-sm text-gray-600 mt-1">
+                                <div class="flex-1 text-center sm:text-left">
+                                    <h3 class="font-semibold text-lg mb-2">{{ $meal['title'] }}</h3>
+                                    <div class="text-sm text-gray-600 space-y-1">
                                         @if (isset($meal['readyInMinutes']))
-                                            <span class="mr-4">{{ $meal['readyInMinutes'] }} {{ __('meal_planner.time_min') }}</span>
+                                            <div class="flex items-center justify-center sm:justify-start">
+                                                <svg class="w-4 h-4 mr-1 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                                </svg>
+                                                {{ $meal['readyInMinutes'] }} {{ __('meal_planner.time_min') }}
+                                            </div>
                                         @endif
                                         @if (isset($meal['servings']))
-                                            <span>{{ $meal['servings'] }} {{ __('meal_planner.servings') }}</span>
+                                            <div class="flex items-center justify-center sm:justify-start">
+                                                <svg class="w-4 h-4 mr-1 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                                                </svg>
+                                                {{ $meal['servings'] }} {{ __('meal_planner.servings') }}
+                                            </div>
                                         @endif
                                     </div>
                                 </div>
-                                <button 
-                                    wire:click="viewRecipeDetails({{ $meal['id'] }})"
-                                    class="px-4 py-2 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition-colors"
-                                >
-                                    {{ __('meal_planner.see_details') }}
-                                </button>
+                                <div class="flex justify-center sm:justify-end">
+                                    <button 
+                                        wire:click="viewRecipeDetails({{ $meal['id'] }})"
+                                        class="w-full sm:w-auto px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors font-medium"
+                                    >
+                                        {{ __('meal_planner.see_details') }}
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     @endforeach
                 </div>
                 
                 @if ($selectedDate)
-                    <button 
-                        wire:click="savePlanToDate('{{ $selectedDate }}')"
-                        class="px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
-                    >
-                        {{ __('meal_planner.save_on') }} {{ \Carbon\Carbon::parse($selectedDate)->format('d.m.Y') }}
-                    </button>
+                    <div class="text-center">
+                        <button 
+                            wire:click="savePlanToDate('{{ $selectedDate }}')"
+                            class="w-full sm:w-auto px-8 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors font-medium"
+                        >
+                            <svg class="w-5 h-5 mr-2 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/>
+                            </svg>
+                            {{ __('meal_planner.save_on') }} {{ \Carbon\Carbon::parse($selectedDate)->format('d.m.Y') }}
+                        </button>
+                    </div>
                 @endif
             </div>
         @endif
@@ -351,27 +404,41 @@
                 <div class="space-y-4">
                     @foreach ($searchResults as $recipe)
                         <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
-                            <div class="flex items-center space-x-4">
+                            <div class="flex flex-col sm:flex-row sm:items-center space-y-4 sm:space-y-0 sm:space-x-4">
                                 @if (isset($recipe['image']))
-                                    <img src="{{ $recipe['image'] }}" alt="{{ $recipe['title'] }}" class="w-16 h-16 object-cover rounded">
+                                    <div class="flex justify-center sm:justify-start">
+                                        <img src="{{ $recipe['image'] }}" alt="{{ $recipe['title'] }}" class="w-24 h-24 object-cover rounded-lg">
+                                    </div>
                                 @endif
-                                <div class="flex-1">
-                                    <h3 class="font-semibold">{{ $recipe['title'] }}</h3>
-                                    <div class="text-sm text-gray-600 mt-1">
+                                <div class="flex-1 text-center sm:text-left">
+                                    <h3 class="font-semibold text-lg mb-2">{{ $recipe['title'] }}</h3>
+                                    <div class="text-sm text-gray-600 space-y-1">
                                         @if (isset($recipe['readyInMinutes']))
-                                            <span class="mr-4">{{ $recipe['readyInMinutes'] }} {{ __('meal_planner.time_min') }}</span>
+                                            <div class="flex items-center justify-center sm:justify-start">
+                                                <svg class="w-4 h-4 mr-1 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                                </svg>
+                                                {{ $recipe['readyInMinutes'] }} {{ __('meal_planner.time_min') }}
+                                            </div>
                                         @endif
                                         @if (isset($recipe['servings']))
-                                            <span>{{ $recipe['servings'] }} {{ __('meal_planner.servings') }}</span>
+                                            <div class="flex items-center justify-center sm:justify-start">
+                                                <svg class="w-4 h-4 mr-1 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                                                </svg>
+                                                {{ $recipe['servings'] }} {{ __('meal_planner.servings') }}
+                                            </div>
                                         @endif
                                     </div>
                                 </div>
-                                <button 
-                                    wire:click="viewRecipeDetails({{ $recipe['id'] }})"
-                                    class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
-                                >
-                                    {{ __('meal_planner.see_details') }}
-                                </button>
+                                <div class="flex justify-center sm:justify-end">
+                                    <button 
+                                        wire:click="viewRecipeDetails({{ $recipe['id'] }})"
+                                        class="w-full sm:w-auto px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors font-medium"
+                                    >
+                                        {{ __('meal_planner.see_details') }}
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     @endforeach

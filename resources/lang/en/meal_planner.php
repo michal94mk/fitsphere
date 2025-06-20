@@ -158,4 +158,5 @@ return [
     'recipe_load_error' => 'Error loading recipe.',
     'search_error' => 'Error during search.',
     'translation_error' => 'Error during translation.',
+    'delete_whole_plan' => 'Delete entire plan',
 ]; 
