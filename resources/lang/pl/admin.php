@@ -50,6 +50,8 @@ return [
     'approvals' => 'Zatwierdzenia',
     'approve' => 'Zatwierdź',
     'approving' => 'Zatwierdzanie',
+    'disapproving' => 'Odrzucanie',
+    'deleting' => 'Usuwanie',
     'details' => 'Szczegóły',
     
     // Users management

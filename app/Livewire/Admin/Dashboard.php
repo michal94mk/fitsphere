@@ -65,54 +65,61 @@ class Dashboard extends Component
             ->get();
     }
     
-    public function approveTrainer($trainerId)
+    public function approveTrainer($id)
     {
         try {
-            // Find and update the trainer (now a User with role='trainer')
-            $trainer = User::where('role', 'trainer')->findOrFail($trainerId);
+            $trainer = User::where('role', 'trainer')->findOrFail($id);
             $trainer->is_approved = true;
             $trainer->save();
             
-            // Clear dashboard cache
-            $cacheKey = 'admin.dashboard.' . App::getLocale();
-            cache()->forget($cacheKey);
+            // Clear cache so other components refresh
+            $this->clearCache();
             
-            // Update the pending trainers list
+            // Refresh pending trainers list and stats
             $this->pendingTrainers = User::where('role', 'trainer')
                 ->where('is_approved', false)
                 ->latest()
                 ->take(5)
                 ->get();
-                
-            // Update the stats
             $this->stats['pendingTrainers'] = User::where('role', 'trainer')->where('is_approved', false)->count();
             
-            // Send notification email using the email service
-            $emailService = app(EmailService::class);
-            $result = $emailService->sendTrainerApprovedEmail($trainer);
-            
-            // Flash appropriate message based on the result
-            if ($result) {
-                session()->flash('success', "Trainer {$trainer->name} has been approved and notification email has been sent.");
-            } else {
-                // Still show success for trainer approval, but note the email issue
-                session()->flash('success', "Trainer {$trainer->name} has been approved, but there was an error sending the notification email.");
-                // Log additional details
-                Log::warning('Failed to send trainer approval email', [
-                    'trainer_id' => $trainerId,
-                    'trainer_email' => $trainer->email
-                ]);
+            // Send notification email
+            try {
+                $emailService = app(EmailService::class);
+                $emailService->sendTrainerApprovedEmail($trainer);
+                session()->flash('success', __('admin.trainer_approved_with_email', ['name' => $trainer->name]));
+            } catch (\Exception $e) {
+                session()->flash('success', __('admin.trainer_approved_no_email', ['name' => $trainer->name, 'error' => $e->getMessage()]));
             }
         } catch (\Exception $e) {
-            // Log the exception with all details
-            Log::error('Error in trainer approval process', [
-                'trainer_id' => $trainerId,
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ]);
-            
-            // Flash error message
-            session()->flash('error', "An error occurred while approving the trainer: {$e->getMessage()}");
+            session()->flash('error', __('admin.trainer_approve_error', ['error' => $e->getMessage()]));
+        }
+    }
+
+    protected function clearCache()
+    {
+        // Clear dashboard cache
+        $cacheKey = 'admin.dashboard.' . app()->getLocale();
+        cache()->forget($cacheKey);
+        
+        // Clear trainer list caches with common search/filter combinations
+        $searches = ['', ' '];
+        $statuses = ['', 'approved', 'pending'];
+        $sortFields = ['created_at', 'name', 'email', 'specialization'];
+        $sortDirections = ['asc', 'desc'];
+        $pages = [1, 2, 3, 4, 5]; // Clear first few pages
+        
+        foreach ($searches as $search) {
+            foreach ($statuses as $status) {
+                foreach ($sortFields as $sortField) {
+                    foreach ($sortDirections as $sortDirection) {
+                        foreach ($pages as $page) {
+                            $trainerCacheKey = 'admin.trainers.' . $search . '.' . $status . '.' . $sortField . '.' . $sortDirection . '.' . $page;
+                            cache()->forget($trainerCacheKey);
+                        }
+                    }
+                }
+            }
         }
     }
     

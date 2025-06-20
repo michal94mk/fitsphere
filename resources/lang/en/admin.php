@@ -50,6 +50,7 @@ return [
     'approvals' => 'Approvals',
     'approve' => 'Approve',
     'approving' => 'Approving',
+    'disapproving' => 'Disapproving',
     'details' => 'Details',
     
     // Users management
@@ -346,4 +347,5 @@ return [
     'new_users' => 'New Users',
     'no_new_users' => 'No new users',
     'joined' => 'Joined',
+    'deleting' => 'Deleting',
 ]; 

@@ -4,7 +4,6 @@ namespace App\Livewire\Admin;
 
 use App\Models\User;
 use App\Services\EmailService;
-use App\Livewire\Admin\Traits\HasFlashMessages;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -12,7 +11,7 @@ use Livewire\Attributes\Layout;
 
 class TrainersIndex extends Component
 {
-    use WithPagination, HasFlashMessages;
+    use WithPagination;
 
     public $search = '';
     public $status = '';
@@ -59,8 +58,6 @@ class TrainersIndex extends Component
 
     public function approveTrainer($id)
     {
-        $this->clearMessages();
-        
         try {
             $trainer = User::where('role', 'trainer')->findOrFail($id);
             $trainer->is_approved = true;
@@ -73,19 +70,17 @@ class TrainersIndex extends Component
             try {
                 $emailService = new EmailService();
                 $emailService->sendTrainerApprovedEmail($trainer);
-                $this->setSuccessMessage(__('admin.trainer_approved_with_email', ['name' => $trainer->name]));
+                session()->flash('success', __('admin.trainer_approved_with_email', ['name' => $trainer->name]));
             } catch (\Exception $e) {
-                $this->setSuccessMessage(__('admin.trainer_approved_no_email', ['name' => $trainer->name, 'error' => $e->getMessage()]));
+                session()->flash('success', __('admin.trainer_approved_no_email', ['name' => $trainer->name, 'error' => $e->getMessage()]));
             }
         } catch (\Exception $e) {
-            $this->setErrorMessage(__('admin.trainer_approve_error', ['error' => $e->getMessage()]));
+            session()->flash('error', __('admin.trainer_approve_error', ['error' => $e->getMessage()]));
         }
     }
 
     public function disapproveTrainer($id)
     {
-        $this->clearMessages();
-        
         try {
             $trainer = User::where('role', 'trainer')->findOrFail($id);
             $trainer->is_approved = false;
@@ -94,9 +89,9 @@ class TrainersIndex extends Component
             // Clear cache to refresh the list
             $this->clearCache();
             
-            $this->setSuccessMessage(__('admin.trainer_disapproved', ['name' => $trainer->name]));
+            session()->flash('success', __('admin.trainer_disapproved', ['name' => $trainer->name]));
         } catch (\Exception $e) {
-            $this->setErrorMessage(__('admin.trainer_disapprove_error', ['error' => $e->getMessage()]));
+            session()->flash('error', __('admin.trainer_disapprove_error', ['error' => $e->getMessage()]));
         }
     }
 
@@ -108,10 +103,8 @@ class TrainersIndex extends Component
 
     public function deleteTrainer()
     {
-        $this->clearMessages();
-        
         if (!$this->trainerIdBeingDeleted) {
-            $this->setErrorMessage(__('admin.trainer_delete_missing_id'));
+            session()->flash('error', __('admin.trainer_delete_missing_id'));
             $this->confirmingTrainerDeletion = false;
             return;
         }
@@ -127,9 +120,9 @@ class TrainersIndex extends Component
             $trainerName = $trainer->name;
             $trainer->delete();
             
-            $this->setSuccessMessage(__('admin.trainer_deleted', ['name' => $trainerName]));
+            session()->flash('success', __('admin.trainer_deleted', ['name' => $trainerName]));
         } catch (\Exception $e) {
-            $this->setErrorMessage(__('admin.trainer_delete_error', ['error' => $e->getMessage()]));
+            session()->flash('error', __('admin.trainer_delete_error', ['error' => $e->getMessage()]));
         }
         
         $this->confirmingTrainerDeletion = false;

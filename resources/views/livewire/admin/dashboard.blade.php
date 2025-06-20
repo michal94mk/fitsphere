@@ -185,11 +185,11 @@
                                         <button 
                                             wire:click="approveTrainer({{ $trainer->id }})" 
                                             wire:loading.attr="disabled"
-                                            wire:target="approveTrainer"
+                                            wire:target="approveTrainer({{ $trainer->id }})"
                                             class="inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
                                         >
-                                            <span wire:loading.remove wire:target="approveTrainer">{{ __('admin.approve') }}</span>
-                                            <span wire:loading wire:target="approveTrainer">{{ __('admin.approving') }}...</span>
+                                            <span wire:loading.remove wire:target="approveTrainer({{ $trainer->id }})">{{ __('admin.approve') }}</span>
+                                            <span wire:loading wire:target="approveTrainer({{ $trainer->id }})">{{ __('admin.approving') }}...</span>
                                         </button>
                                         <a href="{{ route('admin.trainers.edit', $trainer->id) }}" wire:navigate class="inline-flex items-center px-2.5 py-1.5 border border-gray-300 text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                                             {{ __('admin.details') }}
