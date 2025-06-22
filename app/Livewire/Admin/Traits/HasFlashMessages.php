@@ -17,7 +17,7 @@ trait HasFlashMessages
         $this->errorMessage = '';
         $this->infoMessage = '';
         
-        // Set session flash for FlashMessages component
+        // Only set session flash for redirects, not for same-page updates
         session()->flash('success', $message);
     }
     
@@ -30,7 +30,7 @@ trait HasFlashMessages
         $this->successMessage = '';
         $this->infoMessage = '';
         
-        // Set session flash for FlashMessages component
+        // Only set session flash for redirects, not for same-page updates
         session()->flash('error', $message);
     }
     
@@ -43,7 +43,7 @@ trait HasFlashMessages
         $this->successMessage = '';
         $this->errorMessage = '';
         
-        // Set session flash for FlashMessages component
+        // Only set session flash for redirects, not for same-page updates
         session()->flash('info', $message);
     }
     

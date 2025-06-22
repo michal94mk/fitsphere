@@ -21,7 +21,7 @@
                     <label for="search" class="block text-sm font-medium text-gray-700 mb-1">{{ __('admin.search') }}</label>
                     <input wire:model.live.debounce.300ms="search" type="text" id="search"
                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                           placeholder="{{ __('admin.tags_placeholder') }}">
+                           placeholder="{{ __('admin.posts_search_placeholder') }}">
                 </div>
                 <div class="md:w-40">
                     <label for="status" class="block text-sm font-medium text-gray-700 mb-1">{{ __('admin.post_status') }}</label>

@@ -3,12 +3,11 @@
 namespace App\Livewire\Admin;
 
 use App\Models\User;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Validation\Rule;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\Attributes\Layout;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Hash;
 
 class TrainersEdit extends Component
 {
@@ -20,105 +19,81 @@ class TrainersEdit extends Component
     public $password = '';
     public $password_confirmation = '';
     public $specialization = '';
+    public $experience = 0;
     public $description = '';
+    public $biography = '';
+    public $is_approved = false;
     public $photo = null;
-    public $currentImage = '';
     public $existing_photo = null;
     public $changePassword = false;
-    public $is_approved = false;
-    public $biography = '';
-    public $experience = 0;
-
+    public $provider = null;
+    
     public function mount($id)
     {
         $this->trainerId = $id;
-        $trainer = User::where('role', 'trainer')->findOrFail($id);
+        $trainer = User::where('role', 'like', '%trainer%')->findOrFail($id);
         
         $this->name = $trainer->name;
         $this->email = $trainer->email;
         $this->specialization = $trainer->specialization ?? '';
-        $this->description = $trainer->description ?? '';
-        $this->currentImage = $trainer->image;
-        $this->biography = $trainer->bio ?? '';
-        $this->is_approved = $trainer->is_approved;
         $this->experience = $trainer->experience ?? 0;
+        $this->description = $trainer->description ?? '';
+        $this->biography = $trainer->biography ?? '';
+        $this->is_approved = $trainer->is_approved ?? false;
+        $this->provider = $trainer->provider;
         
-        // Set existing_photo based on currentImage
-        if ($this->currentImage) {
-            $this->existing_photo = asset('storage/' . $this->currentImage);
+        if ($trainer->image) {
+            $this->existing_photo = asset('storage/' . $trainer->image);
         }
     }
     
     protected function rules()
     {
         return [
-            'name' => 'required|string|min:3|max:50|regex:/^[\pL\s\-\']+$/u',
-            'email' => ['required', 'string', 'email:rfc,dns', 'max:255', Rule::unique('users')->ignore($this->trainerId)],
-            'specialization' => 'required|string|max:255',
-            'description' => 'nullable|string',
+            'name' => 'required|string|min:3|max:50',
+            'email' => 'required|email|unique:users,email,' . $this->trainerId,
+            'specialization' => 'required|string|min:3|max:100',
+            'experience' => 'required|integer|min:0|max:50',
+            'description' => 'nullable|string|max:500',
+            'biography' => 'nullable|string|max:2000',
+            'password' => $this->changePassword ? 'required|string|min:8|confirmed' : 'nullable',
             'photo' => 'nullable|image|max:1024',
-            'is_approved' => 'boolean',
-            'biography' => 'nullable|string',
-            'experience' => 'nullable|integer|min:0|max:100',
-            'password' => $this->changePassword ? 'required|string|min:8|confirmed|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/' : 'nullable',
-        ];
-    }
-    
-    protected function messages()
-    {
-        return [
-            'name.required' => __('validation.user.name.required'),
-            'name.regex' => __('validation.user.name.regex'),
-            'email.required' => __('validation.user.email.required'),
-            'email.email' => __('validation.user.email.email'),
-            'email.unique' => __('validation.user.email.unique'),
-            'specialization.required' => __('validation.user.specialization.required'),
-            'photo.image' => __('validation.user.image.image'),
-            'photo.max' => __('validation.user.image.max', ['max' => 1024]),
-            'password.required' => __('validation.user.password.required'),
-            'password.min' => __('validation.user.password.min', ['min' => 8]),
-            'password.confirmed' => __('validation.user.password.confirmed'),
-            'password.regex' => __('validation.user.password.regex'),
         ];
     }
 
     public function save()
     {
         $this->validate();
-        
+
         try {
-            $trainer = User::where('role', 'trainer')->findOrFail($this->trainerId);
-            
-            $imagePath = $trainer->image;
+            $trainer = User::findOrFail($this->trainerId);
+
             if ($this->photo) {
-                // Remove old image if exists
                 if ($trainer->image && Storage::disk('public')->exists($trainer->image)) {
-                    // Delete the old image file
                     Storage::disk('public')->delete($trainer->image);
                 }
                 $imagePath = $this->photo->store('images/trainers', 'public');
+                $trainer->image = $imagePath;
             }
-            
+
             $trainer->name = $this->name;
             $trainer->email = $this->email;
+            $trainer->specialization = $this->specialization;
+            $trainer->experience = $this->experience;
+            $trainer->description = $this->description;
+            $trainer->biography = $this->biography;
+            $trainer->is_approved = $this->is_approved;
+            
             if ($this->changePassword && $this->password) {
                 $trainer->password = Hash::make($this->password);
             }
-            $trainer->specialization = $this->specialization;
-            $trainer->description = $this->description;
-            $trainer->bio = $this->biography;
-            if ($imagePath) {
-                $trainer->image = $imagePath;
-            }
-            $trainer->is_approved = $this->is_approved;
-            $trainer->experience = $this->experience;
             
             $trainer->save();
-            
-            session()->flash('success', __('trainers.trainer_updated'));
+
+            session()->flash('success', __('admin.trainer_updated'));
             return redirect()->route('admin.trainers.index');
         } catch (\Exception $e) {
-            session()->flash('error', __('trainers.trainer_update_error', ['error' => $e->getMessage()]));
+            session()->flash('error', __('admin.trainer_update_error', ['error' => $e->getMessage()]));
         }
     }
 
@@ -129,43 +104,33 @@ class TrainersEdit extends Component
         ]);
     }
 
-    public function updatedChangePassword()
+    public function canChangePassword()
     {
-        if (!$this->changePassword) {
-            $this->password = '';
-            $this->password_confirmation = '';
-        }
+        return !$this->provider; // Only allow password change for non-social users
     }
 
     public function removePhoto()
     {
-        if ($this->currentImage) {
+        if ($this->existing_photo) {
             try {
-                // Delete the old image file from storage if it exists
-                if (Storage::disk('public')->exists($this->currentImage)) {
-                    Storage::disk('public')->delete($this->currentImage);
+                $trainer = User::findOrFail($this->trainerId);
+                
+                if ($trainer->image && Storage::disk('public')->exists($trainer->image)) {
+                    Storage::disk('public')->delete($trainer->image);
                 }
                 
-                // Update the database to remove the image reference
-                $trainer = User::where('role', 'trainer')->findOrFail($this->trainerId);
                 $trainer->image = null;
                 $trainer->save();
                 
-                // Update local properties
-                $this->currentImage = null;
                 $this->existing_photo = null;
-                
-                // Reset the new photo too if it exists
                 $this->photo = null;
                 
-                session()->flash('success', __('trainers.photo_removed'));
+                session()->flash('success', __('admin.photo_removed'));
             } catch (\Exception $e) {
-                session()->flash('error', __('trainers.photo_remove_error', ['error' => $e->getMessage()]));
+                session()->flash('error', __('admin.photo_remove_error', ['error' => $e->getMessage()]));
             }
         }
     }
-    
-
 
     #[Layout('layouts.admin', ['header' => 'Edit Trainer'])]
     public function render()

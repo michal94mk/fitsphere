@@ -26,13 +26,11 @@ class UsersIndex extends Component
     public function updatingSearch()
     {
         $this->resetPage();
-        $this->clearCache();
     }
     
     public function updatingRole()
     {
         $this->resetPage();
-        $this->clearCache();
     }
     
     public function updatingSortField()
@@ -48,18 +46,6 @@ class UsersIndex extends Component
             $this->sortField = $field;
             $this->sortDirection = 'asc';
         }
-        $this->clearCache();
-    }
-    
-    public function updatingPage()
-    {
-        $this->clearCache();
-    }
-    
-    protected function clearCache()
-    {
-        $cacheKey = 'admin.users.' . $this->search . '.' . $this->role . '.' . $this->sortField . '.' . $this->sortDirection . '.' . $this->page;
-        cache()->forget($cacheKey);
     }
     
     public function mount($role = 'all')
@@ -94,9 +80,6 @@ class UsersIndex extends Component
             $userName = $user->name;
             $user->delete();
             
-            // Clear cache to refresh the list
-            $this->clearCache();
-            
             $this->setSuccessMessage(__('admin.user_deleted', ['name' => $userName]));
         } catch (\Exception $e) {
             $this->setErrorMessage(__('admin.user_delete_error', ['error' => $e->getMessage()]));
@@ -115,26 +98,38 @@ class UsersIndex extends Component
     #[Layout('layouts.admin', ['header' => 'User Management'])]
     public function render()
     {
-        $cacheKey = 'admin.users.' . $this->search . '.' . $this->role . '.' . $this->sortField . '.' . $this->sortDirection . '.' . $this->page;
-        
-        $users = cache()->remember($cacheKey, 300, function () {
-            $query = User::query()
-                ->select('users.*') // Make sure we select all fields
-                ->when($this->search, function ($query) {
-                    $query->where(function ($query) {
-                        $search = '%' . $this->search . '%';
-                        $query->where('name', 'like', $search)
-                            ->orWhere('email', 'like', $search)
-                            ->orWhere('id', 'like', $search);
+        $users = User::query()
+            ->select('users.*')
+            // Exclude ALL users who have 'trainer' role (even if they have multiple roles)
+            ->where('role', 'not like', '%trainer%')
+            ->when($this->search, function ($query) {
+                $query->where(function ($query) {
+                    $search = '%' . $this->search . '%';
+                    $query->where('name', 'like', $search)
+                        ->orWhere('email', 'like', $search)
+                        ->orWhere('id', 'like', $search);
+                });
+            })
+            ->when($this->role != 'all', function ($query) {
+                // Improved role filtering for comma-separated roles
+                if ($this->role === 'user') {
+                    $query->where(function ($q) {
+                        $q->where('role', '=', 'user')
+                          ->orWhere('role', 'like', 'user,%')
+                          ->orWhere('role', 'like', '%,user,%')
+                          ->orWhere('role', 'like', '%,user');
                     });
-                })
-                ->when($this->role != 'all', function ($query) {
-                    $query->where('role', $this->role);
-                })
-                ->orderBy($this->sortField, $this->sortDirection);
-
-            return $query->paginate(10);
-        });
+                } elseif ($this->role === 'admin') {
+                    $query->where(function ($q) {
+                        $q->where('role', '=', 'admin')
+                          ->orWhere('role', 'like', 'admin,%')
+                          ->orWhere('role', 'like', '%,admin,%')
+                          ->orWhere('role', 'like', '%,admin');
+                    });
+                }
+            })
+            ->orderBy($this->sortField, $this->sortDirection)
+            ->paginate(10);
         
         // Make sure all needed attributes are available
         $users->getCollection()->transform(function ($user) {

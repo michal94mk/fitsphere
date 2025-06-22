@@ -17,21 +17,17 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $fillable = [
         'name',
         'email',
+        'email_verified_at',
         'password',
         'role',
         'image',
+        'specialization',
+        'experience',
+        'description',
+        'biography',
+        'is_approved',
         'provider',
         'provider_id',
-        'specialization',
-        'description',
-        'bio',
-        'specialties',
-        'experience',
-        'is_approved',
-        'phone',
-        'twitter_link',
-        'instagram_link',
-        'facebook_link',
     ];
     
     protected $hidden = [
@@ -207,45 +203,29 @@ class User extends Authenticatable implements MustVerifyEmail
     protected static function boot()
     {
         parent::boot();
-
-        static::created(function ($user) {
-            cache()->forget('user.' . $user->id . '.profile');
-        });
-
-        static::updated(function ($user) {
-            cache()->forget('user.' . $user->id . '.profile');
-        });
-
-        static::deleted(function ($user) {
-            cache()->forget('user.' . $user->id . '.profile');
-        });
     }
 
     public function getProfileDataAttribute()
     {
-        return cache()->remember('user.' . $this->id . '.profile', 3600, function () {
-            return [
-                'name' => $this->name,
-                'email' => $this->email,
-                'role' => $this->role,
-                'specialization' => $this->specialization,
-                'bio' => $this->bio,
-                'is_approved' => $this->is_approved,
-                'created_at' => $this->created_at,
-                'updated_at' => $this->updated_at,
-            ];
-        });
+        return [
+            'name' => $this->name,
+            'email' => $this->email,
+            'role' => $this->role,
+            'specialization' => $this->specialization,
+            'bio' => $this->bio,
+            'is_approved' => $this->is_approved,
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
+        ];
     }
 
     public function getStatisticsAttribute()
     {
-        return cache()->remember('user.' . $this->id . '.statistics', 300, function () {
-            return [
-                'posts_count' => $this->posts()->count(),
-                'comments_count' => $this->comments()->count(),
-                'views_count' => $this->posts()->sum('view_count'),
-            ];
-        });
+        return [
+            'posts_count' => $this->posts()->count(),
+            'comments_count' => $this->comments()->count(),
+            'views_count' => $this->posts()->sum('view_count'),
+        ];
     }
 
     public function getFullName(): string

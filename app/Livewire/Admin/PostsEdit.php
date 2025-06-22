@@ -7,18 +7,19 @@ use App\Models\Category;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\Attributes\Layout;
+use Illuminate\Support\Facades\Storage;
 
 class PostsEdit extends Component
 {
     use WithFileUploads;
     
     public $postId;
-    public $title;
+    public $title = '';
     public $slug;
     public $excerpt;
-    public $content;
-    public $status;
-    public $category_id;
+    public $content = '';
+    public $status = 'draft';
+    public $category_id = null;
     public $currentImage;
     public $image;
     public $dataLoaded = false;
@@ -41,10 +42,64 @@ class PostsEdit extends Component
         $this->slug = \Illuminate\Support\Str::slug($value);
     }
     
+    public function update()
+    {
+        $this->validate();
+
+        try {
+            $post = Post::findOrFail($this->postId);
+
+            if ($this->image) {
+                if ($post->image && Storage::disk('public')->exists($post->image)) {
+                    Storage::disk('public')->delete($post->image);
+                }
+                $imagePath = $this->image->store('images/posts', 'public');
+                $post->image = $imagePath;
+            }
+
+            $post->title = $this->title;
+            $post->slug = $this->slug;
+            $post->excerpt = $this->excerpt;
+            $post->content = $this->content;
+            $post->status = $this->status;
+            $post->category_id = $this->category_id;
+            
+            $post->save();
+
+            session()->flash('success', __('admin.post_updated'));
+            return redirect()->route('admin.posts.index');
+        } catch (\Exception $e) {
+            session()->flash('error', __('admin.post_update_error', ['error' => $e->getMessage()]));
+        }
+    }
+
+    public function updatedImage()
+    {
+        $this->validate([
+            'image' => 'image|max:1024',
+        ]);
+    }
+
     public function removeImage()
     {
-        $this->image = null;
-        $this->currentImage = null;
+        if ($this->currentImage) {
+            try {
+                if (Storage::disk('public')->exists($this->currentImage)) {
+                    Storage::disk('public')->delete($this->currentImage);
+                }
+                
+                $post = Post::findOrFail($this->postId);
+                $post->image = null;
+                $post->save();
+                
+                $this->currentImage = null;
+                $this->image = null;
+                
+                session()->flash('success', __('admin.image_removed'));
+            } catch (\Exception $e) {
+                session()->flash('error', __('admin.image_remove_error', ['error' => $e->getMessage()]));
+            }
+        }
     }
 
     public function mount($id)
@@ -60,38 +115,6 @@ class PostsEdit extends Component
         $this->category_id = $post->category_id;
         $this->currentImage = $post->image;
         $this->dataLoaded = true;
-    }
-    
-    public function update()
-    {
-        $this->validate();
-        
-        try {
-            $post = Post::findOrFail($this->postId);
-            $post->title = $this->title;
-            $post->slug = $this->slug;
-            $post->excerpt = $this->excerpt;
-            $post->content = $this->content;
-            $post->status = $this->status;
-            $post->category_id = $this->category_id;
-            
-            if ($this->image) {
-                // Delete old image if it exists
-                if ($post->image && file_exists(storage_path('app/public/' . $post->image))) {
-                    unlink(storage_path('app/public/' . $post->image));
-                }
-                
-                $imagePath = $this->image->store('images/posts', 'public');
-                $post->image = $imagePath;
-            }
-            
-            $post->save();
-            
-            session()->flash('success', __('admin.post_updated_success'));
-            return redirect()->route('admin.posts.index');
-        } catch (\Exception $e) {
-            session()->flash('error', __('admin.post_update_error', ['error' => $e->getMessage()]));
-        }
     }
     
     #[Layout('layouts.admin', ['header' => 'Edit Post'])]

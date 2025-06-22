@@ -180,6 +180,7 @@ return [
     'select_category' => 'Wybierz kategorię',
     'add_tags' => 'Dodaj tagi',
     'tags_placeholder' => 'Dodaj tagi oddzielone przecinkami',
+    'posts_search_placeholder' => 'Tytuł, treść lub autor...',
     'post_slug' => 'Slug',
     'post_slug_placeholder' => 'twoj-post-url',
     'no_posts_found' => 'Nie znaleziono postów.',
@@ -237,6 +238,7 @@ return [
     'comment_delete_error' => 'Wystąpił błąd podczas usuwania komentarza: :error',
     
     // Trainers management
+    'trainer_management' => 'Zarządzanie trenerami',
     'manage_trainers' => 'Zarządzaj trenerami',
     'add_trainer' => 'Dodaj trenera',
     'edit_trainer' => 'Edytuj trenera',
@@ -285,6 +287,8 @@ return [
     'no_trainers_found' => 'Nie znaleziono trenerów.',
     'trainer_delete_confirmation' => 'Usuń trenera',
     'trainer_delete_confirmation_message' => 'Czy na pewno chcesz usunąć tego trenera? Ta operacja jest nieodwracalna.',
+    'trainer_approve_confirmation' => 'Zatwierdź trenera',
+    'trainer_approve_confirmation_message' => 'Czy na pewno chcesz zatwierdzić tego trenera? Zostanie wysłane powiadomienie email.',
     'trainer_manage_translations' => 'Zarządzaj tłumaczeniami',
     
     // Error and success messages

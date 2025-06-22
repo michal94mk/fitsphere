@@ -187,9 +187,11 @@ class UsersCreate extends Component
         $user->password = Hash::make($this->password);
         $user->role = implode(',', $this->roles);
         
+        $hasImage = false;
         if ($this->photo) {
             $imagePath = $this->photo->store('images/users', 'public');
             $user->image = $imagePath;
+            $hasImage = true;
         }
         
         $user->save();

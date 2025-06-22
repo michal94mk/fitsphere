@@ -24,7 +24,6 @@ class CategoriesIndex extends Component
     public function updatingSearch()
     {
         $this->resetPage();
-        $this->clearCache();
     }
 
     public function updatingSortField()
@@ -40,18 +39,11 @@ class CategoriesIndex extends Component
             $this->sortField = $field;
             $this->sortDirection = 'asc';
         }
-        $this->clearCache();
     }
 
     public function updatingPage()
     {
-        $this->clearCache();
-    }
-
-    protected function clearCache()
-    {
-        $cacheKey = 'admin.categories.' . $this->search . '.' . $this->sortField . '.' . $this->sortDirection . '.' . $this->page;
-        cache()->forget($cacheKey);
+        // Page change handling
     }
 
     public function confirmCategoryDeletion($id)
@@ -85,9 +77,6 @@ class CategoriesIndex extends Component
             
             $category->delete();
             
-            // Clear cache to refresh the list
-            $this->clearCache();
-            
             $this->setSuccessMessage(__('admin.category_deleted', ['name' => $categoryName]));
         } catch (\Exception $e) {
             $this->setErrorMessage(__('admin.category_delete_error', ['error' => $e->getMessage()]));
@@ -102,22 +91,16 @@ class CategoriesIndex extends Component
         $this->confirmingCategoryDeletion = false;
         $this->categoryIdBeingDeleted = null;
     }
-    
-
 
     #[Layout('layouts.admin', ['header' => 'Category Management'])]
     public function render()
     {
-        $cacheKey = 'admin.categories.' . $this->search . '.' . $this->sortField . '.' . $this->sortDirection . '.' . $this->page;
-        
-        $categories = cache()->remember($cacheKey, now()->addMinutes(5), function () {
-            return Category::query()
-                ->with(['translations'])
-                ->withCount('posts')
-                ->when($this->search, fn($query) => $query->where('name', 'like', '%' . $this->search . '%'))
-                ->orderBy($this->sortField, $this->sortDirection)
-                ->paginate(10);
-        });
+        $categories = Category::query()
+            ->with(['translations'])
+            ->withCount('posts')
+            ->when($this->search, fn($query) => $query->where('name', 'like', '%' . $this->search . '%'))
+            ->orderBy($this->sortField, $this->sortDirection)
+            ->paginate(10);
 
         return view('livewire.admin.categories-index', compact('categories'));
     }

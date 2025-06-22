@@ -179,6 +179,7 @@ return [
     'select_category' => 'Select Category',
     'add_tags' => 'Add Tags',
     'tags_placeholder' => 'Add tags separated by commas',
+    'posts_search_placeholder' => 'Title, content or author...',
     'post_slug' => 'Slug',
     'post_slug_placeholder' => 'your-post-url',
     'no_posts_found' => 'No posts found.',
@@ -236,6 +237,7 @@ return [
     'comment_delete_error' => 'An error occurred while deleting the comment: :error',
     
     // Trainers management
+    'trainer_management' => 'Trainer Management',
     'manage_trainers' => 'Manage Trainers',
     'add_trainer' => 'Add Trainer',
     'edit_trainer' => 'Edit Trainer',
@@ -284,6 +286,8 @@ return [
     'no_trainers_found' => 'No trainers found.',
     'trainer_delete_confirmation' => 'Delete Trainer',
     'trainer_delete_confirmation_message' => 'Are you sure you want to delete this trainer? This operation cannot be undone.',
+    'trainer_approve_confirmation' => 'Approve Trainer',
+    'trainer_approve_confirmation_message' => 'Are you sure you want to approve this trainer? A notification email will be sent.',
     'trainer_manage_translations' => 'Manage Translations',
     
     // Error and success messages

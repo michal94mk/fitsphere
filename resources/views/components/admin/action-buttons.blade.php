@@ -13,14 +13,14 @@ $buttonStyles = [
 
 <div class="flex flex-wrap items-center justify-end gap-1">
     @foreach($actions as $action)
-        @if($action['type'] === 'link')
+        @if($action && $action['type'] === 'link')
             <a href="{{ $action['url'] }}" 
                @if(isset($action['navigate']) && $action['navigate']) wire:navigate @endif
                class="{{ $buttonStyles[$action['style']] ?? $buttonStyles['secondary'] }}"
                @if(isset($action['title'])) title="{{ $action['title'] }}" @endif>
                 {{ $action['label'] }}
             </a>
-        @elseif($action['type'] === 'button')
+        @elseif($action && $action['type'] === 'button')
             <button wire:click="{{ $action['action'] }}" 
                     @if(isset($action['loading'])) 
                         wire:loading.attr="disabled" 

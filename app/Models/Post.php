@@ -32,18 +32,6 @@ class Post extends Model
         static::creating(function ($post) {
             $post->slug = Str::slug($post->title);
         });
-
-        static::created(function ($post) {
-            cache()->forget('post.' . $post->id . '.data');
-        });
-
-        static::updated(function ($post) {
-            cache()->forget('post.' . $post->id . '.data');
-        });
-
-        static::deleted(function ($post) {
-            cache()->forget('post.' . $post->id . '.data');
-        });
     }
 
     public function category(): BelongsTo
@@ -79,11 +67,7 @@ class Post extends Model
     public function translation($locale = null)
     {
         $locale = $locale ?: App::getLocale();
-        $cacheKey = "post.{$this->id}.translation.{$locale}";
-        
-        return cache()->remember($cacheKey, now()->addHours(24), function () use ($locale) {
-            return $this->translations()->where('locale', $locale)->first();
-        });
+        return $this->translations()->where('locale', $locale)->first();
     }
     
     public function hasTranslation($locale = null)
@@ -94,31 +78,19 @@ class Post extends Model
     
     public function getTranslatedTitle()
     {
-        $cacheKey = "post.{$this->id}.title." . App::getLocale();
-        
-        return cache()->remember($cacheKey, now()->addHours(24), function () {
-            $translation = $this->translation();
-            return $translation ? $translation->title : $this->title;
-        });
+        $translation = $this->translation();
+        return $translation ? $translation->title : $this->title;
     }
     
     public function getTranslatedContent()
     {
-        $cacheKey = "post.{$this->id}.content." . App::getLocale();
-        
-        return cache()->remember($cacheKey, now()->addHours(24), function () {
-            $translation = $this->translation();
-            return $translation ? $translation->content : $this->content;
-        });
+        $translation = $this->translation();
+        return $translation ? $translation->content : $this->content;
     }
     
     public function getTranslatedExcerpt()
     {
-        $cacheKey = "post.{$this->id}.excerpt." . App::getLocale();
-        
-        return cache()->remember($cacheKey, now()->addHours(24), function () {
-            $translation = $this->translation();
-            return $translation ? $translation->excerpt : $this->excerpt;
-        });
+        $translation = $this->translation();
+        return $translation ? $translation->excerpt : $this->excerpt;
     }
 }

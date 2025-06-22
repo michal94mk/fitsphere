@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('category_id')->constrained()->onDelete('restrict');
             $table->string('title');
             $table->string('slug')->unique();
-            $table->text('excerpt');
+            $table->text('excerpt')->nullable();
             $table->text('content');
             $table->string('image')->nullable();
             $table->enum('status', ['draft', 'published'])->default('draft');
@@ -31,7 +31,7 @@ return new class extends Migration
             $table->string('locale', 2); // Language code (en, pl)
             $table->string('title');
             $table->string('slug');
-            $table->text('excerpt');
+            $table->text('excerpt')->nullable();
             $table->text('content');
             $table->timestamps();
             

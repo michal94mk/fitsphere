@@ -7,13 +7,14 @@ use App\Livewire\Admin\Traits\HasFlashMessages;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\Attributes\Layout;
+use Illuminate\Support\Facades\Storage;
 
 class PostsIndex extends Component
 {
     use WithPagination, HasFlashMessages;
 
     public $search = '';
-    public $status = '';
+    public $status = 'all';
     public $sortField = 'created_at';
     public $sortDirection = 'desc';
     public $postIdBeingDeleted = null;
@@ -21,17 +22,15 @@ class PostsIndex extends Component
     public $page = 1;
 
     protected $queryString = ['search', 'status', 'sortField', 'sortDirection', 'page'];
-
+    
     public function updatingSearch()
     {
         $this->resetPage();
-        $this->clearCache();
     }
 
     public function updatingStatus()
     {
         $this->resetPage();
-        $this->clearCache();
     }
 
     public function updatingSortField()
@@ -47,18 +46,11 @@ class PostsIndex extends Component
             $this->sortField = $field;
             $this->sortDirection = 'asc';
         }
-        $this->clearCache();
     }
 
     public function updatingPage()
     {
-        $this->clearCache();
-    }
-
-    protected function clearCache()
-    {
-        $cacheKey = 'admin.posts.' . $this->search . '.' . $this->status . '.' . $this->sortField . '.' . $this->sortDirection . '.' . $this->page;
-        cache()->forget($cacheKey);
+        // Page change handling
     }
 
     public function confirmPostDeletion($id)
@@ -80,16 +72,13 @@ class PostsIndex extends Component
         try {
             $post = Post::findOrFail($this->postIdBeingDeleted);
             
-            // Delete image file if exists
-            if ($post->image && file_exists(storage_path('app/public/' . $post->image))) {
-                unlink(storage_path('app/public/' . $post->image));
+            // Delete post image if exists
+            if ($post->image && Storage::disk('public')->exists($post->image)) {
+                Storage::disk('public')->delete($post->image);
             }
             
             $postTitle = $post->title;
             $post->delete();
-            
-            // Clear cache to refresh the list
-            $this->clearCache();
             
             $this->setSuccessMessage(__('admin.post_deleted', ['title' => $postTitle]));
         } catch (\Exception $e) {
@@ -106,34 +95,36 @@ class PostsIndex extends Component
         $this->postIdBeingDeleted = null;
     }
 
-    #[Layout('layouts.admin', ['header' => 'Articles Management'])]
+    #[Layout('layouts.admin', ['header' => 'Post Management'])]
     public function render()
     {
-        $cacheKey = 'admin.posts.' . $this->search . '.' . $this->status . '.' . $this->sortField . '.' . $this->sortDirection . '.' . $this->page;
+        $posts = Post::query()
+            ->select('posts.*')
+            ->with(['user', 'translations', 'category'])
+            ->when($this->search, function ($query) {
+                $query->where(function ($query) {
+                    $search = '%' . $this->search . '%';
+                    $query->where('title', 'like', $search)
+                        ->orWhere('content', 'like', $search)
+                        ->orWhere('id', 'like', $search);
+                });
+            })
+            ->when($this->status != 'all', function ($query) {
+                if ($this->status === 'published') {
+                    $query->where('status', 'published');
+                } elseif ($this->status === 'draft') {
+                    $query->where('status', 'draft');
+                }
+            })
+            ->orderBy($this->sortField, $this->sortDirection)
+            ->paginate(10);
         
-        $posts = cache()->remember($cacheKey, now()->addMinutes(5), function () {
-            return Post::query()
-                ->with(['user', 'category', 'translations'])
-                ->when($this->search, function ($query) {
-                    $query->where(function ($query) {
-                        $query->where('title', 'like', '%' . $this->search . '%')
-                            ->orWhere('content', 'like', '%' . $this->search . '%')
-                            ->orWhere('slug', 'like', '%' . $this->search . '%')
-                            ->orWhereHas('user', function ($query) {
-                                $query->where('name', 'like', '%' . $this->search . '%');
-                            })
-                            ->orWhereHas('category', function ($query) {
-                                $query->where('name', 'like', '%' . $this->search . '%');
-                            });
-                    });
-                })
-                ->when($this->status, function ($query) {
-                    $query->where('status', $this->status);
-                })
-                ->orderBy($this->sortField, $this->sortDirection)
-                ->paginate(10);
+        // Make sure all needed attributes are available
+        $posts->getCollection()->transform(function ($post) {
+            $post->status = $post->status ?? 'draft';
+            return $post;
         });
-
+        
         return view('livewire.admin.posts-index', [
             'posts' => $posts
         ]);

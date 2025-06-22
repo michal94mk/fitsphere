@@ -85,11 +85,14 @@ class UsersEdit extends Component
             $user = User::findOrFail($this->userId);
             
             $imagePath = $user->image;
+            $imageChanged = false;
+            
             if ($this->photo) {
                 if ($user->image && Storage::disk('public')->exists($user->image)) {
                     Storage::disk('public')->delete($user->image);
                 }
                 $imagePath = $this->photo->store('images/users', 'public');
+                $imageChanged = true;
             }
             
             $user->name = $this->name;

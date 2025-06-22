@@ -9,17 +9,18 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\Attributes\Layout;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class PostsCreate extends Component
 {
     use WithFileUploads;
     
-    public $title;
+    public $title = '';
     public $slug;
     public $excerpt;
-    public $content;
+    public $content = '';
     public $status = 'draft';
-    public $category_id;
+    public $category_id = null;
     public $image;
     
     protected $rules = [
@@ -46,28 +47,24 @@ class PostsCreate extends Component
     {
         $this->validate();
         
-        try {
-            $post = new Post();
-            $post->title = $this->title;
-            $post->slug = $this->slug;
-            $post->excerpt = $this->excerpt;
-            $post->content = $this->content;
-            $post->status = $this->status;
-            $post->category_id = $this->category_id;
-            $post->user_id = Auth::id();
-            
-            if ($this->image) {
-                $imagePath = $this->image->store('images/posts', 'public');
-                $post->image = $imagePath;
-            }
-            
-            $post->save();
-            
-            session()->flash('success', __('admin.post_created_success'));
-            return redirect()->route('admin.posts.index');
-        } catch (\Exception $e) {
-            session()->flash('error', __('admin.post_create_error', ['error' => $e->getMessage()]));
+        $post = new Post();
+        $post->title = $this->title;
+        $post->slug = $this->slug;
+        $post->excerpt = $this->excerpt;
+        $post->content = $this->content;
+        $post->status = $this->status;
+        $post->category_id = $this->category_id;
+        $post->user_id = Auth::id();
+        
+        if ($this->image) {
+            $imagePath = $this->image->store('images/posts', 'public');
+            $post->image = $imagePath;
         }
+        
+        $post->save();
+        
+        session()->flash('success', __('admin.post_created_success'));
+        return redirect()->route('admin.posts.index');
     }
     
     #[Layout('layouts.admin', ['header' => 'Add New Post'])]
