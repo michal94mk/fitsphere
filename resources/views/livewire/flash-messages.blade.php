@@ -1,15 +1,5 @@
 {{-- Flash Messages Component - Sticky na górze --}}
-<div class="fixed top-16 z-40 w-full max-w-2xl px-4" style="left: calc(50% + 8rem); transform: translateX(-50%);" x-data x-init="
-    function updatePosition() {
-        if (window.innerWidth >= 768) {
-            $el.style.left = 'calc(50% + 8rem)';
-        } else {
-            $el.style.left = '50%';
-        }
-    }
-    updatePosition();
-    window.addEventListener('resize', updatePosition);
-">
+<div class="fixed top-16 z-40 inset-x-2 md:left-1/2 md:transform md:-translate-x-1/2 md:inset-x-auto w-full max-w-sm md:max-w-2xl px-2 md:px-4">
     @if($show && count($messages) > 0)
         @foreach($messages as $index => $message)
             <div 
