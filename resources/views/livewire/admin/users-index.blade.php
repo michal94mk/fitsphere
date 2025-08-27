@@ -4,14 +4,13 @@
 
 <div>
     <div class="container mx-auto p-4">
-        <!-- Header with title and buttons -->
+        <!-- Header with buttons -->
         <div class="flex justify-between items-center mb-6">
-            <h1 class="text-3xl font-bold text-gray-900">
-                {{ __('admin.user_list') }} 
-                @if ($role !== 'all')
-                    <span class="text-sm font-normal bg-blue-100 text-blue-800 rounded-full px-3 py-1 ml-3">{{ ucfirst($role) }}</span>
-                @endif
-            </h1>
+            @if ($role !== 'all')
+                <div class="text-sm font-normal bg-blue-100 text-blue-800 rounded-full px-3 py-1">{{ ucfirst($role) }}</div>
+            @else
+                <div></div>
+            @endif
             <x-admin.add-button 
                 :route="route('admin.users.create')" 
                 :label="__('admin.add')" />

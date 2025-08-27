@@ -6,7 +6,7 @@
     <div class="container mx-auto p-6">
         <!-- Header with Add Button -->
         <div class="flex justify-between items-center mb-6">
-            <h1 class="text-2xl font-bold text-gray-900">{{ __('admin.trainer_management') }}</h1>
+            <div></div>
             <x-admin.add-button 
                 :route="route('admin.trainers.create')" 
                 :label="__('admin.add')" />

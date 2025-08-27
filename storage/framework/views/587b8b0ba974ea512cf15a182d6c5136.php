@@ -7,7 +7,7 @@
     <div class="container mx-auto p-6">
         <!-- Header with Add Button -->
         <div class="flex justify-between items-center mb-6">
-            <h1 class="text-2xl font-bold text-gray-900"><?php echo e(__('admin.trainer_management')); ?></h1>
+            <div></div>
             <?php if (isset($component)) { $__componentOriginalb71cc3ce235f29fc5e10ecb6e3fe4662 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginalb71cc3ce235f29fc5e10ecb6e3fe4662 = $attributes; } ?>
 <?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.add-button','data' => ['route' => route('admin.trainers.create'),'label' => __('admin.add')]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>

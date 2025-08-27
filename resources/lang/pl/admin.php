@@ -31,7 +31,7 @@ return [
     'statistics' => 'Statystyki',
     'users' => 'Użytkownicy',
     'trainers' => 'Trenerzy',
-    'posts' => 'Lista postów',
+    'posts' => 'Posty',
     'comments' => 'Komentarze',
     'published' => 'Opublikowane',
     'drafts' => 'Szkice',
@@ -55,7 +55,7 @@ return [
     'details' => 'Szczegóły',
     
     // Users management
-    'manage_users' => 'Zarządzaj użytkownikami',
+    'manage_users' => 'Użytkownicy',
     'add_user' => 'Dodaj użytkownika',
     'edit_user' => 'Edytuj użytkownika',
     'delete_user' => 'Usuń użytkownika',
@@ -153,7 +153,7 @@ return [
     'password_managed_externally' => 'Hasło zarządzane jest przez zewnętrznego dostawcę.',
     
     // Posts management
-    'manage_posts' => 'Zarządzaj postami',
+    'manage_posts' => 'Posty',
     'add_post' => 'Dodaj post',
     'edit_post' => 'Edytuj post',
     'delete_post' => 'Usuń post',
@@ -215,7 +215,7 @@ return [
     'no_categories_found' => 'Nie znaleziono kategorii.',
     
     // Comments management
-    'manage_comments' => 'Zarządzaj komentarzami',
+    'manage_comments' => 'Komentarze',
     'edit_comment' => 'Edytuj komentarz',
     'delete_comment' => 'Usuń komentarz',
     'comment_content' => 'Treść komentarza',
@@ -238,8 +238,8 @@ return [
     'comment_delete_error' => 'Wystąpił błąd podczas usuwania komentarza: :error',
     
     // Trainers management
-    'trainer_management' => 'Zarządzanie trenerami',
-    'manage_trainers' => 'Zarządzaj trenerami',
+    'trainer_management' => 'Trenerzy',
+    'manage_trainers' => 'Trenerzy',
     'add_trainer' => 'Dodaj trenera',
     'edit_trainer' => 'Edytuj trenera',
     'delete_trainer' => 'Usuń trenera',

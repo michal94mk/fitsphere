@@ -31,7 +31,7 @@ return [
     'statistics' => 'Statistics',
     'users' => 'Users',
     'trainers' => 'Trainers',
-    'posts' => 'Posts List',
+    'posts' => 'Posts',
     'comments' => 'Comments',
     'published' => 'Published',
     'drafts' => 'Drafts',
@@ -54,7 +54,7 @@ return [
     'details' => 'Details',
     
     // Users management
-    'manage_users' => 'Manage Users',
+    'manage_users' => 'Users',
     'add_user' => 'Add User',
     'edit_user' => 'Edit User',
     'delete_user' => 'Delete User',
@@ -152,7 +152,7 @@ return [
     'password_managed_externally' => 'Password is managed by external provider.',
     
     // Posts management
-    'manage_posts' => 'Manage Posts',
+    'manage_posts' => 'Posts',
     'add_post' => 'Add Post',
     'edit_post' => 'Edit Post',
     'delete_post' => 'Delete Post',
@@ -214,7 +214,7 @@ return [
     'no_categories_found' => 'No categories found.',
     
     // Comments management
-    'manage_comments' => 'Manage Comments',
+    'manage_comments' => 'Comments',
     'edit_comment' => 'Edit Comment',
     'delete_comment' => 'Delete Comment',
     'comment_content' => 'Comment Content',
@@ -237,8 +237,8 @@ return [
     'comment_delete_error' => 'An error occurred while deleting the comment: :error',
     
     // Trainers management
-    'trainer_management' => 'Trainer Management',
-    'manage_trainers' => 'Manage Trainers',
+    'trainer_management' => 'Trainers',
+    'manage_trainers' => 'Trainers',
     'add_trainer' => 'Add Trainer',
     'edit_trainer' => 'Edit Trainer',
     'delete_trainer' => 'Delete Trainer',

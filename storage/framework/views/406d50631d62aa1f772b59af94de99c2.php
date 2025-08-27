@@ -5,14 +5,13 @@
 
 <div>
     <div class="container mx-auto p-4">
-        <!-- Header with title and buttons -->
+        <!-- Header with buttons -->
         <div class="flex justify-between items-center mb-6">
-            <h1 class="text-3xl font-bold text-gray-900">
-                <?php echo e(__('admin.user_list')); ?> 
-                <!--[if BLOCK]><![endif]--><?php if($role !== 'all'): ?>
-                    <span class="text-sm font-normal bg-blue-100 text-blue-800 rounded-full px-3 py-1 ml-3"><?php echo e(ucfirst($role)); ?></span>
-                <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
-            </h1>
+            <!--[if BLOCK]><![endif]--><?php if($role !== 'all'): ?>
+                <div class="text-sm font-normal bg-blue-100 text-blue-800 rounded-full px-3 py-1"><?php echo e(ucfirst($role)); ?></div>
+            <?php else: ?>
+                <div></div>
+            <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
             <?php if (isset($component)) { $__componentOriginalb71cc3ce235f29fc5e10ecb6e3fe4662 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginalb71cc3ce235f29fc5e10ecb6e3fe4662 = $attributes; } ?>
 <?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin.add-button','data' => ['route' => route('admin.users.create'),'label' => __('admin.add')]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>

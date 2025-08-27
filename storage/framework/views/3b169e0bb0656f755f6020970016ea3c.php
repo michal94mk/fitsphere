@@ -5,9 +5,9 @@
 
 <div>
     <div class="container mx-auto p-4">
-        <!-- Header with title and buttons -->
+        <!-- Header with buttons -->
         <div class="flex justify-between items-center mb-6">
-            <h1 class="text-3xl font-bold text-gray-900"><?php echo e(__('admin.comments_list')); ?></h1>
+            <div></div>
         </div>
 
 
