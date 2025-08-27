@@ -3,9 +3,9 @@
 </x-slot>
 
 <div>
-    <div class="container mx-auto p-4">
+    <div class="container mx-auto p-2">
         <!-- Header with buttons -->
-        <div class="flex justify-between items-center mb-6">
+        <div class="flex justify-between items-center mb-3">
             <div></div>
         </div>
 
@@ -14,7 +14,7 @@
 
 
         <!-- Search and filters -->
-        <div class="mb-6 bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+        <div class="mb-3 bg-white p-4 rounded-lg shadow-sm border border-gray-200">
             <div class="flex flex-col md:flex-row gap-3">
                 <div class="flex-1">
                     <label for="search" class="block text-sm font-medium text-gray-700 mb-1">{{ __('admin.search') }}</label>

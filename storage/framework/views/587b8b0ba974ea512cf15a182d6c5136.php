@@ -4,9 +4,9 @@
  <?php $__env->endSlot(); ?>
 
 <div>
-    <div class="container mx-auto p-6">
+    <div class="container mx-auto p-2">
         <!-- Header with Add Button -->
-        <div class="flex justify-between items-center mb-6">
+        <div class="flex justify-between items-center mb-3">
             <div></div>
             <?php if (isset($component)) { $__componentOriginalb71cc3ce235f29fc5e10ecb6e3fe4662 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginalb71cc3ce235f29fc5e10ecb6e3fe4662 = $attributes; } ?>
@@ -33,7 +33,7 @@
 
 
         <!-- Search and filters -->
-        <div class="mb-6 bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+        <div class="mb-3 bg-white p-4 rounded-lg shadow-sm border border-gray-200">
             <div class="flex flex-col md:flex-row gap-3">
                 <div class="flex-1">
                     <label for="search" class="block text-sm font-medium text-gray-700 mb-1"><?php echo e(__('admin.search')); ?></label>
