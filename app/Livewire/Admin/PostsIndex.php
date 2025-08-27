@@ -48,11 +48,6 @@ class PostsIndex extends Component
         }
     }
 
-    public function updatingPage()
-    {
-        // Page change handling
-    }
-
     public function confirmPostDeletion($id)
     {
         $this->postIdBeingDeleted = $id;

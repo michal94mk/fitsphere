@@ -72,41 +72,16 @@
                     @enderror
                 </div>
 
-                <!-- Post image upload -->
-                <div>
-                    <h2 class="text-lg font-medium text-gray-900 border-b pb-2">{{ __('admin.post_image') }}</h2>
-                    <div class="mt-4">
-                        <div class="flex items-center">
-                            <div class="flex-shrink-0">
-                                @if ($image)
-                                    <img src="{{ $image->temporaryUrl() }}" alt="Post preview" class="h-32 w-32 rounded-lg object-cover">
-                                @else
-                                    <div class="h-32 w-32 rounded-lg bg-gray-200 flex items-center justify-center">
-                                        <svg class="h-16 w-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                                        </svg>
-                                    </div>
-                                @endif
-                            </div>
-                            <div class="ml-5">
-                                <div class="flex items-center">
-                                    <label for="image" class="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none">
-                                        <span>{{ __('admin.upload_image') }}</span>
-                                        <input id="image" wire:model.live="image" type="file" class="sr-only" accept="image/*">
-                                    </label>
-                                </div>
-                                <p class="text-xs text-gray-500">{{ __('admin.image_requirements') }}</p>
-                                @error('image') <span class="text-red-500 text-sm block mt-1">{{ $message }}</span> @enderror
-                                
-                                @if ($image)
-                                    <button type="button" wire:click="removeImage" class="mt-2 text-sm text-red-600 hover:text-red-900">
-                                        {{ __('admin.remove_image') }}
-                                    </button>
-                                @endif
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                                    <!-- Post image upload -->
+                    <x-admin.image-upload 
+                        title="post_image"
+                        :current-image="null"
+                        :new-image="$image"
+                        input-name="image"
+                        wire-model="image"
+                        remove-method="removeImage"
+                        alt-text="Post preview"
+                    />
 
                 <div class="px-6 py-3 bg-gray-50 flex flex-col sm:flex-row justify-between space-y-3 sm:space-y-0">
                     <div class="w-full sm:w-auto">

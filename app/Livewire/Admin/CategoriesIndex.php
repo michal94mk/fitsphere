@@ -41,11 +41,6 @@ class CategoriesIndex extends Component
         }
     }
 
-    public function updatingPage()
-    {
-        // Page change handling
-    }
-
     public function confirmCategoryDeletion($id)
     {
         $this->categoryIdBeingDeleted = $id;

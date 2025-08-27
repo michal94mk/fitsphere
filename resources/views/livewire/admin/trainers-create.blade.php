@@ -80,40 +80,15 @@
                     </div>
                     
                     <!-- Profile photo upload -->
-                    <div>
-                        <h2 class="text-lg font-medium text-gray-900 border-b pb-2">{{ __('admin.profile_image') }}</h2>
-                        <div class="mt-4">
-                            <div class="flex items-center">
-                                <div class="flex-shrink-0">
-                                    @if ($photo)
-                                        <img src="{{ $photo->temporaryUrl() }}" alt="Profile preview" class="h-24 w-24 rounded-full object-cover">
-                                    @else
-                                        <div class="h-24 w-24 rounded-full bg-gray-200 flex items-center justify-center">
-                                            <svg class="h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                                            </svg>
-                                        </div>
-                                    @endif
-                                </div>
-                                <div class="ml-5">
-                                    <div class="flex items-center">
-                                        <label for="photo" class="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none">
-                                            <span>{{ __('admin.upload_image') }}</span>
-                                            <input id="photo" wire:model.live="photo" type="file" class="sr-only" accept="image/*">
-                                        </label>
-                                    </div>
-                                    <p class="text-xs text-gray-500">{{ __('admin.image_requirements') }}</p>
-                                    @error('photo') <span class="text-red-500 text-sm block mt-1">{{ $message }}</span> @enderror
-                                    
-                                    @if ($photo)
-                                        <button type="button" wire:click="$set('photo', null)" class="mt-2 text-sm text-red-600 hover:text-red-900">
-                                            {{ __('admin.remove_image') }}
-                                        </button>
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <x-admin.image-upload 
+                        title="profile_image"
+                        :current-image="null"
+                        :new-image="$photo"
+                        input-name="photo"
+                        wire-model="photo"
+                        remove-method="removePhoto"
+                        alt-text="Profile preview"
+                    />
                     
                     <!-- Approval status -->
                     <div>

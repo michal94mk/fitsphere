@@ -36,6 +36,11 @@ class TrainersCreate extends Component
         ];
     }
 
+    public function removePhoto()
+    {
+        $this->photo = null;
+    }
+
     public function store()
     {
         $this->validate();
