@@ -222,7 +222,7 @@
         <!-- Content area -->
         <div class="flex flex-col flex-1 w-0 overflow-hidden">
             <!-- Mobile header -->
-            <div class="md:hidden pl-1 pt-1 sm:pl-3 sm:pt-3 flex items-center justify-between shadow bg-white">
+            <div class="md:hidden px-3 py-2 flex items-center justify-between shadow bg-white">
                 <button 
                     @click="sidebarOpen = true" 
                     class="p-2 text-gray-500 rounded-md hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
@@ -244,7 +244,7 @@
                             <?php echo e($header ?? __('admin.dashboard')); ?>
 
                         </h1>
-                        <div class="md:hidden text-lg font-medium text-gray-900"><?php echo e(__('admin.admin_panel')); ?></div>
+                        <div class="md:hidden text-lg font-medium text-gray-900"><?php echo e($header ?? __('admin.admin_panel')); ?></div>
                         
                         <!-- Right side - user info and actions -->
                         <div class="flex items-center space-x-4">
