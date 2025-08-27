@@ -303,10 +303,13 @@
             
             <!-- Main content -->
             <main class="flex-1 overflow-y-auto focus:outline-none">
-                <div class="py-6">
+                <div class="py-6 mt-16">
                     <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
                         <!-- Flash Messages Component -->
                         <livewire:flash-messages />
+                        
+                        <!-- Toast Notifications -->
+                        <livewire:admin.toast-notifications />
                         
                         {{ $slot }}
                     </div>

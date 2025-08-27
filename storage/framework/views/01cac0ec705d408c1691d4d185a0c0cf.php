@@ -1,5 +1,15 @@
 
-<div>
+<div class="fixed top-16 z-40 w-full max-w-2xl px-4" style="left: calc(50% + 8rem); transform: translateX(-50%);" x-data x-init="
+    function updatePosition() {
+        if (window.innerWidth >= 768) {
+            $el.style.left = 'calc(50% + 8rem)';
+        } else {
+            $el.style.left = '50%';
+        }
+    }
+    updatePosition();
+    window.addEventListener('resize', updatePosition);
+">
     <!--[if BLOCK]><![endif]--><?php if($show && count($messages) > 0): ?>
         <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $messages; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $message): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
             <div 
@@ -12,9 +22,9 @@
                 x-transition:leave="transition ease-in duration-200"
                 x-transition:leave-start="opacity-100"
                 x-transition:leave-end="opacity-0"
-                class="w-full <?php if($message['type'] === 'success'): ?> bg-green-100 border-green-500 text-green-700 <?php elseif($message['type'] === 'error'): ?> bg-red-100 border-red-500 text-red-700 <?php elseif($message['type'] === 'warning'): ?> bg-yellow-100 border-yellow-500 text-yellow-700 <?php else: ?> bg-blue-100 border-blue-500 text-blue-700 <?php endif; ?> border-b-2 shadow-md"
+                class="w-full <?php if($message['type'] === 'success'): ?> bg-green-100 border-green-500 text-green-700 <?php elseif($message['type'] === 'error'): ?> bg-red-100 border-red-500 text-red-700 <?php elseif($message['type'] === 'warning'): ?> bg-yellow-100 border-yellow-500 text-yellow-700 <?php else: ?> bg-blue-100 border-blue-500 text-blue-700 <?php endif; ?> border border-b-2 shadow-lg rounded-lg mb-2"
             >
-                <div class="container mx-auto px-4 py-3 flex items-center justify-center relative">
+                <div class="px-4 py-3 flex items-center justify-between relative">
                     <div class="flex items-center">
                         <!--[if BLOCK]><![endif]--><?php if($message['type'] === 'success'): ?>
                             <svg class="w-5 h-5 mr-2 text-green-600" fill="currentColor" viewBox="0 0 20 20">
@@ -36,6 +46,16 @@
                         
                         <span class="text-sm font-medium"><?php echo e($message['message']); ?></span>
                     </div>
+                    
+                    
+                    <button 
+                        @click="show = false; $wire.removeMessage(<?php echo e($index); ?>)"
+                        class="text-gray-400 hover:text-gray-600 focus:outline-none focus:text-gray-600 transition ease-in-out duration-150"
+                    >
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                        </svg>
+                    </button>
                 </div>
                 
                 

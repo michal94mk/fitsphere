@@ -4,6 +4,7 @@ namespace App\Livewire\Admin;
 
 use App\Models\Post;
 use App\Models\Category;
+use App\Livewire\Admin\Traits\HasFlashMessages;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\Attributes\Layout;
@@ -11,7 +12,7 @@ use Illuminate\Support\Facades\Storage;
 
 class PostsEdit extends Component
 {
-    use WithFileUploads;
+    use WithFileUploads, HasFlashMessages;
     
     public $postId;
     public $title = '';
@@ -66,10 +67,10 @@ class PostsEdit extends Component
             
             $post->save();
 
-            session()->flash('success', __('admin.post_updated'));
+            $this->setSuccessMessage(__('admin.post_updated'));
             return redirect()->route('admin.posts.index');
         } catch (\Exception $e) {
-            session()->flash('error', __('admin.post_update_error', ['error' => $e->getMessage()]));
+            $this->setErrorMessage(__('admin.post_update_error', ['error' => $e->getMessage()]));
         }
     }
 
@@ -95,9 +96,9 @@ class PostsEdit extends Component
                 $this->currentImage = null;
                 $this->image = null;
                 
-                session()->flash('success', __('admin.image_removed'));
+                $this->setSuccessMessage(__('admin.image_removed'));
             } catch (\Exception $e) {
-                session()->flash('error', __('admin.image_remove_error', ['error' => $e->getMessage()]));
+                $this->setErrorMessage(__('admin.image_remove_error', ['error' => $e->getMessage()]));
             }
         }
     }

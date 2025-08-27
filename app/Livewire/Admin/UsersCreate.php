@@ -3,6 +3,7 @@
 namespace App\Livewire\Admin;
 
 use App\Models\User;
+use App\Livewire\Admin\Traits\HasFlashMessages;
 use Illuminate\Support\Facades\Hash;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -10,7 +11,7 @@ use Livewire\Attributes\Layout;
 
 class UsersCreate extends Component
 {
-    use WithFileUploads;
+    use WithFileUploads, HasFlashMessages;
     
     public $name = '';
     public $email = '';
@@ -196,7 +197,7 @@ class UsersCreate extends Component
         
         $user->save();
         
-        session()->flash('success', __('profile.user_created_success'));
+        $this->setSuccessMessage(__('profile.user_created_success'));
         return redirect()->route('admin.users.index');
     }
     

@@ -3,12 +3,14 @@
 namespace App\Livewire\Admin;
 
 use App\Models\Category;
+use App\Livewire\Admin\Traits\HasFlashMessages;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
 
 class CategoriesEdit extends Component
 {
+    use HasFlashMessages;
     public $categoryId;
     
     public $name = '';
@@ -49,10 +51,10 @@ class CategoriesEdit extends Component
             
             $category->save();
             
-            session()->flash('success', __('admin.category_updated'));
+            $this->setSuccessMessage(__('admin.category_updated'));
             return redirect()->route('admin.categories.index');
         } catch (\Exception $e) {
-            session()->flash('error', __('admin.category_update_error', ['error' => $e->getMessage()]));
+            $this->setErrorMessage(__('admin.category_update_error', ['error' => $e->getMessage()]));
         }
     }
 

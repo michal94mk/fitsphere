@@ -4,11 +4,13 @@ namespace App\Livewire\Admin;
 
 use App\Models\Category;
 use App\Models\CategoryTranslation;
+use App\Livewire\Admin\Traits\HasFlashMessages;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
 
 class CategoryTranslations extends Component
 {
+    use HasFlashMessages;
     public $categoryId;
     public $category;
     
@@ -53,7 +55,7 @@ class CategoryTranslations extends Component
         $translation->delete();
         
         $this->loadTranslations();
-        session()->flash('success', __('admin.translation_deleted'));
+        $this->setSuccessMessage(__('admin.translation_deleted'));
     }
     
     public function saveTranslation()
@@ -70,7 +72,7 @@ class CategoryTranslations extends Component
             // Check if translation for this locale already exists
             $exists = $this->category->translations()->where('locale', $this->locale)->exists();
             if ($exists) {
-                session()->flash('error', __('admin.translation_exists'));
+                $this->setErrorMessage(__('admin.translation_exists'));
                 return;
             }
             
@@ -86,7 +88,7 @@ class CategoryTranslations extends Component
         $this->loadTranslations();
         $this->resetFormFields();
         
-        session()->flash('success', __('admin.translation_saved'));
+        $this->setSuccessMessage(__('admin.translation_saved'));
     }
     
     public function cancelEdit()

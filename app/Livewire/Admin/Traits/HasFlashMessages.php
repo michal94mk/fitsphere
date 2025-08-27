@@ -17,8 +17,11 @@ trait HasFlashMessages
         $this->errorMessage = '';
         $this->infoMessage = '';
         
-        // Only set session flash for redirects, not for same-page updates
+        // Set session flash for redirects
         session()->flash('success', $message);
+        
+        // Emit toast notification event
+        $this->dispatch('show-toast', 'success', $message);
     }
     
     /**
@@ -30,8 +33,11 @@ trait HasFlashMessages
         $this->successMessage = '';
         $this->infoMessage = '';
         
-        // Only set session flash for redirects, not for same-page updates
+        // Set session flash for redirects
         session()->flash('error', $message);
+        
+        // Emit toast notification event
+        $this->dispatch('show-toast', 'error', $message);
     }
     
     /**
@@ -43,8 +49,11 @@ trait HasFlashMessages
         $this->successMessage = '';
         $this->errorMessage = '';
         
-        // Only set session flash for redirects, not for same-page updates
+        // Set session flash for redirects
         session()->flash('info', $message);
+        
+        // Emit toast notification event
+        $this->dispatch('show-toast', 'info', $message);
     }
     
     /**

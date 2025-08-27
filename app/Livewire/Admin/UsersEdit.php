@@ -3,6 +3,7 @@
 namespace App\Livewire\Admin;
 
 use App\Models\User;
+use App\Livewire\Admin\Traits\HasFlashMessages;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
@@ -12,7 +13,7 @@ use Livewire\Attributes\Layout;
 
 class UsersEdit extends Component
 {
-    use WithFileUploads;
+    use WithFileUploads, HasFlashMessages;
     
     public $userId;
     public $name = '';
@@ -109,10 +110,10 @@ class UsersEdit extends Component
             
             $user->save();
             
-            session()->flash('success', __('admin.user_updated'));
+            $this->setSuccessMessage(__('admin.user_updated'));
             return redirect()->route('admin.users.index');
         } catch (\Exception $e) {
-            session()->flash('error', __('admin.user_update_error', ['error' => $e->getMessage()]));
+            $this->setErrorMessage(__('admin.user_update_error', ['error' => $e->getMessage()]));
         }
     }
 
@@ -153,9 +154,9 @@ class UsersEdit extends Component
                 
                 $this->photo = null;
                 
-                session()->flash('success', __('admin.photo_removed'));
+                $this->setSuccessMessage(__('admin.photo_removed'));
             } catch (\Exception $e) {
-                session()->flash('error', __('admin.photo_remove_error', ['error' => $e->getMessage()]));
+                $this->setErrorMessage(__('admin.photo_remove_error', ['error' => $e->getMessage()]));
             }
         }
     }

@@ -3,6 +3,7 @@
 namespace App\Livewire\Admin;
 
 use App\Models\User;
+use App\Livewire\Admin\Traits\HasFlashMessages;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\Attributes\Layout;
@@ -10,7 +11,7 @@ use Illuminate\Support\Facades\Hash;
 
 class TrainersCreate extends Component
 {
-    use WithFileUploads;
+    use WithFileUploads, HasFlashMessages;
     
     public $name = '';
     public $email = '';
@@ -63,7 +64,7 @@ class TrainersCreate extends Component
         
         $trainer->save();
         
-        session()->flash('success', __('admin.trainer_created_success'));
+        $this->setSuccessMessage(__('admin.trainer_created_success'));
         return redirect()->route('admin.trainers.index');
     }
 

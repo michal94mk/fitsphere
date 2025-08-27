@@ -4,11 +4,13 @@ namespace App\Livewire\Admin;
 
 use App\Models\User;
 use App\Models\UserTranslation;
+use App\Livewire\Admin\Traits\HasFlashMessages;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
 
 class UserTranslations extends Component
 {
+    use HasFlashMessages;
     public $userId;
     public $user;
     
@@ -31,7 +33,7 @@ class UserTranslations extends Component
         
         // Verify this user is a trainer or admin (has translation needs)
         if (!$this->user->isTrainer() && !$this->user->isAdmin()) {
-            session()->flash('error', __('admin.only_trainers_can_have_translations'));
+            $this->setErrorMessage(__('admin.only_trainers_can_have_translations'));
             return redirect()->route('admin.users.index');
         }
         
@@ -73,7 +75,7 @@ class UserTranslations extends Component
         $translation->delete();
         
         $this->loadTranslations();
-        session()->flash('success', __('admin.translation_deleted'));
+        $this->setSuccessMessage(__('admin.translation_deleted'));
     }
 
     public function saveTranslation()
@@ -94,7 +96,7 @@ class UserTranslations extends Component
             // Check if translation for this locale already exists
             $exists = $this->user->translations()->where('locale', $this->locale)->exists();
             if ($exists) {
-                session()->flash('error', __('admin.translation_exists'));
+                $this->setErrorMessage(__('admin.translation_exists'));
                 return;
             }
             
@@ -115,7 +117,7 @@ class UserTranslations extends Component
         $this->loadTranslations();
         $this->resetFormFields();
         
-        session()->flash('success', __('admin.translation_saved'));
+        $this->setSuccessMessage(__('admin.translation_saved'));
     }
     
     public function cancelEdit()

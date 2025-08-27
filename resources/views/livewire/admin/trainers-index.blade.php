@@ -12,6 +12,8 @@
                 :label="__('admin.add')" />
         </div>
 
+
+
         <!-- Search and filters -->
         <div class="mb-6 bg-white p-4 rounded-lg shadow-sm border border-gray-200">
             <div class="flex flex-col md:flex-row gap-3">

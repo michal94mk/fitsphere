@@ -337,7 +337,7 @@ if (isset($__slots)) unset($__slots);
             
             <!-- Main content -->
             <main class="flex-1 overflow-y-auto focus:outline-none">
-                <div class="py-6">
+                <div class="py-6 mt-16">
                     <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
                         <!-- Flash Messages Component -->
                         <?php
@@ -347,6 +347,24 @@ $__split = function ($name, $params = []) {
 [$__name, $__params] = $__split('flash-messages', []);
 
 $__html = app('livewire')->mount($__name, $__params, 'lw-1721103428-1', $__slots ?? [], get_defined_vars());
+
+echo $__html;
+
+unset($__html);
+unset($__name);
+unset($__params);
+unset($__split);
+if (isset($__slots)) unset($__slots);
+?>
+                        
+                        <!-- Toast Notifications -->
+                        <?php
+$__split = function ($name, $params = []) {
+    return [$name, $params];
+};
+[$__name, $__params] = $__split('admin.toast-notifications', []);
+
+$__html = app('livewire')->mount($__name, $__params, 'lw-1721103428-2', $__slots ?? [], get_defined_vars());
 
 echo $__html;
 

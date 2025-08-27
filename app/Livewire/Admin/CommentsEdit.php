@@ -3,11 +3,13 @@
 namespace App\Livewire\Admin;
 
 use App\Models\Comment;
+use App\Livewire\Admin\Traits\HasFlashMessages;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
 
 class CommentsEdit extends Component
 {
+    use HasFlashMessages;
     public $commentId;
     public $content = '';
     public $userName = '';
@@ -52,10 +54,10 @@ class CommentsEdit extends Component
             
             $comment->save();
             
-            session()->flash('success', __('common.comment_update_success'));
+            $this->setSuccessMessage(__('common.comment_update_success'));
             return redirect()->route('admin.comments.index');
         } catch (\Exception $e) {
-            session()->flash('error', __('common.comment_update_error'));
+            $this->setErrorMessage(__('common.comment_update_error'));
         }
     }
 

@@ -7,12 +7,14 @@ use App\Models\Comment;
 use App\Models\Post;
 use App\Models\Reservation;
 use App\Models\User;
+use App\Livewire\Admin\Traits\HasFlashMessages;
 use App\Services\EmailService;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
 
 class Dashboard extends Component
 {
+    use HasFlashMessages;
     public function approveTrainer($trainerId)
     {
         try {
@@ -24,12 +26,12 @@ class Dashboard extends Component
             try {
                 $emailService = new EmailService();
                 $emailService->sendTrainerApprovedEmail($trainer);
-                session()->flash('success', __('admin.trainer_approved_with_email', ['name' => $trainer->name]));
+                $this->setSuccessMessage(__('admin.trainer_approved_with_email', ['name' => $trainer->name]));
             } catch (\Exception $e) {
-                session()->flash('success', __('admin.trainer_approved_no_email', ['name' => $trainer->name, 'error' => $e->getMessage()]));
+                $this->setSuccessMessage(__('admin.trainer_approved_no_email', ['name' => $trainer->name, 'error' => $e->getMessage()]));
             }
         } catch (\Exception $e) {
-            session()->flash('error', __('admin.trainer_approve_error', ['error' => $e->getMessage()]));
+            $this->setErrorMessage(__('admin.trainer_approve_error', ['error' => $e->getMessage()]));
         }
     }
 

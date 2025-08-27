@@ -3,6 +3,7 @@
 namespace App\Livewire\Admin;
 
 use App\Models\User;
+use App\Livewire\Admin\Traits\HasFlashMessages;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\Attributes\Layout;
@@ -11,7 +12,7 @@ use Illuminate\Support\Facades\Hash;
 
 class TrainersEdit extends Component
 {
-    use WithFileUploads;
+    use WithFileUploads, HasFlashMessages;
     
     public $trainerId;
     public $name = '';
@@ -90,10 +91,10 @@ class TrainersEdit extends Component
             
             $trainer->save();
 
-            session()->flash('success', __('admin.trainer_updated'));
+            $this->setSuccessMessage(__('admin.trainer_updated'));
             return redirect()->route('admin.trainers.index');
         } catch (\Exception $e) {
-            session()->flash('error', __('admin.trainer_update_error', ['error' => $e->getMessage()]));
+            $this->setErrorMessage(__('admin.trainer_update_error', ['error' => $e->getMessage()]));
         }
     }
 
@@ -125,9 +126,9 @@ class TrainersEdit extends Component
                 $this->existing_photo = null;
                 $this->photo = null;
                 
-                session()->flash('success', __('admin.photo_removed'));
+                $this->setSuccessMessage(__('admin.photo_removed'));
             } catch (\Exception $e) {
-                session()->flash('error', __('admin.photo_remove_error', ['error' => $e->getMessage()]));
+                $this->setErrorMessage(__('admin.photo_remove_error', ['error' => $e->getMessage()]));
             }
         }
     }

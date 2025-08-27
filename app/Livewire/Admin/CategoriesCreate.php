@@ -3,11 +3,13 @@
 namespace App\Livewire\Admin;
 
 use App\Models\Category;
+use App\Livewire\Admin\Traits\HasFlashMessages;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
 
 class CategoriesCreate extends Component
 {
+    use HasFlashMessages;
     public $name = '';
     
     protected function rules()
@@ -33,10 +35,10 @@ class CategoriesCreate extends Component
                 'name' => $this->name
             ]);
             
-            session()->flash('success', __('admin.category_created'));
+            $this->setSuccessMessage(__('admin.category_created'));
             return redirect()->route('admin.categories.index');
         } catch (\Exception $e) {
-            session()->flash('error', __('admin.category_create_error', ['error' => $e->getMessage()]));
+            $this->setErrorMessage(__('admin.category_create_error', ['error' => $e->getMessage()]));
         }
     }
 

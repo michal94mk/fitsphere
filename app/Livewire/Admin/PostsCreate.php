@@ -4,6 +4,7 @@ namespace App\Livewire\Admin;
 
 use App\Models\Post;
 use App\Models\Category;
+use App\Livewire\Admin\Traits\HasFlashMessages;
 use Illuminate\Support\Str;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -13,7 +14,7 @@ use Illuminate\Support\Facades\Storage;
 
 class PostsCreate extends Component
 {
-    use WithFileUploads;
+    use WithFileUploads, HasFlashMessages;
     
     public $title = '';
     public $slug;
@@ -63,7 +64,7 @@ class PostsCreate extends Component
         
         $post->save();
         
-        session()->flash('success', __('admin.post_created_success'));
+        $this->setSuccessMessage(__('admin.post_created_success'));
         return redirect()->route('admin.posts.index');
     }
     
