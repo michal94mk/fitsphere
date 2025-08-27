@@ -5,8 +5,8 @@
     
     <button @click="open = !open" 
             type="button"
-            class="flex items-center text-gray-300 px-1 py-1 rounded hover:bg-gray-700 transition-colors"
-            :class="{ 'bg-gray-700': open }">
+            class="flex items-center text-gray-600 px-2 py-1 rounded hover:bg-gray-100 transition-colors"
+            :class="{ 'bg-gray-100': open }">
         
         <span class="sr-only"><?php echo e(__('common.switch_language')); ?></span>
         
@@ -39,12 +39,12 @@
          x-transition:leave-start="transform opacity-100 scale-100" 
          x-transition:leave-end="transform opacity-0 scale-95"
          @click.outside="open = false"
-         class="absolute z-50 top-full right-0 mt-1 bg-gray-800 rounded shadow-lg overflow-hidden border border-gray-700 min-w-[100px]">
+         class="absolute z-50 top-full right-0 mt-1 bg-white rounded shadow-lg overflow-hidden border border-gray-200 min-w-[100px]">
         
         
         <a href="<?php echo e(request()->fullUrlWithQuery(['locale' => 'pl'])); ?>"
           wire:navigate
-          class="flex items-center px-3 py-2 text-gray-300 hover:bg-gray-700 transition-colors <?php echo e($currentLocale === 'pl' ? 'bg-gray-700' : ''); ?>">
+          class="flex items-center px-3 py-2 text-gray-700 hover:bg-gray-50 transition-colors <?php echo e($currentLocale === 'pl' ? 'bg-gray-50' : ''); ?>">
             <span class="flag-icon text-lg">🇵🇱</span>
             <span class="ml-2 text-xs">Polski</span>
         </a>
@@ -52,7 +52,7 @@
         
         <a href="<?php echo e(request()->fullUrlWithQuery(['locale' => 'en'])); ?>"
           wire:navigate
-          class="flex items-center px-3 py-2 text-gray-300 hover:bg-gray-700 transition-colors <?php echo e($currentLocale === 'en' ? 'bg-gray-700' : ''); ?>">
+          class="flex items-center px-3 py-2 text-gray-700 hover:bg-gray-50 transition-colors <?php echo e($currentLocale === 'en' ? 'bg-gray-50' : ''); ?>">
             <span class="flag-icon text-lg">🇬🇧</span>
             <span class="ml-2 text-xs">English</span>
         </a>
