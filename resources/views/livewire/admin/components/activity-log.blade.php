@@ -1,6 +1,6 @@
 <div class="bg-white overflow-hidden shadow rounded-lg">
     <div class="px-4 py-4 border-b">
-        <h3 class="text-lg leading-6 font-medium text-gray-900">Ostatnia aktywność</h3>
+        <h3 class="text-lg leading-6 font-medium text-gray-900">{{ __('admin.recent_activity') }}</h3>
     </div>
     <div class="px-4 py-3">
         @if ($loading)
@@ -12,7 +12,7 @@
             </div>
         @elseif(count($activities) === 0)
             <div class="text-center py-4 text-gray-500">
-                Brak aktywności do wyświetlenia
+                {{ __('admin.no_activity_to_display') }}
             </div>
         @else
             <div class="flow-root">
@@ -57,14 +57,14 @@
                                         <div class="mt-2 text-sm text-gray-700">
                                             @if ($activity['type'] === 'post')
                                                 @if ($activity['action'] === 'created')
-                                                    <p>Utworzył post <strong>{{ $activity['name'] }}</strong></p>
+                                                    <p>{{ __('admin.created_post') }} <strong>{{ $activity['name'] }}</strong></p>
                                                 @else
-                                                    <p>Zaktualizował post <strong>{{ $activity['name'] }}</strong></p>
+                                                    <p>{{ __('admin.updated_post') }} <strong>{{ $activity['name'] }}</strong></p>
                                                 @endif
                                             @elseif ($activity['type'] === 'comment')
-                                                <p>Dodał komentarz: <strong>{{ $activity['name'] }}</strong></p>
+                                                <p>{{ __('admin.added_comment') }}: <strong>{{ $activity['name'] }}</strong></p>
                                             @elseif ($activity['type'] === 'user')
-                                                <p>Użytkownik <strong>{{ $activity['name'] }}</strong> zarejestrował się</p>
+                                                <p>{{ __('admin.user') }} <strong>{{ $activity['name'] }}</strong> {{ __('admin.user_registered') }}</p>
                                             @endif
                                         </div>
                                     </div>

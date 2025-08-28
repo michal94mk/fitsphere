@@ -190,6 +190,14 @@ return [
     'generate' => 'Generate',
     'excerpt_description' => 'Short summary of the post (maximum 500 characters)',
     
+    // Activity Log
+    'recent_activity' => 'Recent Activity',
+    'no_activity_to_display' => 'No activity to display',
+    'created_post' => 'Created post',
+    'updated_post' => 'Updated post',
+    'added_comment' => 'Added comment',
+    'user_registered' => 'User registered',
+    
     // Categories management
     'manage_categories' => 'Categories',
     'add_category' => 'Add Category',

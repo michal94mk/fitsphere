@@ -1,6 +1,6 @@
 <div class="bg-white overflow-hidden shadow rounded-lg">
     <div class="px-4 py-4 border-b">
-        <h3 class="text-lg leading-6 font-medium text-gray-900">Ostatnia aktywność</h3>
+        <h3 class="text-lg leading-6 font-medium text-gray-900"><?php echo e(__('admin.recent_activity')); ?></h3>
     </div>
     <div class="px-4 py-3">
         <!--[if BLOCK]><![endif]--><?php if($loading): ?>
@@ -12,7 +12,8 @@
             </div>
         <?php elseif(count($activities) === 0): ?>
             <div class="text-center py-4 text-gray-500">
-                Brak aktywności do wyświetlenia
+                <?php echo e(__('admin.no_activity_to_display')); ?>
+
             </div>
         <?php else: ?>
             <div class="flow-root">
@@ -59,14 +60,14 @@
                                         <div class="mt-2 text-sm text-gray-700">
                                             <!--[if BLOCK]><![endif]--><?php if($activity['type'] === 'post'): ?>
                                                 <!--[if BLOCK]><![endif]--><?php if($activity['action'] === 'created'): ?>
-                                                    <p>Utworzył post <strong><?php echo e($activity['name']); ?></strong></p>
+                                                    <p><?php echo e(__('admin.created_post')); ?> <strong><?php echo e($activity['name']); ?></strong></p>
                                                 <?php else: ?>
-                                                    <p>Zaktualizował post <strong><?php echo e($activity['name']); ?></strong></p>
+                                                    <p><?php echo e(__('admin.updated_post')); ?> <strong><?php echo e($activity['name']); ?></strong></p>
                                                 <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                                             <?php elseif($activity['type'] === 'comment'): ?>
-                                                <p>Dodał komentarz: <strong><?php echo e($activity['name']); ?></strong></p>
+                                                <p><?php echo e(__('admin.added_comment')); ?>: <strong><?php echo e($activity['name']); ?></strong></p>
                                             <?php elseif($activity['type'] === 'user'): ?>
-                                                <p>Użytkownik <strong><?php echo e($activity['name']); ?></strong> zarejestrował się</p>
+                                                <p><?php echo e(__('admin.user')); ?> <strong><?php echo e($activity['name']); ?></strong> <?php echo e(__('admin.user_registered')); ?></p>
                                             <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                                         </div>
                                     </div>

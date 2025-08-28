@@ -349,4 +349,12 @@ return [
     'user_email' => 'Email użytkownika',
     'user_role' => 'Rola użytkownika',
     'description' => 'Opis',
+    
+    // Activity Log
+    'recent_activity' => 'Ostatnia aktywność',
+    'no_activity_to_display' => 'Brak aktywności do wyświetlenia',
+    'created_post' => 'Utworzył post',
+    'updated_post' => 'Zaktualizował post',
+    'added_comment' => 'Dodał komentarz',
+    'user_registered' => 'zarejestrował się',
 ]; 
