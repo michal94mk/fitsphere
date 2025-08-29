@@ -11,12 +11,18 @@ use App\Livewire\Admin\Traits\HasFlashMessages;
 use App\Services\EmailService;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
+use Illuminate\Support\Facades\Auth;
 
 class Dashboard extends Component
 {
     use HasFlashMessages;
     public function approveTrainer($trainerId)
     {
+        // Check if user is admin
+        if (!Auth::user() || !Auth::user()->isAdmin()) {
+            abort(403, 'Access denied');
+        }
+        
         try {
             $trainer = User::findOrFail($trainerId);
             $trainer->is_approved = true;
