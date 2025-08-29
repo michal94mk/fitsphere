@@ -47,6 +47,8 @@ return [
     'vegan' => 'Vegan',
     'sugar_free' => 'Sugar-Free',
     'save_profile' => 'Save Profile',
+    'buttons_info' => 'First calculate your requirements, then save your profile.',
+    'buttons_info_disabled' => 'Calculate your requirements first to enable profile saving.',
     
     // API configuration message
     'api_key_missing_title' => 'Note: API key not configured',

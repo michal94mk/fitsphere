@@ -157,12 +157,25 @@
                                     </div>
                                 </div>
                                 
+                                <div class="mt-4 mb-3 text-center">
+                                    <p class="text-sm italic @if($showDietaryInfo) text-gray-600 @else text-gray-500 @endif">
+                                        {{ $showDietaryInfo ? __('nutrition_calculator.buttons_info') : __('nutrition_calculator.buttons_info_disabled') }}
+                                    </p>
+                                </div>
+                                
                                 <div class="flex space-x-4">
                                     <button wire:click="calculateNutrition" class="px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-md font-semibold text-xs uppercase tracking-widest hover:from-blue-600 hover:to-blue-700 transition duration-300 shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
                                         {{ __('nutrition_calculator.calculate') }}
                                     </button>
                                     
-                                    <button wire:click="saveProfile" class="px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-md font-semibold text-xs uppercase tracking-widest hover:from-blue-600 hover:to-blue-700 transition duration-300 shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                                    <button wire:click="saveProfile" 
+                                            @if(!$showDietaryInfo) disabled @endif
+                                            class="px-4 py-2 font-semibold text-xs uppercase tracking-widest transition duration-300 shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2
+                                                   @if($showDietaryInfo) 
+                                                       bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700 focus:ring-blue-500
+                                                   @else 
+                                                       bg-gray-300 text-gray-500 cursor-not-allowed
+                                                   @endif">
                                         {{ __('nutrition_calculator.save_profile') }}
                                     </button>
                                 </div>

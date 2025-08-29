@@ -47,6 +47,8 @@ return [
     'vegan' => 'Wegańska',
     'sugar_free' => 'Bez cukru',
     'save_profile' => 'Zapisz profil',
+    'buttons_info' => 'Najpierw oblicz zapotrzebowanie, następnie zapisz profil.',
+    'buttons_info_disabled' => 'Najpierw oblicz zapotrzebowanie, aby włączyć zapisywanie profilu.',
     
     // Wiadomość konfiguracji API
     'api_key_missing_title' => 'Uwaga: Brak skonfigurowanego klucza API',
