@@ -4,11 +4,13 @@
             <div class="text-center mb-8">
                 <h1 class="text-5xl font-extrabold mb-4">
                     <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-blue-500">
-                        {{ __('nutrition_calculator.title') }}
+                        <?php echo e(__('nutrition_calculator.title')); ?>
+
                     </span>
                 </h1>
                 <p class="text-xl text-gray-600 max-w-3xl mx-auto">
-                    {{ __('nutrition_calculator.subtitle') }}
+                    <?php echo e(__('nutrition_calculator.subtitle')); ?>
+
                 </p>
             </div>
         </div>
@@ -17,7 +19,7 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <!-- Informacja o konfiguracji klucza API -->
-            @if (empty(config('services.spoonacular.key')) || config('services.spoonacular.key') === 'your_spoonacular_api_key_here')
+            <!--[if BLOCK]><![endif]--><?php if(empty(config('services.spoonacular.key')) || config('services.spoonacular.key') === 'your_spoonacular_api_key_here'): ?>
                 <div class="mb-6 bg-yellow-50 border-l-4 border-yellow-400 p-4">
                     <div class="flex">
                         <div class="flex-shrink-0">
@@ -26,22 +28,22 @@
                             </svg>
                         </div>
                         <div class="ml-3">
-                            <h3 class="text-sm font-medium text-yellow-800">{{ __('nutrition_calculator.api_key_missing_title') }}</h3>
+                            <h3 class="text-sm font-medium text-yellow-800"><?php echo e(__('nutrition_calculator.api_key_missing_title')); ?></h3>
                             <div class="mt-2 text-sm text-yellow-700">
-                                <p>{{ __('nutrition_calculator.api_key_missing_message') }}</p>
+                                <p><?php echo e(__('nutrition_calculator.api_key_missing_message')); ?></p>
                                 <ol class="mt-1 ml-4 list-decimal">
-                                    <li>{{ __('nutrition_calculator.api_key_step1') }} <a href="https://spoonacular.com/food-api" target="_blank" class="underline">spoonacular.com/food-api</a></li>
-                                    <li>{{ __('nutrition_calculator.api_key_step2') }}</li>
-                                    <li>{{ __('nutrition_calculator.api_key_step3') }}</li>
+                                    <li><?php echo e(__('nutrition_calculator.api_key_step1')); ?> <a href="https://spoonacular.com/food-api" target="_blank" class="underline">spoonacular.com/food-api</a></li>
+                                    <li><?php echo e(__('nutrition_calculator.api_key_step2')); ?></li>
+                                    <li><?php echo e(__('nutrition_calculator.api_key_step3')); ?></li>
                                 </ol>
                             </div>
                         </div>
                     </div>
                 </div>
-            @endif
+            <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
             
             <!-- Informacja o konfiguracji DeepL -->
-            @if(empty(config('services.deepl.key')) && App::getLocale() === 'pl')
+            <!--[if BLOCK]><![endif]--><?php if(empty(config('services.deepl.key')) && App::getLocale() === 'pl'): ?>
                 <div class="mb-6 bg-blue-50 border-l-4 border-blue-400 p-4">
                     <div class="flex">
                         <div class="flex-shrink-0">
@@ -50,24 +52,24 @@
                             </svg>
                         </div>
                         <div class="ml-3">
-                            <h3 class="text-sm font-medium text-blue-800">{{ __('nutrition_calculator.translation_info_title') }}</h3>
+                            <h3 class="text-sm font-medium text-blue-800"><?php echo e(__('nutrition_calculator.translation_info_title')); ?></h3>
                             <div class="mt-2 text-sm text-blue-700">
-                                <p>{{ __('nutrition_calculator.translation_info_message') }}</p>
+                                <p><?php echo e(__('nutrition_calculator.translation_info_message')); ?></p>
                                 <ul class="mt-1 ml-4 list-disc">
-                                    <li>{{ __('nutrition_calculator.translation_info_point1') }}</li>
-                                    <li>{{ __('nutrition_calculator.translation_info_point2') }}</li>
-                                    <li>{{ __('nutrition_calculator.translation_info_point3') }}</li>
-                                    <li>{{ __('nutrition_calculator.translation_info_point4') }}</li>
+                                    <li><?php echo e(__('nutrition_calculator.translation_info_point1')); ?></li>
+                                    <li><?php echo e(__('nutrition_calculator.translation_info_point2')); ?></li>
+                                    <li><?php echo e(__('nutrition_calculator.translation_info_point3')); ?></li>
+                                    <li><?php echo e(__('nutrition_calculator.translation_info_point4')); ?></li>
                                 </ul>
                             </div>
                         </div>
                     </div>
                 </div>
-            @endif
+            <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
             
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
-                    <h2 class="text-2xl font-semibold mb-6">{{ __('nutrition_calculator.title') }}</h2>
+                    <h2 class="text-2xl font-semibold mb-6"><?php echo e(__('nutrition_calculator.title')); ?></h2>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <!-- Formularz profilu -->
@@ -75,179 +77,187 @@
 
                             
                             <div class="bg-gray-50 p-6 rounded-lg shadow-sm">
-                                <h3 class="text-xl font-semibold mb-4">{{ __('nutrition_calculator.personal_info') }}</h3>
+                                <h3 class="text-xl font-semibold mb-4"><?php echo e(__('nutrition_calculator.personal_info')); ?></h3>
                                 
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                                     <div>
-                                        <label for="age" class="block text-sm font-medium text-gray-700 mb-1">{{ __('nutrition_calculator.age') }}</label>
+                                        <label for="age" class="block text-sm font-medium text-gray-700 mb-1"><?php echo e(__('nutrition_calculator.age')); ?></label>
                                         <input type="number" wire:model="age" id="age" class="w-full rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" min="1" max="120">
                                     </div>
                                     
                                     <div>
-                                        <label for="gender" class="block text-sm font-medium text-gray-700 mb-1">{{ __('nutrition_calculator.gender') }}</label>
+                                        <label for="gender" class="block text-sm font-medium text-gray-700 mb-1"><?php echo e(__('nutrition_calculator.gender')); ?></label>
                                         <select wire:model="gender" id="gender" class="w-full rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                                            <option value="">{{ __('nutrition_calculator.select') }}...</option>
-                                            <option value="male">{{ __('nutrition_calculator.male') }}</option>
-                                            <option value="female">{{ __('nutrition_calculator.female') }}</option>
+                                            <option value=""><?php echo e(__('nutrition_calculator.select')); ?>...</option>
+                                            <option value="male"><?php echo e(__('nutrition_calculator.male')); ?></option>
+                                            <option value="female"><?php echo e(__('nutrition_calculator.female')); ?></option>
                                         </select>
                                     </div>
                                 </div>
                                 
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                                     <div>
-                                        <label for="weight" class="block text-sm font-medium text-gray-700 mb-1">{{ __('nutrition_calculator.weight') }}</label>
+                                        <label for="weight" class="block text-sm font-medium text-gray-700 mb-1"><?php echo e(__('nutrition_calculator.weight')); ?></label>
                                         <input type="number" wire:model="weight" id="weight" class="w-full rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" min="1" step="0.1">
                                     </div>
                                     
                                     <div>
-                                        <label for="height" class="block text-sm font-medium text-gray-700 mb-1">{{ __('nutrition_calculator.height') }}</label>
+                                        <label for="height" class="block text-sm font-medium text-gray-700 mb-1"><?php echo e(__('nutrition_calculator.height')); ?></label>
                                         <input type="number" wire:model="height" id="height" class="w-full rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" min="1" step="0.1">
                                     </div>
                                 </div>
                                 
                                 <div class="mb-4">
-                                    <label for="activityLevel" class="block text-sm font-medium text-gray-700 mb-1">{{ __('nutrition_calculator.activity_level') }}</label>
+                                    <label for="activityLevel" class="block text-sm font-medium text-gray-700 mb-1"><?php echo e(__('nutrition_calculator.activity_level')); ?></label>
                                     <select wire:model="activityLevel" id="activityLevel" class="w-full rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                                        <option value="">{{ __('nutrition_calculator.select') }}...</option>
-                                        <option value="sedentary">{{ __('nutrition_calculator.activity_level_1') }}</option>
-                                        <option value="light">{{ __('nutrition_calculator.activity_level_2') }}</option>
-                                        <option value="moderate">{{ __('nutrition_calculator.activity_level_3') }}</option>
-                                        <option value="active">{{ __('nutrition_calculator.activity_level_4') }}</option>
-                                        <option value="very_active">{{ __('nutrition_calculator.activity_level_5') }}</option>
+                                        <option value=""><?php echo e(__('nutrition_calculator.select')); ?>...</option>
+                                        <option value="sedentary"><?php echo e(__('nutrition_calculator.activity_level_1')); ?></option>
+                                        <option value="light"><?php echo e(__('nutrition_calculator.activity_level_2')); ?></option>
+                                        <option value="moderate"><?php echo e(__('nutrition_calculator.activity_level_3')); ?></option>
+                                        <option value="active"><?php echo e(__('nutrition_calculator.activity_level_4')); ?></option>
+                                        <option value="very_active"><?php echo e(__('nutrition_calculator.activity_level_5')); ?></option>
                                     </select>
                                 </div>
                                 
                                 <div class="mb-4">
-                                    <label for="goal" class="block text-sm font-medium text-gray-700 mb-1">{{ __('nutrition_calculator.goal') }}</label>
+                                    <label for="goal" class="block text-sm font-medium text-gray-700 mb-1"><?php echo e(__('nutrition_calculator.goal')); ?></label>
                                     <select wire:model="goal" id="goal" class="w-full rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                                        <option value="">{{ __('nutrition_calculator.select') }}...</option>
-                                        <option value="lose">{{ __('nutrition_calculator.goal_lose') }}</option>
-                                        <option value="maintain">{{ __('nutrition_calculator.goal_maintain') }}</option>
-                                        <option value="gain">{{ __('nutrition_calculator.goal_gain') }}</option>
+                                        <option value=""><?php echo e(__('nutrition_calculator.select')); ?>...</option>
+                                        <option value="lose"><?php echo e(__('nutrition_calculator.goal_lose')); ?></option>
+                                        <option value="maintain"><?php echo e(__('nutrition_calculator.goal_maintain')); ?></option>
+                                        <option value="gain"><?php echo e(__('nutrition_calculator.goal_gain')); ?></option>
                                     </select>
                                 </div>
                                 
                                 <div class="mb-4">
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('nutrition_calculator.allergies') }}</label>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1"><?php echo e(__('nutrition_calculator.allergies')); ?></label>
                                     <div class="grid grid-cols-2 gap-2">
                                         <label class="inline-flex items-center">
                                             <input type="checkbox" wire:model="dietaryRestrictions" value="gluten" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                                            <span class="ml-2">{{ __('nutrition_calculator.gluten_free') }}</span>
+                                            <span class="ml-2"><?php echo e(__('nutrition_calculator.gluten_free')); ?></span>
                                         </label>
                                         <label class="inline-flex items-center">
                                             <input type="checkbox" wire:model="dietaryRestrictions" value="dairy" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                                            <span class="ml-2">{{ __('nutrition_calculator.dairy_free') }}</span>
+                                            <span class="ml-2"><?php echo e(__('nutrition_calculator.dairy_free')); ?></span>
                                         </label>
                                         <label class="inline-flex items-center">
                                             <input type="checkbox" wire:model="dietaryRestrictions" value="peanut" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                                            <span class="ml-2">{{ __('nutrition_calculator.peanut_free') }}</span>
+                                            <span class="ml-2"><?php echo e(__('nutrition_calculator.peanut_free')); ?></span>
                                         </label>
                                         <label class="inline-flex items-center">
                                             <input type="checkbox" wire:model="dietaryRestrictions" value="vegetarian" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                                            <span class="ml-2">{{ __('nutrition_calculator.vegetarian') }}</span>
+                                            <span class="ml-2"><?php echo e(__('nutrition_calculator.vegetarian')); ?></span>
                                         </label>
                                         <label class="inline-flex items-center">
                                             <input type="checkbox" wire:model="dietaryRestrictions" value="vegan" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                                            <span class="ml-2">{{ __('nutrition_calculator.vegan') }}</span>
+                                            <span class="ml-2"><?php echo e(__('nutrition_calculator.vegan')); ?></span>
                                         </label>
                                         <label class="inline-flex items-center">
                                             <input type="checkbox" wire:model="dietaryRestrictions" value="sugar" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                                            <span class="ml-2">{{ __('nutrition_calculator.sugar_free') }}</span>
+                                            <span class="ml-2"><?php echo e(__('nutrition_calculator.sugar_free')); ?></span>
                                         </label>
                                     </div>
                                 </div>
                                 
                                 <div class="mt-4 mb-3 text-center">
-                                    <p class="text-sm italic @if($showDietaryInfo) text-gray-600 @else text-gray-500 @endif">
-                                        {{ $showDietaryInfo ? __('nutrition_calculator.buttons_info') : __('nutrition_calculator.buttons_info_disabled') }}
+                                    <p class="text-sm italic <?php if($showDietaryInfo): ?> text-gray-600 <?php else: ?> text-gray-500 <?php endif; ?>">
+                                        <?php echo e($showDietaryInfo ? __('nutrition_calculator.buttons_info') : __('nutrition_calculator.buttons_info_disabled')); ?>
+
                                     </p>
                                 </div>
                                 
                                 <div class="flex space-x-4">
                                     <button wire:click="calculateNutrition" class="px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-md font-semibold text-xs uppercase tracking-widest hover:from-blue-600 hover:to-blue-700 transition duration-300 shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-                                        {{ __('nutrition_calculator.calculate') }}
+                                        <?php echo e(__('nutrition_calculator.calculate')); ?>
+
                                     </button>
                                     
                                     <button wire:click="saveProfile" 
-                                            @if(!$showDietaryInfo) disabled @endif
+                                            <?php if(!$showDietaryInfo): ?> disabled <?php endif; ?>
                                             class="px-4 py-2 rounded-md font-semibold text-xs uppercase tracking-widest transition duration-300 shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2
-                                                   @if($showDietaryInfo) 
+                                                   <?php if($showDietaryInfo): ?> 
                                                        bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700 focus:ring-blue-500
-                                                   @else 
+                                                   <?php else: ?> 
                                                        bg-gray-300 text-gray-500 cursor-not-allowed
-                                                   @endif">
-                                        {{ __('nutrition_calculator.save_profile') }}
+                                                   <?php endif; ?>">
+                                        <?php echo e(__('nutrition_calculator.save_profile')); ?>
+
                                     </button>
                                 </div>
                                 
                                 <!-- Profile messages -->
-                                @if (session()->has('message'))
+                                <!--[if BLOCK]><![endif]--><?php if(session()->has('message')): ?>
                                     <div class="mt-4 bg-green-100 border-l-4 border-green-500 text-green-700 p-4">
-                                        {{ session('message') }}
+                                        <?php echo e(session('message')); ?>
+
                                     </div>
-                                @endif
+                                <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                                 
-                                @if (session()->has('success'))
-                                    <div class="mt-4 bg-green-100 border-l-4 border-green-500 text-green-700 p-4" wire:key="profile-success-{{ time() }}">
-                                        {{ session('success') }}
+                                <?php if(session()->has('success')): ?>
+                                    <div class="mt-4 bg-green-100 border-l-4 border-green-500 text-green-700 p-4" wire:key="profile-success-<?php echo e(time()); ?>">
+                                        <?php echo e(session('success')); ?>
+
                                     </div>
-                                @endif
+                                <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                                 
-                                @if (session()->has('error'))
+                                <?php if(session()->has('error')): ?>
                                     <div class="mt-4 bg-red-100 border-l-4 border-red-500 text-red-700 p-4">
-                                        {{ session('error') }}
+                                        <?php echo e(session('error')); ?>
+
                                     </div>
-                                @endif
+                                <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                             </div>
                         </div>
                         
                         <!-- Wyniki i wyszukiwarka -->
                         <div>
-                            @if ($showDietaryInfo)
+                            <!--[if BLOCK]><![endif]--><?php if($showDietaryInfo): ?>
                                 <div class="bg-gray-50 p-6 rounded-lg shadow-sm mb-6">
-                                    <h3 class="text-xl font-semibold mb-4">{{ __('nutrition_calculator.results') }}</h3>
+                                    <h3 class="text-xl font-semibold mb-4"><?php echo e(__('nutrition_calculator.results')); ?></h3>
                                     
                                     <div class="grid grid-cols-2 gap-4 mb-4">
                                         <div class="bg-white p-3 rounded-lg shadow-sm">
-                                            <div class="text-sm text-gray-500">{{ __('nutrition_calculator.bmr') }}</div>
-                                            <div class="text-2xl font-bold">{{ $bmr ? round($bmr) : 'N/A' }}</div>
+                                            <div class="text-sm text-gray-500"><?php echo e(__('nutrition_calculator.bmr')); ?></div>
+                                            <div class="text-2xl font-bold"><?php echo e($bmr ? round($bmr) : 'N/A'); ?></div>
                                         </div>
                                         
                                         <div class="bg-white p-3 rounded-lg shadow-sm">
-                                            <div class="text-sm text-gray-500">{{ __('nutrition_calculator.calories') }}</div>
-                                            <div class="text-2xl font-bold">{{ $dailyCalories ?? 'N/A' }} {{ __('nutrition_calculator.calories_per_day') }}</div>
+                                            <div class="text-sm text-gray-500"><?php echo e(__('nutrition_calculator.calories')); ?></div>
+                                            <div class="text-2xl font-bold"><?php echo e($dailyCalories ?? 'N/A'); ?> <?php echo e(__('nutrition_calculator.calories_per_day')); ?></div>
                                         </div>
                                     </div>
                                     
-                                    <h4 class="text-lg font-semibold mb-2">{{ __('nutrition_calculator.macros') }}</h4>
+                                    <h4 class="text-lg font-semibold mb-2"><?php echo e(__('nutrition_calculator.macros')); ?></h4>
                                     <div class="grid grid-cols-3 gap-4">
                                         <div class="bg-white p-3 rounded-lg shadow-sm">
-                                            <div class="text-sm text-gray-500">{{ __('nutrition_calculator.protein') }}</div>
-                                            <div class="text-xl font-bold">{{ $protein ?? 'N/A' }} {{ __('nutrition_calculator.grams_per_day') }}</div>
+                                            <div class="text-sm text-gray-500"><?php echo e(__('nutrition_calculator.protein')); ?></div>
+                                            <div class="text-xl font-bold"><?php echo e($protein ?? 'N/A'); ?> <?php echo e(__('nutrition_calculator.grams_per_day')); ?></div>
                                         </div>
                                         
                                         <div class="bg-white p-3 rounded-lg shadow-sm">
-                                            <div class="text-sm text-gray-500">{{ __('nutrition_calculator.carbs') }}</div>
-                                            <div class="text-xl font-bold">{{ $carbs ?? 'N/A' }} {{ __('nutrition_calculator.grams_per_day') }}</div>
+                                            <div class="text-sm text-gray-500"><?php echo e(__('nutrition_calculator.carbs')); ?></div>
+                                            <div class="text-xl font-bold"><?php echo e($carbs ?? 'N/A'); ?> <?php echo e(__('nutrition_calculator.grams_per_day')); ?></div>
                                         </div>
                                         
                                         <div class="bg-white p-3 rounded-lg shadow-sm">
-                                            <div class="text-sm text-gray-500">{{ __('nutrition_calculator.fat') }}</div>
-                                            <div class="text-xl font-bold">{{ $fat ?? 'N/A' }} {{ __('nutrition_calculator.grams_per_day') }}</div>
+                                            <div class="text-sm text-gray-500"><?php echo e(__('nutrition_calculator.fat')); ?></div>
+                                            <div class="text-xl font-bold"><?php echo e($fat ?? 'N/A'); ?> <?php echo e(__('nutrition_calculator.grams_per_day')); ?></div>
                                         </div>
                                     </div>
                                 </div>
-                            @endif
+                            <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                             
                             <div class="bg-gray-50 p-6 rounded-lg shadow-sm">
-                                <h3 class="text-xl font-semibold mb-4">{{ __('nutrition_calculator.meal_planning') }}</h3>
+                                <h3 class="text-xl font-semibold mb-4"><?php echo e(__('nutrition_calculator.meal_planning')); ?></h3>
                                 
                                 <p class="text-gray-600 mb-4">
-                                    {{ __('nutrition_calculator.meal_planning_description') }}
+                                    <?php echo e(__('nutrition_calculator.meal_planning_description')); ?>
+
                                 </p>
                                 
-                                <a href="{{ route('meal-planner') }}" class="inline-block px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-md font-semibold text-sm uppercase tracking-widest hover:from-blue-600 hover:to-blue-700 transition duration-300 shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-                                    {{ __('nutrition_calculator.go_to_meal_planner') }}
+                                <a href="<?php echo e(route('meal-planner')); ?>" class="inline-block px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-md font-semibold text-sm uppercase tracking-widest hover:from-blue-600 hover:to-blue-700 transition duration-300 shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                                    <?php echo e(__('nutrition_calculator.go_to_meal_planner')); ?>
+
                                 </a>
                             </div>
                         </div>
@@ -258,7 +268,7 @@
     </div>
 
     <div class="container mx-auto p-4">
-        @if(!empty(config('services.spoonacular.key')))
+        <!--[if BLOCK]><![endif]--><?php if(!empty(config('services.spoonacular.key'))): ?>
             <!-- Login required modal -->
             <div 
                 x-data="{ open: false, message: '' }"
@@ -290,34 +300,37 @@
                                 </div>
                                 <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
                                     <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-headline">
-                                        {{ __('nutrition_calculator.login_required_title') }}
+                                        <?php echo e(__('nutrition_calculator.login_required_title')); ?>
+
                                     </h3>
                                     <div class="mt-2">
-                                        <p class="text-sm text-gray-500" x-text="message || '{{ __('nutrition_calculator.login_required') }}'"></p>
+                                        <p class="text-sm text-gray-500" x-text="message || '<?php echo e(__('nutrition_calculator.login_required')); ?>'"></p>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                            <a href="{{ route('login') }}" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm">
-                                {{ __('nutrition_calculator.login') }}
+                            <a href="<?php echo e(route('login')); ?>" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm">
+                                <?php echo e(__('nutrition_calculator.login')); ?>
+
                             </a>
                             <button 
                                 type="button" 
                                 @click="open = false" 
                                 class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
                             >
-                                {{ __('nutrition_calculator.cancel') }}
+                                <?php echo e(__('nutrition_calculator.cancel')); ?>
+
                             </button>
                         </div>
                     </div>
                 </div>
             </div>
-        @endif
+        <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
     </div>
 
     <!-- Recipe Details Modal -->
-    @if($showRecipeModal && $selectedRecipe)
+    <!--[if BLOCK]><![endif]--><?php if($showRecipeModal && $selectedRecipe): ?>
     <div class="fixed inset-0 z-50 overflow-y-auto" 
         x-data="{ 
             titleLoading: false,
@@ -433,8 +446,8 @@
                             <span class="text-2xl font-bold" :class="{'text-blue-600': $wire.translateRecipe, 'text-gray-400': !$wire.translateRecipe}">PL</span>
                         </div>
                         
-                        <p class="text-xl font-bold text-blue-600 mb-1">{{ __('nutrition_calculator.translating') }}</p>
-                        <p class="text-gray-600">{{ __('nutrition_calculator.please_wait') }}</p>
+                        <p class="text-xl font-bold text-blue-600 mb-1"><?php echo e(__('nutrition_calculator.translating')); ?></p>
+                        <p class="text-gray-600"><?php echo e(__('nutrition_calculator.please_wait')); ?></p>
                         
                         <!-- Indykator postępu tłumaczenia -->
                         <div class="w-64 h-3 bg-gray-200 rounded-full mt-4 overflow-hidden">
@@ -463,11 +476,13 @@
                             <div class="relative">
                                 <!-- Tytuł przepisu -->
                                 <h3 class="text-2xl font-bold text-gray-900" x-show="!titleLoading">
-                                    @if($translateRecipe && $translatedTitle)
-                                        {{ $translatedTitle }}
-                                    @else
-                                        {{ $selectedRecipe['title'] }}
-                                    @endif
+                                    <!--[if BLOCK]><![endif]--><?php if($translateRecipe && $translatedTitle): ?>
+                                        <?php echo e($translatedTitle); ?>
+
+                                    <?php else: ?>
+                                        <?php echo e($selectedRecipe['title']); ?>
+
+                                    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                                 </h3>
                                 
                                 <!-- Animacja ładowania tytułu -->
@@ -493,19 +508,20 @@
                         </div>
                         
                         <div class="flex justify-end mt-2">
-                            @if(App::getLocale() === 'pl' || $translateRecipe)
+                            <!--[if BLOCK]><![endif]--><?php if(App::getLocale() === 'pl' || $translateRecipe): ?>
                             <button 
                                 wire:click="toggleRecipeTranslation" 
-                                class="inline-flex items-center text-sm font-medium {{ $translateRecipe ? 'text-blue-600' : 'text-gray-600' }} hover:text-blue-500 focus:outline-none"
+                                class="inline-flex items-center text-sm font-medium <?php echo e($translateRecipe ? 'text-blue-600' : 'text-gray-600'); ?> hover:text-blue-500 focus:outline-none"
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
                                 </svg>
                                 <span>
-                                    {{ $translateRecipe ? __('nutrition_calculator.show_original') : __('nutrition_calculator.translate_to_polish') }}
+                                    <?php echo e($translateRecipe ? __('nutrition_calculator.show_original') : __('nutrition_calculator.translate_to_polish')); ?>
+
                                 </span>
                             </button>
-                            @endif
+                            <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                         </div>
                         
 
@@ -513,32 +529,32 @@
                         <div class="mt-4 grid grid-cols-1 md:grid-cols-5 gap-6">
                             <!-- Left side: Image and nutrition -->
                             <div class="md:col-span-2">
-                                @if(isset($selectedRecipe['image']))
-                                    <img src="{{ $selectedRecipe['image'] }}" alt="{{ $selectedRecipe['title'] }}" class="w-full h-auto rounded-lg shadow-md">
-                                @endif
+                                <!--[if BLOCK]><![endif]--><?php if(isset($selectedRecipe['image'])): ?>
+                                    <img src="<?php echo e($selectedRecipe['image']); ?>" alt="<?php echo e($selectedRecipe['title']); ?>" class="w-full h-auto rounded-lg shadow-md">
+                                <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
 
                                 <div class="mt-4 bg-blue-50 p-4 rounded-lg">
-                                    <h4 class="font-semibold text-lg mb-2">{{ __('nutrition_calculator.nutrition_info') }}</h4>
+                                    <h4 class="font-semibold text-lg mb-2"><?php echo e(__('nutrition_calculator.nutrition_info')); ?></h4>
                                     
                                     <div class="grid grid-cols-2 gap-2">
-                                        @if(isset($selectedRecipe['nutrition']['nutrients']))
-                                            @foreach(collect($selectedRecipe['nutrition']['nutrients'])->take(8) as $nutrient)
+                                        <!--[if BLOCK]><![endif]--><?php if(isset($selectedRecipe['nutrition']['nutrients'])): ?>
+                                            <!--[if BLOCK]><![endif]--><?php $__currentLoopData = collect($selectedRecipe['nutrition']['nutrients'])->take(8); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $nutrient): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                                 <div class="flex justify-between">
-                                                    <span class="text-sm">{{ $nutrient['name'] }}:</span>
-                                                    <span class="text-sm font-medium">{{ round($nutrient['amount'], 1) }} {{ $nutrient['unit'] }}</span>
+                                                    <span class="text-sm"><?php echo e($nutrient['name']); ?>:</span>
+                                                    <span class="text-sm font-medium"><?php echo e(round($nutrient['amount'], 1)); ?> <?php echo e($nutrient['unit']); ?></span>
                                                 </div>
-                                            @endforeach
-                                        @endif
+                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
+                                        <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                                     </div>
                                     
                                     <div class="mt-3 pt-3 border-t border-blue-200">
                                         <div class="flex justify-between">
-                                            <span>{{ __('nutrition_calculator.servings') }}:</span>
-                                            <span class="font-medium">{{ $selectedRecipe['servings'] ?? 1 }}</span>
+                                            <span><?php echo e(__('nutrition_calculator.servings')); ?>:</span>
+                                            <span class="font-medium"><?php echo e($selectedRecipe['servings'] ?? 1); ?></span>
                                         </div>
                                         <div class="flex justify-between">
-                                            <span>{{ __('nutrition_calculator.preparation_time') }}:</span>
-                                            <span class="font-medium">{{ $selectedRecipe['readyInMinutes'] ?? '?' }} min</span>
+                                            <span><?php echo e(__('nutrition_calculator.preparation_time')); ?>:</span>
+                                            <span class="font-medium"><?php echo e($selectedRecipe['readyInMinutes'] ?? '?'); ?> min</span>
                                         </div>
                                     </div>
                                 </div>
@@ -548,7 +564,7 @@
                             <div class="md:col-span-3">
                                 <!-- Ingredients section -->
                                 <div class="mb-6">
-                                    <h4 class="font-semibold text-lg mb-2">{{ __('nutrition_calculator.ingredients') }}</h4>
+                                    <h4 class="font-semibold text-lg mb-2"><?php echo e(__('nutrition_calculator.ingredients')); ?></h4>
                                     
                                     <!-- Animacja ładowania składników -->
                                     <div x-show="ingredientsLoading" class="py-4">
@@ -557,39 +573,42 @@
                                                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                             </svg>
-                                            <span class="text-sm text-gray-600">{{ __('nutrition_calculator.translating_ingredients') }}</span>
+                                            <span class="text-sm text-gray-600"><?php echo e(__('nutrition_calculator.translating_ingredients')); ?></span>
                                         </div>
                                         
                                         <ul class="list-disc pl-5 space-y-1">
-                                            @for($i = 0; $i < 5; $i++)
+                                            <!--[if BLOCK]><![endif]--><?php for($i = 0; $i < 5; $i++): ?>
                                                 <li class="h-5 bg-gray-200 rounded w-full animate-pulse mb-2"></li>
-                                            @endfor
+                                            <?php endfor; ?><!--[if ENDBLOCK]><![endif]-->
                                         </ul>
                                     </div>
                                     
                                     <!-- Lista składników -->
                                     <ul class="list-disc pl-5 space-y-1" x-show="!ingredientsLoading">
-                                        @if(isset($selectedRecipe['extendedIngredients']) && is_array($selectedRecipe['extendedIngredients']) && count($selectedRecipe['extendedIngredients']) > 0)
-                                            @foreach($selectedRecipe['extendedIngredients'] as $index => $ingredient)
+                                        <!--[if BLOCK]><![endif]--><?php if(isset($selectedRecipe['extendedIngredients']) && is_array($selectedRecipe['extendedIngredients']) && count($selectedRecipe['extendedIngredients']) > 0): ?>
+                                            <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $selectedRecipe['extendedIngredients']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $ingredient): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                                 <li class="text-gray-700">
-                                                    @if($translateRecipe && isset($translatedIngredients[$index]))
-                                                        {{ $translatedIngredients[$index] }}
-                                                    @elseif(isset($ingredient['original']))
-                                                        {{ $ingredient['original'] }}
-                                                    @else
-                                                        {{ $ingredient['amount'] ?? '' }} {{ $ingredient['unit'] ?? '' }} {{ $ingredient['name'] ?? '' }}
-                                                    @endif
+                                                    <!--[if BLOCK]><![endif]--><?php if($translateRecipe && isset($translatedIngredients[$index])): ?>
+                                                        <?php echo e($translatedIngredients[$index]); ?>
+
+                                                    <?php elseif(isset($ingredient['original'])): ?>
+                                                        <?php echo e($ingredient['original']); ?>
+
+                                                    <?php else: ?>
+                                                        <?php echo e($ingredient['amount'] ?? ''); ?> <?php echo e($ingredient['unit'] ?? ''); ?> <?php echo e($ingredient['name'] ?? ''); ?>
+
+                                                    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                                                 </li>
-                                            @endforeach
-                                        @else
-                                            <li class="text-gray-500 italic">{{ __('nutrition_calculator.no_ingredients') }}</li>
-                                        @endif
+                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
+                                        <?php else: ?>
+                                            <li class="text-gray-500 italic"><?php echo e(__('nutrition_calculator.no_ingredients')); ?></li>
+                                        <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                                     </ul>
                                 </div>
                                 
                                 <!-- Instructions section -->
                                 <div>
-                                    <h4 class="font-semibold text-lg mb-2">{{ __('nutrition_calculator.instructions') }}</h4>
+                                    <h4 class="font-semibold text-lg mb-2"><?php echo e(__('nutrition_calculator.instructions')); ?></h4>
                                     
                                     <!-- Animacja ładowania instrukcji -->
                                     <div x-show="instructionsLoading" class="py-4">
@@ -598,35 +617,37 @@
                                                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                             </svg>
-                                            <span class="text-sm text-gray-600">{{ __('nutrition_calculator.translating_instructions') }}</span>
+                                            <span class="text-sm text-gray-600"><?php echo e(__('nutrition_calculator.translating_instructions')); ?></span>
                                         </div>
                                         
                                         <div class="space-y-2">
-                                            @for($i = 0; $i < 4; $i++)
+                                            <!--[if BLOCK]><![endif]--><?php for($i = 0; $i < 4; $i++): ?>
                                                 <div class="h-20 bg-gray-200 rounded w-full animate-pulse"></div>
-                                            @endfor
+                                            <?php endfor; ?><!--[if ENDBLOCK]><![endif]-->
                                         </div>
                                     </div>
                                     
                                     <!-- Instrukcje przepisu -->
                                     <div x-show="!instructionsLoading">
-                                        @if($translateRecipe && $translatedInstructions)
+                                        <!--[if BLOCK]><![endif]--><?php if($translateRecipe && $translatedInstructions): ?>
                                             <div class="text-gray-700">
-                                                {!! $translatedInstructions !!}
+                                                <?php echo $translatedInstructions; ?>
+
                                             </div>
-                                        @elseif(isset($selectedRecipe['analyzedInstructions']) && is_array($selectedRecipe['analyzedInstructions']) && count($selectedRecipe['analyzedInstructions']) > 0 && isset($selectedRecipe['analyzedInstructions'][0]['steps']))
+                                        <?php elseif(isset($selectedRecipe['analyzedInstructions']) && is_array($selectedRecipe['analyzedInstructions']) && count($selectedRecipe['analyzedInstructions']) > 0 && isset($selectedRecipe['analyzedInstructions'][0]['steps'])): ?>
                                             <ol class="list-decimal pl-5 space-y-2">
-                                                @foreach($selectedRecipe['analyzedInstructions'][0]['steps'] as $step)
-                                                    <li class="text-gray-700">{{ $step['step'] }}</li>
-                                                @endforeach
+                                                <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $selectedRecipe['analyzedInstructions'][0]['steps']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $step): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                    <li class="text-gray-700"><?php echo e($step['step']); ?></li>
+                                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
                                             </ol>
-                                        @elseif(isset($selectedRecipe['instructions']) && !empty($selectedRecipe['instructions']))
+                                        <?php elseif(isset($selectedRecipe['instructions']) && !empty($selectedRecipe['instructions'])): ?>
                                             <div class="text-gray-700">
-                                                {!! nl2br(e($selectedRecipe['instructions'])) !!}
+                                                <?php echo nl2br(e($selectedRecipe['instructions'])); ?>
+
                                             </div>
-                                        @else
-                                            <p class="text-gray-500 italic">{{ __('nutrition_calculator.no_instructions') }}</p>
-                                        @endif
+                                        <?php else: ?>
+                                            <p class="text-gray-500 italic"><?php echo e(__('nutrition_calculator.no_instructions')); ?></p>
+                                        <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                                     </div>
                                 </div>
                             </div>
@@ -636,25 +657,27 @@
                 
                 <div class="bg-gray-50 px-6 py-4 flex justify-end">
                     <button wire:click="closeRecipeModal" class="px-4 py-2 bg-gray-300 text-gray-800 rounded-md font-medium text-sm hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 transition-colors duration-300 z-20">
-                        {{ __('nutrition_calculator.close') }}
+                        <?php echo e(__('nutrition_calculator.close')); ?>
+
                     </button>
                 </div>
                 
-                @if(config('app.debug'))
+                <!--[if BLOCK]><![endif]--><?php if(config('app.debug')): ?>
                 <div class="border-t border-gray-200 px-6 py-4">
                     <p class="text-xs text-gray-500 mb-2">Debug information (only visible in development mode):</p>
                     <div class="bg-gray-800 text-gray-200 p-3 rounded text-xs overflow-auto max-h-40">
-                        <strong>Recipe data keys:</strong> {{ implode(', ', array_keys($selectedRecipe)) }}<br>
-                        <strong>Has instructions:</strong> {{ isset($selectedRecipe['instructions']) ? 'Yes' : 'No' }}<br>
-                        <strong>Has analyzedInstructions:</strong> {{ isset($selectedRecipe['analyzedInstructions']) ? 'Yes' : 'No' }}<br>
-                        <strong>Has extendedIngredients:</strong> {{ isset($selectedRecipe['extendedIngredients']) ? 'Yes' : 'No' }}<br>
-                        <strong>Data structure:</strong> <pre>{{ json_encode($selectedRecipe, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) }}</pre>
+                        <strong>Recipe data keys:</strong> <?php echo e(implode(', ', array_keys($selectedRecipe))); ?><br>
+                        <strong>Has instructions:</strong> <?php echo e(isset($selectedRecipe['instructions']) ? 'Yes' : 'No'); ?><br>
+                        <strong>Has analyzedInstructions:</strong> <?php echo e(isset($selectedRecipe['analyzedInstructions']) ? 'Yes' : 'No'); ?><br>
+                        <strong>Has extendedIngredients:</strong> <?php echo e(isset($selectedRecipe['extendedIngredients']) ? 'Yes' : 'No'); ?><br>
+                        <strong>Data structure:</strong> <pre><?php echo e(json_encode($selectedRecipe, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)); ?></pre>
                     </div>
                 </div>
-                @endif
+                <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
             </div>
         </div>
     </div>
-    @endif
+    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
 
 </div>
+<?php /**PATH C:\Laravel\fitsphere\resources\views/livewire/nutrition-calculator.blade.php ENDPATH**/ ?>
