@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Auth\MustVerifyEmail as MustVerifyEmailTrait;
+use App\Helpers\ImageHelper;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -86,13 +87,7 @@ class User extends Authenticatable implements MustVerifyEmail
     
     public function getProfilePhotoUrlAttribute()
     {
-        if ($this->image) {
-            return asset('storage/' . $this->image);
-        }
-        
-        // Use gravatar as fallback
-        $hash = md5(strtolower(trim($this->email)));
-        return "https://www.gravatar.com/avatar/{$hash}?d=mp&s=160";
+        return ImageHelper::getUserAvatar($this->image, $this->name);
     }
     
     // Relationships
