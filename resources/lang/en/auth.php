@@ -48,6 +48,7 @@ return [
     'logout' => 'Log Out',
     'welcome_back' => 'Welcome back!',
     'remember_me' => 'Remember me',
+    'verification_resent' => 'Verification link has been resent to',
     
     // Account types
     'account_type' => 'Account Type',

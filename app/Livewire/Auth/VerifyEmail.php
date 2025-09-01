@@ -41,7 +41,7 @@ class VerifyEmail extends Component
 
         $this->user->sendEmailVerificationNotification();
         $this->resent = true;
-        session()->flash('status', 'Verification link has been resent to: ' . $this->user->email);
+        session()->flash('status', __('auth.verification_resent') . ': ' . $this->user->email);
     }
 
     #[Layout('layouts.blog')]

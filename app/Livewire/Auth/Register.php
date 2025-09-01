@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
 use Livewire\Attributes\Layout;
+use Illuminate\Auth\Events\Registered;
 
 /**
  * Handles the user registration process for both regular users and trainers.
@@ -192,7 +193,8 @@ class Register extends Component
 
         if ($this->account_type === 'regular') {
             $user = $this->createRegularUser();
-            // Email weryfikacyjny jest wysyłany automatycznie przez AppServiceProvider
+            // Wyzwól event Registered dla automatycznego wysłania email weryfikacyjnego
+            event(new Registered($user));
             $this->sendWelcomeEmail($user);
             $this->setUserRegistrationSuccess();
             
@@ -200,7 +202,8 @@ class Register extends Component
             return Redirect::to('/registration-success/user');
         } else {
             $user = $this->createTrainer();
-            // Email weryfikacyjny jest wysyłany automatycznie przez AppServiceProvider
+            // Wyzwól event Registered dla automatycznego wysłania email weryfikacyjnego
+            event(new Registered($user));
             $this->sendWelcomeEmailToTrainer($user);
             $this->setTrainerRegistrationSuccess();
             

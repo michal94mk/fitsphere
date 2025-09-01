@@ -48,6 +48,7 @@ return [
     'logout' => 'Wyloguj się',
     'welcome_back' => 'Witaj ponownie!',
     'remember_me' => 'Zapamiętaj mnie',
+    'verification_resent' => 'Link weryfikacyjny został ponownie wysłany na',
     
     // Account types
     'account_type' => 'Typ konta',

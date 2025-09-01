@@ -46,7 +46,7 @@ class RegistrationSuccess extends Component
         }
         
         $this->resent = true;
-        session()->flash('success', 'Verification link has been resent to: ' . $this->email);
+        session()->flash('success', __('auth.verification_resent') . ': ' . $this->email);
     }
     
     #[Layout('layouts.blog', ['title' => 'Registration Completed Successfully'])]
