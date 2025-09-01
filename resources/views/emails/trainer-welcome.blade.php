@@ -1,7 +1,9 @@
 @extends('emails.layout')
 
 @section('title', 'Welcome to FitSphere as a Trainer!')
-@section('email-title', 'Welcome, {{ $trainer->name }}!')
+@section('email-title')
+    Welcome, {{ $trainer->name }}!
+@endsection
 
 @section('content')
     <p>Congratulations on joining the FitSphere trainer community! We're excited that you want to share your knowledge and help others achieve their fitness goals.</p>

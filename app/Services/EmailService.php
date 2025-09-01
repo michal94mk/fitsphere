@@ -37,7 +37,20 @@ class EmailService
     public function sendWelcomeEmail(User $user): bool
     {
         try {
+            // Sprawdź czy email już nie został wysłany (zapobieganie duplikatom)
+            $cacheKey = "welcome_email_sent_" . $user->id;
+            if (cache()->has($cacheKey)) {
+                Log::info('Welcome email already sent, skipping', [
+                    'user_id' => $user->id,
+                    'email' => $user->email
+                ]);
+                return true;
+            }
+            
             Mail::to($user->email)->queue(new WelcomeEmail($user));
+            
+            // Oznacz że email został wysłany (cache na 1 godzinę)
+            cache()->put($cacheKey, true, 3600);
             
             Log::info('Welcome email queued', [
                 'user_id' => $user->id,
@@ -137,7 +150,20 @@ class EmailService
     public function sendTrainerWelcomeEmail(User $trainer): bool
     {
         try {
+            // Sprawdź czy email już nie został wysłany (zapobieganie duplikatom)
+            $cacheKey = "trainer_welcome_email_sent_" . $trainer->id;
+            if (cache()->has($cacheKey)) {
+                Log::info('Trainer welcome email already sent, skipping', [
+                    'trainer_id' => $trainer->id,
+                    'email' => $trainer->email
+                ]);
+                return true;
+            }
+            
             Mail::to($trainer->email)->queue(new TrainerWelcomeEmail($trainer));
+            
+            // Oznacz że email został wysłany (cache na 1 godzinę)
+            cache()->put($cacheKey, true, 3600);
             
             Log::info('Trainer welcome email queued', [
                 'trainer_id' => $trainer->id,
