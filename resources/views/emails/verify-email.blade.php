@@ -1,39 +1,41 @@
 @extends('emails.layout')
 
-@section('title', 'Potwierdź swój adres email - FitSphere')
-@section('email-title', 'Potwierdź swój adres email')
+@section('title', 'Verify Your Email Address')
+@section('email-title', '📧 Verify Your Email Address')
 
 @section('content')
-    <p>Cześć {{ $user->name }}!</p>
+    <p>Hi {{ $user->name }}!</p>
 
-    <p>Aby ukończyć proces rejestracji w FitSphere, musisz potwierdzić swój adres email. To pomoże nam upewnić się, że to rzeczywiście Ty utworzyłeś to konto.</p>
+    <p>Thank you for registering with FitSphere! To complete your registration and start using all platform features, please verify your email address.</p>
 
     <div class="info-box">
-        <p><strong>⚠️ Ważne!</strong></p>
-        <p>Link weryfikacyjny jest ważny przez <strong>60 minut</strong> od momentu wysłania tego emaila.</p>
+        <p><strong>⏰ Important:</strong> This verification link is valid for <strong>60 minutes</strong> from the time it was sent.</p>
     </div>
 
     <div class="text-center">
-        <a href="{{ $verificationUrl }}" class="cta-button success">✅ Potwierdź Email</a>
+        <a href="{{ $verificationUrl }}" class="cta-button">✅ Verify Email Address</a>
     </div>
 
-    <p>Jeśli przycisk powyżej nie działa, skopiuj i wklej poniższy link do przeglądarki:</p>
+    <p>If the button above doesn't work, copy and paste the following link into your browser:</p>
 
     <div class="alternative-link">
         {{ $verificationUrl }}
     </div>
 
-    <div class="success-box">
-        <p><strong>Co się stanie po weryfikacji?</strong></p>
+    <div class="highlight-box">
+        <p><strong>🎯 After verification you will be able to:</strong></p>
         <ul>
-            <li>✅ Twoje konto zostanie w pełni aktywowane</li>
-            <li>🎯 Będziesz mógł korzystać ze wszystkich funkcji FitSphere</li>
-            <li>📧 Otrzymasz dostęp do powiadomień email</li>
-            <li>🏋️‍♂️ Możesz rozpocząć swoją podróż fitness!</li>
+            <li>🔐 Access all platform features</li>
+            <li>👨‍🏫 Book sessions with trainers</li>
+            <li>📊 Use fitness calculators</li>
+            <li>💬 Comment on posts</li>
+            <li>📧 Receive important notifications</li>
         </ul>
     </div>
 
     <div class="warning-box">
-        <p class="text-warning">⚠️ Jeśli to nie Ty utworzyłeś to konto, możesz zignorować ten email.</p>
+        <p><strong>🔒 Security:</strong> If you didn't create this account, please ignore this email or contact our support team.</p>
     </div>
-@endsection 
+
+    <p>Welcome to the FitSphere community!</p>
+@endsection

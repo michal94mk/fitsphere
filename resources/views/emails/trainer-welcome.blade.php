@@ -1,52 +1,52 @@
 @extends('emails.layout')
 
-@section('title', 'Witaj w FitSphere jako Trener!')
-@section('email-title', 'Witaj, {{ $trainer->name }}!')
+@section('title', 'Welcome to FitSphere as a Trainer!')
+@section('email-title', 'Welcome, {{ $trainer->name }}!')
 
 @section('content')
-    <p>Gratulujemy dołączenia do społeczności trenerów FitSphere! Jesteśmy podekscytowani, że chcesz dzielić się swoją wiedzą i pomagać innym w osiąganiu celów fitness.</p>
+    <p>Congratulations on joining the FitSphere trainer community! We're excited that you want to share your knowledge and help others achieve their fitness goals.</p>
 
     <div class="info-box">
-        <p><strong>⏳ Ważne: Oczekiwanie na zatwierdzenie</strong></p>
-        <p>Twoje konto trenerskie zostało utworzone, ale <strong>wymaga zatwierdzenia przez administratora</strong> przed rozpoczęciem przyjmowania rezerwacji.</p>
-        <p>Otrzymasz email powiadomienia, gdy Twoje konto zostanie zatwierdzone.</p>
+        <p><strong>⏳ Important: Waiting for approval</strong></p>
+        <p>Your trainer account has been created, but <strong>requires approval by an administrator</strong> before you can start accepting bookings.</p>
+        <p>You will receive an email notification when your account is approved.</p>
     </div>
 
     <div class="highlight-box">
-        <p><strong>🚀 Co możesz zrobić już teraz:</strong></p>
+        <p><strong>🚀 What you can do right now:</strong></p>
         <ul>
-            <li>📧 <strong>Potwierdź swój adres email</strong> (sprawdź skrzynkę)</li>
-            <li>📝 Przygotuj opis swojej oferty treningowej</li>
-            <li>🎯 Zaplanuj swoje specjalizacje</li>
-            <li>📚 Zapoznaj się z platformą</li>
-            <li>💡 Przygotuj materiały dla klientów</li>
-            <li>📸 Dodaj profesjonalne zdjęcie profilowe</li>
+            <li>📧 <strong>Verify your email address</strong> (check your inbox)</li>
+            <li>📝 Prepare your training offer description</li>
+            <li>🎯 Plan your specializations</li>
+            <li>📚 Get familiar with the platform</li>
+            <li>💡 Prepare materials for clients</li>
+            <li>📸 Add a professional profile photo</li>
         </ul>
     </div>
 
     <div class="success-box">
-        <p><strong>💪 Po zatwierdzeniu będziesz mógł/mogła:</strong></p>
+        <p><strong>💪 After approval you will be able to:</strong></p>
         <ul>
-            <li>👥 <strong>Przyjmować rezerwacje</strong> od klientów</li>
-            <li>📅 Zarządzać swoim kalendarzem</li>
-            <li>💬 Komunikować się z klientami</li>
-            <li>📊 Śledzić swoje statystyki</li>
-            <li>✍️ Publikować artykuły i porady</li>
-            <li>🎯 Budować swoją bazę klientów</li>
+            <li>👥 <strong>Accept bookings</strong> from clients</li>
+            <li>📅 Manage your calendar</li>
+            <li>💬 Communicate with clients</li>
+            <li>📊 Track your statistics</li>
+            <li>✍️ Publish articles and tips</li>
+            <li>🎯 Build your client base</li>
         </ul>
     </div>
 
     <div class="highlight-box">
-        <p><strong>📋 Twoja specjalizacja:</strong> {{ $trainer->specialization }}</p>
+        <p><strong>📋 Your specialization:</strong> {{ $trainer->specialization }}</p>
     </div>
 
     <div class="text-center">
-        <a href="{{ config('app.url') }}/login" class="cta-button">🔐 Zaloguj się do Platformy</a>
+        <a href="{{ config('app.url') }}/login" class="cta-button">🔐 Log in to Platform</a>
     </div>
 
-    <p>Jeśli masz jakiekolwiek pytania dotyczące procesu zatwierdzania lub platformy, nasz zespół wsparcia jest zawsze gotowy do pomocy!</p>
+    <p>If you have any questions about the approval process or the platform, our support team is always ready to help!</p>
 
     <div class="info-box">
-        <p><strong>💡 Wskazówka:</strong> Dodaj nasz adres email do zaufanych nadawców, aby nie przegapić powiadomienia o zatwierdzeniu konta!</p>
+        <p><strong>💡 Tip:</strong> Add our email address to trusted senders so you don't miss the account approval notification!</p>
     </div>
-@endsection 
+@endsection

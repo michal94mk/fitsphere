@@ -1,38 +1,38 @@
 @extends('emails.layout')
 
-@section('title', 'Witaj w FitSphere')
-@section('email-title', 'Witaj, {{ $user->name }}!')
+@section('title', 'Welcome to FitSphere')
+@section('email-title', 'Welcome, {{ $user->name }}!')
 
 @section('content')
-    <p>Dziękujemy za dołączenie do społeczności FitSphere! Jesteśmy podekscytowani, że rozpoczynasz swoją przygodę z fitness razem z nami.</p>
+    <p>Thank you for joining the FitSphere community! We're excited that you're starting your fitness journey with us.</p>
 
     <div class="highlight-box">
-        <h3>Co możesz teraz zrobić:</h3>
+        <h3>What you can do now:</h3>
         <ul>
-            <li>🎯 Ustaw swoje cele fitness</li>
-            <li>📊 Śledź swoje postępy</li>
-            <li>👨‍🏫 Znajdź idealnego trenera</li>
-            <li>🏃‍♀️ Dołącz do treningów grupowych</li>
-            <li>📈 Analizuj swoje wyniki</li>
-            <li>🍎 Planuj zdrowe posiłki</li>
+            <li>🎯 Set your fitness goals</li>
+            <li>📊 Track your progress</li>
+            <li>👨‍🏫 Find the perfect trainer</li>
+            <li>🏃‍♀️ Join group workouts</li>
+            <li>📈 Analyze your results</li>
+            <li>🍎 Plan healthy meals</li>
         </ul>
     </div>
 
-    <p>Twoje konto zostało pomyślnie utworzone i możesz rozpocząć korzystanie ze wszystkich funkcji platformy.</p>
+    <p>Your account has been successfully created and you can start using all platform features.</p>
 
     <div class="success-box">
-        <p><strong>✅ Konto aktywne!</strong></p>
-        <p>Zaloguj się i zacznij swoją transformację już dziś.</p>
+        <p><strong>✅ Account Active!</strong></p>
+        <p>Log in and start your transformation today.</p>
     </div>
 
     <div class="text-center">
-        <a href="{{ config('app.url') }}/profile" class="cta-button">🎯 Przejdź do Panelu</a>
+        <a href="{{ config('app.url') }}/profile" class="cta-button">🎯 Go to Dashboard</a>
     </div>
 
-    <p>Jeśli masz jakiekolwiek pytania, nasz zespół wsparcia jest zawsze gotowy do pomocy!</p>
+    <p>If you have any questions, our support team is always ready to help!</p>
 
     <div class="info-box">
-        <p><strong>💡 Potrzebujesz pomocy?</strong></p>
-        <p>Skontaktuj się z nami przez formularz kontaktowy na stronie.</p>
+        <p><strong>💡 Need help?</strong></p>
+        <p>Contact us through the contact form on our website.</p>
     </div>
 @endsection 

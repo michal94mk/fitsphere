@@ -192,7 +192,7 @@ class Register extends Component
 
         if ($this->account_type === 'regular') {
             $user = $this->createRegularUser();
-            $this->sendVerificationEmail($user);
+            // Email weryfikacyjny jest wysyłany automatycznie przez AppServiceProvider
             $this->sendWelcomeEmail($user);
             $this->setUserRegistrationSuccess();
             
@@ -200,7 +200,7 @@ class Register extends Component
             return Redirect::to('/registration-success/user');
         } else {
             $user = $this->createTrainer();
-            $this->sendVerificationEmail($user);
+            // Email weryfikacyjny jest wysyłany automatycznie przez AppServiceProvider
             $this->sendWelcomeEmailToTrainer($user);
             $this->setTrainerRegistrationSuccess();
             
@@ -237,15 +237,8 @@ class Register extends Component
         ]);
     }
     
-    /**
-     * Sends verification email if the model supports it
-     */
-    private function sendVerificationEmail($user)
-    {
-        if (method_exists($user, 'sendEmailVerificationNotification')) {
-            $user->sendEmailVerificationNotification();
-        }
-    }
+    // Metoda sendVerificationEmail została usunięta - email weryfikacyjny
+    // jest wysyłany automatycznie przez AppServiceProvider
     
     /**
      * Wysyła email powitalny dla użytkownika przez Brevo

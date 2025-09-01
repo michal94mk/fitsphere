@@ -26,7 +26,7 @@ class TrainerWelcomeEmail extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Witaj w FitSphere jako Trener! 🏋️‍♂️💪',
+            subject: 'Welcome to FitSphere as a Trainer! 🏋️‍♂️💪',
             from: new Address(config('mail.from.address', '8eecba001@smtp-brevo.com'), config('mail.from.name', 'FitSphere')),
             replyTo: [
                 config('mail.from.address'),

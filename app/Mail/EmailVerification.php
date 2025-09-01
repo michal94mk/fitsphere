@@ -42,7 +42,7 @@ class EmailVerification extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Potwierdź swój adres email - FitSphere',
+            subject: 'Verify Your Email Address - FitSphere',
             from: new Address(config('mail.from.address', '8eecba001@smtp-brevo.com'), config('mail.from.name', 'FitSphere')),
             replyTo: [
                 config('mail.from.address'),

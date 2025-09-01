@@ -30,7 +30,7 @@ class PasswordResetEmail extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Reset hasła - FitSphere',
+            subject: 'Password Reset - FitSphere',
             from: new Address(config('mail.from.address', '8eecba001@smtp-brevo.com'), config('mail.from.name', 'FitSphere')),
             replyTo: [
                 config('mail.from.address'),

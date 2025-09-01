@@ -21,7 +21,7 @@ class ForgotPassword extends Component
         $status = Password::sendResetLink(['email' => $this->email]);
 
         if ($status == Password::RESET_LINK_SENT) {
-            session()->flash('message', 'Password reset link has been sent!');
+            session()->flash('message', __('passwords.sent'));
             $this->reset('email');
         } else {
             $this->addError('email', 'No user found with this email address.');
