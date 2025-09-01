@@ -32,7 +32,7 @@ class ContentSeeder extends Seeder
                 'excerpt' => 'Poznaj podstawy treningu siłowego i rozpocznij swoją przygodę z budowaniem mięśni.',
                 'content' => 'Trening siłowy to jedna z najlepszych form aktywności fizycznej. Jako początkujący, powinieneś skupić się na nauce poprawnej techniki wykonywania podstawowych ćwiczeń, takich jak przysiad, martwy ciąg, wyciskanie na ławce i wiosłowanie. Zacznij od 2-3 treningów tygodniowo, dając mięśniom czas na regenerację.',
                 'category' => 'Trening siłowy',
-                'image' => 'images/posts/post1.jpg',
+                'image' => 'images/posts/B0kFw5xRoGIKLobehyKNb51r0BXgx8kRadZx2qqx.jpg',
                 'translations' => [
                     'en' => [
                         'title' => 'Strength Training for Beginners',
@@ -46,7 +46,7 @@ class ContentSeeder extends Seeder
                 'excerpt' => 'Skuteczne ćwiczenia cardio, które pomogą Ci szybciej spalić zbędny tłuszcz.',
                 'content' => 'Trening cardio to świetny sposób na spalanie kalorii. Najskuteczniejsze ćwiczenia to: interwały biegowe (HIIT), jazda na rowerze, pływanie, skakanie na skakance i trening na orbitreku. Szczególnie efektywne są treningi interwałowe, polegające na naprzemiennych fazach intensywnego wysiłku i odpoczynku.',
                 'category' => 'Cardio',
-                'image' => 'images/posts/post2.jpg',
+                'image' => 'images/posts/ojXiP980Dt5qMU3qeOIHzYwh3Z3ths9jSIPv9rl2.jpg',
                 'translations' => [
                     'en' => [
                         'title' => 'Best Cardio Exercises for Fat Burning',
@@ -60,7 +60,7 @@ class ContentSeeder extends Seeder
                 'excerpt' => 'Poznaj zasady diety ketogenicznej i dowiedz się, czy jest odpowiednia dla Ciebie.',
                 'content' => 'Dieta ketogeniczna to sposób odżywiania polegający na drastycznym ograniczeniu węglowodanów przy jednoczesnym zwiększeniu podaży tłuszczów. Głównym celem jest wprowadzenie organizmu w stan ketozy, w którym jako główne źródło energii wykorzystywane są ketony zamiast glukozy. Typowa dieta ketogeniczna zawiera około 70-80% kalorii z tłuszczów.',
                 'category' => 'Dieta i odżywianie',
-                'image' => 'images/posts/post3.jpg',
+                'image' => null,
                 'translations' => [
                     'en' => [
                         'title' => 'Ketogenic Diet - Everything You Need to Know',
@@ -74,7 +74,7 @@ class ContentSeeder extends Seeder
                 'excerpt' => 'Skuteczne metody na budowanie masy mięśniowej bez wspomagania.',
                 'content' => 'Budowanie masy mięśniowej w sposób naturalny wymaga cierpliwości i konsekwencji. Kluczowe aspekty to: progresywny trening oporowy, odpowiednie odżywianie (nadwyżka kaloryczna i wystarczająca ilość białka), właściwa regeneracja (7-9 godzin snu), regularne posiłki oraz minimalizacja stresu.',
                 'category' => 'Trening siłowy',
-                'image' => 'images/posts/post4.jpg',
+                'image' => null,
                 'translations' => [
                     'en' => [
                         'title' => 'How to Increase Muscle Mass Naturally',
@@ -88,7 +88,7 @@ class ContentSeeder extends Seeder
                 'excerpt' => 'Poznaj najwartościowsze produkty białkowe dla osób aktywnych fizycznie.',
                 'content' => 'Białko jest niezbędnym składnikiem diety każdego sportowca. Oto 10 najlepszych źródeł białka: 1) Pierś z kurczaka, 2) Jaja, 3) Tuńczyk, 4) Łosoś, 5) Wołowina, 6) Twaróg, 7) Soczewica, 8) Tofu, 9) Jogurt grecki, 10) Quinoa. Warto łączyć różne źródła białka w diecie, aby zapewnić kompletny profil aminokwasowy.',
                 'category' => 'Dieta i odżywianie',
-                'image' => 'images/posts/post5.jpg',
+                'image' => null,
                 'translations' => [
                     'en' => [
                         'title' => '10 Best Protein Sources in an Athlete\'s Diet',
@@ -102,7 +102,7 @@ class ContentSeeder extends Seeder
                 'excerpt' => 'Poznaj technikę wykonania jednego z najlepszych ćwiczeń na całe ciało.',
                 'content' => 'Martwy ciąg to jedno z najlepszych ćwiczeń na rozwój siły i masy mięśniowej. Poprawna technika wykonania: 1) Stań przed sztangą, stopy na szerokość bioder. 2) Schyl się i chwyć sztangę. 3) Obniż biodra, wyprostuj plecy. 4) Weź głęboki wdech. 5) Zacznij ruch od wyprostowania nóg. 6) Gdy sztanga minie kolana, pchnij biodra do przodu. 7) Wróć kontrolując ruch.',
                 'category' => 'Trening siłowy',
-                'image' => 'images/posts/post6.jpg',
+                'image' => null,
                 'translations' => [
                     'en' => [
                         'title' => 'How to Properly Perform a Deadlift',
@@ -116,7 +116,7 @@ class ContentSeeder extends Seeder
                 'excerpt' => 'Dowiedz się, jak praktyka jogi może poprawić Twoje wyniki sportowe.',
                 'content' => 'Joga to wartościowe uzupełnienie treningu dla sportowców. Główne korzyści to: 1) Poprawa elastyczności i zakresu ruchu, 2) Wzmocnienie mięśni stabilizujących, 3) Lepsza równowaga i koordynacja, 4) Zwiększona świadomość oddechu, 5) Szybsza regeneracja mięśni, 6) Redukcja stresu i poprawa koncentracji.',
                 'category' => 'Joga i rozciąganie',
-                'image' => 'images/posts/post7.jpg',
+                'image' => null,
                 'translations' => [
                     'en' => [
                         'title' => 'Benefits of Yoga Training for Athletes',
@@ -130,7 +130,7 @@ class ContentSeeder extends Seeder
                 'excerpt' => 'Przewodnik po świecie suplementów dla osób aktywnych fizycznie.',
                 'content' => 'W gąszczu dostępnych suplementów łatwo się zagubić. Warto stosować: 1) Kreatynę, 2) Białko serwatkowe, 3) Kofeinę, 4) Beta-alaninę, 5) Elektrolity. Suplementy o wątpliwej skuteczności to: 1) Spalacze tłuszczu, 2) Glutamina, 3) ZMA, 4) HMB. Pamiętaj, że suplementy to tylko dodatek do zbilansowanej diety.',
                 'category' => 'Suplementacja',
-                'image' => 'images/posts/post8.jpg',
+                'image' => null,
                 'translations' => [
                     'en' => [
                         'title' => 'Supplements - Which to Use and Which to Avoid',
@@ -144,7 +144,7 @@ class ContentSeeder extends Seeder
                 'excerpt' => 'Kompletny plan treningowy dla osób rozpoczynających przygodę z siłownią.',
                 'content' => 'Oto 4-tygodniowy plan dla początkujących, zakładający 3 treningi w tygodniu. Tydzień 1-2: Trening A: przysiad, wyciskanie, wiosłowanie. Trening B: wykroki, wyciskanie nad głowę, podciąganie. Trening C: martwy ciąg, wyciskanie skośne, przyciąganie do klatki. Tydzień 3-4: Te same ćwiczenia, ale zwiększ ciężar o 5-10%.',
                 'category' => 'Plany treningowe',
-                'image' => 'images/posts/post9.jpg',
+                'image' => null,
                 'translations' => [
                     'en' => [
                         'title' => '4-Week Training Plan for Beginners',
@@ -158,7 +158,7 @@ class ContentSeeder extends Seeder
                 'excerpt' => 'Poznaj zasady zdrowej diety, która wspiera aktywny tryb życia.',
                 'content' => 'Dieta śródziemnomorska świetnie sprawdza się dla osób aktywnych. Jej zasady to: 1) Obfitość warzyw i owoców, 2) Pełnoziarniste produkty zbożowe, 3) Zdrowe tłuszcze z oliwy, orzechów i ryb, 4) Umiarkowane spożycie białka, 5) Ograniczenie czerwonego mięsa, 6) Minimalna ilość przetworzonych produktów.',
                 'category' => 'Dieta i odżywianie',
-                'image' => 'images/posts/post10.jpg',
+                'image' => null,
                 'translations' => [
                     'en' => [
                         'title' => 'Mediterranean Diet for Active People',
