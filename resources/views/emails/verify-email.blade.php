@@ -1,7 +1,9 @@
 @extends('emails.layout')
 
 @section('title', 'Verify Your Email Address')
-@section('email-title', '📧 Verify Your Email Address')
+@section('email-title')
+    📧 Verify Your Email Address
+@endsection
 
 @section('content')
     <p>Hi {{ $user->name }}!</p>

@@ -193,8 +193,7 @@ class Register extends Component
 
         if ($this->account_type === 'regular') {
             $user = $this->createRegularUser();
-            // Wyzwól event Registered dla automatycznego wysłania email weryfikacyjnego
-            event(new Registered($user));
+            // Wysyłamy tylko hybrydowy email welcome+verification
             $this->sendWelcomeEmail($user);
             $this->setUserRegistrationSuccess();
             
@@ -202,8 +201,7 @@ class Register extends Component
             return Redirect::to('/registration-success/user');
         } else {
             $user = $this->createTrainer();
-            // Wyzwól event Registered dla automatycznego wysłania email weryfikacyjnego
-            event(new Registered($user));
+            // Wysyłamy tylko hybrydowy email welcome+verification
             $this->sendWelcomeEmailToTrainer($user);
             $this->setTrainerRegistrationSuccess();
             

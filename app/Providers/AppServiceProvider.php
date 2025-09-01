@@ -55,16 +55,8 @@ class AppServiceProvider extends ServiceProvider
             });
         }
         
-        // Clear existing listeners for the Registered event
-        $events = $this->app['events'];
-        $events->forget(Registered::class);
-        
-        // Register custom listener that handles user registration
-        Event::listen(Registered::class, function (Registered $event) {
-            // All users (including trainers) are now User instances
-            // Use the standard email verification handler
-            (new SendEmailVerificationNotification)->handle($event);
-        });
+        // Email verification is now handled in welcome emails
+        // No separate verification email needed
 
 
     }

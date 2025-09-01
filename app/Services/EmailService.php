@@ -75,7 +75,20 @@ class EmailService
     public function sendEmailVerification(User $user): bool
     {
         try {
+            // Sprawdź czy email weryfikacyjny już nie został wysłany (zapobieganie duplikatom)
+            $cacheKey = "verification_email_sent_" . $user->id;
+            if (cache()->has($cacheKey)) {
+                Log::info('Verification email already sent, skipping', [
+                    'user_id' => $user->id,
+                    'email' => $user->email
+                ]);
+                return true;
+            }
+            
             Mail::to($user->email)->queue(new EmailVerification($user));
+            
+            // Oznacz że email został wysłany (cache na 1 godzinę)
+            cache()->put($cacheKey, true, 3600);
             
             Log::info('Email verification queued', [
                 'user_id' => $user->id,
