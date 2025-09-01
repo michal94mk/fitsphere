@@ -4,15 +4,9 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Auth\Events\Registered;
-use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
-use Illuminate\Support\Facades\Event;
-use App\Models\User;
 use App\Services\EmailService;
 use App\Services\LogService;
-use App\Services\TranslationService;
 use GuzzleHttp\Client;
-use Laravel\Socialite\SocialiteServiceProvider;
 
 
 
@@ -55,9 +49,13 @@ class AppServiceProvider extends ServiceProvider
             });
         }
         
+        // Force HTTPS in production
+        if (config('app.env') === 'production') {
+            \Illuminate\Support\Facades\URL::forceScheme('https');
+            \Illuminate\Support\Facades\URL::forceRootUrl(config('app.url'));
+        }
+
         // Email verification is now handled in welcome emails
         // No separate verification email needed
-
-
     }
 }

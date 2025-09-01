@@ -22,6 +22,9 @@ return Application::configure(basePath: dirname(__DIR__))
             'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         ]);
         
+        // Trust proxies for HTTPS detection
+        $middleware->trustProxies(at: '*');
+        
         // Register the SetLocale middleware to run on all web requests
         $middleware->web(append: [
             \App\Http\Middleware\SetLocale::class
