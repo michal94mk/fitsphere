@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             TrainerSeeder::class,       // Trainers (depends on base structure)
             ContentSeeder::class,       // Posts (depends on users + categories)
             InteractionSeeder::class,   // Comments (depends on posts + users)
+            ImageSeeder::class,         // Images (depends on all content)
         ]);
 
         $this->command->info('✅ FitSphere database seeding completed successfully!');

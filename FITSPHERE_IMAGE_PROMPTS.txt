@@ -1,0 +1,115 @@
+🎨 FITSPHERE - KOMPLETNE PROMPTY DO OBRAZKÓW AI
+================================================================
+
+1. AVATARY UŻYTKOWNIKÓW (User Avatars)
+----------------------------------------
+Professional headshot portrait of a fit person, wearing casual fitness clothing, studio lighting, high quality, professional photography style, 4K, detailed
+
+2. AVATARY TRENERÓW (Trainer Avatars)
+--------------------------------------
+🏋️ Trening siłowy (Strength Training):
+Professional muscular fitness trainer, gym environment, holding weights, confident pose, studio lighting, high quality, professional photography style, 4K, detailed
+
+🧘 Joga i pilates (Yoga & Pilates):
+Professional yoga instructor, peaceful expression, yoga studio, zen atmosphere, meditation pose, studio lighting, high quality, professional photography style, 4K, detailed
+
+🏃 Trening funkcjonalny (Functional Training):
+Professional functional trainer, dynamic pose, gym equipment, TRX, kettlebells, studio lighting, high quality, professional photography style, 4K, detailed
+
+💪 Fitness i cardio (Fitness & Cardio):
+Professional fitness instructor, energetic pose, cardio equipment, treadmill, stationary bike, studio lighting, high quality, professional photography style, 4K, detailed
+
+⚔️ CrossFit i sporty walki (CrossFit & Combat Sports):
+Professional CrossFit trainer, intense expression, CrossFit gym, warrior pose, gym equipment, studio lighting, high quality, professional photography style, 4K, detailed
+
+3. OBRAZKI POSTÓW BLOGOWYCH (Blog Post Images)
+-----------------------------------------------
+💪 Trening siłowy (Strength Training):
+Gym equipment setup for strength training, barbells, dumbbells, weight plates, clean gym environment, motivational atmosphere, fitness inspiration, high quality, professional photography, 4K, detailed
+
+🏃 Cardio:
+Cardio equipment collection, treadmill, stationary bike, elliptical machine, jump rope, gym environment, energy and motivation, high quality, professional photography, 4K, detailed
+
+🥗 Dieta i odżywianie (Diet & Nutrition):
+Healthy food spread, fruits, vegetables, lean proteins, nutrition theme, beautiful food photography, high quality, professional styling, 4K, detailed
+
+🌿 Zdrowy styl życia (Healthy Lifestyle):
+Lifestyle wellness scene, meditation, healthy habits, balanced living, wellness environment, high quality, professional photography, 4K, detailed
+
+💪 Motywacja (Motivation):
+Inspirational fitness scene, determination, success, achievement, motivational atmosphere, high quality, professional photography, 4K, detailed
+
+💊 Suplementacja (Supplementation):
+Sports supplements collection, vitamins, healthy lifestyle, gym environment, supplement bottles, high quality, professional photography, 4K, detailed
+
+🏃 Trening funkcjonalny (Functional Training):
+Functional training equipment, TRX, kettlebells, dynamic movement, gym environment, high quality, professional photography, 4K, detailed
+
+🧘 Joga i rozciąganie (Yoga & Stretching):
+Yoga studio, meditation, flexibility, peace, zen atmosphere, high quality, professional photography, 4K, detailed
+
+4. OBRAZKI KATEGORII (Category Images)
+---------------------------------------
+💪 Trening siłowy (Strength Training):
+Strength training equipment, barbells, dumbbells, weight plates, gym environment, fitness motivation, high quality, professional photography, 4K, detailed
+
+🏃 Cardio:
+Cardio equipment, treadmill, bike, elliptical, energetic atmosphere, fitness motivation, high quality, professional photography, 4K, detailed
+
+🥗 Dieta i odżywianie (Diet & Nutrition):
+Healthy food collection, fruits, vegetables, lean proteins, nutrition theme, beautiful food photography, high quality, professional styling, 4K, detailed
+
+🌿 Zdrowy styl życia (Healthy Lifestyle):
+Lifestyle wellness scene, meditation, healthy habits, balanced living, wellness environment, high quality, professional photography, 4K, detailed
+
+💪 Motywacja (Motivation):
+Inspirational fitness scene, determination, success, achievement, motivational atmosphere, high quality, professional photography, 4K, detailed
+
+💊 Suplementacja (Supplementation):
+Sports supplements, vitamins, healthy lifestyle, gym environment, supplement bottles, high quality, professional photography, 4K, detailed
+
+🏃 Trening funkcjonalny (Functional Training):
+Functional training equipment, TRX, kettlebells, dynamic movement, gym environment, high quality, professional photography, 4K, detailed
+
+🧘 Joga i rozciąganie (Yoga & Stretching):
+Yoga studio, meditation, flexibility, peace, zen atmosphere, high quality, professional photography, 4K, detailed
+
+5. OBRAZKI DOMYŚLNE (Default/Placeholder Images)
+-------------------------------------------------
+👤 Domyślny avatar użytkownika:
+Generic fitness person silhouette, neutral design, fitness theme, placeholder style, high quality, simple and clean
+
+🏋️ Domyślny avatar trenera:
+Generic fitness trainer silhouette, professional appearance, fitness theme, placeholder style, high quality, simple and clean
+
+📝 Domyślny obrazek posta:
+Generic fitness motivation image, gym equipment, inspirational atmosphere, placeholder style, high quality, simple and clean
+
+🏠 Domyślny obrazek strony głównej:
+Fitness lifestyle collage, gym, healthy food, active people, motivational atmosphere, high quality, professional photography
+
+================================================================
+SPECYFIKACJE TECHNICZNE:
+- Format: JPG/PNG
+- Rozdzielczość: Minimum 800x600px, zalecane 1200x800px
+- Styl: Profesjonalna fotografia fitness, jasne kolory, motywacyjny nastrój
+- Tło: Czyste, profesjonalne środowisko (siłownia, studio, natura)
+- Osoby: Różnorodne, w różnym wieku, profesjonalny wygląd
+- Atmosfera: Motywacyjna, energetyczna, profesjonalna
+
+STRUKTURA FOLDERÓW:
+public/images/
+├── users/          # Avatary użytkowników
+├── trainers/       # Avatary trenerów  
+├── posts/          # Obrazki postów blogowych
+├── categories/     # Obrazki kategorii
+└── default/        # Obrazki domyślne
+
+NARZĘDZIA AI DO UŻYCIA:
+- Stability AI (platform.stability.ai)
+- Leonardo.ai (leonardo.ai)
+- Playground AI (playgroundai.com)
+- DALL-E (openai.com/dall-e-2)
+- Midjourney (midjourney.com)
+
+================================================================
