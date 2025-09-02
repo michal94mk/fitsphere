@@ -69,6 +69,8 @@ return [
     'user_role_desc' => 'Może rezerwować treningi i korzystać z funkcji użytkownika',
     'trainer_role' => 'Trener',
     'trainer_role_desc' => 'Może prowadzić treningi i zarządzać rezerwacjami',
+    'trainer_role_disabled' => 'Rola trenera jest zablokowana dla administratorów',
+    'trainer_role_disabled_note' => 'Rola trenera może być przypisana tylko przez system rejestracji trenerów',
     'all_roles' => 'Wszystkie role',
     'created_at' => 'Data utworzenia',
     'confirm_delete_user' => 'Czy na pewno chcesz usunąć tego użytkownika?',

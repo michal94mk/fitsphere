@@ -68,6 +68,8 @@ return [
     'user_role_desc' => 'Can book trainings and use user features',
     'trainer_role' => 'Trainer',
     'trainer_role_desc' => 'Can conduct trainings and manage reservations',
+    'trainer_role_disabled' => 'Trainer role is disabled for administrators',
+    'trainer_role_disabled_note' => 'Trainer role can only be assigned through the trainer registration system',
     'all_roles' => 'All Roles',
     'created_at' => 'Created At',
     'confirm_delete_user' => 'Are you sure you want to delete this user?',

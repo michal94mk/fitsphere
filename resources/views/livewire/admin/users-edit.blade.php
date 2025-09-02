@@ -112,15 +112,6 @@
                                             <span class="text-gray-500"> - {{ __('admin.user_role_desc') }}</span>
                                         </span>
                                     </label>
-                                    
-                                    <label class="inline-flex items-center">
-                                        <input type="checkbox" wire:model="roles" value="trainer" 
-                                               class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                                        <span class="ml-2 text-sm text-gray-700">
-                                            <span class="font-medium">{{ __('admin.trainer_role') }}</span>
-                                            <span class="text-gray-500"> - {{ __('admin.trainer_role_desc') }}</span>
-                                        </span>
-                                    </label>
                                 </div>
                                 @error('roles') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                             </div>
