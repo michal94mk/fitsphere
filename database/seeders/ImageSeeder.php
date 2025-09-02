@@ -31,9 +31,15 @@ class ImageSeeder extends Seeder
         $users = User::whereNull('image')->orWhere('image', '')->get();
         $userImages = $this->getImageFiles('users');
         
+        $this->command->info("🔍 Znaleziono {$users->count()} użytkowników");
+        $this->command->info("🔍 Znaleziono " . count($userImages) . " obrazków użytkowników");
+        
         $users->each(function ($user, $index) use ($userImages) {
             if (isset($userImages[$index])) {
                 $user->update(['image' => 'users/' . $userImages[$index]]);
+                $this->command->info("✅ Przypisano {$userImages[$index]} do użytkownika {$user->name}");
+            } else {
+                $this->command->info("❌ Brak obrazka dla użytkownika {$user->name} (index: {$index})");
             }
         });
         
@@ -45,16 +51,22 @@ class ImageSeeder extends Seeder
      */
     private function assignTrainerImages(): void
     {
-        $trainers = User::where('is_trainer', true)
+        $trainers = User::where('role', 'trainer')
             ->where(function($query) {
                 $query->whereNull('image')->orWhere('image', '');
             })->get();
         
         $trainerImages = $this->getImageFiles('trainers');
         
+        $this->command->info("🔍 Znaleziono {$trainers->count()} trenerów");
+        $this->command->info("🔍 Znaleziono " . count($trainerImages) . " obrazków trenerów");
+        
         $trainers->each(function ($trainer, $index) use ($trainerImages) {
             if (isset($trainerImages[$index])) {
                 $trainer->update(['image' => 'trainers/' . $trainerImages[$index]]);
+                $this->command->info("✅ Przypisano {$trainerImages[$index]} do trenera {$trainer->name}");
+            } else {
+                $this->command->info("❌ Brak obrazka dla trenera {$trainer->name} (index: {$index})");
             }
         });
         
@@ -69,9 +81,15 @@ class ImageSeeder extends Seeder
         $posts = Post::whereNull('image')->orWhere('image', '')->get();
         $postImages = $this->getImageFiles('posts');
         
+        $this->command->info("🔍 Znaleziono {$posts->count()} postów");
+        $this->command->info("🔍 Znaleziono " . count($postImages) . " obrazków postów");
+        
         $posts->each(function ($post, $index) use ($postImages) {
             if (isset($postImages[$index])) {
                 $post->update(['image' => 'posts/' . $postImages[$index]]);
+                $this->command->info("✅ Przypisano {$postImages[$index]} do posta '{$post->title}'");
+            } else {
+                $this->command->info("❌ Brak obrazka dla posta '{$post->title}' (index: {$index})");
             }
         });
         
@@ -83,9 +101,10 @@ class ImageSeeder extends Seeder
      */
     private function getImageFiles(string $folder): array
     {
-        $path = storage_path("app/public/{$folder}");
+        $path = storage_path("app/public/images/{$folder}");
         
         if (!File::exists($path)) {
+            $this->command->info("⚠️ Folder {$path} nie istnieje!");
             return [];
         }
         
@@ -101,6 +120,9 @@ class ImageSeeder extends Seeder
         
         // Sortuj pliki po nazwie (user1.jpg, user2.jpg, etc.)
         sort($imageFiles, SORT_NATURAL);
+        
+        $this->command->info("📁 Skanuję folder: {$path}");
+        $this->command->info("📁 Znalezione pliki: " . implode(', ', $imageFiles));
         
         return $imageFiles;
     }

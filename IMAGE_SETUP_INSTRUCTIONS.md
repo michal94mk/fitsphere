@@ -3,7 +3,7 @@
 ## 📁 **STRUKTURA FOLDERÓW**
 
 ```
-storage/app/public/
+storage/app/public/images/
 ├── users/          # user1.jpg, user2.jpg, user3.jpg...
 ├── trainers/       # trainer1.jpg, trainer2.jpg, trainer3.jpg...
 └── posts/          # post1.jpg, post2.jpg, post3.jpg...
@@ -12,7 +12,7 @@ storage/app/public/
 ## 🚀 **JAK TO DZIAŁA**
 
 ### **1. Wklej obrazki**
-- Wklej wszystkie obrazki do odpowiednich folderów w `storage/app/public/`
+- Wklej wszystkie obrazki do odpowiednich folderów w `storage/app/public/images/`
 - **Ważne:** Nazwy plików muszą być w formacie: `user1.jpg`, `trainer1.jpg`, `post1.jpg`
 
 ### **2. Uruchom seeder**
@@ -25,7 +25,7 @@ php artisan db:seed
 ```
 
 ### **3. Seeder automatycznie:**
-- Skanuje foldery `users/`, `trainers/`, `posts/` w `storage/app/public/`
+- Skanuje foldery `users/`, `trainers/`, `posts/` w `storage/app/public/images/`
 - Znajduje pliki obrazków
 - Przypisuje je do odpowiednich rekordów w bazie danych
 - Zapisuje ścieżki: `users/user1.jpg`, `trainers/trainer1.jpg`, `posts/post1.jpg`
