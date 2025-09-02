@@ -16,9 +16,17 @@ class ImageSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->assignUserImages();
-        $this->assignTrainerImages();
-        $this->assignPostImages();
+        $force = $this->command->option('force') ?? false;
+        
+        if ($force) {
+            $this->command->info('🚀 Tryb FORCE - przypisuję obrazki do wszystkich rekordów!');
+        } else {
+            $this->command->info('🔍 Tryb normalny - przypisuję obrazki tylko do rekordów bez obrazków');
+        }
+        
+        $this->assignUserImages($force);
+        $this->assignTrainerImages($force);
+        $this->assignPostImages($force);
         
         $this->command->info('✅ Obrazki zostały przypisane pomyślnie!');
     }
@@ -26,9 +34,19 @@ class ImageSeeder extends Seeder
     /**
      * Przypisuje obrazki do użytkowników
      */
-    private function assignUserImages(): void
+    private function assignUserImages(bool $force = false): void
     {
-        $users = User::whereNull('image')->orWhere('image', '')->get();
+        // Sprawdź czy użytkownicy mają już obrazki
+        $usersWithImages = User::whereNotNull('image')->where('image', '!=', '')->count();
+        $usersWithoutImages = User::whereNull('image')->orWhere('image', '')->count();
+        
+        $this->command->info("🔍 Użytkownicy z obrazkami: {$usersWithImages}");
+        $this->command->info("🔍 Użytkownicy bez obrazków: {$usersWithoutImages}");
+        
+        // Pobierz wszystkich użytkowników (z force) lub tylko bez obrazków
+        $users = $force 
+            ? User::all() 
+            : User::whereNull('image')->orWhere('image', '')->get();
         $userImages = $this->getImageFiles('users');
         
         $this->command->info("🔍 Znaleziono {$users->count()} użytkowników");
@@ -49,12 +67,26 @@ class ImageSeeder extends Seeder
     /**
      * Przypisuje obrazki do trenerów
      */
-    private function assignTrainerImages(): void
+    private function assignTrainerImages(bool $force = false): void
     {
-        $trainers = User::where('role', 'trainer')
+        // Sprawdź ile trenerów ma obrazki
+        $trainersWithImages = User::where('role', 'trainer')
+            ->whereNotNull('image')->where('image', '!=', '')->count();
+        $trainersWithoutImages = User::where('role', 'trainer')
             ->where(function($query) {
                 $query->whereNull('image')->orWhere('image', '');
-            })->get();
+            })->count();
+        
+        $this->command->info("🔍 Trenerzy z obrazkami: {$trainersWithImages}");
+        $this->command->info("🔍 Trenerzy bez obrazków: {$trainersWithoutImages}");
+        
+        // Pobierz wszystkich trenerów (z force) lub tylko bez obrazków
+        $trainers = $force 
+            ? User::where('role', 'trainer')->get()
+            : User::where('role', 'trainer')
+                ->where(function($query) {
+                    $query->whereNull('image')->orWhere('image', '');
+                })->get();
         
         $trainerImages = $this->getImageFiles('trainers');
         
@@ -76,9 +108,19 @@ class ImageSeeder extends Seeder
     /**
      * Przypisuje obrazki do postów
      */
-    private function assignPostImages(): void
+    private function assignPostImages(bool $force = false): void
     {
-        $posts = Post::whereNull('image')->orWhere('image', '')->get();
+        // Sprawdź ile postów ma obrazki
+        $postsWithImages = Post::whereNotNull('image')->where('image', '!=', '')->count();
+        $postsWithoutImages = Post::whereNull('image')->orWhere('image', '')->count();
+        
+        $this->command->info("🔍 Posty z obrazkami: {$postsWithImages}");
+        $this->command->info("🔍 Posty bez obrazków: {$postsWithoutImages}");
+        
+        // Pobierz wszystkie posty (z force) lub tylko bez obrazków
+        $posts = $force 
+            ? Post::all()
+            : Post::whereNull('image')->orWhere('image', '')->get();
         $postImages = $this->getImageFiles('posts');
         
         $this->command->info("🔍 Znaleziono {$posts->count()} postów");
