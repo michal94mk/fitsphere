@@ -63,4 +63,9 @@ return [
     'forgot_password_description' => 'Podaj swój adres email, a wyślemy Ci link do zresetowania hasła.',
     'remember_password' => 'Pamiętasz hasło?',
     'back_to_login' => 'Wróć do logowania',
+    
+    // Admin login info
+    'admin_login_info_title' => 'Dane logowania dla administratora',
+    'admin_login_info_email' => 'Email',
+    'admin_login_info_password' => 'Hasło',
 ]; 

@@ -25,7 +25,7 @@ class BaseDataSeeder extends Seeder
             [
                 'name' => 'Admin',
                 'email' => 'admin@fitsphere.com',
-                'password' => 'Password123',
+                'password' => 'Password123!',
                 'role' => 'admin,user',
                 'image' => null,
             ],

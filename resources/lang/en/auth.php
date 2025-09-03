@@ -63,4 +63,9 @@ return [
     'forgot_password_description' => 'Enter your email address and we\'ll send you a link to reset your password.',
     'remember_password' => 'Remember your password?',
     'back_to_login' => 'Back to login',
+    
+    // Admin login info
+    'admin_login_info_title' => 'Administrator Login Credentials',
+    'admin_login_info_email' => 'Email',
+    'admin_login_info_password' => 'Password',
 ]; 
