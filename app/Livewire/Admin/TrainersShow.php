@@ -24,7 +24,7 @@ class TrainersShow extends Component
     
 
 
-    #[Layout('layouts.admin', ['header' => 'Szczegóły trenera'])]
+    #[Layout('layouts.admin', ['header' => 'admin.trainer_details'])]
     public function render()
     {
         return view('livewire.admin.trainers-show', [

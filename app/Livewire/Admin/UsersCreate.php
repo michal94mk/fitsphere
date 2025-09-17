@@ -201,7 +201,7 @@ class UsersCreate extends Component
         return redirect()->route('admin.users.index');
     }
     
-    #[Layout('layouts.admin', ['header' => 'Add New User'])]
+    #[Layout('layouts.admin', ['header' => 'admin.add_new_user'])]
     public function render()
     {
         return view('livewire.admin.users-create');

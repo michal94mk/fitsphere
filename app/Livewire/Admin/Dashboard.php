@@ -41,7 +41,7 @@ class Dashboard extends Component
         }
     }
 
-    #[Layout('layouts.admin', ['header' => 'Dashboard'])]
+    #[Layout('layouts.admin', ['header' => 'admin.dashboard'])]
     public function render()
     {
         // Basic stats - these are small queries, no need to cache for real-time accuracy

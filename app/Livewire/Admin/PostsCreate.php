@@ -68,7 +68,7 @@ class PostsCreate extends Component
         return redirect()->route('admin.posts.index');
     }
     
-    #[Layout('layouts.admin', ['header' => 'Add New Post'])]
+    #[Layout('layouts.admin', ['header' => 'admin.add_new_post'])]
     public function render()
     {
         return view('livewire.admin.posts-create', [

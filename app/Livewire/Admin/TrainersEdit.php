@@ -133,7 +133,7 @@ class TrainersEdit extends Component
         }
     }
 
-    #[Layout('layouts.admin', ['header' => 'Edit Trainer'])]
+    #[Layout('layouts.admin', ['header' => 'admin.edit_trainer'])]
     public function render()
     {
         return view('livewire.admin.trainers-edit');

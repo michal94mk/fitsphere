@@ -87,7 +87,7 @@ class CategoriesIndex extends Component
         $this->categoryIdBeingDeleted = null;
     }
 
-    #[Layout('layouts.admin', ['header' => 'Category Management'])]
+    #[Layout('layouts.admin', ['header' => 'admin.category_management'])]
     public function render()
     {
         $categories = Category::query()

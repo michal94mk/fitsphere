@@ -5,8 +5,6 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\User;
 use App\Models\Post;
-use App\Models\Category;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 
 class ImageSeeder extends Seeder

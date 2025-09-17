@@ -42,7 +42,7 @@ class CategoriesCreate extends Component
         }
     }
 
-    #[Layout('layouts.admin', ['header' => 'Add New Category'])]
+    #[Layout('layouts.admin', ['header' => 'admin.add_new_category'])]
     public function render()
     {
         return view('livewire.admin.categories-create');

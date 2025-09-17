@@ -61,7 +61,7 @@ class CommentsEdit extends Component
         }
     }
 
-    #[Layout('layouts.admin', ['header' => 'Edit Comment'])]
+    #[Layout('layouts.admin', ['header' => 'admin.edit_comment'])]
     public function render()
     {
         return view('livewire.admin.comments-edit');

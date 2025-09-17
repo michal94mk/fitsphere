@@ -241,10 +241,10 @@
                     <div class="flex items-center justify-between">
                         <!-- Page title -->
                         <h1 class="text-xl font-semibold text-gray-900 hidden md:block">
-                            <?php echo e($header ?? __('admin.dashboard')); ?>
+                            <?php echo e($header ? __($header) : __('admin.dashboard')); ?>
 
                         </h1>
-                        <div class="md:hidden text-lg font-medium text-gray-900"><?php echo e($header ?? __('admin.admin_panel')); ?></div>
+                        <div class="md:hidden text-lg font-medium text-gray-900"><?php echo e($header ? __($header) : __('admin.admin_panel')); ?></div>
                         
                         <!-- Right side - user info and actions -->
                         <div class="flex items-center space-x-4">

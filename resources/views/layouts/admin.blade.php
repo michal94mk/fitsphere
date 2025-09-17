@@ -228,9 +228,9 @@
                     <div class="flex items-center justify-between">
                         <!-- Page title -->
                         <h1 class="text-xl font-semibold text-gray-900 hidden md:block">
-                            {{ $header ?? __('admin.dashboard') }}
+                            {{ $header ? __($header) : __('admin.dashboard') }}
                         </h1>
-                        <div class="md:hidden text-lg font-medium text-gray-900">{{ $header ?? __('admin.admin_panel') }}</div>
+                        <div class="md:hidden text-lg font-medium text-gray-900">{{ $header ? __($header) : __('admin.admin_panel') }}</div>
                         
                         <!-- Right side - user info and actions -->
                         <div class="flex items-center space-x-4">

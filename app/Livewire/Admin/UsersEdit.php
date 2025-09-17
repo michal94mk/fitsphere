@@ -161,7 +161,7 @@ class UsersEdit extends Component
         }
     }
 
-    #[Layout('layouts.admin', ['header' => 'Edit User'])]
+    #[Layout('layouts.admin', ['header' => 'admin.edit_user'])]
     public function render()
     {
         return view('livewire.admin.users-edit');

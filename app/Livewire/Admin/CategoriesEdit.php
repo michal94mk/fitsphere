@@ -58,7 +58,7 @@ class CategoriesEdit extends Component
         }
     }
 
-    #[Layout('layouts.admin', ['header' => 'Edit Category'])]
+    #[Layout('layouts.admin', ['header' => 'admin.edit_category'])]
     public function render()
     {
         return view('livewire.admin.categories-edit');

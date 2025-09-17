@@ -136,7 +136,7 @@ class PostTranslations extends Component
     /**
      * Render the component
      */
-    #[Layout('layouts.admin', ['header' => 'Manage Post Translations'])]
+    #[Layout('layouts.admin', ['header' => 'admin.manage_post_translations'])]
     public function render()
     {
         return view('livewire.admin.post-translations', [

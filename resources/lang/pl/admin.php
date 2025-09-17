@@ -359,4 +359,21 @@ return [
     'updated_post' => 'Zaktualizował post',
     'added_comment' => 'Dodał komentarz',
     'user_registered' => 'zarejestrował się',
+    
+    // Page headers
+    'user_management' => 'Zarządzanie użytkownikami',
+    'category_management' => 'Zarządzanie kategoriami',
+    'post_management' => 'Zarządzanie postami',
+    'trainer_management' => 'Zarządzanie trenerami',
+    'comments_management' => 'Zarządzanie komentarzami',
+    'add_new_user' => 'Dodaj nowego użytkownika',
+    'add_new_category' => 'Dodaj nową kategorię',
+    'add_new_trainer' => 'Dodaj nowego trenera',
+    'add_new_post' => 'Dodaj nowy post',
+    'user_details' => 'Szczegóły użytkownika',
+    'post_details' => 'Szczegóły posta',
+    'trainer_details' => 'Szczegóły trenera',
+    'manage_user_translations' => 'Zarządzaj tłumaczeniami użytkownika',
+    'manage_category_translations' => 'Zarządzaj tłumaczeniami kategorii',
+    'manage_post_translations' => 'Zarządzaj tłumaczeniami posta',
 ]; 

@@ -96,7 +96,7 @@ class CategoryTranslations extends Component
         $this->redirectRoute('admin.categories.index', navigate: true);
     }
     
-    #[Layout('layouts.admin', ['header' => 'Manage Category Translations'])]
+    #[Layout('layouts.admin', ['header' => 'admin.manage_category_translations'])]
     public function render()
     {
         return view('livewire.admin.category-translations', [

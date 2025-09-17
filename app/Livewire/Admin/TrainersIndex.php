@@ -128,7 +128,7 @@ class TrainersIndex extends Component
         $this->trainerIdBeingApproved = null;
     }
     
-    #[Layout('layouts.admin', ['header' => 'Trainer Management'])]
+    #[Layout('layouts.admin', ['header' => 'admin.trainer_management'])]
     public function render()
     {
         $trainers = User::query()

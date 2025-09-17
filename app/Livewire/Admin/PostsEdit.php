@@ -118,7 +118,7 @@ class PostsEdit extends Component
         $this->dataLoaded = true;
     }
     
-    #[Layout('layouts.admin', ['header' => 'Edit Post'])]
+    #[Layout('layouts.admin', ['header' => 'admin.edit_post'])]
     public function render()
     {
         return view('livewire.admin.posts-edit', [

@@ -129,7 +129,7 @@ class UserTranslations extends Component
         }
     }
     
-    #[Layout('layouts.admin', ['header' => 'Manage User Translations'])]
+    #[Layout('layouts.admin', ['header' => 'admin.manage_user_translations'])]
     public function render()
     {
         return view('livewire.admin.user-translations', [

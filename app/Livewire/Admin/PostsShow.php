@@ -17,7 +17,7 @@ class PostsShow extends Component
         $this->post = Post::with(['user', 'category', 'comments', 'translations'])->findOrFail($id);
     }
 
-    #[Layout('layouts.admin', ['header' => 'Post Details'])]
+    #[Layout('layouts.admin', ['header' => 'admin.post_details'])]
     public function render()
     {
         return view('livewire.admin.posts-show');

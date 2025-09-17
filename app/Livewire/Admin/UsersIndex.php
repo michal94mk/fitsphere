@@ -95,7 +95,7 @@ class UsersIndex extends Component
         $this->userIdBeingDeleted = null;
     }
     
-    #[Layout('layouts.admin', ['header' => 'User Management'])]
+    #[Layout('layouts.admin', ['header' => 'admin.user_management'])]
     public function render()
     {
         $users = User::query()

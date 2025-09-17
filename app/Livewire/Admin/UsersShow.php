@@ -17,7 +17,7 @@ class UsersShow extends Component
         $this->user = User::with(['posts', 'comments'])->findOrFail($id);
     }
 
-    #[Layout('layouts.admin', ['header' => 'User Details'])]
+    #[Layout('layouts.admin', ['header' => 'admin.user_details'])]
     public function render()
     {
         return view('livewire.admin.users-show');

@@ -75,7 +75,7 @@ class CommentsIndex extends Component
         $this->commentIdBeingDeleted = null;
     }
 
-    #[Layout('layouts.admin', ['header' => 'Comments Management'])]
+    #[Layout('layouts.admin', ['header' => 'admin.comments_management'])]
     public function render()
     {
         $comments = Comment::with(['user', 'post'])

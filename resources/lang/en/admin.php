@@ -366,4 +366,21 @@ return [
     'no_new_users' => 'No new users',
     'joined' => 'Joined',
     'deleting' => 'Deleting',
+    
+    // Page headers
+    'user_management' => 'User Management',
+    'category_management' => 'Category Management',
+    'post_management' => 'Post Management',
+    'trainer_management' => 'Trainer Management',
+    'comments_management' => 'Comments Management',
+    'add_new_user' => 'Add New User',
+    'add_new_category' => 'Add New Category',
+    'add_new_trainer' => 'Add New Trainer',
+    'add_new_post' => 'Add New Post',
+    'user_details' => 'User Details',
+    'post_details' => 'Post Details',
+    'trainer_details' => 'Trainer Details',
+    'manage_user_translations' => 'Manage User Translations',
+    'manage_category_translations' => 'Manage Category Translations',
+    'manage_post_translations' => 'Manage Post Translations',
 ]; 

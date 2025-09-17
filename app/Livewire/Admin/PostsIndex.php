@@ -90,7 +90,7 @@ class PostsIndex extends Component
         $this->postIdBeingDeleted = null;
     }
 
-    #[Layout('layouts.admin', ['header' => 'Post Management'])]
+    #[Layout('layouts.admin', ['header' => 'admin.post_management'])]
     public function render()
     {
         $posts = Post::query()

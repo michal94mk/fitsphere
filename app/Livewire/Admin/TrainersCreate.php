@@ -68,7 +68,7 @@ class TrainersCreate extends Component
         return redirect()->route('admin.trainers.index');
     }
 
-    #[Layout('layouts.admin', ['header' => 'Add New Trainer'])]
+    #[Layout('layouts.admin', ['header' => 'admin.add_new_trainer'])]
     public function render()
     {
         return view('livewire.admin.trainers-create');
