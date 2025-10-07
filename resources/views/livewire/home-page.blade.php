@@ -2,13 +2,8 @@
     <!-- Hero Section -->
     <section class="relative bg-gradient-to-br from-gray-900 to-gray-800 text-white h-[85vh] text-center flex flex-col justify-center overflow-hidden">
 
-        <!-- Background video -->
-        <div class="absolute inset-0 w-full h-full z-0">
-            <video id="video1" class="absolute inset-0 w-full h-full object-cover opacity-20" autoplay loop muted>
-                <source src="/videos/video1.mp4" type="video/mp4">
-                <source src="/videos/video1.webm" type="video/webm">
-            </video>
-        </div>
+        <!-- Background gradient overlay -->
+        <div class="absolute inset-0 w-full h-full z-0 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900"></div>
 
         <!-- Hero content -->
         <div class="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 -mt-16">
