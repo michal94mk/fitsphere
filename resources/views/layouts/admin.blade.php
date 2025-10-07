@@ -81,6 +81,13 @@
                             </svg>
                             {{ __('admin.comments') }}
                         </a>
+                        
+                        <a href="{{ route('admin.subscribers.index') }}" wire:navigate class="flex items-center px-3 py-2 text-sm font-medium {{ request()->routeIs('admin.subscribers.*') ? 'text-white bg-gray-700' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }} rounded-md">
+                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                            </svg>
+                            {{ __('admin.newsletter_subscribers') }}
+                        </a>
                     </nav>
                 </div>
                 
@@ -200,6 +207,13 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path>
                             </svg>
                             {{ __('admin.comments') }}
+                        </a>
+                        
+                        <a href="{{ route('admin.subscribers.index') }}" wire:navigate class="group flex items-center px-2 py-2 text-base font-medium rounded-md {{ request()->routeIs('admin.subscribers.*') ? 'text-white bg-gray-700' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
+                            <svg class="mr-3 h-6 w-6 text-gray-400 group-hover:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                            </svg>
+                            {{ __('admin.newsletter_subscribers') }}
                         </a>
                     </nav>
                 </div>

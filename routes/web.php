@@ -65,6 +65,7 @@ use App\Livewire\Admin\TrainersCreate;
 use App\Livewire\Admin\TrainersEdit;
 use App\Livewire\Admin\TrainersShow;
 use App\Livewire\Admin\UserTranslations;
+use App\Livewire\Admin\SubscribersIndex;
 
 // -----------------------------------------
 // PUBLIC ROUTES
@@ -224,4 +225,7 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
         Route::get('/{id}', TrainersShow::class)->name('trainers.show');
         Route::get('/{id}/translations', UserTranslations::class)->name('trainers.translations');
     });
+    
+    // Subscribers management
+    Route::get('/subscribers', SubscribersIndex::class)->name('subscribers.index');
 });

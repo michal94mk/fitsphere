@@ -34,7 +34,7 @@
                             </div>
                             <input type="email" wire:model="email" placeholder="{{ __('footer.email_placeholder') }}" 
                                 class="pl-10 w-full px-4 py-3 bg-gray-700 border border-gray-600 text-white rounded-lg sm:rounded-r-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-                                required>
+                                autocomplete="email" required>
                         </div>
                     </div>
                     <button type="submit" 

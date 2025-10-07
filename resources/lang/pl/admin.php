@@ -33,6 +33,7 @@ return [
     'trainers' => 'Trenerzy',
     'posts' => 'Posty',
     'comments' => 'Komentarze',
+    'newsletter_subscribers' => 'Subskrybenci Newslettera',
     'published' => 'Opublikowane',
     'drafts' => 'Szkice',
     'no_drafts' => 'Brak szkiców',
@@ -376,4 +377,19 @@ return [
     'manage_user_translations' => 'Zarządzaj tłumaczeniami użytkownika',
     'manage_category_translations' => 'Zarządzaj tłumaczeniami kategorii',
     'manage_post_translations' => 'Zarządzaj tłumaczeniami posta',
+    
+    // Newsletter Subscribers
+    'subscriber_management' => 'Zarządzanie Subskrybentami Newslettera',
+    'total_subscribers' => 'Łączna liczba subskrybentów',
+    'search_email_placeholder' => 'Szukaj po emailu...',
+    'subscriber_id' => 'ID Subskrybenta',
+    'subscription_date' => 'Data Subskrypcji',
+    'no_subscribers_found' => 'Nie znaleziono subskrybentów',
+    'subscribed' => 'Zapisany',
+    'delete_subscriber' => 'Usuń Subskrybenta',
+    'delete_subscriber_confirmation' => 'Usuń Subskrybenta',
+    'delete_subscriber_confirmation_message' => 'Czy na pewno chcesz usunąć tego subskrybenta? Ta akcja nie może zostać cofnięta.',
+    'subscriber_delete_missing_id' => 'Brakuje ID subskrybenta',
+    'subscriber_deleted' => 'Subskrybent :email został pomyślnie usunięty',
+    'subscriber_delete_error' => 'Błąd podczas usuwania subskrybenta: :error',
 ]; 

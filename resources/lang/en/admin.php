@@ -33,6 +33,7 @@ return [
     'trainers' => 'Trainers',
     'posts' => 'Posts',
     'comments' => 'Comments',
+    'newsletter_subscribers' => 'Newsletter Subscribers',
     'published' => 'Published',
     'drafts' => 'Drafts',
     'no_drafts' => 'No drafts',
@@ -383,4 +384,19 @@ return [
     'manage_user_translations' => 'Manage User Translations',
     'manage_category_translations' => 'Manage Category Translations',
     'manage_post_translations' => 'Manage Post Translations',
+    
+    // Newsletter Subscribers
+    'subscriber_management' => 'Newsletter Subscribers Management',
+    'total_subscribers' => 'Total Subscribers',
+    'search_email_placeholder' => 'Search by email...',
+    'subscriber_id' => 'Subscriber ID',
+    'subscription_date' => 'Subscription Date',
+    'no_subscribers_found' => 'No subscribers found',
+    'subscribed' => 'Subscribed',
+    'delete_subscriber' => 'Delete Subscriber',
+    'delete_subscriber_confirmation' => 'Delete Subscriber',
+    'delete_subscriber_confirmation_message' => 'Are you sure you want to delete this subscriber? This action cannot be undone.',
+    'subscriber_delete_missing_id' => 'Subscriber ID is missing',
+    'subscriber_deleted' => 'Subscriber :email has been deleted successfully',
+    'subscriber_delete_error' => 'Error deleting subscriber: :error',
 ]; 
