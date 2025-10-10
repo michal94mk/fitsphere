@@ -26,6 +26,15 @@ class Footer extends Component
         'email' => 'required|email|unique:subscribers,email',
     ];
 
+    protected function messages()
+    {
+        return [
+            'email.required' => __('footer.email_required'),
+            'email.email' => __('footer.email_invalid'),
+            'email.unique' => __('footer.email_already_subscribed'),
+        ];
+    }
+
     public function subscribe()
     {
         try {
